@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RA1 · Prácticas de Laboratorio | Configuración en Entorno Monousuario</title>
+    <style>
+        :root {
+            --azul-oscuro: #1a2744; --azul-medio: #2c5282; --azul: #3182ce; --azul-claro: #ebf4ff;
+            --verde: #276749; --verde-claro: #f0fff4; --naranja: #c05621; --naranja-claro: #fffaf0;
+            --rojo: #c53030; --rojo-claro: #fff5f5; --purpura: #6b46c1; --purpura-claro: #faf5ff;
+            --gris: #f7fafc; --gris-oscuro: #4a5568; --texto: #1a202c; --borde: #e2e8f0;
+            --sombra: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+            --radio: 12px; --radio-sm: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--texto); background: #edf2f7; font-size: 15px; line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .hero {
+            background: linear-gradient(160deg, #1a2744 0%, #1e3a5f 40%, #2c5282 100%);
+            color: white; padding: 48px 40px 36px; position: relative; overflow: hidden;
+        }
+        .hero::after { content: ''; position: absolute; top: -80px; right: -120px; width: 380px; height: 380px; background: rgba(255,255,255,0.03); border-radius: 50%; pointer-events: none; }
+        .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 5px 16px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+        .hero h1 { font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; position: relative; z-index: 1; }
+        .hero .subtitulo { font-size: 15px; opacity: 0.82; font-style: italic; position: relative; z-index: 1; }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; position: relative; z-index: 1; }
+        .hero-meta span { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600; }
+        .wrapper { max-width: 1100px; margin: 0 auto; padding: 32px 20px 64px; }
+        .ra-card { background: white; border-radius: var(--radio); padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); }
+        .ra-card h2 { font-size: 20px; color: var(--azul-oscuro); font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
+        .practica-card { background: white; border-radius: var(--radio); padding: 0; margin-bottom: 36px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); overflow: hidden; }
+        .practica-header { background: linear-gradient(135deg, var(--verde), #1a5330); color: white; padding: 20px 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .practica-header .practica-num { background: rgba(255,255,255,0.25); font-weight: 700; font-size: 18px; border-radius: 8px; padding: 8px 18px; white-space: nowrap; }
+        .practica-header h3 { font-size: 18px; font-weight: 700; flex: 1; }
+        .practica-header .practica-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+        .practica-header .practica-meta span { background: rgba(255,255,255,0.2); border-radius: 16px; padding: 4px 14px; font-size: 12px; font-weight: 600; }
+        .practica-body { padding: 24px 28px; }
+        .ce-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+        .ce-tag { font-size: 10px; font-weight: 700; background: var(--azul-claro); color: var(--azul-medio); border: 1px solid #bee3f8; border-radius: 16px; padding: 3px 10px; }
+        .box-practice { background: var(--verde-claro); border-left: 4px solid var(--verde); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 18px 22px; margin: 18px 0; }
+        .box-practice .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .box-objective { background: #ebf4ff; border-left: 4px solid var(--azul); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 16px 0; }
+        .box-objective .box-label { color: var(--azul-medio); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-delivery { background: #fffaf0; border-left: 4px solid var(--naranja); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 16px 0; }
+        .box-delivery .box-label { color: var(--naranja); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .rubrica { background: #fff5f5; border: 2px solid var(--rojo); border-radius: var(--radio-sm); padding: 20px 22px; margin: 20px 0; }
+        .rubrica h4 { color: var(--rojo); font-size: 15px; margin-bottom: 14px; font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+        thead tr { background: var(--azul-oscuro); color: white; }
+        thead th { padding: 10px 12px; text-align: left; font-weight: 600; font-size: 11px; }
+        tbody tr:nth-child(even) { background: var(--gris); }
+        tbody td { padding: 9px 12px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+        .check { color: var(--verde); font-weight: bold; }
+        .cross { color: var(--rojo); font-weight: bold; }
+        ul.icon-list { list-style: none; padding-left: 0; margin: 10px 0; }
+        ul.icon-list li { padding: 5px 0 5px 24px; position: relative; border-bottom: 1px solid #f0f0f0; }
+        ul.icon-list li::before { content: "▸"; color: var(--verde); position: absolute; left: 4px; font-size: 13px; top: 6px; font-weight: bold; }
+        ol.styled { margin: 10px 0 10px 20px; } ol.styled li { padding: 6px 0 6px 6px; }
+        code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #1e40af; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 10px 0; }
+        pre code { background: none; color: inherit; padding: 0; }
+        hr.divider { border: none; border-top: 1px solid var(--borde); margin: 16px 0; }
+        footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--borde); }
+        .practica-body p { margin-bottom: 10px; }
+        .indice-practicas { background: white; border-radius: var(--radio); padding: 20px 24px; margin-bottom: 28px; box-shadow: var(--sombra); border: 1px solid var(--borde); }
+        .indice-practicas h3 { color: var(--verde); margin-bottom: 12px; }
+        .indice-practicas ol { columns: 2; margin-left: 20px; }
+        .indice-practicas ol li { padding: 3px 0; font-size: 14px; }
+        .tree { background: #1e293b; color: #a8d8a8; font-family: 'Courier New', monospace; padding: 16px 20px; border-radius: var(--radio-sm); margin: 14px 0; font-size: 13px; line-height: 1.9; overflow-x: auto; white-space: pre; }
+        .box-warning { background: #fff5f5; border: 2px solid var(--rojo); border-radius: var(--radio-sm); padding: 16px 20px; margin: 16px 0; }
+        .box-warning .box-label { color: var(--rojo); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .entrega-tag { display: inline-block; background: var(--naranja-claro); border: 1px solid #fbd38d; border-radius: 4px; padding: 1px 8px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--naranja); font-weight: 600; }
+        @media (max-width: 720px) {
+            .hero { padding: 28px 20px; } .hero h1 { font-size: 23px; }
+            .wrapper { padding: 16px 10px; } .practica-body { padding: 16px; } .practica-header { padding: 14px 16px; }
+            .indice-practicas ol { columns: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="hero-badge">🧪 PRÁCTICAS DE LABORATORIO · CFGB Informática</div>
+    <h1>💻 RA1 · Prácticas de Configuración en Entorno Monousuario</h1>
+    <p class="subtitulo">16 prácticas · Una por bloque · Rúbricas de corrección preparadas para IA</p>
+    <div class="hero-meta">
+        <span>🐧 Windows & Linux</span>
+        <span>🖥️ VirtualBox</span>
+        <span>📎 LibreOffice</span>
+        <span>🤖 Rúbricas IA-ready</span>
+    </div>
+</header>
+
+<div class="wrapper">
+
+    <!-- PORTADA -->
+    <div class="ra-card" style="border-top: 4px solid var(--verde);">
+        <h2>🧪 RA1 – Prácticas de Laboratorio · 16 Prácticas Evaluables</h2>
+        <p>Cada práctica se corresponde con un bloque de los apuntes del alumno. Todas las rúbricas están diseñadas con <strong>criterios observables y medibles</strong> para que puedan ser corregidas por una IA sin ambigüedad.</p>
+        <p><strong>📦 Entorno de trabajo:</strong> Oracle VirtualBox con Windows 11 y Ubuntu 24.04 LTS como máquinas virtuales invitadas.</p>
+    </div>
+
+    <!-- INSTRUCCIONES DE ENTREGA -->
+    <div class="ra-card" style="border-top: 4px solid var(--naranja);">
+        <h2>📦 Cómo entregar las prácticas</h2>
+        <p>Todas las prácticas de RA1 se entregan en una <strong>única carpeta comprimida</strong>. El sistema de corrección automática con IA leerá los archivos por su nombre exacto, por lo que <strong>es imprescindible respetar la nomenclatura al pie de la letra</strong>.</p>
+
+        <h3 style="margin:18px 0 8px;color:var(--azul-oscuro);font-size:16px;">1. Estructura de carpetas y nombre del ZIP</h3>
+        <p>Un único ZIP con todas las prácticas de RA1. La estructura interna debe ser exactamente así:</p>
+        <div class="tree">Garcia_Juan_RA1.zip
+└── Garcia_Juan/
+    ├── P1-1/
+    │   └── P1-1_tabla.pdf
+    ├── P1-2/
+    │   └── P1-2_tabla.pdf
+    ├── P1-3/
+    │   ├── P1-3_documento.pdf
+    │   ├── P1-3_captura01.png
+    │   └── P1-3_captura08.png
+    ├── ...
+    └── P1-16/
+        ├── P1-16_documento.pdf
+        └── CONFIGURACION.txt</div>
+
+        <h3 style="margin:18px 0 8px;color:var(--azul-oscuro);font-size:16px;">2. Reglas de nomenclatura</h3>
+        <table>
+            <thead><tr><th>Elemento</th><th>Formato</th><th>Ejemplo</th></tr></thead>
+            <tbody>
+                <tr><td>ZIP principal</td><td><code>Apellido_Nombre_RA1.zip</code></td><td><code>Garcia_Juan_RA1.zip</code></td></tr>
+                <tr><td>Carpeta raíz dentro del ZIP</td><td><code>Apellido_Nombre/</code></td><td><code>Garcia_Juan/</code></td></tr>
+                <tr><td>Subcarpeta de cada práctica</td><td><code>P1-N/</code></td><td><code>P1-5/</code>, <code>P1-12/</code></td></tr>
+                <tr><td>Documento principal</td><td><code>P1-N_documento.pdf</code></td><td><code>P1-5_documento.pdf</code></td></tr>
+                <tr><td>Capturas numeradas</td><td><code>P1-N_capturaXX.png</code> (dos dígitos)</td><td><code>P1-3_captura01.png</code></td></tr>
+                <tr><td>Capturas con nombre descriptivo</td><td><code>P1-N_descripcion.png</code></td><td><code>P1-4_bios.jpg</code></td></tr>
+            </tbody>
+        </table>
+        <p style="margin-top:10px;font-size:13px;color:var(--gris-oscuro);">ℹ️ Apellido y nombre sin tildes ni ñ. Si tienes dos apellidos, usa solo el primero. Guion bajo (<code>_</code>), nunca espacios.</p>
+
+        <h3 style="margin:18px 0 8px;color:var(--azul-oscuro);font-size:16px;">3. Cómo funciona la corrección con IA</h3>
+        <ol class="styled">
+            <li>El sistema descomprime el ZIP y verifica la estructura de carpetas.</li>
+            <li>Para cada práctica, extrae el texto del PDF y lo compara con la rúbrica.</li>
+            <li>Verifica que están presentes todas las capturas requeridas (por nombre exacto).</li>
+            <li>Asigna una puntuación: <strong>Excelente (10)</strong>, <strong>Aceptable (6,5)</strong> o <strong>Insuficiente (3)</strong>.</li>
+            <li>El profesor revisa el informe generado y puede modificar notas antes de publicarlas.</li>
+        </ol>
+
+        <div class="box-warning">
+            <div class="box-label">⚠️ Errores que invalidan la entrega automáticamente</div>
+            <table style="margin:8px 0;">
+                <thead><tr><th>Error</th><th>Consecuencia</th></tr></thead>
+                <tbody>
+                    <tr><td>ZIP sin carpeta raíz <code>Apellido_Nombre/</code></td><td>Alumno no identificado → nota 0 en todo RA1</td></tr>
+                    <tr><td>Nombres de carpeta con espacios (<code>P1 5/</code>)</td><td>Práctica no encontrada → nota 0 en esa práctica</td></tr>
+                    <tr><td>Documento entregado como DOCX en vez de PDF</td><td>No se puede extraer texto → nota incompleta</td></tr>
+                    <tr><td>Capturas en formato HEIC (iPhone/iPad)</td><td>No procesables → convertir a PNG o JPG antes de entregar</td></tr>
+                    <tr><td>Nombres con tildes o ñ (<code>Gómez_María</code>)</td><td>Error de codificación → usar <code>Gomez_Maria</code></td></tr>
+                    <tr><td>Archivo comprimido en RAR o 7Z</td><td>No aceptado → debe ser <code>.zip</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="margin:18px 0 8px;color:var(--azul-oscuro);font-size:16px;">4. Plazo y canal de entrega</h3>
+        <p>El ZIP de RA1 completo se entrega en la tarea habilitada en el aula virtual (Moodle) <strong>antes del fin del bloque 16</strong>. No se aceptan entregas por correo electrónico ni por USB. Si tienes problemas técnicos para crear el ZIP, comunícaselo al profesor antes de la fecha límite.</p>
+    </div>
+
+    <!-- ÍNDICE -->
+    <div class="indice-practicas">
+        <h3>📑 Índice de Prácticas</h3>
+        <ol>
+            <li><strong>P1.1:</strong> Identificación de SO en dispositivos reales (B1)</li>
+            <li><strong>P1.2:</strong> Clasificación y comparativa de SO (B2)</li>
+            <li><strong>P1.3:</strong> Arquitectura del SO: identificación de capas (B3)</li>
+            <li><strong>P1.4:</strong> Exploración de BIOS/UEFI y bootloader (B4)</li>
+            <li><strong>P1.5:</strong> Instalación de Windows 11 en VirtualBox (B5)</li>
+            <li><strong>P1.6:</strong> Instalación de Ubuntu y comparativa (B6)</li>
+            <li><strong>P1.7:</strong> Personalización completa del entorno (B7)</li>
+            <li><strong>P1.8:</strong> Sistema de archivos y rutas (B8)</li>
+            <li><strong>P1.9:</strong> Operaciones con archivos GUI + CLI (B9)</li>
+            <li><strong>P1.10:</strong> Atributos de archivos (B10)</li>
+            <li><strong>P1.11:</strong> Permisos NTFS y chmod (B11)</li>
+            <li><strong>P1.12:</strong> Administración de soportes de almacenamiento (B12)</li>
+            <li><strong>P1.13:</strong> Instalación y gestión de periféricos (B13)</li>
+            <li><strong>P1.14:</strong> Análisis de malware y antivirus (B14)</li>
+            <li><strong>P1.15:</strong> Copias de seguridad y restauración (B15)</li>
+            <li><strong>P1.16:</strong> Prueba práctica integrada RA1 (B16)</li>
+        </ol>
+    </div>
+
+    <!-- ═══════════ P1.1 · B1 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.1</span>
+            <h3>Identificación de sistemas operativos en dispositivos reales</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 1</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA1 CE-h · Conceptos básicos SO (15%)</span></div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Investigar qué sistemas operativos utilizan dispositivos cotidianos.</li>
+                    <li>Reconocer que los SO están presentes en muchos más dispositivos que solo ordenadores.</li>
+                    <li>Reflexionar sobre la diversidad de sistemas operativos en el mundo real.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <ol class="styled">
+                    <li>Busca en Internet (o inspecciona físicamente si tienes acceso) qué sistema operativo utilizan los siguientes <strong>10 dispositivos</strong>:
+                        <ol style="list-style:lower-alpha;margin-left:20px;">
+                            <li>Un cajero automático de cualquier banco</li>
+                            <li>Una consola PlayStation 5</li>
+                            <li>Una consola Nintendo Switch</li>
+                            <li>Un Tesla Model 3 (pantalla central)</li>
+                            <li>Un router WiFi doméstico (cualquier marca)</li>
+                            <li>Un Apple Watch</li>
+                            <li>Un Samsung Galaxy Watch</li>
+                            <li>Un lector de libros electrónicos Amazon Kindle</li>
+                            <li>Un smart TV Samsung (modelo reciente)</li>
+                            <li>El ordenador de a bordo de un avión Airbus A350</li>
+                        </ol>
+                    </li>
+                    <li>Para cada dispositivo, indica: nombre del SO, fabricante, tipo de licencia (libre/propietario) y una breve descripción de para qué sirve ese SO en ese dispositivo.</li>
+                    <li>Elige el dispositivo cuyo sistema operativo más te haya sorprendido y explica por qué.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-1/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-1_tabla.pdf</code> — Tabla de 10 filas (Dispositivo | SO | Fabricante | Licencia | Descripción) + párrafo de reflexión al final</li>
+                </ul>
+                <p style="margin-top:8px;font-size:13px;color:var(--gris-oscuro);">ℹ️ La tabla debe estar creada en un procesador de textos. No se aceptan capturas de pantalla de la tabla.</p>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.1</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CE-h: Investigación</strong></td>
+                            <td>10 dispositivos identificados correctamente con SO real (no inventado). Las fuentes son fiables.</td>
+                            <td>8-9 dispositivos correctos o 10 con 1-2 errores menores.</td>
+                            <td>Menos de 8 dispositivos correctos o varios SO inventados.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tabla completa</strong></td>
+                            <td>Tabla con las 5 columnas solicitadas, datos coherentes y bien formateada.</td>
+                            <td>Falta 1 columna o el formato es descuidado.</td>
+                            <td>Faltan 2+ columnas o la tabla es ilegible.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reflexión</strong></td>
+                            <td>Párrafo de 4-5 líneas bien argumentado que demuestra comprensión del tema.</td>
+                            <td>Reflexión correcta pero demasiado breve o superficial.</td>
+                            <td>Sin reflexión o no relacionada con los SO.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.2 · B2 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.2</span>
+            <h3>Clasificación y comparativa de sistemas operativos</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 2</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA1 CE-h · Conceptos básicos SO (15%)</span></div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Aplicar todos los criterios de clasificación de sistemas operativos.</li>
+                    <li>Comparar diferentes SO utilizando terminología técnica precisa.</li>
+                    <li>Identificar qué tipo de SO es adecuado para cada escenario.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <ol class="styled">
+                    <li>Crea una tabla comparativa con los siguientes <strong>8 sistemas operativos</strong>: Windows 11, Ubuntu 24.04 LTS, MS-DOS 6.22, Android 14, iOS 17, Windows Server 2022, FreeRTOS, ChromeOS.</li>
+                    <li>Para cada SO, indica en la tabla:
+                        <ul>
+                            <li><strong>Monousuario o multiusuario</strong></li>
+                            <li><strong>Monotarea o multitarea</strong></li>
+                            <li><strong>Arquitectura</strong> (16/32/64 bits)</li>
+                            <li><strong>Tiempo compartido o tiempo real</strong></li>
+                            <li><strong>Libre o propietario</strong></li>
+                            <li><strong>Uso principal</strong> (escritorio, servidor, móvil, embebido...)</li>
+                        </ul>
+                    </li>
+                    <li>Responde: ¿qué SO elegirías para cada uno de estos escenarios? Justifica tu elección en 1-2 frases.
+                        <ol style="list-style:lower-alpha;margin-left:20px;">
+                            <li>Controlar el sistema de frenos ABS de un coche</li>
+                            <li>Un servidor web que recibe miles de visitas diarias</li>
+                            <li>Un portátil para un estudiante sin presupuesto para licencias</li>
+                            <li>Un móvil de gama alta</li>
+                        </ol>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-2/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-2_tabla.pdf</code> — Tabla comparativa (8 SO × 7 criterios) + las 4 respuestas de los escenarios justificadas</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.2</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CE-h: Tabla comparativa</strong></td>
+                            <td>8 SO clasificados correctamente en los 6 criterios. Sin errores conceptuales.</td>
+                            <td>6-7 SO correctos o 1-2 errores de clasificación.</td>
+                            <td>Menos de 6 SO correctos o errores graves (confundir monousuario con multitarea).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Escenarios</strong></td>
+                            <td>4 escenarios con SO adecuado y justificación técnica correcta.</td>
+                            <td>3 escenarios correctos o justificaciones débiles.</td>
+                            <td>2 o menos escenarios correctos.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Presentación</strong></td>
+                            <td>Tabla bien formateada, legible, sin faltas de ortografía.</td>
+                            <td>Tabla legible pero con formato descuidado.</td>
+                            <td>Tabla ilegible o con múltiples errores.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.3 · B3 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.3</span>
+            <h3>Arquitectura del SO: identificación práctica de capas</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 3</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-h · Conceptos básicos SO (15%)</span>
+                <span class="ce-tag">RA1 CE-c · Usar interfaz (5%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Identificar las capas del sistema operativo en funcionamiento real.</li>
+                    <li>Usar comandos de terminal para obtener información del kernel, shell y sistema de archivos.</li>
+                    <li>Comparar la arquitectura interna de Windows y Linux.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>En Windows (VM):</strong></p>
+                <ol class="styled">
+                    <li>Abre PowerShell como administrador. Ejecuta <code>systeminfo | findstr /B /C:"OS"</code> para ver la versión del SO.</li>
+                    <li>Ejecuta <code>Get-ComputerInfo | Select-Object WindowsVersion, OsHardwareAbstractionLayer</code> para ver información del kernel.</li>
+                    <li>Abre el Administrador de dispositivos (<code>devmgmt.msc</code>) y captura la lista de drivers de la categoría "Procesadores".</li>
+                    <li>Ejecuta <code>fsutil fsinfo volumeinfo C:</code> para ver información del sistema de archivos.</li>
+                </ol>
+                <p><strong>En Ubuntu (VM):</strong></p>
+                <ol class="styled">
+                    <li>Ejecuta <code>uname -a</code> para ver la versión del kernel Linux.</li>
+                    <li>Ejecuta <code>echo $SHELL</code> para ver qué shell estás usando.</li>
+                    <li>Ejecuta <code>lsblk -f</code> para ver los sistemas de archivos montados.</li>
+                    <li>Ejecuta <code>lspci | head -10</code> para ver dispositivos PCI (drivers cargados).</li>
+                </ol>
+                <p><strong>Análisis:</strong> Para cada comando ejecutado, identifica a qué capa del SO pertenece la información obtenida (kernel, shell, sistema de archivos o drivers).</p>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-3/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-3_documento.pdf</code> — Tabla: comando | capa del SO | justificación (8 filas)</li>
+                    <li><code>P1-3_captura01.png</code> a <code>P1-3_captura08.png</code> — Capturas de cada comando (4 Windows + 4 Ubuntu)</li>
+                </ul>
+                <p style="margin-top:8px;font-size:13px;color:var(--gris-oscuro);">ℹ️ Los nombres deben ser exactos: <code>P1-3_captura01.png</code>, <code>P1-3_captura02.png</code>… hasta <code>P1-3_captura08.png</code>.</p>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.3</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CE-c: Ejecución de comandos</strong></td>
+                            <td>8 comandos ejecutados correctamente con capturas que muestran el comando y su salida.</td>
+                            <td>6-7 comandos correctos o capturas incompletas.</td>
+                            <td>Menos de 6 comandos o capturas que no muestran la salida.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CE-h: Identificación de capas</strong></td>
+                            <td>Tabla con la capa correcta asignada a cada comando y justificación coherente.</td>
+                            <td>1-2 capas mal asignadas o justificaciones débiles.</td>
+                            <td>3+ capas mal asignadas o sin justificación.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.4 · B4 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.4</span>
+            <h3>Exploración de la BIOS/UEFI, bootloader y secuencia de arranque</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 4</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-h · Conceptos básicos SO (15%)</span>
+                <span class="ce-tag">RA1 CE-a · Parámetros instalación (10%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Explorar la configuración de la BIOS/UEFI de un equipo real (sin modificar nada).</li>
+                    <li>Identificar el bootloader en ambos sistemas operativos.</li>
+                    <li>Documentar la secuencia de arranque completa del equipo del aula.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>⚠️ ADVERTENCIA:</strong> No modifiques NINGUNA opción en la BIOS/UEFI. Solo observar y anotar.</p>
+                <ol class="styled">
+                    <li>Reinicia el ordenador del aula y accede a la BIOS/UEFI (consulta a tu profesor la tecla correcta: F2, Supr, F10, F12...).</li>
+                    <li>Identifica si es BIOS (pantalla azul-gris, solo teclado) o UEFI (interfaz gráfica, ratón). Anótalo.</li>
+                    <li>Localiza y anota: <strong>versión del firmware</strong>, <strong>fecha de la BIOS/UEFI</strong>, <strong>orden de arranque</strong> (boot order) y <strong>estado de Secure Boot</strong>.</li>
+                    <li>Busca la opción de virtualización (VT-x en Intel o AMD-V en AMD) y anota si está activada o desactivada.</li>
+                    <li>Sal sin guardar cambios.</li>
+                    <li>En Windows, abre una terminal como administrador y ejecuta <code>bcdedit /enum</code>. Identifica la entrada del bootloader de Windows y captura la salida.</li>
+                    <li>En Ubuntu, ejecuta <code>cat /boot/grub/grub.cfg | head -30</code> para ver la configuración de GRUB (no la modifiques).</li>
+                    <li>Dibuja un esquema de la secuencia de arranque de tu equipo desde que pulsas el botón hasta que aparece el login.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-4/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-4_documento.pdf</code> — Datos anotados de BIOS/UEFI + esquema de la secuencia de arranque</li>
+                    <li><code>P1-4_bios.jpg</code> — Foto o captura de la pantalla de BIOS/UEFI</li>
+                    <li><code>P1-4_bcdedit.png</code> — Captura de <code>bcdedit</code> en Windows</li>
+                    <li><code>P1-4_grub.png</code> — Captura del menú GRUB en Ubuntu</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.4</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>CE-h: Exploración BIOS/UEFI</strong></td>
+                        <td>Accede correctamente, identifica tipo, anota versión, fecha, boot order, Secure Boot y virtualización.</td>
+                        <td>Accede pero no anota todos los datos solicitados (faltan 1-2).</td>
+                        <td>No accede a la BIOS/UEFI o faltan 3+ datos.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CE-a: Bootloader</strong></td>
+                        <td>Captura de bcdedit y GRUB correctas, identifica las entradas de arranque.</td>
+                        <td>Una de las dos capturas falta o es incorrecta.</td>
+                        <td>Ninguna captura de bootloader.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Esquema de arranque</strong></td>
+                        <td>Esquema completo con los 10 pasos de la secuencia de arranque identificados.</td>
+                        <td>Esquema con 6-9 pasos correctos.</td>
+                        <td>Esquema con menos de 6 pasos o incoherente.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    <!-- ═══════════ P1.5 · B5 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.5</span>
+            <h3>Instalación de Windows 11 en VirtualBox</h3>
+            <div class="practica-meta">
+                <span>⏱️ 90 min</span>
+                <span>📘 Bloque 5</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-a · Parámetros básicos de instalación (10%)</span>
+                <span class="ce-tag">RA1 CE-c · Usar interfaz para preparar entorno (5%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Crear una máquina virtual correctamente dimensionada para Windows 11.</li>
+                    <li>Instalar Windows 11 desde cero documentando cada decisión.</li>
+                    <li>Realizar la configuración inicial básica del sistema recén instalado.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <ol class="styled">
+                    <li><strong>Crear la VM:</strong> Nombre: <code>W11-P5-[tus_iniciales]</code>. Tipo: Microsoft Windows. Versión: Windows 11 (64-bit). Asigna 4096 MB de RAM, 2 CPUs, disco VDI dinámico de 60 GB.</li>
+                    <li><strong>Montar la ISO</strong> de Windows 11 (descárgala previamente desde el sitio oficial de Microsoft).</li>
+                    <li><strong>Instalar Windows 11</strong> seleccionando idioma Español, teclado Español. Cuando llegue el momento de crear la cuenta, elige "Opciones de inicio de sesión" → "Cuenta sin conexión" para crear una cuenta local llamada <code>alumno-p5</code> (sin vincular a Microsoft).</li>
+                    <li><strong>Configuración inicial:</strong> pon zona horaria de Madrid, desactiva la publicidad en el menú de inicio, desactiva IPv6 en la tarjeta de red.</li>
+                    <li><strong>Documenta el proceso:</strong> captura de pantalla de la configuración de la VM, de la pantalla de selección de idioma, de la creación de la cuenta local y del escritorio final.</li>
+                    <li>Anota el <strong>tiempo total</strong> que tardó la instalación desde que pulsaste "Iniciar" hasta que apareció el escritorio.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-5/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-5_documento.pdf</code> — Tiempo total de instalación + respuesta sobre privacidad + comentario de cada captura</li>
+                    <li><code>P1-5_captura01.png</code> a <code>P1-5_captura04.png</code> — Las 4 capturas del proceso de instalación</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.5</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-a: VM configurada</strong></td><td>RAM ≥4 GB, 2 CPUs, disco 60 GB VDI dinámico, ISO montada correctamente.</td><td>Configuración correcta pero 1 parámetro incorrecto.</td><td>VM no arranca o 2+ parámetros mal configurados.</td></tr>
+                        <tr><td><strong>CE-c: Instalación</strong></td><td>Instalación completada sin errores, cuenta local creada (sin Microsoft), IPv6 desactivado.</td><td>Instalación completada pero usó cuenta Microsoft o falta algún paso.</td><td>Instalación no completada o no arranca.</td></tr>
+                        <tr><td><strong>Documentación</strong></td><td>4 capturas con comentarios claros, tiempo registrado, respuesta sobre privacidad.</td><td>2-3 capturas o falta algún elemento de documentación.</td><td>Sin capturas o documentación muy incompleta.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.6 · B6 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.6</span>
+            <h3>Instalación de Ubuntu 24.04 LTS y comparativa con Windows</h3>
+            <div class="practica-meta">
+                <span>⏱️ 90 min</span>
+                <span>📘 Bloque 6</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-a · Parámetros básicos de instalación (10%)</span>
+                <span class="ce-tag">RA1 CE-b · Preferencias del entorno personal (5%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Instalar Ubuntu 24.04 LTS en una máquina virtual.</li>
+                    <li>Comparar objetivamente el proceso de instalación y el sistema resultante con Windows 11.</li>
+                    <li>Personalizar el escritorio de Ubuntu por primera vez.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <ol class="styled">
+                    <li><strong>Crear la VM:</strong> Nombre: <code>Ubuntu-P6-[tus_iniciales]</code>. Tipo: Linux. Versión: Ubuntu (64-bit). Asigna 4096 MB de RAM, 2 CPUs, disco VDI dinámico de 30 GB.</li>
+                    <li><strong>Instalar Ubuntu 24.04 LTS</strong> desde la ISO oficial. Elige instalación normal, idioma español, teclado Spanish. Crea el usuario <code>alumno-p6</code> con contraseña.</li>
+                    <li><strong>Completa una tabla comparativa</strong> con al menos 10 criterios (tiempo de instalación, espacio ocupado, RAM consumida en reposo, software preinstalado, tipo de cuenta requerida, pasos del instalador, etc.).</li>
+                    <li><strong>Personaliza el escritorio:</strong> cambia el fondo de pantalla, activa el modo oscuro, ancla LibreOffice Writer al dock lateral.</li>
+                    <li>Anota cuánto espacio ocupa Ubuntu recién instalado (comando <code>df -h /</code>).</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-6/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-6_documento.pdf</code> — Tabla comparativa Windows vs Ubuntu (mínimo 10 criterios)</li>
+                    <li><code>P1-6_captura01.png</code> a <code>P1-6_captura03.png</code> — 3 capturas del proceso de instalación de Ubuntu</li>
+                    <li><code>P1-6_escritorio.png</code> — Captura del escritorio personalizado</li>
+                    <li><code>P1-6_dfh.png</code> — Captura del comando <code>df -h</code></li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.6</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-a: Instalación Ubuntu</strong></td><td>Ubuntu instalado correctamente, usuario creado, escritorio funcional.</td><td>Instalado pero con errores menores (idioma, teclado incorrecto).</td><td>No arranca o instalación fallida.</td></tr>
+                        <tr><td><strong>Tabla comparativa</strong></td><td>10+ criterios con datos reales medidos (no copiados de Internet).</td><td>7-9 criterios o datos no medidos directamente.</td><td>Menos de 7 criterios o tabla copiada.</td></tr>
+                        <tr><td><strong>CE-b: Personalización</strong></td><td>Fondo cambiado, modo oscuro activado, aplicación anclada. Captura incluida.</td><td>2 de 3 personalizaciones realizadas.</td><td>1 o ninguna personalización.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.7 · B7 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.7</span>
+            <h3>Personalización completa del entorno y accesibilidad</h3>
+            <div class="practica-meta">
+                <span>⏱️ 90 min</span>
+                <span>📘 Bloque 7</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-b · Preferencias del entorno personal (5%)</span>
+                <span class="ce-tag">RA1 CE-c · Usar interfaz para preparar el entorno (5%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Personalizar completamente el entorno de trabajo en ambos sistemas operativos.</li>
+                    <li>Configurar opciones de accesibilidad y entender su importancia.</li>
+                    <li>Crear una estructura de trabajo organizada en el escritorio.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>En AMBOS sistemas operativos (Windows 11 y Ubuntu):</strong></p>
+                <ol class="styled">
+                    <li><strong>Fondo y tema:</strong> Descarga una imagen de Unsplash o Pexels (paisaje libre de derechos). Establécala como fondo de escritorio. Activa el <strong>modo oscuro</strong>.</li>
+                    <li><strong>Barra/Dock:</strong> Ancla estas 4 aplicaciones: explorador de archivos, navegador web, procesador de textos y terminal.</li>
+                    <li><strong>Accesibilidad:</strong> Activa temporalmente el <strong>lector de pantalla</strong>. Intenta abrir el explorador de archivos sin mirar la pantalla, solo escuchando. Describe la experiencia en 3-4 líneas. Desactiva el lector después.</li>
+                    <li><strong>Estructura de carpetas:</strong> Crea esta jerarquía en el escritorio de ambos SO:
+                        <pre><code>Escritorio/
+├── CURSO/
+│   ├── RA1/
+│   │   ├── Apuntes/
+│   │   ├── Practicas/
+│   │   └── Capturas/
+│   └── RA2/
+│       ├── Apuntes/
+│       ├── Practicas/
+│       └── Capturas/
+└── Personal/</code></pre>
+                    </li>
+                    <li><strong>Captura el antes y el después:</strong> haz una captura before/after en cada SO.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-7/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-7_documento.pdf</code> — Descripción de la experiencia con el lector de pantalla + confirmación de la estructura de carpetas creada</li>
+                    <li><code>P1-7_win_antes.png</code> — Escritorio Windows antes de personalizar</li>
+                    <li><code>P1-7_win_despues.png</code> — Escritorio Windows después de personalizar</li>
+                    <li><code>P1-7_ubuntu_antes.png</code> — Escritorio Ubuntu antes de personalizar</li>
+                    <li><code>P1-7_ubuntu_despues.png</code> — Escritorio Ubuntu después de personalizar</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.7</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-b: Personalización</strong></td><td>Fondo, modo oscuro y anclaje de apps realizados en AMBOS SO.</td><td>Realizado en un SO o falta algún elemento.</td><td>No realizado o apenas cambios.</td></tr>
+                        <tr><td><strong>CE-c: Accesibilidad</strong></td><td>Lector de pantalla probado, experiencia descrita con detalle, estructura de carpetas creada.</td><td>Lector probado pero descripción superficial o carpetas incompletas.</td><td>Lector no probado o carpetas no creadas.</td></tr>
+                        <tr><td><strong>Capturas</strong></td><td>4 capturas before/after en ambos SO, bien identificadas.</td><td>2-3 capturas o mal identificadas.</td><td>1 o ninguna captura.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.8 · B8 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.8</span>
+            <h3>Sistema de archivos, rutas y extensiones</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 8</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-e · Manejo de archivos (10%)</span>
+                <span class="ce-tag">RA1 CE-h · Conceptos básicos SO (15%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Comprender la estructura de rutas en Windows (letras de unidad) y Linux (árbol único).</li>
+                    <li>Identificar extensiones de archivo y asociaciones de programas.</li>
+                    <li>Practicar la navegación por el sistema de archivos usando terminal.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <ol class="styled">
+                    <li>En Windows, abre el Explorador y navega hasta <code>C:\Windows\System32\</code>. Enumera 5 archivos con extensión <code>.exe</code> y explica brevemente para qué sirve cada uno (investiga si es necesario).</li>
+                    <li>En Ubuntu, abre la terminal y navega hasta <code>/usr/bin/</code>. Enumera 5 archivos ejecutables y explica para qué sirven.</li>
+                    <li>Crea una tabla con 15 extensiones de archivo diferentes que encuentres en tu sistema. Para cada una: indica la extensión, el tipo de contenido, el programa que lo abre por defecto y un ejemplo de nombre de archivo real que hayas encontrado.</li>
+                    <li>Escribe la <strong>ruta absoluta</strong> de los siguientes elementos en ambos SO:
+                        <ul>
+                            <li>Tu carpeta personal (home)</li>
+                            <li>Tu carpeta de Descargas</li>
+                            <li>Un archivo llamado <code>datos.txt</code> guardado en el Escritorio</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-8/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-8_documento.pdf</code> — Listado de 5+5 ejecutables con función, tabla de 15 extensiones y 6 rutas absolutas</li>
+                </ul>
+                <p style="margin-top:8px;font-size:13px;color:var(--gris-oscuro);">ℹ️ Las rutas absolutas deben estar escritas en texto dentro del PDF, no como captura de pantalla.</p>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.8</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-e: Archivos ejecutables</strong></td><td>5+5 ejecutables identificados correctamente con función descrita.</td><td>8-9 ejecutables o descripciones vagas.</td><td>Menos de 8 ejecutables o funciones incorrectas.</td></tr>
+                        <tr><td><strong>CE-h: Extensiones</strong></td><td>Tabla con 15 extensiones, contenido correcto, programa correcto, ejemplo real.</td><td>10-14 extensiones o algún dato incorrecto.</td><td>Menos de 10 extensiones.</td></tr>
+                        <tr><td><strong>Rutas absolutas</strong></td><td>6 rutas escritas con sintaxis correcta en cada SO (con \ para Windows, / para Linux).</td><td>4-5 rutas correctas o error de sintaxis menor.</td><td>Menos de 4 rutas correctas.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.9 · B9 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.9</span>
+            <h3>Operaciones con archivos: GUI vs Terminal</h3>
+            <div class="practica-meta">
+                <span>⏱️ 90 min</span>
+                <span>📘 Bloque 9</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-e · Manejo de archivos (10%)</span>
+                <span class="ce-tag">RA1 CE-f · Herramientas del SO para explorar soportes (10%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Realizar las mismas operaciones con archivos usando GUI y CLI.</li>
+                    <li>Comparar la eficiencia de ambos métodos.</li>
+                    <li>Dominar los comandos básicos de terminal en ambos SO.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p>Vas a crear la MISMA estructura de archivos DOS VECES: una usando solo la GUI y otra usando solo la terminal. Hazlo en ambos SO (4 veces en total: Windows GUI, Windows CLI, Ubuntu GUI, Ubuntu CLI).</p>
+                <ol class="styled">
+                    <li>Crea esta estructura (el nombre de la carpeta raíz debe ser <code>PRUEBA</code> en el escritorio):
+                        <pre><code>PRUEBA/
+├── Documentos/
+│   ├── Notas/
+│   └── Facturas/
+├── Imagenes/
+│   ├── Fotos/
+│   └── Capturas/
+└── Musica/
+    ├── Pop/
+    └── Rock/</code></pre>
+                    </li>
+                    <li>Dentro de <code>Documentos/Notas/</code>, crea un archivo <code>recordatorio.txt</code> con el texto "Reunión el lunes a las 10:00".</li>
+                    <li>Copia <code>recordatorio.txt</code> a la carpeta <code>Facturas/</code> y renómbralo como <code>backup.txt</code>.</li>
+                    <li>Mueve <code>backup.txt</code> de <code>Facturas/</code> a <code>Musica/Pop/</code>.</li>
+                    <li>Borra la carpeta <code>Musica/Rock/</code> que estaba vacía.</li>
+                </ol>
+                <p><strong>Documenta:</strong> para la versión CLI, anota el comando exacto que usaste en cada paso. Para la versión GUI, describe brevemente los clics realizados.</p>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-9/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-9_documento.pdf</code> — Lista de comandos CLI usados en cada SO + respuesta comparativa (GUI vs CLI)</li>
+                    <li><code>P1-9_gui_windows.png</code> — Captura de la estructura de carpetas creada por GUI en Windows</li>
+                    <li><code>P1-9_gui_ubuntu.png</code> — Captura de la estructura de carpetas creada por GUI en Ubuntu</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.9</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-e: Estructura creada</strong></td><td>4 estructuras creadas correctamente (Win GUI, Win CLI, Ubuntu GUI, Ubuntu CLI).</td><td>3 de 4 estructuras correctas.</td><td>2 o menos estructuras correctas.</td></tr>
+                        <tr><td><strong>CE-f: Comandos CLI</strong></td><td>Todos los comandos documentados con sintaxis correcta y funcionaron.</td><td>Comandos documentados pero con 1-2 errores de sintaxis.</td><td>Comandos no documentados o mayoría incorrectos.</td></tr>
+                        <tr><td><strong>Comparativa GUI vs CLI</strong></td><td>Respuesta bien argumentada, identifica ventajas de cada método.</td><td>Respuesta correcta pero superficial.</td><td>Sin respuesta o sin argumentos.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.10 · B10 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.10</span>
+            <h3>Atributos de archivos: solo lectura, oculto, sistema</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 10</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA1 CE-d · Atributos y permisos en archivos/directorios (20%)</span></div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Experimentar con los atributos de archivos en Windows (solo lectura, oculto, sistema, archivo).</li>
+                    <li>Comparar con el mecanismo equivalente en Linux (archivos ocultos con punto).</li>
+                    <li>Usar el comando <code>attrib</code> de Windows.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>En Windows:</strong></p>
+                <ol class="styled">
+                    <li>Crea un archivo <code>importante.txt</code> en el escritorio con el texto "INFORME CONFIDENCIAL 2025".</li>
+                    <li>Asígnalo como <strong>solo lectura</strong>. Intenta editar el archivo y guardar cambios. Captura el mensaje de error.</li>
+                    <li>Asígnalo también como <strong>oculto</strong>. ¿Desaparece del escritorio? Ve al Explorador → Vista → Mostrar → Elementos ocultos. ¿Aparece ahora? Captura ambas situaciones.</li>
+                    <li>Abre cmd y ejecuta <code>attrib importante.txt</code>. Captura el resultado. ¿Qué letras aparecen? Explica qué significa cada una.</li>
+                    <li>Ejecuta <code>attrib -r -h importante.txt</code> para quitar ambos atributos. Comprueba que el archivo vuelve a ser visible y editable.</li>
+                </ol>
+                <p><strong>En Ubuntu:</strong></p>
+                <ol class="styled">
+                    <li>Crea un archivo <code>.secreto.txt</code> en tu carpeta personal con <code>echo "datos ocultos" > ~/.secreto.txt</code>.</li>
+                    <li>¿Aparece en el explorador de archivos? Pulsa Ctrl+H. ¿Aparece ahora? Explica el mecanismo.</li>
+                    <li>Compara: ¿cuál es la diferencia fundamental entre el atributo "oculto" de Windows y el "punto" de Linux?</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-10/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-10_documento.pdf</code> — Respuesta comparativa de atributos Windows vs Linux</li>
+                    <li><code>P1-10_captura01.png</code> a <code>P1-10_captura04.png</code> — Capturas de los pasos en Windows (oculto, solo lectura, propiedades)</li>
+                    <li><code>P1-10_ubuntu.png</code> — Captura equivalente en Ubuntu</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.10</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-d: Atributos Windows</strong></td><td>Solo lectura y oculto aplicados, mensaje de error al guardar capturado, attrib usado correctamente.</td><td>Atributos aplicados pero falta alguna captura o explicación.</td><td>Atributos no aplicados o no se entiende el mecanismo.</td></tr>
+                        <tr><td><strong>Linux: archivos ocultos</strong></td><td>Archivo con punto creado, Ctrl+H usado, diferencia explicada correctamente.</td><td>Archivo creado pero explicación incompleta.</td><td>No se creó o no se entendió.</td></tr>
+                        <tr><td><strong>Comparativa</strong></td><td>Diferencia fundamental identificada: attributo vs naming convention.</td><td>Comparación correcta pero superficial.</td><td>Sin comparativa o incorrecta.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.11 · B11 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.11</span>
+            <h3>Permisos en Windows (NTFS) y Linux (chmod)</h3>
+            <div class="practica-meta">
+                <span>⏱️ 90 min</span>
+                <span>📘 Bloque 11</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA1 CE-d · Atributos y permisos en archivos/directorios (20%)</span></div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Configurar permisos NTFS en Windows para controlar el acceso a archivos.</li>
+                    <li>Usar chmod en Linux para cambiar permisos en notación octal.</li>
+                    <li>Comprobar experimentalmente el efecto de los permisos.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>En Windows (NTFS):</strong></p>
+                <ol class="styled">
+                    <li>Crea una carpeta <code>C:\Compartido</code> con un archivo <code>publico.txt</code> dentro.</li>
+                    <li>Crea un segundo usuario estándar (sin privilegios de administrador) llamado <code>InvitadoP11</code> desde Configuración → Cuentas → Familia y otros usuarios.</li>
+                    <li>En la carpeta <code>Compartido</code>, ve a Propiedades → Seguridad. Añade al usuario <code>InvitadoP11</code> y asígnale solo permiso de <strong>Lectura</strong>.</li>
+                    <li>Cierra sesión, entra como <code>InvitadoP11</code> e intenta modificar <code>publico.txt</code>. Captura lo que ocurre.</li>
+                    <li>Vuelve a tu cuenta principal y ahora da a <code>InvitadoP11</code> permiso de <strong>Control total</strong>. Comprueba desde la otra cuenta que ahora sí puedes modificar el archivo.</li>
+                </ol>
+                <p><strong>En Ubuntu (chmod):</strong></p>
+                <ol class="styled">
+                    <li>Crea un archivo: <code>echo "CONFIDENCIAL" > ~/secreto.txt</code></li>
+                    <li>Revisa sus permisos actuales: <code>ls -l ~/secreto.txt</code>. Captura la salida.</li>
+                    <li>Aplica <code>chmod 600 ~/secreto.txt</code>. Vuelve a ejecutar <code>ls -l</code>. ¿Qué ha cambiado? Explica en términos de dueño/grupo/otros.</li>
+                    <li>Prueba <code>chmod 644 ~/secreto.txt</code>. ¿Quién puede leer ahora? ¿Quién puede escribir?</li>
+                    <li>Explica qué significan los permisos <code>-rwxr-x---</code> y a qué octal equivale.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-11/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-11_documento.pdf</code> — Explicación en notación octal de los permisos asignados</li>
+                    <li><code>P1-11_captura01.png</code> a <code>P1-11_captura04.png</code> — Capturas de los pasos (permisos NTFS Windows + chmod Ubuntu)</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.11</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-d: Permisos NTFS</strong></td><td>Usuario creado, permisos Lectura y Control total aplicados y verificados experimentalmente.</td><td>Permisos aplicados pero no verificados desde la otra cuenta.</td><td>Permisos no aplicados o usuario no creado.</td></tr>
+                        <tr><td><strong>CE-d: Permisos Linux</strong></td><td>chmod 600 y 644 aplicados, cambios verificados con ls -l, octal explicado correctamente.</td><td>chmod aplicado pero explicación octal incorrecta o incompleta.</td><td>chmod no aplicado o permisos mal interpretados.</td></tr>
+                        <tr><td><strong>Documentación</strong></td><td>Capturas claras de cada paso, explicaciones precisas.</td><td>Faltan 1-2 capturas o explicaciones ambiguas.</td><td>Documentación muy incompleta.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.12 · B12 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.12</span>
+            <h3>Administración de soportes de almacenamiento</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 12</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-f · Herramientas del SO para explorar soportes (10%)</span>
+                <span class="ce-tag">RA1 CE-d · Reconocer atributos y permisos (20%)</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Añadir discos virtuales a una VM y formatearlos con diferentes sistemas de archivos.</li>
+                    <li>Comparar las propiedades de NTFS, FAT32 y ext4.</li>
+                    <li>Usar herramientas de administración de discos en ambos SO.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <ol class="styled">
+                    <li>En tu VM de Windows, añade <strong>DOS discos virtuales nuevos</strong> de 10 GB cada uno (Configuración → Almacenamiento → Añadir disco duro).</li>
+                    <li>En el Administrador de discos de Windows (<code>diskmgmt.msc</code>), inicializa ambos discos como MBR.</li>
+                    <li>Formatea el primer disco como <strong>NTFS</strong> con etiqueta "DATOS_NTFS". Formatea el segundo como <strong>FAT32</strong> con etiqueta "DATOS_FAT32".</li>
+                    <li>Crea en cada disco un archivo de texto de 5 KB. Anota el "Tamaño en disco" de cada archivo (Propiedades). ¿Ocupan lo mismo? ¿Por qué?</li>
+                    <li>En tu VM de Ubuntu, añade un disco virtual de 10 GB. Usa <code>sudo fdisk -l</code> para identificarlo y <code>sudo mkfs.ext4 /dev/sdX</code> para formatearlo con ext4.</li>
+                    <li>Monta el disco en <code>/mnt/datos</code> (crea la carpeta primero) y comprueba que funciona con <code>df -h</code>.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-12/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-12_documento.pdf</code> — Respuesta razonada sobre por qué el mismo archivo ocupa distinto espacio en disco</li>
+                    <li><code>P1-12_admindiscos.png</code> — Captura del Administrador de discos (Windows)</li>
+                    <li><code>P1-12_propiedades.png</code> — Captura de propiedades del archivo (tamaño en disco)</li>
+                    <li><code>P1-12_fdisk.png</code> — Captura de <code>fdisk -l</code> en Ubuntu</li>
+                    <li><code>P1-12_dfh.png</code> — Captura de <code>df -h</code> en Ubuntu</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.12</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-f: Discos en Windows</strong></td><td>2 discos añadidos, inicializados, formateados NTFS y FAT32, archivos creados y tamaño comparado.</td><td>Discos formateados pero falta la comparación de tamaños.</td><td>Discos no añadidos o no formateados.</td></tr>
+                        <tr><td><strong>CE-f: Disco en Ubuntu</strong></td><td>Disco particionado con ext4, montado correctamente y funcionando.</td><td>Formateado pero no montado.</td><td>No se completó el formateo.</td></tr>
+                        <tr><td><strong>Análisis</strong></td><td>Explica correctamente por qué el mismo archivo ocupa diferente espacio en NTFS vs FAT32 (tamaño de cluster).</td><td>Explicación parcial.</td><td>Sin explicación o incorrecta.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.13 · B13 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.13</span>
+            <h3>Instalación y gestión de periféricos</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 13</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA1 CE-e · Manejo de archivos y periféricos (10%)</span></div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Identificar todos los periféricos del equipo y sus drivers.</li>
+                    <li>Clasificar periféricos como entrada, salida o E/S.</li>
+                    <li>Instalar una impresora virtual y gestionar la cola de impresión.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <ol class="styled">
+                    <li>Abre el Administrador de dispositivos en Windows (<code>devmgmt.msc</code>). Enumera TODOS los periféricos que encuentres bajo estas categorías: Teclados, Ratones, Monitores, Unidades de disco, Controladoras de sonido, Adaptadores de pantalla, Dispositivos de imagen, Colas de impresión.</li>
+                    <li>Para cada periférico encontrado, clasifícalo como <strong>Entrada, Salida o Entrada/Salida</strong>.</li>
+                    <li>Haz clic derecho sobre la tarjeta gráfica → Propiedades → Controlador. Anota: nombre del driver, fecha y versión.</li>
+                    <li>Instala la impresora virtual <strong>Microsoft Print to PDF</strong> (si no está ya instalada: Configuración → Bluetooth y dispositivos → Impresoras y escáneres → Agregar dispositivo).</li>
+                    <li>Imprime un documento de prueba a PDF y comprueba que se genera correctamente.</li>
+                    <li>En Ubuntu, ejecuta <code>lsusb</code> y <code>lspci</code>. Enumera los dispositivos encontrados y compáralos con los de Windows.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-13/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-13_documento.pdf</code> — Tabla de periféricos clasificados + datos del driver + listado <code>lsusb</code>/<code>lspci</code> comentado</li>
+                    <li><code>P1-13_prueba_impresion.pdf</code> — PDF de prueba de impresión generado</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.13</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-e: Identificación</strong></td><td>10+ periféricos identificados y clasificados correctamente (Entrada/Salida/E/S).</td><td>7-9 periféricos o errores de clasificación.</td><td>Menos de 7 periféricos.</td></tr>
+                        <tr><td><strong>Driver tarjeta gráfica</strong></td><td>Nombre, fecha y versión del driver anotados correctamente.</td><td>Falta algún dato.</td><td>No se identificó el driver.</td></tr>
+                        <tr><td><strong>Impresora</strong></td><td>PDF de prueba generado correctamente. Captura incluida.</td><td>Impresora instalada pero PDF no generado.</td><td>Impresora no instalada.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.14 · B14 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.14</span>
+            <h3>Análisis de malware y configuración de antivirus</h3>
+            <div class="practica-meta">
+                <span>⏱️ 55 min</span>
+                <span>📘 Bloque 14</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA1 CE-g · Operaciones de protección: antivirus (25%)</span></div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Configurar correctamente Windows Defender.</li>
+                    <li>Realizar un análisis de seguridad simulado con el archivo EICAR.</li>
+                    <li>Instalar y usar ClamAV en Ubuntu.</li>
+                    <li>Reconocer los principales tipos de malware.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>En Windows:</strong></p>
+                <ol class="styled">
+                    <li>Abre "Seguridad de Windows". Comprueba que todos los apartados muestran check verde (✔️). Captura la pantalla principal.</li>
+                    <li>Ejecuta un <strong>Examen rápido</strong>. Anota el tiempo que tarda y el número de archivos analizados.</li>
+                    <li>Activa la <strong>protección contra ransomware</strong>: activa "Acceso controlado a carpetas".</li>
+                    <li><strong>Test EICAR:</strong> El archivo EICAR es un archivo inofensivo que todos los antivirus detectan como virus para probar que funcionan. Crea un archivo de texto con este contenido exacto (sin espacios extra):<br><code>X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*</code><br>Guárdalo como <code>eicar.com</code>. ¿Qué hace Windows Defender? Captura la notificación.</li>
+                </ol>
+                <p><strong>En Ubuntu:</strong></p>
+                <ol class="styled">
+                    <li>Instala ClamAV: <code>sudo apt install clamav</code></li>
+                    <li>Actualiza la base de datos: <code>sudo freshclam</code></li>
+                    <li>Escanea tu carpeta personal: <code>clamscan -r ~/</code> (anota el resultado).</li>
+                    <li>Vuelve a crear el archivo EICAR en Ubuntu y escanea la carpeta donde lo guardaste. ¿Lo detecta ClamAV?</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-14/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-14_documento.pdf</code> — Respuesta al escenario ransomware (.encrypt)</li>
+                    <li><code>P1-14_seguridad_windows.png</code> — Captura del panel Seguridad de Windows</li>
+                    <li><code>P1-14_examen_rapido.png</code> — Captura del resultado del examen rápido</li>
+                    <li><code>P1-14_eicar.png</code> — Captura de la notificación del archivo EICAR</li>
+                    <li><code>P1-14_clamav.png</code> — Captura de la instalación y scan de ClamAV en Ubuntu</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.14</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-g: Windows Defender</strong></td><td>Examen rápido ejecutado, ransomware activado, EICAR detectado y capturado.</td><td>2 de 3 elementos completados.</td><td>1 o ningún elemento.</td></tr>
+                        <tr><td><strong>CE-g: ClamAV</strong></td><td>Instalado, actualizado, escaneo ejecutado con resultado documentado.</td><td>Instalado pero no escaneado.</td><td>No instalado.</td></tr>
+                        <tr><td><strong>Respuesta ransomware</strong></td><td>Describe un protocolo de actuación correcto (desconectar red, no pagar, restaurar backup).</td><td>Respuesta parcialmente correcta.</td><td>Respuesta incorrecta o peligrosa.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.15 · B15 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.15</span>
+            <h3>Copias de seguridad: configuración, ejecución y restauración</h3>
+            <div class="practica-meta">
+                <span>⏱️ 90 min</span>
+                <span>📘 Bloque 15</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA1 CE-g · Operaciones de protección: copias de seguridad (25%)</span></div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Configurar un sistema de copias de seguridad automáticas en Windows.</li>
+                    <li>Realizar una copia, borrar archivos originales y restaurarlos.</li>
+                    <li>Usar Déjà Dup en Ubuntu para el mismo propósito.</li>
+                    <li>Entender la importancia de verificar que las copias funcionan.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>En Windows (Historial de archivos):</strong></p>
+                <ol class="styled">
+                    <li>Crea una carpeta <code>IMPORTANTE</code> en el escritorio con 5 archivos de texto: <code>doc1.txt</code> a <code>doc5.txt</code>. Pon en cada uno un contenido de 2-3 líneas (inventa algo).</li>
+                    <li>Añade un segundo disco virtual de 20 GB a la VM.</li>
+                    <li>Configura el <strong>Historial de archivos</strong> para que haga copia de la carpeta <code>IMPORTANTE</code> en el segundo disco. Actívalo y ejecuta la primera copia manualmente ("Ejecutar ahora").</li>
+                    <li>Modifica el contenido de <code>doc1.txt</code> y <code>doc2.txt</code>. Ejecuta otra copia.</li>
+                    <li>Borra <code>doc3.txt</code> completamente. Restáuralo usando el Historial de archivos.</li>
+                </ol>
+                <p><strong>En Ubuntu (Déjà Dup):</strong></p>
+                <ol class="styled">
+                    <li>Crea una carpeta <code>IMPORTANTE</code> en el escritorio con 5 archivos.</li>
+                    <li>Abre "Copias de seguridad" (Déjà Dup). Configura la carpeta <code>IMPORTANTE</code> como origen y una carpeta <code>Backups</code> en tu home como destino.</li>
+                    <li>Haz la primera copia. Borra un archivo y restáuralo.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-15/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-15_documento.pdf</code> — Respuesta razonada sobre la importancia de las pruebas de restauración periódicas</li>
+                    <li><code>P1-15_historial_config.png</code> — Captura de la configuración del Historial de archivos</li>
+                    <li><code>P1-15_antes_restaurar.png</code> — Estado de la carpeta antes de restaurar <code>doc3.txt</code></li>
+                    <li><code>P1-15_despues_restaurar.png</code> — Estado de la carpeta después de restaurar <code>doc3.txt</code></li>
+                    <li><code>P1-15_dejavu.png</code> — Captura de Déjà Dup en funcionamiento</li>
+                </ul>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.15</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-g: Backup Windows</strong></td><td>Historial de archivos configurado, copia realizada, archivo borrado y restaurado correctamente.</td><td>Configurado pero no se restauró archivo.</td><td>No configurado o copia no realizada.</td></tr>
+                        <tr><td><strong>CE-g: Backup Ubuntu</strong></td><td>Déjà Dup configurado, copia realizada, archivo restaurado.</td><td>Configurado pero no restaurado.</td><td>No configurado.</td></tr>
+                        <tr><td><strong>Reflexión</strong></td><td>Explica claramente por qué hay que probar las restauraciones (backup corrupto, cinta dañada, etc.).</td><td>Respuesta correcta pero genérica.</td><td>Sin respuesta o irrelevante.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ P1.16 · B16 ═══════════ -->
+    <div class="practica-card">
+        <div class="practica-header">
+            <span class="practica-num">P1.16</span>
+            <h3>Prueba práctica integrada RA1</h3>
+            <div class="practica-meta">
+                <span>⏱️ 110 min</span>
+                <span>📘 Bloque 16</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar">
+                <span class="ce-tag">RA1 CE-a</span><span class="ce-tag">RA1 CE-b</span><span class="ce-tag">RA1 CE-c</span>
+                <span class="ce-tag">RA1 CE-d</span><span class="ce-tag">RA1 CE-e</span><span class="ce-tag">RA1 CE-f</span>
+                <span class="ce-tag">RA1 CE-g</span><span class="ce-tag">RA1 CE-h</span>
+            </div>
+
+            <div class="box-objective">
+                <div class="box-label">🎯 Objetivos</div>
+                <ul class="icon-list">
+                    <li>Demostrar dominio completo de todos los criterios de evaluación del RA1.</li>
+                    <li>Instalar, configurar, personalizar, proteger y documentar un sistema desde cero.</li>
+                    <li>Trabajar de forma autónoma en un escenario profesional simulado.</li>
+                </ul>
+            </div>
+
+            <div class="box-practice">
+                <div class="box-label">🔨 Tareas a realizar</div>
+                <p><strong>Escenario:</strong> Eres el técnico informático de una PYME. Debes preparar un equipo para un nuevo empleado del departamento de contabilidad.</p>
+                <ol class="styled">
+                    <li><strong>INSTALACIÓN (25 min):</strong> Crea una nueva VM en VirtualBox. Instala Windows 11 con cuenta local <code>contabilidad</code>. La VM debe tener 4 GB RAM, 2 CPUs y disco de 60 GB.</li>
+                    <li><strong>PERSONALIZACIÓN (15 min):</strong> Fondo de escritorio corporativo (descarga una imagen de oficina), modo oscuro, anclar a la barra: Explorador, Edge, Calculadora y Bloc de notas.</li>
+                    <li><strong>ESTRUCTURA (10 min):</strong> Crea <code>C:\Empresa\Contabilidad\2025\</code> con subcarpetas <code>Facturas</code>, <code>Nominas</code>, <code>Impuestos</code>. Crea un archivo <code>plantilla_factura.txt</code> en <code>Facturas</code> con texto de ejemplo.</li>
+                    <li><strong>SEGURIDAD (20 min):</strong> Pon atributo de SOLO LECTURA a <code>plantilla_factura.txt</code>. Pon atributo OCULTO a la carpeta <code>Nominas</code>. Configura Windows Defender con protección en tiempo real y contra ransomware.</li>
+                    <li><strong>BACKUP (15 min):</strong> Añade segundo disco de 20 GB. Configura Historial de archivos para <code>C:\Empresa\</code>. Ejecuta la primera copia.</li>
+                    <li><strong>DOCUMENTACIÓN (15 min):</strong> Crea un archivo <code>CONFIGURACION.txt</code> en el escritorio con: versión de Windows, nombre del equipo, usuarios del sistema, estructura de carpetas creada, atributos aplicados, configuración de seguridad, backup configurado.</li>
+                </ol>
+            </div>
+
+            <div class="box-delivery">
+                <div class="box-label">📦 Entrega</div>
+                <p>📁 Carpeta: <span class="entrega-tag">Apellido_Nombre/P1-16/</span></p>
+                <ul class="icon-list" style="margin-top:8px;">
+                    <li><code>P1-16_documento.pdf</code> — Informe de los 6 apartados con mínimo 8 capturas incrustadas</li>
+                    <li><code>CONFIGURACION.txt</code> — Archivo de texto con todos los datos de configuración del sistema</li>
+                </ul>
+                <p style="margin-top:8px;font-size:13px;color:var(--gris-oscuro);">⚠️ El archivo <code>CONFIGURACION.txt</code> debe entregarse con ese nombre exacto (en mayúsculas, sin tilde en la O).</p>
+            </div>
+
+            <div class="rubrica">
+                <h4>📊 Rúbrica de corrección · P1.16 (Prueba Integrada)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-a: Instalación</strong></td><td>VM correctamente dimensionada, Windows instalado, cuenta local creada.</td><td>Instalación completada con 1 error menor.</td><td>VM no arranca o instalación fallida.</td></tr>
+                        <tr><td><strong>CE-b, CE-c: Personalización</strong></td><td>Fondo cambiado, modo oscuro, 4 apps ancladas.</td><td>2-3 apps ancladas.</td><td>1 o ninguna.</td></tr>
+                        <tr><td><strong>CE-e: Estructura</strong></td><td>Todas las carpetas y archivos creados correctamente.</td><td>Falta algún elemento.</td><td>Estructura no creada.</td></tr>
+                        <tr><td><strong>CE-d: Atributos</strong></td><td>Solo lectura y oculto aplicados correctamente.</td><td>Un atributo aplicado.</td><td>Ninguno.</td></tr>
+                        <tr><td><strong>CE-g: Seguridad y backup</strong></td><td>Defender configurado, ransomware activado, backup funcionando.</td><td>Falta algún elemento.</td><td>No configurado.</td></tr>
+                        <tr><td><strong>Documentación</strong></td><td>CONFIGURACION.txt completo con todos los datos + 8 capturas.</td><td>Faltan 1-2 datos o capturas.</td><td>Documentación muy incompleta.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        🧪 RA1 · Prácticas de Laboratorio · 16 prácticas evaluables · Una por bloque<br>
+        Windows 11 + Ubuntu 24.04 LTS · VirtualBox · Rúbricas preparadas para corrección por IA<br>
+        Material didáctico original
+    </footer>
+
+</div>
+</body>
+</html>
