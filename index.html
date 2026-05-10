@@ -2,411 +2,626 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>OACE · 2º CFGB Informática | Apuntes del Curso</title>
     <style>
         :root {
-            --azul-oscuro: #1a2744;
-            --azul: #2563eb;
-            --azul-claro: #eff6ff;
-            --verde: #16a34a;
-            --verde-claro: #f0fdf4;
-            --naranja: #ea580c;
-            --naranja-claro: #fff7ed;
-            --rojo: #dc2626;
-            --rojo-claro: #fef2f2;
-            --morado: #7c3aed;
-            --morado-claro: #f5f3ff;
-            --gris: #f8fafc;
-            --texto: #1e293b;
-            --borde: #e2e8f0;
+            --azul-oscuro: #1a2744; --azul-medio: #2c5282; --azul: #3182ce; --azul-claro: #ebf4ff;
+            --verde: #276749; --verde-claro: #f0fff4; --naranja: #c05621; --naranja-claro: #fffaf0;
+            --rojo: #c53030; --rojo-claro: #fff5f5; --purpura: #6b46c1; --purpura-claro: #faf5ff;
+            --gris: #f7fafc; --gris-oscuro: #4a5568; --texto: #1a202c; --borde: #e2e8f0;
+            --sombra: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+            --radio: 12px; --radio-sm: 8px;
+            --nav-h: 56px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 50%, #f0fdf4 100%);
+            background: #f4f7fb;
             color: var(--texto);
             min-height: 100vh;
-            line-height: 1.6;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* HERO */
+        /* ═══════════ NAV ═══════════ */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--azul-oscuro);
+            height: var(--nav-h);
+            display: flex; align-items: center;
+            padding: 0 24px; gap: 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 10px;
+            color: white; text-decoration: none; font-weight: 700;
+            font-size: 15px; letter-spacing: 0.3px; flex-shrink: 0;
+            margin-right: 24px;
+        }
+        .nav-brand .brand-badge {
+            background: var(--azul); color: white;
+            border-radius: 6px; padding: 3px 9px;
+            font-size: 12px; font-weight: 800;
+        }
+        .nav-links {
+            display: flex; align-items: center; gap: 4px;
+            flex: 1; overflow-x: auto; -webkit-overflow-scrolling: touch;
+        }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-link {
+            color: rgba(255,255,255,0.7); text-decoration: none;
+            font-size: 13px; font-weight: 600;
+            padding: 6px 14px; border-radius: 20px;
+            white-space: nowrap; transition: 0.15s;
+            border: 1px solid transparent;
+        }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+        .nav-link.active {
+            color: white; background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.25);
+        }
+        .nav-link .nav-dot {
+            display: inline-block; width: 7px; height: 7px;
+            border-radius: 50%; margin-right: 5px; vertical-align: middle;
+        }
+        .nav-dot.ra1 { background: var(--azul); }
+        .nav-dot.ra2 { background: #38a169; }
+        .nav-dot.ra3 { background: #dd6b20; }
+        .nav-dot.ra4 { background: #805ad5; }
+        .nav-dot.pendiente { background: #718096; }
+        .nav-right { margin-left: auto; flex-shrink: 0; }
+
+        /* ═══════════ HERO ═══════════ */
         .hero {
-            background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%);
-            color: white;
-            text-align: center;
-            padding: 60px 24px 50px;
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(160deg, #1a2744 0%, #2c3e6e 50%, #2c5282 100%);
+            color: white; padding: 56px 24px 70px; text-align: center;
+            position: relative; overflow: hidden;
         }
         .hero::before {
-            content: '';
-            position: absolute;
-            top: -100px; left: -100px;
-            width: 300px; height: 300px;
-            background: rgba(37, 99, 235, 0.15);
-            border-radius: 50%;
+            content: ''; position: absolute; top: -120px; left: -80px;
+            width: 400px; height: 400px;
+            background: rgba(49, 130, 206, 0.12); border-radius: 50%; pointer-events: none;
         }
         .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -80px; right: -60px;
-            width: 250px; height: 250px;
-            background: rgba(22, 163, 74, 0.12);
-            border-radius: 50%;
+            content: ''; position: absolute; bottom: -100px; right: -60px;
+            width: 320px; height: 320px;
+            background: rgba(255,255,255,0.03); border-radius: 50%; pointer-events: none;
         }
         .hero-badge {
             display: inline-block;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 30px;
-            padding: 6px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 30px; padding: 6px 20px;
+            font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 20px; position: relative; z-index: 1;
         }
         .hero h1 {
-            font-size: 38px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
-            position: relative;
-            z-index: 1;
+            font-size: 34px; font-weight: 800; letter-spacing: -0.5px;
+            margin-bottom: 10px; position: relative; z-index: 1;
+            max-width: 700px; margin-left: auto; margin-right: auto;
         }
-        .hero .ciclo {
-            font-size: 18px;
-            opacity: 0.85;
-            margin-bottom: 6px;
-            position: relative;
-            z-index: 1;
+        .hero .ciclo { font-size: 17px; opacity: 0.82; margin-bottom: 4px; position: relative; z-index: 1; }
+        .hero .curso  { font-size: 13px; opacity: 0.6;  position: relative; z-index: 1; }
+        .hero-stats {
+            display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;
+            margin-top: 32px; position: relative; z-index: 1;
         }
-        .hero .curso {
-            font-size: 14px;
-            opacity: 0.65;
-            position: relative;
-            z-index: 1;
+        .hero-stat {
+            background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 14px; padding: 14px 20px; text-align: center; min-width: 90px;
         }
+        .hero-stat .sn { font-size: 26px; font-weight: 800; line-height: 1; }
+        .hero-stat .sl { font-size: 11px; font-weight: 600; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
 
-        /* CONTENEDOR */
-        .wrapper {
-            max-width: 1000px;
-            margin: -30px auto 0;
-            padding: 0 20px 60px;
-            position: relative;
-            z-index: 2;
-        }
+        /* ═══════════ WRAPPER ═══════════ */
+        .wrapper { max-width: 1060px; margin: 0 auto; padding: 32px 20px 72px; }
 
-        /* TARJETA DE LA ASIGNATURA */
-        .intro-card {
-            background: white;
-            border-radius: 20px;
-            padding: 32px;
-            margin-bottom: 32px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-            text-align: center;
-            border: 1px solid var(--borde);
+        /* ═══════════ BIENVENIDA ═══════════ */
+        .welcome-card {
+            background: white; border-radius: var(--radio); padding: 28px 32px;
+            margin-top: -38px; margin-bottom: 32px;
+            box-shadow: var(--sombra-lg); border: 1px solid var(--borde);
+            position: relative; z-index: 2;
+            display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
         }
-        .intro-card h2 {
-            font-size: 22px;
-            color: #0f172a;
-            margin-bottom: 8px;
+        .welcome-card .welcome-text h2 { font-size: 19px; color: var(--azul-oscuro); margin-bottom: 5px; }
+        .welcome-card .welcome-text p  { color: var(--gris-oscuro); font-size: 14px; }
+        .progress-global {
+            margin-left: auto; background: var(--gris); border-radius: 10px;
+            padding: 12px 20px; text-align: center; min-width: 120px;
         }
-        .intro-card .subtitulo {
-            color: #64748b;
-            font-size: 15px;
-            margin-bottom: 20px;
-        }
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        .stat-item {
-            background: var(--gris);
-            border-radius: 14px;
-            padding: 16px 24px;
-            text-align: center;
-            min-width: 100px;
-        }
-        .stat-item .stat-num {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--azul);
-        }
-        .stat-item .stat-label {
-            font-size: 12px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
+        .progress-global .pg-num { font-size: 22px; font-weight: 800; color: var(--azul); }
+        .progress-global .pg-label { font-size: 11px; color: var(--gris-oscuro); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
 
-        /* SECCIÓN RA */
-        .ra-section {
-            margin-bottom: 20px;
-        }
+        /* ═══════════ RA SECTION ═══════════ */
+        .ra-section { margin-bottom: 28px; }
         .ra-header {
-            background: white;
-            border-radius: 18px 18px 0 0;
-            padding: 20px 28px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border: 1px solid var(--borde);
-            border-bottom: none;
+            background: white; border-radius: var(--radio) var(--radio) 0 0;
+            padding: 18px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+            border: 1px solid var(--borde); border-bottom: none;
         }
-        .ra-header .ra-badge {
-            font-weight: 800;
-            font-size: 14px;
-            border-radius: 10px;
-            padding: 8px 18px;
-            color: white;
-            white-space: nowrap;
+        .ra-badge {
+            font-weight: 800; font-size: 14px; border-radius: 8px;
+            padding: 7px 16px; color: white; white-space: nowrap;
         }
-        .ra-badge.ra1 { background: var(--azul); }
+        .ra-badge.ra1 { background: var(--azul-medio); }
         .ra-badge.ra2 { background: var(--verde); }
         .ra-badge.ra3 { background: var(--naranja); }
-        .ra-badge.ra4 { background: var(--morado); }
-        .ra-header .ra-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: #0f172a;
+        .ra-badge.ra4 { background: var(--purpura); }
+        .ra-title { font-size: 16px; font-weight: 700; color: var(--azul-oscuro); flex: 1; }
+        .ra-meta { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+        .ra-sesiones {
+            background: var(--gris); border-radius: 20px; padding: 4px 12px;
+            font-size: 12px; font-weight: 600; color: var(--gris-oscuro); white-space: nowrap;
         }
-        .ra-header .ra-peso {
-            margin-left: auto;
-            background: var(--gris);
-            border-radius: 20px;
-            padding: 5px 14px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-            white-space: nowrap;
-        }
-
-        /* ENLACES */
-        .ra-links {
-            background: white;
-            border-radius: 0 0 18px 18px;
-            border: 1px solid var(--borde);
-            border-top: none;
-            padding: 12px 16px 18px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .ra-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 22px;
-            border-radius: 14px;
-            text-decoration: none;
-            font-weight: 650;
-            font-size: 14px;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-            flex: 1;
-            min-width: 180px;
-        }
-        .ra-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        }
-        .ra-link.alumno {
-            background: #eff6ff;
-            color: #1e40af;
-            border-color: #bfdbfe;
-        }
-        .ra-link.alumno:hover { background: #dbeafe; border-color: #93c5fd; }
-        .ra-link.practicas {
-            background: #f0fdf4;
-            color: #166534;
-            border-color: #bbf7d0;
-        }
-        .ra-link.practicas:hover { background: #dcfce7; border-color: #86efac; }
-        .ra-link.profesor {
-            background: #fef2f2;
-            color: #991b1b;
-            border-color: #fecaca;
-        }
-        .ra-link.profesor:hover { background: #fee2e2; border-color: #fca5a5; }
-        .ra-link .link-icon {
-            font-size: 24px;
-        }
-        .ra-link .link-text small {
-            display: block;
-            font-weight: 400;
-            font-size: 11px;
-            opacity: 0.7;
-            margin-top: 2px;
-        }
-
-        /* ESTADO */
         .estado {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 3px 10px;
-            border-radius: 12px;
+            display: inline-block; font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 12px;
         }
-        .estado.completo { background: #dcfce7; color: #166534; }
-        .estado.proximo { background: #fef3c7; color: #92400e; }
+        .estado.completo  { background: #dcfce7; color: #166534; }
+        .estado.proximo   { background: #fef3c7; color: #92400e; }
         .estado.pendiente { background: #f1f5f9; color: #64748b; }
 
-        /* FOOTER */
-        footer {
-            text-align: center;
-            padding: 30px 20px;
-            color: #94a3b8;
-            font-size: 13px;
+        .ra-body {
+            background: white; border-radius: 0 0 var(--radio) var(--radio);
+            border: 1px solid var(--borde); border-top: 3px solid var(--azul);
+            padding: 20px 24px 24px;
         }
-        footer a {
-            color: var(--azul);
-            text-decoration: none;
-        }
-        footer a:hover { text-decoration: underline; }
+        .ra-body.verde  { border-top-color: var(--verde); }
+        .ra-body.naranja{ border-top-color: var(--naranja); }
+        .ra-body.purpura{ border-top-color: var(--purpura); }
 
-        /* RESPONSIVE */
-        @media (max-width: 700px) {
-            .hero h1 { font-size: 26px; }
-            .hero { padding: 40px 16px 36px; }
-            .ra-header { flex-wrap: wrap; padding: 14px 16px; }
-            .ra-header .ra-peso { margin-left: 0; }
-            .ra-link { min-width: 100%; }
-            .stats { gap: 12px; }
-            .stat-item { min-width: 80px; padding: 12px 16px; }
+        /* ═══════════ ACCESOS RÁPIDOS ═══════════ */
+        .quick-links { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .qlink {
+            display: flex; align-items: center; gap: 9px;
+            padding: 11px 18px; border-radius: 10px; text-decoration: none;
+            font-weight: 650; font-size: 13px; transition: all 0.18s;
+            border: 2px solid transparent; flex: 1; min-width: 160px;
+        }
+        .qlink:hover { transform: translateY(-2px); box-shadow: 0 5px 16px rgba(0,0,0,0.1); }
+        .qlink.alumno    { background: var(--azul-claro); color: #1e40af; border-color: #bfdbfe; }
+        .qlink.alumno:hover { background: #dbeafe; border-color: #93c5fd; }
+        .qlink.practicas { background: var(--verde-claro); color: var(--verde); border-color: #bbf7d0; }
+        .qlink.practicas:hover { background: #dcfce7; border-color: #86efac; }
+        .qlink.disabled  { opacity: 0.45; pointer-events: none; cursor: default; }
+        .qlink .qi { font-size: 20px; }
+        .qlink .qt small { display: block; font-weight: 400; font-size: 11px; opacity: 0.72; margin-top: 1px; }
+
+        /* ═══════════ BLOQUE GRID ═══════════ */
+        .bloques-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.2px; color: var(--gris-oscuro); margin-bottom: 10px;
+        }
+        .bloque-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .bcard {
+            background: var(--gris); border: 1.5px solid var(--borde);
+            border-radius: var(--radio-sm); padding: 12px 14px;
+            text-decoration: none; color: var(--texto);
+            transition: all 0.18s; display: flex; flex-direction: column; gap: 5px;
+            position: relative; overflow: hidden;
+        }
+        .bcard::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; background: var(--azul); border-radius: 3px 0 0 3px;
+            opacity: 0; transition: opacity 0.18s;
+        }
+        .bcard:hover { background: white; border-color: #bee3f8; box-shadow: var(--sombra); transform: translateY(-2px); }
+        .bcard:hover::before { opacity: 1; }
+        .bcard .bnum {
+            font-size: 10px; font-weight: 800; text-transform: uppercase;
+            color: var(--azul-medio); letter-spacing: 0.8px;
+        }
+        .bcard .bicon { font-size: 18px; line-height: 1; }
+        .bcard .btitle {
+            font-size: 12px; font-weight: 600; color: var(--texto);
+            line-height: 1.35; flex: 1;
+        }
+        .bcard .bdur {
+            font-size: 10px; color: var(--gris-oscuro); margin-top: 3px;
+        }
+
+        /* ═══════════ COMING SOON ═══════════ */
+        .coming-soon {
+            background: repeating-linear-gradient(
+                45deg, var(--gris), var(--gris) 10px,
+                #f0f4f8 10px, #f0f4f8 20px
+            );
+            border: 2px dashed var(--borde); border-radius: var(--radio-sm);
+            padding: 28px; text-align: center; color: var(--gris-oscuro); font-size: 14px;
+        }
+        .coming-soon .cs-icon { font-size: 28px; margin-bottom: 8px; }
+        .coming-soon strong { display: block; font-size: 15px; margin-bottom: 4px; }
+
+        /* ═══════════ AVISO LEGAL ═══════════ */
+        .aviso {
+            background: white; border-radius: var(--radio); padding: 20px 24px;
+            border: 1px solid var(--borde); box-shadow: var(--sombra);
+            margin-top: 28px;
+            display: flex; align-items: flex-start; gap: 14px;
+        }
+        .aviso .aviso-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+        .aviso p { font-size: 13px; color: var(--gris-oscuro); line-height: 1.6; }
+
+        /* ═══════════ FOOTER ═══════════ */
+        footer {
+            text-align: center; color: #a0aec0; font-size: 12px;
+            padding: 28px 20px; margin-top: 20px;
+            border-top: 1px solid var(--borde);
+        }
+
+        /* ═══════════ RESPONSIVE ═══════════ */
+        @media (max-width: 860px) {
+            .bloque-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 620px) {
+            .hero h1 { font-size: 23px; }
+            .hero { padding: 40px 16px 56px; }
+            .bloque-grid { grid-template-columns: repeat(2, 1fr); }
+            .welcome-card { flex-direction: column; }
+            .progress-global { margin-left: 0; width: 100%; }
+            .wrapper { padding: 20px 12px 56px; }
+            .ra-header { gap: 8px; }
+            .ra-title { font-size: 14px; }
+            .hero-stats { gap: 12px; }
+            .hero-stat { padding: 10px 14px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ═══════════ HERO ═══════════ -->
-    <header class="hero">
-        <div class="hero-badge">📘 Apuntes del Curso</div>
-        <h1>Operaciones Auxiliares para la Configuración y la Explotación</h1>
-        <p class="ciclo">2º Curso · CFGB Informática y Comunicaciones</p>
-        <p class="curso">Curso 2025/26</p>
-    </header>
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar">
+    <a href="index.html" class="nav-brand">
+        <span class="brand-badge">OACE</span>
+        <span>2º CFGB</span>
+    </a>
+    <div class="nav-links">
+        <a href="#ra1" class="nav-link active">
+            <span class="nav-dot ra1"></span>RA1 · Monousuario
+        </a>
+        <a href="#ra2" class="nav-link">
+            <span class="nav-dot pendiente"></span>RA2 · Red
+        </a>
+        <a href="#ra3" class="nav-link">
+            <span class="nav-dot pendiente"></span>RA3 · Ofimática
+        </a>
+        <a href="#ra4" class="nav-link">
+            <span class="nav-dot pendiente"></span>RA4 · Internet
+        </a>
+    </div>
+    <div class="nav-right">
+        <a href="RA1_OACE_CFGB_Alumno.html" class="nav-link" style="background:rgba(49,130,206,0.25);color:white;border-color:rgba(49,130,206,0.5);">
+            📘 Apuntes RA1
+        </a>
+    </div>
+</nav>
 
-    <!-- ═══════════ CONTENIDO ═══════════ -->
-    <div class="wrapper">
-
-        <!-- INTRO -->
-        <div class="intro-card">
-            <h2>👋 ¡Bienvenido a OACE!</h2>
-            <p class="subtitulo">Aquí encontrarás todos los apuntes, ejercicios y prácticas del curso. <strong>Elige tu RA</strong> y accede al material que necesites.</p>
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-num">4</span>
-                    <span class="stat-label">Resultados de Aprendizaje</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-num">160</span>
-                    <span class="stat-label">Sesiones</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-num">80</span>
-                    <span class="stat-label">Bloques</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-num">🐧+🪟</span>
-                    <span class="stat-label">Windows & Linux</span>
-                </div>
-            </div>
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+    <div class="hero-badge">📘 Apuntes del Curso · 2025/26</div>
+    <h1>Operaciones Auxiliares para la Configuración y la Explotación</h1>
+    <p class="ciclo">2º Curso · CFGB Informática y Comunicaciones</p>
+    <p class="curso">Curso 2025/26 · Windows 11 + Ubuntu 24.04 + VirtualBox</p>
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <div class="sn">4</div>
+            <div class="sl">RAs</div>
         </div>
-
-        <!-- ═══════════ RA1 ═══════════ -->
-        <div class="ra-section">
-            <div class="ra-header">
-                <span class="ra-badge ra1">RA1</span>
-                <span class="ra-title">Configurar equipos en entorno monousuario</span>
-                <span class="ra-peso">Peso: 20% · 32 sesiones <span class="estado completo">✓ Completado</span></span>
-            </div>
-            <div class="ra-links">
-                <a href="RA1_OACE_Alumno.html" class="ra-link alumno">
-                    <span class="link-icon">📘</span>
-                    <span class="link-text">Apuntes del alumno<small>Teoría, ejercicios, refuerzo y profundización</small></span>
-                </a>
-                <a href="RA1_OACE_Practicas.html" class="ra-link practicas">
-                    <span class="link-icon">🧪</span>
-                    <span class="link-text">Prácticas de laboratorio<small>16 prácticas evaluables con rúbricas</small></span>
-                </a>
-            </div>
+        <div class="hero-stat">
+            <div class="sn">16</div>
+            <div class="sl">Bloques RA1</div>
         </div>
-
-        <!-- ═══════════ RA2 ═══════════ -->
-        <div class="ra-section">
-            <div class="ra-header">
-                <span class="ra-badge ra2">RA2</span>
-                <span class="ra-title">Configurar equipos en entorno de red</span>
-                <span class="ra-peso">Peso: 30% · 48 sesiones <span class="estado proximo">⏳ Próximamente</span></span>
-            </div>
-            <div class="ra-links">
-                <a href="#" class="ra-link alumno" style="opacity:0.5; pointer-events:none;">
-                    <span class="link-icon">📘</span>
-                    <span class="link-text">Apuntes del alumno<small>Disponible próximamente</small></span>
-                </a>
-                <a href="#" class="ra-link practicas" style="opacity:0.5; pointer-events:none;">
-                    <span class="link-icon">🧪</span>
-                    <span class="link-text">Prácticas de laboratorio<small>Disponible próximamente</small></span>
-                </a>
-            </div>
+        <div class="hero-stat">
+            <div class="sn">32</div>
+            <div class="sl">Sesiones RA1</div>
         </div>
-
-        <!-- ═══════════ RA3 ═══════════ -->
-        <div class="ra-section">
-            <div class="ra-header">
-                <span class="ra-badge ra3">RA3</span>
-                <span class="ra-title">Utilizar aplicaciones de un paquete ofimático</span>
-                <span class="ra-peso">Peso: 30% · 48 sesiones <span class="estado pendiente">📅 Pendiente</span></span>
-            </div>
-            <div class="ra-links">
-                <a href="#" class="ra-link alumno" style="opacity:0.5; pointer-events:none;">
-                    <span class="link-icon">📘</span>
-                    <span class="link-text">Apuntes del alumno<small>Disponible próximamente</small></span>
-                </a>
-                <a href="#" class="ra-link practicas" style="opacity:0.5; pointer-events:none;">
-                    <span class="link-icon">🧪</span>
-                    <span class="link-text">Prácticas de laboratorio<small>Disponible próximamente</small></span>
-                </a>
-            </div>
+        <div class="hero-stat">
+            <div class="sn">🐧🪟</div>
+            <div class="sl">Linux & Windows</div>
         </div>
+    </div>
+</header>
 
-        <!-- ═══════════ RA4 ═══════════ -->
-        <div class="ra-section">
-            <div class="ra-header">
-                <span class="ra-badge ra4">RA4</span>
-                <span class="ra-title">Emplear utilidades proporcionadas por Internet</span>
-                <span class="ra-peso">Peso: 20% · 32 sesiones <span class="estado pendiente">📅 Pendiente</span></span>
-            </div>
-            <div class="ra-links">
-                <a href="#" class="ra-link alumno" style="opacity:0.5; pointer-events:none;">
-                    <span class="link-icon">📘</span>
-                    <span class="link-text">Apuntes del alumno<small>Disponible próximamente</small></span>
-                </a>
-                <a href="#" class="ra-link practicas" style="opacity:0.5; pointer-events:none;">
-                    <span class="link-icon">🧪</span>
-                    <span class="link-text">Prácticas de laboratorio<small>Disponible próximamente</small></span>
-                </a>
-            </div>
+<!-- ═══════════ CONTENIDO ═══════════ -->
+<div class="wrapper">
+
+    <!-- BIENVENIDA -->
+    <div class="welcome-card">
+        <div class="welcome-text">
+            <h2>👋 ¡Bienvenido a tus apuntes de OACE!</h2>
+            <p>Aquí tienes <strong>todo el material del curso</strong>: apuntes con vídeos y ejercicios interactivos, prácticas de laboratorio y el solucionario del profesor. Elige un bloque y ¡a trabajar!</p>
         </div>
-
+        <div class="progress-global">
+            <div class="pg-num">RA1</div>
+            <div class="pg-label">Disponible</div>
+        </div>
     </div>
 
-    <!-- ═══════════ FOOTER ═══════════ -->
-    <footer>
-        📘 OACE · 2º CFGB Informática y Comunicaciones · Curso 2025/26<br>
-        Material bajo licencia Creative Commons BY-NC-SA
-    </footer>
+    <!-- ═══════════ RA1 ═══════════ -->
+    <div class="ra-section" id="ra1">
+        <div class="ra-header">
+            <span class="ra-badge ra1">RA1</span>
+            <span class="ra-title">Configurar equipos en entorno monousuario</span>
+            <div class="ra-meta">
+                <span class="ra-sesiones">⏱️ 32 sesiones · 16 bloques</span>
+                <span class="estado completo">✓ Disponible</span>
+            </div>
+        </div>
+        <div class="ra-body">
+
+            <!-- Accesos rápidos -->
+            <div class="quick-links">
+                <a href="RA1_OACE_CFGB_Alumno.html" class="qlink alumno">
+                    <span class="qi">📘</span>
+                    <span class="qt">Apuntes del alumno<small>Teoría + vídeos + ejercicios + tests interactivos</small></span>
+                </a>
+                <a href="RA1_OACE_Practicas.html" class="qlink practicas">
+                    <span class="qi">🧪</span>
+                    <span class="qt">Prácticas de laboratorio<small>16 prácticas evaluables con rúbricas</small></span>
+                </a>
+            </div>
+
+            <!-- Grid de bloques -->
+            <div class="bloques-label">🗂️ Acceso directo a cada bloque</div>
+            <div class="bloque-grid">
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b1" class="bcard">
+                    <span class="bnum">B1</span>
+                    <span class="bicon">🖥️</span>
+                    <span class="btitle">¿Qué es un sistema operativo?</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b2" class="bcard">
+                    <span class="bnum">B2</span>
+                    <span class="bicon">🔢</span>
+                    <span class="btitle">Tipos de SO: Windows, Linux, Android…</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b3" class="bcard">
+                    <span class="bnum">B3</span>
+                    <span class="bicon">⚙️</span>
+                    <span class="btitle">Kernel, shell, drivers y sistema de archivos</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b4" class="bcard">
+                    <span class="bnum">B4</span>
+                    <span class="bicon">🚀</span>
+                    <span class="btitle">BIOS/UEFI, POST y arranque del ordenador</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b5" class="bcard">
+                    <span class="bnum">B5</span>
+                    <span class="bicon">🪟</span>
+                    <span class="btitle">Instalar Windows 11 en VirtualBox</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b6" class="bcard">
+                    <span class="bnum">B6</span>
+                    <span class="bicon">🐧</span>
+                    <span class="btitle">Instalar Ubuntu Linux y compararlo con Windows</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b7" class="bcard">
+                    <span class="bnum">B7</span>
+                    <span class="bicon">🎨</span>
+                    <span class="btitle">Personalizar el escritorio y accesibilidad</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b8" class="bcard">
+                    <span class="bnum">B8</span>
+                    <span class="bicon">📁</span>
+                    <span class="btitle">Archivos, carpetas, rutas y extensiones</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b9" class="bcard">
+                    <span class="bnum">B9</span>
+                    <span class="bicon">💻</span>
+                    <span class="btitle">Crear, copiar, mover y borrar archivos</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b10" class="bcard">
+                    <span class="bnum">B10</span>
+                    <span class="bicon">🔒</span>
+                    <span class="btitle">Atributos: solo lectura, oculto y sistema</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b11" class="bcard">
+                    <span class="bnum">B11</span>
+                    <span class="bicon">🛡️</span>
+                    <span class="btitle">Permisos NTFS (Windows) y chmod (Linux)</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b12" class="bcard">
+                    <span class="bnum">B12</span>
+                    <span class="bicon">💾</span>
+                    <span class="btitle">Discos duros, SSD, USB y sistemas de archivos</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b13" class="bcard">
+                    <span class="bnum">B13</span>
+                    <span class="bicon">🖱️</span>
+                    <span class="btitle">Impresoras, ratones, teclados y drivers</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b14" class="bcard">
+                    <span class="bnum">B14</span>
+                    <span class="bicon">🦠</span>
+                    <span class="btitle">Virus, troyanos y cómo protegerte</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b15" class="bcard">
+                    <span class="bnum">B15</span>
+                    <span class="bicon">🔄</span>
+                    <span class="btitle">Copias de seguridad: no pierdas tus archivos</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+                <a href="RA1_OACE_CFGB_Alumno.html#b16" class="bcard" style="border-color:#fcd34d;background:#fffbeb;">
+                    <span class="bnum" style="color:#b45309;">B16</span>
+                    <span class="bicon">🎓</span>
+                    <span class="btitle" style="color:#92400e;">Prueba final: demuestra lo que sabes</span>
+                    <span class="bdur">⏱️ 110 min</span>
+                </a>
+
+            </div><!-- /bloque-grid -->
+        </div><!-- /ra-body -->
+    </div><!-- /ra-section ra1 -->
+
+
+    <!-- ═══════════ RA2 ═══════════ -->
+    <div class="ra-section" id="ra2">
+        <div class="ra-header">
+            <span class="ra-badge ra2">RA2</span>
+            <span class="ra-title">Configurar equipos en entorno de red</span>
+            <div class="ra-meta">
+                <span class="ra-sesiones">⏱️ 48 sesiones · 24 bloques</span>
+                <span class="estado proximo">⏳ Próximamente</span>
+            </div>
+        </div>
+        <div class="ra-body verde">
+            <div class="quick-links">
+                <span class="qlink alumno disabled">
+                    <span class="qi">📘</span>
+                    <span class="qt">Apuntes del alumno<small>Disponible próximamente</small></span>
+                </span>
+                <span class="qlink practicas disabled">
+                    <span class="qi">🧪</span>
+                    <span class="qt">Prácticas de laboratorio<small>Disponible próximamente</small></span>
+                </span>
+            </div>
+            <div class="coming-soon">
+                <div class="cs-icon">🌐</div>
+                <strong>En preparación</strong>
+                Aquí encontrarás todo el material de RA2 cuando esté disponible: configuración de redes, TCP/IP, Wi-Fi, compartición de archivos en red...
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ RA3 ═══════════ -->
+    <div class="ra-section" id="ra3">
+        <div class="ra-header">
+            <span class="ra-badge ra3">RA3</span>
+            <span class="ra-title">Utilizar aplicaciones de un paquete ofimático</span>
+            <div class="ra-meta">
+                <span class="ra-sesiones">⏱️ 48 sesiones · 24 bloques</span>
+                <span class="estado pendiente">📅 Pendiente</span>
+            </div>
+        </div>
+        <div class="ra-body naranja">
+            <div class="quick-links">
+                <span class="qlink alumno disabled">
+                    <span class="qi">📘</span>
+                    <span class="qt">Apuntes del alumno<small>Disponible próximamente</small></span>
+                </span>
+                <span class="qlink practicas disabled">
+                    <span class="qi">🧪</span>
+                    <span class="qt">Prácticas de laboratorio<small>Disponible próximamente</small></span>
+                </span>
+            </div>
+            <div class="coming-soon">
+                <div class="cs-icon">📊</div>
+                <strong>En preparación</strong>
+                Writer, Calc e Impress de LibreOffice · Procesador de textos, hojas de cálculo y presentaciones.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ RA4 ═══════════ -->
+    <div class="ra-section" id="ra4">
+        <div class="ra-header">
+            <span class="ra-badge ra4">RA4</span>
+            <span class="ra-title">Emplear utilidades proporcionadas por Internet</span>
+            <div class="ra-meta">
+                <span class="ra-sesiones">⏱️ 32 sesiones · 16 bloques</span>
+                <span class="estado pendiente">📅 Pendiente</span>
+            </div>
+        </div>
+        <div class="ra-body purpura">
+            <div class="quick-links">
+                <span class="qlink alumno disabled">
+                    <span class="qi">📘</span>
+                    <span class="qt">Apuntes del alumno<small>Disponible próximamente</small></span>
+                </span>
+                <span class="qlink practicas disabled">
+                    <span class="qi">🧪</span>
+                    <span class="qt">Prácticas de laboratorio<small>Disponible próximamente</small></span>
+                </span>
+            </div>
+            <div class="coming-soon">
+                <div class="cs-icon">🌍</div>
+                <strong>En preparación</strong>
+                Correo electrónico, navegación segura, almacenamiento en la nube, videoconferencia y búsqueda avanzada.
+            </div>
+        </div>
+    </div>
+
+    <!-- AVISO -->
+    <div class="aviso">
+        <span class="aviso-icon">ℹ️</span>
+        <p>Este material es de uso educativo para el módulo OACE del 2º curso del CFGB de Informática y Comunicaciones. Los apuntes son interactivos: incluyen vídeos explicativos, ejercicios con autocorrección y listas de verificación de progreso. Si tienes problemas para acceder a algún contenido, consulta con tu profesor.</p>
+    </div>
+
+</div><!-- /wrapper -->
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+    📘 OACE · 2º CFGB Informática y Comunicaciones · Curso 2025/26<br>
+    Material bajo licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons BY-NC-SA 4.0</a>
+</footer>
+
+<script>
+    // Highlight active navbar link based on scroll position
+    const sections = ['ra1','ra2','ra3','ra4'];
+    const navLinks = document.querySelectorAll('.nav-links .nav-link');
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const match = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+                if (match) match.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+    });
+
+    // Smooth scroll for all internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

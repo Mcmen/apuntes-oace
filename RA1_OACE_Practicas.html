@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>RA1 · Prácticas de Laboratorio | Configuración en Entorno Monousuario</title>
     <style>
+
         :root {
             --azul-oscuro: #1a2744; --azul-medio: #2c5282; --azul: #3182ce; --azul-claro: #ebf4ff;
             --verde: #276749; --verde-claro: #f0fff4; --naranja: #c05621; --naranja-claro: #fffaf0;
@@ -12,93 +13,243 @@
             --gris: #f7fafc; --gris-oscuro: #4a5568; --texto: #1a202c; --borde: #e2e8f0;
             --sombra: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
             --sombra-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
-            --radio: 12px; --radio-sm: 8px;
+            --radio: 12px; --radio-sm: 8px; --nav-h: 52px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: var(--texto); background: #edf2f7; font-size: 15px; line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
+            color: var(--texto); background: #f4f7fb;
+            font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased;
         }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: sticky; top: 0; z-index: 200;
+            background: var(--azul-oscuro); height: var(--nav-h);
+            display: flex; align-items: center; padding: 0 20px; gap: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 9px; color: white;
+            text-decoration: none; font-weight: 700; font-size: 14px;
+            margin-right: 20px; flex-shrink: 0;
+        }
+        .nav-brand .brand-badge {
+            background: var(--azul); color: white; border-radius: 6px;
+            padding: 3px 8px; font-size: 12px; font-weight: 800;
+        }
+        .nav-links { display: flex; align-items: center; gap: 3px; flex: 1; overflow-x: auto; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-link {
+            color: rgba(255,255,255,0.68); text-decoration: none;
+            font-size: 13px; font-weight: 600; padding: 5px 13px;
+            border-radius: 18px; white-space: nowrap; transition: 0.15s;
+            border: 1px solid transparent;
+        }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+        .nav-link.active { color: white; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); }
+        .nav-right { margin-left: auto; flex-shrink: 0; }
+
+        /* ── HERO ── */
         .hero {
-            background: linear-gradient(160deg, #1a2744 0%, #1e3a5f 40%, #2c5282 100%);
-            color: white; padding: 48px 40px 36px; position: relative; overflow: hidden;
+            color: white; padding: 44px 40px 56px;
+            position: relative; overflow: hidden;
         }
-        .hero::after { content: ''; position: absolute; top: -80px; right: -120px; width: 380px; height: 380px; background: rgba(255,255,255,0.03); border-radius: 50%; pointer-events: none; }
-        .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 5px 16px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
-        .hero h1 { font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; position: relative; z-index: 1; }
+        .hero::after {
+            content: ''; position: absolute; top: -80px; right: -120px;
+            width: 380px; height: 380px; background: rgba(255,255,255,0.03);
+            border-radius: 50%; pointer-events: none;
+        }
+        .hero::before {
+            content: ''; position: absolute; bottom: -100px; left: -60px;
+            width: 300px; height: 300px; background: rgba(255,255,255,0.025);
+            border-radius: 50%; pointer-events: none;
+        }
+        .hero-badge {
+            display: inline-block; background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.22); border-radius: 20px;
+            padding: 5px 16px; font-size: 12px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px;
+            position: relative; z-index: 1;
+        }
+        .hero h1 {
+            font-size: 28px; font-weight: 700; margin-bottom: 8px;
+            letter-spacing: -0.3px; position: relative; z-index: 1; max-width: 700px;
+        }
         .hero .subtitulo { font-size: 15px; opacity: 0.82; font-style: italic; position: relative; z-index: 1; }
-        .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; position: relative; z-index: 1; }
-        .hero-meta span { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600; }
-        .wrapper { max-width: 1100px; margin: 0 auto; padding: 32px 20px 64px; }
-        .ra-card { background: white; border-radius: var(--radio); padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); }
-        .ra-card h2 { font-size: 20px; color: var(--azul-oscuro); font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
-        .practica-card { background: white; border-radius: var(--radio); padding: 0; margin-bottom: 36px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); overflow: hidden; }
-        .practica-header { background: linear-gradient(135deg, var(--verde), #1a5330); color: white; padding: 20px 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .practica-header .practica-num { background: rgba(255,255,255,0.25); font-weight: 700; font-size: 18px; border-radius: 8px; padding: 8px 18px; white-space: nowrap; }
-        .practica-header h3 { font-size: 18px; font-weight: 700; flex: 1; }
-        .practica-header .practica-meta { display: flex; gap: 10px; flex-wrap: wrap; }
-        .practica-header .practica-meta span { background: rgba(255,255,255,0.2); border-radius: 16px; padding: 4px 14px; font-size: 12px; font-weight: 600; }
-        .practica-body { padding: 24px 28px; }
-        .ce-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
-        .ce-tag { font-size: 10px; font-weight: 700; background: var(--azul-claro); color: var(--azul-medio); border: 1px solid #bee3f8; border-radius: 16px; padding: 3px 10px; }
-        .box-practice { background: var(--verde-claro); border-left: 4px solid var(--verde); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 18px 22px; margin: 18px 0; }
-        .box-practice .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .box-objective { background: #ebf4ff; border-left: 4px solid var(--azul); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 16px 0; }
-        .box-objective .box-label { color: var(--azul-medio); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .box-delivery { background: #fffaf0; border-left: 4px solid var(--naranja); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 16px 0; }
-        .box-delivery .box-label { color: var(--naranja); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .rubrica { background: #fff5f5; border: 2px solid var(--rojo); border-radius: var(--radio-sm); padding: 20px 22px; margin: 20px 0; }
-        .rubrica h4 { color: var(--rojo); font-size: 15px; margin-bottom: 14px; font-weight: 700; }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; position: relative; z-index: 1; }
+        .hero-meta span {
+            background: rgba(255,255,255,0.12); border-radius: 20px;
+            padding: 5px 14px; font-size: 12px; font-weight: 600;
+        }
+
+        /* ── LAYOUT ── */
+        .page-layout {
+            display: flex; align-items: flex-start;
+            max-width: 1200px; margin: 0 auto; padding: 0 0 64px;
+        }
+
+        /* ── LATERAL NAV ── */
+        .nav-lateral {
+            width: 196px; flex-shrink: 0;
+            position: sticky; top: calc(var(--nav-h) + 16px);
+            max-height: calc(100vh - var(--nav-h) - 32px);
+            overflow-y: auto; overflow-x: hidden;
+            padding: 16px 0 16px 16px; scrollbar-width: thin;
+        }
+        .nav-lateral::-webkit-scrollbar { width: 3px; }
+        .nav-lateral::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 3px; }
+        .nav-titulo {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.2px; color: var(--gris-oscuro); padding: 4px 10px 10px;
+        }
+        .nav-item {
+            display: block; padding: 7px 10px; border-radius: 8px;
+            text-decoration: none; font-size: 12px; font-weight: 600;
+            color: var(--gris-oscuro); transition: 0.15s; margin-bottom: 2px;
+            border-left: 3px solid transparent; line-height: 1.3;
+        }
+        .nav-item:hover { background: white; color: var(--azul-medio); border-left-color: var(--borde); }
+        .nav-item.activo { background: var(--azul-claro); color: var(--azul-medio); border-left-color: var(--azul); }
+        .nav-sep { height: 1px; background: var(--borde); margin: 8px 10px; }
+
+        /* ── CONTENT ── */
+        .content { flex: 1; min-width: 0; padding: 24px 24px 0 16px; }
+
+        /* ── CARDS ── */
+        .ra-card {
+            background: white; border-radius: var(--radio); padding: 24px 28px;
+            margin-bottom: 24px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde);
+        }
+        .ra-card h2 { font-size: 19px; color: var(--azul-oscuro); font-weight: 700; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
+
+        /* ── TABLE ── */
         table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
         thead tr { background: var(--azul-oscuro); color: white; }
-        thead th { padding: 10px 12px; text-align: left; font-weight: 600; font-size: 11px; }
+        thead th { padding: 9px 12px; text-align: left; font-weight: 600; font-size: 11px; }
         tbody tr:nth-child(even) { background: var(--gris); }
-        tbody td { padding: 9px 12px; border-bottom: 1px solid var(--borde); vertical-align: top; }
-        .check { color: var(--verde); font-weight: bold; }
-        .cross { color: var(--rojo); font-weight: bold; }
-        ul.icon-list { list-style: none; padding-left: 0; margin: 10px 0; }
-        ul.icon-list li { padding: 5px 0 5px 24px; position: relative; border-bottom: 1px solid #f0f0f0; }
-        ul.icon-list li::before { content: "▸"; color: var(--verde); position: absolute; left: 4px; font-size: 13px; top: 6px; font-weight: bold; }
-        ol.styled { margin: 10px 0 10px 20px; } ol.styled li { padding: 6px 0 6px 6px; }
+        tbody td { padding: 8px 12px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+
+        /* ── CODE ── */
         code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #1e40af; }
         pre { background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 10px 0; }
         pre code { background: none; color: inherit; padding: 0; }
-        hr.divider { border: none; border-top: 1px solid var(--borde); margin: 16px 0; }
-        footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--borde); }
-        .practica-body p { margin-bottom: 10px; }
-        .indice-practicas { background: white; border-radius: var(--radio); padding: 20px 24px; margin-bottom: 28px; box-shadow: var(--sombra); border: 1px solid var(--borde); }
-        .indice-practicas h3 { color: var(--verde); margin-bottom: 12px; }
-        .indice-practicas ol { columns: 2; margin-left: 20px; }
-        .indice-practicas ol li { padding: 3px 0; font-size: 14px; }
-        .tree { background: #1e293b; color: #a8d8a8; font-family: 'Courier New', monospace; padding: 16px 20px; border-radius: var(--radio-sm); margin: 14px 0; font-size: 13px; line-height: 1.9; overflow-x: auto; white-space: pre; }
-        .box-warning { background: #fff5f5; border: 2px solid var(--rojo); border-radius: var(--radio-sm); padding: 16px 20px; margin: 16px 0; }
-        .box-warning .box-label { color: var(--rojo); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .entrega-tag { display: inline-block; background: var(--naranja-claro); border: 1px solid #fbd38d; border-radius: 4px; padding: 1px 8px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--naranja); font-weight: 600; }
-        @media (max-width: 720px) {
-            .hero { padding: 28px 20px; } .hero h1 { font-size: 23px; }
-            .wrapper { padding: 16px 10px; } .practica-body { padding: 16px; } .practica-header { padding: 14px 16px; }
-            .indice-practicas ol { columns: 1; }
+
+        /* ── FOOTER ── */
+        footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 32px; padding: 20px; border-top: 1px solid var(--borde); }
+
+        /* ── BACK TO TOP ── */
+        #backTop {
+            position: fixed; right: 20px; bottom: 24px; z-index: 150;
+            background: var(--azul-oscuro); color: white; border: none;
+            border-radius: 50%; width: 40px; height: 40px; font-size: 16px;
+            cursor: pointer; box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            display: none; align-items: center; justify-content: center;
+            transition: 0.2s;
         }
+        #backTop:hover { background: var(--azul-medio); transform: translateY(-2px); }
+
+
+        /* Practices-specific */
+        .practica-card { background: white; border-radius: var(--radio); margin-bottom: 28px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); overflow: hidden; }
+        .practica-header { background: linear-gradient(135deg, var(--verde), #1a5330); color: white; padding: 18px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .practica-header .practica-num { background: rgba(255,255,255,0.25); font-weight: 700; font-size: 17px; border-radius: 8px; padding: 6px 16px; white-space: nowrap; }
+        .practica-header h3 { font-size: 17px; font-weight: 700; flex: 1; }
+        .practica-header .practica-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+        .practica-header .practica-meta span { background: rgba(255,255,255,0.2); border-radius: 16px; padding: 4px 12px; font-size: 12px; font-weight: 600; }
+        .practica-body { padding: 22px 26px; }
+        .practica-body p { margin-bottom: 10px; }
+        .ce-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+        .ce-tag { font-size: 10px; font-weight: 700; background: var(--azul-claro); color: var(--azul-medio); border: 1px solid #bee3f8; border-radius: 16px; padding: 3px 10px; }
+        .box-objective { background: #ebf4ff; border-left: 4px solid var(--azul); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 14px 18px; margin: 14px 0; }
+        .box-objective .box-label { color: var(--azul-medio); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-practice { background: var(--verde-claro); border-left: 4px solid var(--verde); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 14px 0; }
+        .box-practice .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .box-delivery { background: var(--naranja-claro); border-left: 4px solid var(--naranja); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 14px 18px; margin: 14px 0; }
+        .box-delivery .box-label { color: var(--naranja); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-apuntes { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 12px 18px; margin: 12px 0; }
+        .box-apuntes .box-label { color: #b45309; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .box-warning { background: var(--rojo-claro); border: 2px solid var(--rojo); border-radius: var(--radio-sm); padding: 14px 18px; margin: 14px 0; }
+        .box-warning .box-label { color: var(--rojo); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .rubrica { background: var(--rojo-claro); border: 2px solid var(--rojo); border-radius: var(--radio-sm); padding: 18px 20px; margin: 18px 0; }
+        .rubrica h4 { color: var(--rojo); font-size: 14px; margin-bottom: 12px; font-weight: 700; }
+        .entrega-tag { display: inline-block; background: var(--naranja-claro); border: 1px solid #fbd38d; border-radius: 4px; padding: 1px 8px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--naranja); font-weight: 600; }
+        .tree { background: #1e293b; color: #a8d8a8; font-family: 'Courier New', monospace; padding: 14px 18px; border-radius: var(--radio-sm); margin: 12px 0; font-size: 13px; line-height: 1.9; overflow-x: auto; white-space: pre; }
+        ul.icon-list { list-style: none; padding-left: 0; margin: 8px 0; }
+        ul.icon-list li { padding: 5px 0 5px 22px; position: relative; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        ul.icon-list li::before { content: "▸"; color: var(--verde); position: absolute; left: 4px; font-size: 12px; top: 7px; font-weight: bold; }
+        ol.styled { margin: 8px 0 8px 18px; }
+        ol.styled li { padding: 5px 0 5px 6px; font-size: 14px; }
+        .indice-practicas { background: white; border-radius: var(--radio); padding: 18px 22px; margin-bottom: 22px; box-shadow: var(--sombra); border: 1px solid var(--borde); }
+        .indice-practicas h3 { color: var(--verde); margin-bottom: 10px; font-size: 15px; }
+        .indice-practicas ol { columns: 2; margin-left: 18px; }
+        .indice-practicas ol li { padding: 3px 0; font-size: 13px; }
+        .check { color: var(--verde); font-weight: bold; }
+        .cross { color: var(--rojo); font-weight: bold; }
+        hr.divider { border: none; border-top: 1px solid var(--borde); margin: 14px 0; }
+
+
+        @media (max-width: 860px) {
+            .nav-lateral { display: none; }
+            .content { padding: 16px 14px 0; }
+            .hero { padding: 28px 20px 40px; }
+            .hero h1 { font-size: 22px; }
+        }
+        @media (max-width: 520px) {
+            .hero h1 { font-size: 19px; }
+            .practica-header, .bloque-header { flex-wrap: wrap; }
+        }
+
     </style>
 </head>
 <body>
 
-<header class="hero">
-    <div class="hero-badge">🧪 PRÁCTICAS DE LABORATORIO · CFGB Informática</div>
+<nav class="navbar">
+    <a href="index.html" class="nav-brand">
+        <span class="brand-badge">OACE</span>
+        <span>2º CFGB</span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA1_OACE_CFGB_Alumno.html" class="nav-link">📘 Apuntes</a>
+        <a href="RA1_OACE_Practicas.html" class="nav-link active">🧪 Prácticas</a>
+    </div>
+</nav>
+
+<header class="hero" style="background: linear-gradient(160deg, #1a3d2e 0%, #1a5330 40%, #276749 100%);">
+    <div class="hero-badge">🧪 Prácticas de Laboratorio · CFGB Informática</div>
     <h1>💻 RA1 · Prácticas de Configuración en Entorno Monousuario</h1>
-    <p class="subtitulo">16 prácticas · Una por bloque · Rúbricas de corrección preparadas para IA</p>
+    <p class="subtitulo">16 prácticas evaluables · Una por bloque · Windows 11 + Ubuntu 24.04 LTS · VirtualBox</p>
     <div class="hero-meta">
-        <span>🐧 Windows & Linux</span>
+        <span>🐧 Windows &amp; Linux</span>
         <span>🖥️ VirtualBox</span>
         <span>📎 LibreOffice</span>
-        <span>🤖 Rúbricas IA-ready</span>
+        <span>📚 Alineadas con los apuntes del alumno</span>
     </div>
 </header>
 
-<div class="wrapper">
-
-    <!-- PORTADA -->
+<div class="page-layout">
+    <nav class="nav-lateral">
+    <div class="nav-titulo">🧪 RA1 · Prácticas</div>
+        <a href="#p1-1" class="nav-item">P1.1 · Dispositivos reales</a>
+        <a href="#p1-2" class="nav-item">P1.2 · Tipos de SO</a>
+        <a href="#p1-3" class="nav-item">P1.3 · Arquitectura del SO</a>
+        <a href="#p1-4" class="nav-item">P1.4 · BIOS/UEFI</a>
+        <a href="#p1-5" class="nav-item">P1.5 · Windows 11 en VM</a>
+        <a href="#p1-6" class="nav-item">P1.6 · Ubuntu Linux</a>
+        <a href="#p1-7" class="nav-item">P1.7 · Personalización</a>
+        <a href="#p1-8" class="nav-item">P1.8 · Sistema de archivos</a>
+        <a href="#p1-9" class="nav-item">P1.9 · GUI vs Terminal</a>
+        <a href="#p1-10" class="nav-item">P1.10 · Atributos</a>
+        <a href="#p1-11" class="nav-item">P1.11 · Permisos</a>
+        <a href="#p1-12" class="nav-item">P1.12 · Almacenamiento</a>
+        <a href="#p1-13" class="nav-item">P1.13 · Periféricos</a>
+        <a href="#p1-14" class="nav-item">P1.14 · Malware y antivirus</a>
+        <a href="#p1-15" class="nav-item">P1.15 · Copias de seguridad</a>
+        <a href="#p1-16" class="nav-item">P1.16 · 🎓 Prueba final</a>
+</nav>
+    <div class="content">
+        <!-- PORTADA -->
     <div class="ra-card" style="border-top: 4px solid var(--verde);">
         <h2>🧪 RA1 – Prácticas de Laboratorio · 16 Prácticas Evaluables</h2>
         <p>Cada práctica se corresponde con un bloque de los apuntes del alumno. Todas las rúbricas están diseñadas con <strong>criterios observables y medibles</strong> para que puedan ser corregidas por una IA sin ambigüedad.</p>
@@ -141,7 +292,6 @@
         </table>
         <p style="margin-top:10px;font-size:13px;color:var(--gris-oscuro);">ℹ️ Apellido y nombre sin tildes ni ñ. Si tienes dos apellidos, usa solo el primero. Guion bajo (<code>_</code>), nunca espacios.</p>
 
-
         <div class="box-warning">
             <div class="box-label">⚠️ Errores que invalidan la entrega automáticamente</div>
             <table style="margin:8px 0;">
@@ -157,7 +307,7 @@
             </table>
         </div>
 
-        <h3 style="margin:18px 0 8px;color:var(--azul-oscuro);font-size:16px;">3.. Plazo y canal de entrega</h3>
+        <h3 style="margin:18px 0 8px;color:var(--azul-oscuro);font-size:16px;">4. Plazo y canal de entrega</h3>
         <p>El ZIP de RA1 completo se entrega en la tarea habilitada en el aula virtual (Moodle) <strong>antes del fin del bloque 16</strong>. No se aceptan entregas por correo electrónico ni por USB. Si tienes problemas técnicos para crear el ZIP, comunícaselo al profesor antes de la fecha límite.</p>
     </div>
 
@@ -185,7 +335,7 @@
     </div>
 
     <!-- ═══════════ P1.1 · B1 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-1" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.1</span>
             <h3>Identificación de sistemas operativos en dispositivos reales</h3>
@@ -204,6 +354,12 @@
                     <li>Reconocer que los SO están presentes en muchos más dispositivos que solo ordenadores.</li>
                     <li>Reflexionar sobre la diversidad de sistemas operativos en el mundo real.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B1</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B1</strong> de tus apuntes. Presta especial atención a: qué es un SO, sus 6 funciones principales y los tipos de SO en distintos dispositivos.</p>
             </div>
 
             <div class="box-practice">
@@ -267,7 +423,7 @@
     </div>
 
     <!-- ═══════════ P1.2 · B2 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-2" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.2</span>
             <h3>Clasificación y comparativa de sistemas operativos</h3>
@@ -286,6 +442,12 @@
                     <li>Comparar diferentes SO utilizando terminología técnica precisa.</li>
                     <li>Identificar qué tipo de SO es adecuado para cada escenario.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B2</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B2</strong> de tus apuntes. Presta especial atención a: cómo clasificar un SO: monousuario/multiusuario, multitarea, bits y libre/propietario.</p>
             </div>
 
             <div class="box-practice">
@@ -351,7 +513,7 @@
     </div>
 
     <!-- ═══════════ P1.3 · B3 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-3" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.3</span>
             <h3>Arquitectura del SO: identificación práctica de capas</h3>
@@ -373,6 +535,12 @@
                     <li>Usar comandos de terminal para obtener información del kernel, shell y sistema de archivos.</li>
                     <li>Comparar la arquitectura interna de Windows y Linux.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B3</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B3</strong> de tus apuntes. Presta especial atención a: las capas internas del SO: kernel, shell, sistema de archivos y drivers.</p>
             </div>
 
             <div class="box-practice">
@@ -428,7 +596,7 @@
     </div>
 
     <!-- ═══════════ P1.4 · B4 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-4" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.4</span>
             <h3>Exploración de la BIOS/UEFI, bootloader y secuencia de arranque</h3>
@@ -450,6 +618,12 @@
                     <li>Identificar el bootloader en ambos sistemas operativos.</li>
                     <li>Documentar la secuencia de arranque completa del equipo del aula.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B4</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B4</strong> de tus apuntes. Presta especial atención a: la secuencia de arranque completa: BIOS/UEFI → POST → bootloader → kernel.</p>
             </div>
 
             <div class="box-practice">
@@ -508,7 +682,7 @@
 </div>
 
     <!-- ═══════════ P1.5 · B5 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-5" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.5</span>
             <h3>Instalación de Windows 11 en VirtualBox</h3>
@@ -530,6 +704,12 @@
                     <li>Instalar Windows 11 desde cero documentando cada decisión.</li>
                     <li>Realizar la configuración inicial básica del sistema recén instalado.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B5</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B5</strong> de tus apuntes. Presta especial atención a: cómo funciona VirtualBox y los parámetros mínimos para instalar Windows 11.</p>
             </div>
 
             <div class="box-practice">
@@ -568,7 +748,7 @@
     </div>
 
     <!-- ═══════════ P1.6 · B6 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-6" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.6</span>
             <h3>Instalación de Ubuntu 24.04 LTS y comparativa con Windows</h3>
@@ -590,6 +770,12 @@
                     <li>Comparar objetivamente el proceso de instalación y el sistema resultante con Windows 11.</li>
                     <li>Personalizar el escritorio de Ubuntu por primera vez.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B6</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B6</strong> de tus apuntes. Presta especial atención a: el proceso de instalación de Ubuntu y la comparativa Windows vs Linux.</p>
             </div>
 
             <div class="box-practice">
@@ -629,7 +815,7 @@
     </div>
 
     <!-- ═══════════ P1.7 · B7 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-7" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.7</span>
             <h3>Personalización completa del entorno y accesibilidad</h3>
@@ -651,6 +837,12 @@
                     <li>Configurar opciones de accesibilidad y entender su importancia.</li>
                     <li>Crear una estructura de trabajo organizada en el escritorio.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B7</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B7</strong> de tus apuntes. Presta especial atención a: cómo personalizar el escritorio, activar el modo oscuro y las opciones de accesibilidad.</p>
             </div>
 
             <div class="box-practice">
@@ -704,7 +896,7 @@
     </div>
 
     <!-- ═══════════ P1.8 · B8 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-8" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.8</span>
             <h3>Sistema de archivos, rutas y extensiones</h3>
@@ -726,6 +918,12 @@
                     <li>Identificar extensiones de archivo y asociaciones de programas.</li>
                     <li>Practicar la navegación por el sistema de archivos usando terminal.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B8</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B8</strong> de tus apuntes. Presta especial atención a: rutas absolutas/relativas, extensiones de archivo y la estructura de carpetas del SO.</p>
             </div>
 
             <div class="box-practice">
@@ -768,7 +966,7 @@
     </div>
 
     <!-- ═══════════ P1.9 · B9 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-9" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.9</span>
             <h3>Operaciones con archivos: GUI vs Terminal</h3>
@@ -790,6 +988,12 @@
                     <li>Comparar la eficiencia de ambos métodos.</li>
                     <li>Dominar los comandos básicos de terminal en ambos SO.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B9</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B9</strong> de tus apuntes. Presta especial atención a: los comandos básicos de terminal: <code>mkdir</code>, <code>cp</code>/<code>copy</code>, <code>mv</code>/<code>move</code>, <code>rm</code>/<code>del</code>, <code>ls</code>/<code>dir</code>.</p>
             </div>
 
             <div class="box-practice">
@@ -841,7 +1045,7 @@
     </div>
 
     <!-- ═══════════ P1.10 · B10 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-10" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.10</span>
             <h3>Atributos de archivos: solo lectura, oculto, sistema</h3>
@@ -860,6 +1064,12 @@
                     <li>Comparar con el mecanismo equivalente en Linux (archivos ocultos con punto).</li>
                     <li>Usar el comando <code>attrib</code> de Windows.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B10</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B10</strong> de tus apuntes. Presta especial atención a: los atributos de archivos en Windows: Solo lectura (R), Oculto (H), Sistema (S) y el comando <code>attrib</code>.</p>
             </div>
 
             <div class="box-practice">
@@ -905,7 +1115,7 @@
     </div>
 
     <!-- ═══════════ P1.11 · B11 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-11" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.11</span>
             <h3>Permisos en Windows (NTFS) y Linux (chmod)</h3>
@@ -924,6 +1134,12 @@
                     <li>Usar chmod en Linux para cambiar permisos en notación octal.</li>
                     <li>Comprobar experimentalmente el efecto de los permisos.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B11</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B11</strong> de tus apuntes. Presta especial atención a: los permisos NTFS en Windows y la notación octal de <code>chmod</code> en Linux.</p>
             </div>
 
             <div class="box-practice">
@@ -970,7 +1186,7 @@
     </div>
 
     <!-- ═══════════ P1.12 · B12 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-12" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.12</span>
             <h3>Administración de soportes de almacenamiento</h3>
@@ -992,6 +1208,12 @@
                     <li>Comparar las propiedades de NTFS, FAT32 y ext4.</li>
                     <li>Usar herramientas de administración de discos en ambos SO.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B12</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B12</strong> de tus apuntes. Presta especial atención a: las diferencias entre NTFS, FAT32 y ext4: límites de archivo, compatibilidad y uso.</p>
             </div>
 
             <div class="box-practice">
@@ -1033,7 +1255,7 @@
     </div>
 
     <!-- ═══════════ P1.13 · B13 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-13" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.13</span>
             <h3>Instalación y gestión de periféricos</h3>
@@ -1052,6 +1274,12 @@
                     <li>Clasificar periféricos como entrada, salida o E/S.</li>
                     <li>Instalar una impresora virtual y gestionar la cola de impresión.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B13</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B13</strong> de tus apuntes. Presta especial atención a: la clasificación de periféricos (entrada/salida/E/S) y cómo funcionan los drivers.</p>
             </div>
 
             <div class="box-practice">
@@ -1090,7 +1318,7 @@
     </div>
 
     <!-- ═══════════ P1.14 · B14 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-14" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.14</span>
             <h3>Análisis de malware y configuración de antivirus</h3>
@@ -1110,6 +1338,12 @@
                     <li>Instalar y usar ClamAV en Ubuntu.</li>
                     <li>Reconocer los principales tipos de malware.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B14</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B14</strong> de tus apuntes. Presta especial atención a: los tipos de malware, cómo funciona Windows Defender y el archivo de prueba EICAR.</p>
             </div>
 
             <div class="box-practice">
@@ -1157,7 +1391,7 @@
     </div>
 
     <!-- ═══════════ P1.15 · B15 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-15" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.15</span>
             <h3>Copias de seguridad: configuración, ejecución y restauración</h3>
@@ -1177,6 +1411,12 @@
                     <li>Usar Déjà Dup en Ubuntu para el mismo propósito.</li>
                     <li>Entender la importancia de verificar que las copias funcionan.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B15</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B15</strong> de tus apuntes. Presta especial atención a: la estrategia de backup 3-2-1, el Historial de archivos de Windows y Déjà Dup en Ubuntu.</p>
             </div>
 
             <div class="box-practice">
@@ -1224,7 +1464,7 @@
     </div>
 
     <!-- ═══════════ P1.16 · B16 ═══════════ -->
-    <div class="practica-card">
+    <div class="practica-card" id="p1-16" data-nav>
         <div class="practica-header">
             <span class="practica-num">P1.16</span>
             <h3>Prueba práctica integrada RA1</h3>
@@ -1247,6 +1487,12 @@
                     <li>Instalar, configurar, personalizar, proteger y documentar un sistema desde cero.</li>
                     <li>Trabajar de forma autónoma en un escenario profesional simulado.</li>
                 </ul>
+            </div>
+
+            
+            <div class="box-apuntes">
+                <div class="box-label">📚 Antes de empezar · Repasa los apuntes del B16</div>
+                <p>Antes de realizar esta práctica, revisa el <strong>B16</strong> de tus apuntes. Presta especial atención a: todos los bloques del RA1 — esta práctica evalúa todo lo aprendido.</p>
             </div>
 
             <div class="box-practice">
@@ -1287,14 +1533,40 @@
                 </table>
             </div>
         </div>
-    </div>
-
-    <footer>
+        <footer>
         🧪 RA1 · Prácticas de Laboratorio · 16 prácticas evaluables · Una por bloque<br>
         Windows 11 + Ubuntu 24.04 LTS · VirtualBox · Rúbricas preparadas para corrección por IA<br>
         Material didáctico original
     </footer>
-
+    </div>
 </div>
+
+<button id="backTop" title="Volver arriba">↑</button>
+
+<script>
+
+    // Lateral nav highlight
+    const sections = document.querySelectorAll('[data-nav]');
+    const navItems = document.querySelectorAll('.nav-item');
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navItems.forEach(n => n.classList.remove('activo'));
+                const m = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+                if (m) m.classList.add('activo');
+            }
+        });
+    }, { rootMargin: '-10% 0px -80% 0px' });
+    sections.forEach(s => io.observe(s));
+
+    // Back to top
+    const btn = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+        btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+    });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+</script>
+
 </body>
 </html>
