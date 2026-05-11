@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RA2 · Configuración en entorno de red | Apuntes del Alumno</title>
+    <style>
+        :root {
+            --azul-oscuro: #1a2744; --azul-medio: #2c5282; --azul: #3182ce; --azul-claro: #ebf4ff;
+            --verde: #276749; --verde-claro: #f0fff4; --naranja: #c05621; --naranja-claro: #fffaf0;
+            --rojo: #c53030; --rojo-claro: #fff5f5; --purpura: #6b46c1; --purpura-claro: #faf5ff;
+            --gris: #f7fafc; --gris-oscuro: #4a5568; --texto: #1a202c; --borde: #e2e8f0;
+            --sombra: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+            --radio: 12px; --radio-sm: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--texto); background: #f4f7fb; font-size: 15px; line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar { position: sticky; top: 0; z-index: 200; background: var(--azul-oscuro); height: 48px; display: flex; align-items: center; padding: 0 20px; gap: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+        .nav-brand { display: flex; align-items: center; gap: 9px; color: white; text-decoration: none; font-weight: 700; font-size: 14px; margin-right: 20px; flex-shrink: 0; }
+        .nav-brand .brand-badge { background: var(--verde); color: white; border-radius: 6px; padding: 3px 8px; font-size: 12px; font-weight: 800; }
+        .nav-links { display: flex; align-items: center; gap: 3px; flex: 1; overflow-x: auto; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-link { color: rgba(255,255,255,0.68); text-decoration: none; font-size: 13px; font-weight: 600; padding: 5px 13px; border-radius: 18px; white-space: nowrap; transition: 0.15s; border: 1px solid transparent; }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+        .nav-link.active { color: white; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); }
+        .nav-right { margin-left: auto; flex-shrink: 0; }
+        /* ── QUIZ ── */
+        .box-test { background: #fefce8; border-left: 4px solid #ca8a04; border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-test .box-label { color: #92400e; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .quiz-option { display: block; padding: 8px 14px; margin: 4px 0; border: 2px solid var(--borde); border-radius: 8px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .quiz-option:hover { background: var(--verde-claro); border-color: var(--verde); }
+        .quiz-option.correcta { background: #dcfce7; border-color: #22c55e; color: #166534; font-weight: 600; pointer-events: none; }
+        .quiz-option.incorrecta { background: #fef2f2; border-color: #ef4444; color: #c53030; pointer-events: none; }
+        .quiz-option.bloqueada { pointer-events: none; opacity: 0.6; }
+        /* ── PROGRESO ── */
+        .progreso-global { background: white; border-radius: var(--radio); padding: 18px 24px; margin-bottom: 24px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); text-align: center; }
+        .progreso-global h3 { font-size: 16px; margin-bottom: 6px; }
+        .progreso-barra { height: 14px; background: var(--borde); border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .progreso-relleno { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--verde), #22c55e); transition: width 0.5s; width: 0%; }
+        .progreso-texto { font-size: 13px; color: var(--gris-oscuro); }
+        .insignias { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center; }
+        .insignia { font-size: 28px; opacity: 0.3; transition: opacity 0.4s; filter: grayscale(1); }
+        .insignia.ganada { opacity: 1; filter: grayscale(0); animation: pop 0.5s ease; }
+        @keyframes pop { 0%{transform:scale(1)}50%{transform:scale(1.5)}100%{transform:scale(1)} }
+        /* ── VIDEO ── */
+        .box-video-es { background: #fff7ed; border-left: 4px solid #ea580c; border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-video-es .box-label { color: #c05621; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 10px 0; border-radius: 8px; box-shadow: var(--sombra); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px; }
+
+        .hero {
+            background: linear-gradient(160deg, #14532d 0%, #166534 40%, #15803d 100%);
+            color: white; padding: 48px 40px 36px; position: relative; overflow: hidden;
+        }
+        .hero::after { content: ''; position: absolute; top: -80px; right: -120px; width: 380px; height: 380px; background: rgba(255,255,255,0.03); border-radius: 50%; pointer-events: none; }
+        .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 5px 16px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+        .hero h1 { font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; position: relative; z-index: 1; }
+        .hero .subtitulo { font-size: 15px; opacity: 0.82; font-style: italic; position: relative; z-index: 1; }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; position: relative; z-index: 1; }
+        .hero-meta span { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600; }
+        .wrapper { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; }
+        .bloque { background: white; border-radius: var(--radio); padding: 0; margin-bottom: 32px; box-shadow: var(--sombra); border: 1px solid var(--borde); overflow: hidden; }
+        .bloque-header { background: var(--gris); padding: 16px 24px; border-bottom: 1px solid var(--borde); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .bloque-header .num { background: var(--verde); color: white; font-weight: 700; font-size: 14px; border-radius: 6px; padding: 6px 14px; white-space: nowrap; }
+        .bloque-header h3 { font-size: 17px; color: var(--azul-oscuro); font-weight: 650; flex: 1; }
+        .bloque-header .duracion { background: var(--verde-claro); color: var(--verde); font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 14px; white-space: nowrap; }
+        .bloque-body { padding: 24px 28px; }
+        .bloque-body p { margin-bottom: 12px; }
+        .ce-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+        .ce-tag { font-size: 10px; font-weight: 700; background: var(--verde-claro); color: var(--verde); border: 1px solid #a7f3d0; border-radius: 16px; padding: 3px 10px; }
+        .box-def { background: var(--verde-claro); border-left: 4px solid var(--verde); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-def .box-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--verde); margin-bottom: 6px; }
+        .box-tip { background: #fffbeb; border-left: 4px solid #d69e2e; border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-tip .box-label { color: #975a16; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-warning { background: var(--rojo-claro); border-left: 4px solid var(--rojo); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-warning .box-label { color: var(--rojo); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-exercise { background: #fff5f5; border-left: 4px solid var(--rojo); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-exercise .box-label { color: var(--rojo); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-key-concept { background: #f0fff4; border-left: 4px solid var(--verde); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-key-concept .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-reinforcement { background: #f0fdf4; border: 2px dashed var(--verde); border-radius: var(--radio-sm); padding: 16px 20px; margin: 18px 0; }
+        .box-reinforcement .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-deepening { background: #faf5ff; border: 2px solid var(--purpura); border-radius: var(--radio-sm); padding: 16px 20px; margin: 18px 0; }
+        .box-deepening .box-label { color: var(--purpura); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .respuesta-alumno { background: #fefefe; border: 2px dotted #cbd5e1; border-radius: 8px; padding: 12px 16px; margin: 10px 0; min-height: 60px; }
+        .respuesta-alumno p { color: #94a3b8; font-style: italic; margin: 0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
+        .grid-card { border: 1px solid var(--borde); border-radius: var(--radio-sm); padding: 16px 18px; background: #fafbfc; }
+        .grid-card.azul { border-top: 3px solid var(--azul); } .grid-card.azul h4 { color: var(--azul-medio); }
+        .grid-card.verde { border-top: 3px solid var(--verde); } .grid-card.verde h4 { color: var(--verde); }
+        .grid-card.naranja { border-top: 3px solid var(--naranja); } .grid-card.naranja h4 { color: var(--naranja); }
+        .grid-card.purpura { border-top: 3px solid var(--purpura); } .grid-card.purpura h4 { color: var(--purpura); }
+        .grid-card.rojo { border-top: 3px solid var(--rojo); } .grid-card.rojo h4 { color: var(--rojo); }
+        .grid-card h4 { font-size: 14px; margin-bottom: 6px; font-weight: 700; }
+        ul.icon-list { list-style: none; padding-left: 0; margin: 12px 0; }
+        ul.icon-list li { padding: 7px 0 7px 26px; position: relative; border-bottom: 1px solid #f0f0f0; }
+        ul.icon-list li::before { content: "▸"; color: var(--verde); position: absolute; left: 6px; font-size: 13px; top: 8px; font-weight: bold; }
+        ol.styled { margin: 12px 0 12px 20px; } ol.styled li { padding: 5px 0 5px 6px; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+        thead tr { background: var(--azul-oscuro); color: white; }
+        thead th { padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; }
+        tbody tr:nth-child(even) { background: var(--gris); }
+        tbody td { padding: 9px 14px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+        hr.divider { border: none; border-top: 2px dashed var(--borde); margin: 20px 0; }
+        code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #1e40af; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 14px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 12px 0; }
+        pre code { background: none; color: inherit; padding: 0; }
+        .ra-card { background: white; border-radius: var(--radio); padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); }
+        .ra-card h2 { font-size: 20px; color: var(--azul-oscuro); font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
+        .peso-bar { height: 10px; background: var(--borde); border-radius: 5px; margin: 8px 0 16px; overflow: hidden; }
+        .peso-fill { height: 100%; border-radius: 5px; background: var(--verde); }
+        footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--borde); }
+        .indice { background: white; border-radius: var(--radio); padding: 20px 24px; margin-bottom: 24px; box-shadow: var(--sombra); }
+        .indice h3 { color: var(--azul-oscuro); margin-bottom: 12px; }
+        .indice ol { columns: 2; margin-left: 20px; }
+        .indice ol li { padding: 3px 0; font-size: 14px; }
+        .nav-lateral { position: fixed; right: 12px; top: 50%; transform: translateY(-50%); z-index: 150; display: flex; flex-direction: column; gap: 3px; }
+        .nav-lateral a { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--azul-oscuro); color: white; text-decoration: none; font-size: 10px; font-weight: 800; box-shadow: 0 2px 6px rgba(0,0,0,0.18); transition: transform 0.15s, background 0.15s; }
+        .nav-lateral a:hover { transform: scale(1.25); background: var(--verde); }
+        .nav-lateral a.activo { background: var(--verde); }
+        .btn-top { position: fixed; right: 18px; bottom: 24px; background: var(--azul-oscuro); color: white; border: none; border-radius: 50%; width: 42px; height: 42px; cursor: pointer; font-size: 18px; box-shadow: var(--sombra-lg); z-index: 200; display: none; align-items: center; justify-content: center; }
+        .btn-top.visible { display: flex; }
+        .respuesta-alumno[contenteditable="true"] { cursor: text; background: #fefefe; color: var(--texto); font-style: normal; min-height: 70px; }
+        .respuesta-alumno[contenteditable="true"]:focus { border-color: var(--verde); outline: 2px solid rgba(39,103,73,0.25); background: white; }
+        .respuesta-alumno[contenteditable="true"]:empty::before { content: attr(data-placeholder); color: #94a3b8; font-style: italic; pointer-events: none; }
+        .autoevaluacion { background: #f0fff4; border: 2px solid var(--verde); border-radius: var(--radio-sm); padding: 14px 20px; margin: 20px 0 4px; }
+        .autoevaluacion .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .autoevaluacion ul { list-style: none; padding: 0; margin: 0; }
+        .autoevaluacion ul li { padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; font-size: 14px; border-bottom: 1px solid #c6f6d5; }
+        .autoevaluacion ul li:last-child { border-bottom: none; }
+        .autoevaluacion ul li input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--verde); flex-shrink: 0; margin-top: 3px; cursor: pointer; }
+        .autoevaluacion ul li label { cursor: pointer; line-height: 1.5; }
+        .autoevaluacion ul li.done label { text-decoration: line-through; color: #68d391; }
+        .box-tempo { background: #fffbeb; border: 2px solid #d69e2e; border-radius: var(--radio); padding: 16px 22px; margin-bottom: 24px; }
+        .box-tempo .box-label { color: #975a16; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .diagrama { margin: 18px 0; text-align: center; }
+        .diagrama svg { max-width: 680px; width: 100%; border-radius: 8px; box-shadow: var(--sombra); }
+        .diagrama figcaption { font-size: 12px; color: var(--gris-oscuro); margin-top: 6px; font-style: italic; }
+        #guardado-ok { position: fixed; left: 50%; transform: translateX(-50%); bottom: 72px; background: var(--verde); color: white; padding: 7px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 300; opacity: 0; transition: opacity 0.3s; pointer-events: none; box-shadow: var(--sombra-lg); }
+        #guardado-ok.show { opacity: 1; }
+        @media (max-width: 720px) {
+            .hero { padding: 28px 20px; } .hero h1 { font-size: 23px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; } .wrapper { padding: 16px 10px; } .bloque-body { padding: 16px; }
+            .indice ol { columns: 1; } .nav-lateral { display: none; }
+        }
+        @media print {
+            .nav-lateral, .btn-top, #guardado-ok { display: none !important; }
+            @page { size: A4; margin: 1.8cm 2cm 2cm 2cm; }
+            .bloque { break-before: page; } .bloque-header { break-after: avoid; }
+            .grid-2, .grid-3 { display: block !important; } .grid-card { margin-bottom: 14px; break-inside: avoid; }
+            .indice ol { columns: 1 !important; }
+            hr.divider { break-after: avoid; } h3, h4 { break-before: avoid; break-after: avoid; }
+            .box-def, .box-key-concept, .box-exercise, .box-reinforcement, .box-deepening, .box-tip, .box-tempo, .diagrama, .autoevaluacion { break-inside: avoid; }
+            table { break-inside: avoid; } tr { break-inside: avoid; }
+            p { orphans: 3; widows: 3; }
+            .respuesta-alumno { border: 1px dashed #cbd5e0 !important; min-height: 50px; }
+            body { background: white !important; } .wrapper { max-width: 100% !important; padding: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html" class="nav-brand">
+        <span class="brand-badge">OACE</span>
+        <span>2º CFGB</span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA2_OACE_Alumno.html" class="nav-link active">📘 Apuntes RA2</a>
+        <a href="RA2_OACE_Practicas.html" class="nav-link">🧪 Prácticas RA2</a>
+    </div>
+</nav>
+<header class="hero">
+    <div class="hero-badge">📘 VERSIÓN ALUMNO · CFGB Informática</div>
+    <h1>🌐 RA2 · Configuración en Entorno de Red</h1>
+    <p class="subtitulo">Windows 11 + Ubuntu 24.04 LTS · VirtualBox · 48 sesiones · 24 bloques</p>
+    <div class="hero-meta">
+        <span>🐧 Windows & Linux</span>
+        <span>🖥️ VirtualBox</span>
+        <span>🔗 Redes y recursos compartidos</span>
+    </div>
+</header>
+
+<nav class="nav-lateral" id="navLateral" aria-label="Bloques"></nav>
+<div id="badgeProgreso" title="Tu progreso en el RA2" style="position:fixed;right:18px;top:56px;z-index:199;background:var(--verde);color:#fff;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.18);display:none;align-items:center;gap:6px;cursor:pointer;" onclick="document.getElementById('progresoGlobal').scrollIntoView({behavior:'smooth'})">🏆 <span id="badgeProgresoTxt">0/24</span></div>
+<button class="btn-top" id="btnTop" title="Volver arriba" aria-label="Volver al inicio">↑</button>
+<div id="guardado-ok" role="status">✓ Respuesta guardada</div>
+
+<div class="wrapper">
+
+    <!-- BARRA DE PROGRESO RA2 -->
+    <div class="progreso-global" id="progresoGlobal">
+        <h3>🏆 Tu progreso en el RA2</h3>
+        <div class="progreso-barra"><div class="progreso-relleno" id="progresoRelleno"></div></div>
+        <p class="progreso-texto" id="progresoTexto">Has completado 0 de 24 bloques</p>
+        <div class="insignias" id="insignias">
+            <span class="insignia" title="Primer paso: 6 bloques">🌱</span>
+            <span class="insignia" title="Aprendiz: 12 bloques">🌿</span>
+            <span class="insignia" title="Avanzado: 18 bloques">🌳</span>
+            <span class="insignia" title="Experto RA2: 24 bloques">🏅</span>
+        </div>
+    </div>
+
+
+    <!-- PORTADA RA2 -->
+    <div class="ra-card" style="border-top: 4px solid var(--verde);">
+        <h2>🎯 RA2 – Configura equipos informáticos para su funcionamiento en un entorno de red, identificando los permisos del usuario (30% · 48 sesiones)</h2>
+        <div class="peso-bar"><div class="peso-fill" style="width:100%"></div></div>
+        <table>
+            <thead><tr><th>Peso</th><th>Criterio de Evaluación</th><th>Sesiones</th></tr></thead>
+            <tbody>
+                <tr><td>25%</td><td><strong>CE-g)</strong> Aplicar normas de seguridad en recursos compartidos</td><td>12 ses</td></tr>
+                <tr><td>20%</td><td><strong>CE-b)</strong> Configurar y gestionar cuentas de usuario</td><td>10 ses</td></tr>
+                <tr><td>20%</td><td><strong>CE-e)</strong> Asignar permisos a recursos compartidos</td><td>10 ses</td></tr>
+                <tr><td>15%</td><td><strong>CE-f)</strong> Acceder a recursos compartidos</td><td>8 ses</td></tr>
+                <tr><td>10%</td><td><strong>CE-d)</strong> Usar servicios para compartir recursos</td><td>5 ses</td></tr>
+                <tr><td>5%</td><td><strong>CE-c)</strong> Comprobar conectividad servidor-cliente</td><td>3 ses</td></tr>
+                <tr><td>5%</td><td><strong>CE-a)</strong> Aplicar preferencias del entorno personal</td><td>2 ses</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ÍNDICE -->
+    <div class="indice">
+        <h3>📑 Índice de bloques</h3>
+        <ol>
+            <li><strong>B17:</strong> Introducción a las redes informáticas</li>
+            <li><strong>B18:</strong> Direccionamiento IP, máscara, puerta de enlace, DNS</li>
+            <li><strong>B19:</strong> Configuración de red en Windows</li>
+            <li><strong>B20:</strong> Configuración de red en Ubuntu</li>
+            <li><strong>B21:</strong> Comprobación de conectividad</li>
+            <li><strong>B22:</strong> Grupos de trabajo en Windows</li>
+            <li><strong>B23:</strong> Cuentas de usuario: tipos y privilegios</li>
+            <li><strong>B24:</strong> Gestión de cuentas de usuario en Windows</li>
+            <li><strong>B25:</strong> Gestión de cuentas de usuario en Ubuntu</li>
+            <li><strong>B26:</strong> Perfiles de usuario</li>
+            <li><strong>B27:</strong> Grupos de usuarios en Windows</li>
+            <li><strong>B28:</strong> Grupos de usuarios en Ubuntu</li>
+            <li><strong>B29:</strong> Recursos compartidos: concepto y tipos</li>
+            <li><strong>B30:</strong> Compartir carpetas en Windows</li>
+            <li><strong>B31:</strong> Compartir carpetas en Ubuntu (Samba)</li>
+            <li><strong>B32:</strong> Acceso a recursos compartidos</li>
+            <li><strong>B33:</strong> Permisos de red en Windows</li>
+            <li><strong>B34:</strong> Permisos combinados y resolución de conflictos</li>
+            <li><strong>B35:</strong> Impresoras compartidas en red</li>
+            <li><strong>B36:</strong> Seguridad en recursos compartidos</li>
+            <li><strong>B37:</strong> Cortafuegos y antivirus de red</li>
+            <li><strong>B38:</strong> Copias de seguridad en red</li>
+            <li><strong>B39:</strong> Repaso integrado RA2</li>
+            <li><strong>B40:</strong> Prueba práctica integrada RA2</li>
+        </ol>
+    </div>
+
+    <!-- NOTA DE TEMPORALIZACIÓN -->
+    <div class="box-tempo">
+        <div class="box-label">📅 Cómo funciona cada bloque · Léelo antes de empezar</div>
+        <p>El RA2 se divide en <strong>24 bloques de 110 minutos</strong> (2 sesiones de 55 min cada una). En cada bloque encontrarás:</p>
+        <ul style="list-style:none;padding:0;margin:8px 0 10px;">
+            <li style="padding:3px 0;"><strong>① Teoría</strong> — explicaciones, tablas y definiciones para leer antes de la práctica.</li>
+            <li style="padding:3px 0;"><strong>② Ejercicios en este documento</strong> — responde en los campos editables. <strong>Se guardan automáticamente</strong> en este navegador.</li>
+            <li style="padding:3px 0;"><strong>③ Práctica de laboratorio</strong> — documento aparte (<em>RA2_OACE_Practicas.html</em>) con las tareas a entregar.</li>
+            <li style="padding:3px 0;"><strong>④ Autoevaluación</strong> — checklist al final de cada bloque para comprobar tu progreso.</li>
+        </ul>
+        <p style="margin:0;font-size:13px;color:#975a16;"><strong>⚠️ Sobre el guardado:</strong> los campos se guardan solo en <em>este navegador y este equipo</em>. Para la entrega final, sigue las instrucciones del documento de prácticas.</p>
+    </div>
+
+    <!-- ═══════════ BLOQUE 17: INTRODUCCIÓN A LAS REDES ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B17</span><h3>Introducción a las redes informáticas: tipos, topologías y elementos</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-a · Preferencias del entorno personal (5%)</span><span class="ce-tag">RA2 CE-c · Conectividad servidor-cliente (5%)</span></div>
+        <p>Una <strong>red informática</strong> es un conjunto de ordenadores y dispositivos conectados entre sí para compartir recursos (archivos, impresoras, conexión a Internet) y comunicarse. Sin redes, cada ordenador sería una isla aislada. Las redes permiten que trabajes en equipo, compartas archivos sin usar un USB y accedas a Internet desde cualquier dispositivo de tu casa o del instituto.</p>
+        <div class="box-def"><div class="box-label">📌 Definición</div>Una red informática está formada por <strong>dispositivos</strong> (ordenadores, impresoras, servidores), <strong>medios de transmisión</strong> (cables de cobre, fibra óptica, ondas WiFi) y <strong>protocolos</strong> (reglas que permiten que los dispositivos se entiendan entre sí).</div>
+        <p><strong>🏷️ Tipos de redes según su tamaño:</strong></p>
+        <div class="grid-3">
+            <div class="grid-card verde"><h4>🏠 PAN (Personal Area Network)</h4><p>Red de muy corto alcance (unos metros). Conecta dispositivos personales: tu móvil con tus auriculares Bluetooth, tu ordenador con tu smartwatch.</p></div>
+            <div class="grid-card verde"><h4>🏢 LAN (Local Area Network)</h4><p>Red de área local. Conecta ordenadores dentro de un edificio o campus. Es la red del aula, de tu casa o de una oficina. Suele usar cables Ethernet o WiFi.</p></div>
+            <div class="grid-card verde"><h4>🌍 WAN (Wide Area Network)</h4><p>Red de área extensa. Conecta dispositivos a larga distancia (ciudades, países, continentes). El ejemplo más claro es <strong>Internet</strong>: la WAN más grande del mundo.</p></div>
+        </div>
+        <p><strong>🔗 Topologías de red (formas de conectar los dispositivos):</strong></p>
+        <div class="grid-2">
+            <div class="grid-card azul"><h4>⭐ Estrella</h4><p>Todos los dispositivos se conectan a un <strong>elemento central</strong> (un switch o un router). Si un cable se rompe, solo falla ese dispositivo. Es la más usada hoy en día en redes LAN.</p></div>
+            <div class="grid-card azul"><h4>🚌 Bus</h4><p>Todos los dispositivos comparten <strong>un mismo cable</strong>. Si el cable se rompe, toda la red deja de funcionar. Era común en los años 80-90, hoy está en desuso.</p></div>
+            <div class="grid-card naranja"><h4>🔁 Anillo</h4><p>Los dispositivos se conectan formando un <strong>círculo cerrado</strong>. Los datos viajan en una dirección. Si un dispositivo falla, se rompe el anillo y la comunicación se interrumpe.</p></div>
+            <div class="grid-card naranja"><h4>🕸️ Malla</h4><p>Cada dispositivo se conecta <strong>con varios otros</strong>. Si un camino falla, los datos pueden ir por otro. Muy resistente a fallos. Se usa en redes WiFi mesh y en infraestructuras críticas.</p></div>
+        </div>
+        <p><strong>📦 Elementos principales de una red:</strong></p>
+        <ul class="icon-list">
+            <li><strong>Switch:</strong> conecta ordenadores dentro de una misma red local. Es como un "multiplicador de puertos" inteligente.</li>
+            <li><strong>Router:</strong> conecta redes diferentes (por ejemplo, tu red local con Internet). Asigna IPs y dirige el tráfico.</li>
+            <li><strong>Punto de acceso WiFi:</strong> permite que dispositivos inalámbricos se conecten a la red cableada.</li>
+            <li><strong>Tarjeta de red (NIC):</strong> el componente que permite a un ordenador conectarse a una red. Cada tarjeta tiene una dirección <strong>MAC</strong> única.</li>
+        </ul>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Internet no es "la nube": es una <strong>red física de cables submarinos, routers y servidores</strong> repartidos por todo el mundo. Cuando accedes a una página web, tus datos viajan por cables reales (fibra óptica, cobre) a través de múltiples routers hasta llegar al servidor donde está alojada esa página.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.1 · Identifica los elementos de tu red</div><p>Responde a estas preguntas investigando la red de tu aula o de tu casa:</p><ol class="styled"><li>¿Qué tipo de red es la del aula (PAN, LAN, WAN)? ¿Por qué?</li><li>Dibuja un esquema sencillo de cómo están conectados los ordenadores del aula. ¿Qué topología crees que usa?</li><li>¿Cuántos switches y routers ves en el aula? ¿Dónde están ubicados?</li><li>¿Qué medio de transmisión usa la red del aula: cable, WiFi o ambos?</li></ol><div class="respuesta-alumno"><p>Escribe aquí tus respuestas...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué tipo de red es la que conecta los ordenadores de un aula?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q17',this,'B')">A) PAN – Personal Area Network</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q17',this,'B')">B) LAN – Local Area Network</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q17',this,'B')">C) WAN – Wide Area Network</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q17',this,'B')">D) MAN – Metropolitana</label>
+            <div id="fb_q17" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Relaciona conceptos de red</div><p>Une cada elemento con su función principal:</p><ol class="styled"><li>Switch → .........</li><li>Router → .........</li><li>Punto de acceso WiFi → .........</li><li>Tarjeta de red → .........</li></ol><p><em>Opciones: a) Conecta redes diferentes y asigna IPs. b) Permite que un ordenador se conecte a la red. c) Conecta ordenadores dentro de la misma red local. d) Permite conexiones inalámbricas.</em></p></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · ¿Cómo funciona Internet?</div><p>Investiga: ¿qué son los <strong>cables submarinos</strong> de fibra óptica? ¿Cuántos hay en el mundo? Busca un mapa de cables submarinos y localiza los que pasan cerca de España. ¿Qué ocurriría si se cortaran varios de ellos a la vez?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 18: DIRECCIONAMIENTO IP ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B18</span><h3>Direccionamiento IP: IPv4, máscara de subred, puerta de enlace y DNS</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-c · Conectividad servidor-cliente (5%)</span></div>
+        <p>Para que dos ordenadores se comuniquen en una red, necesitan <strong>identificarse</strong>. Igual que las casas tienen una dirección postal, los ordenadores tienen una <strong>dirección IP</strong>. Sin direcciones IP, los datos no sabrían a qué dispositivo llegar.</p>
+        <div class="box-def"><div class="box-label">📌 ¿Qué es una dirección IP?</div>Una dirección IP (Internet Protocol) es un <strong>número único</strong> que identifica a cada dispositivo en una red. Es como la matrícula de un coche o el número de teléfono de un móvil: no puede haber dos dispositivos con la misma IP en la misma red.</div>
+        <p><strong>🔢 IPv4: el formato más común</strong></p>
+        <p>Una dirección IPv4 está formada por <strong>4 números</strong> separados por puntos. Cada número va del 0 al 255. Ejemplo: <code>192.168.1.10</code></p>
+        <p>Esto da un total de aproximadamente <strong>4.300 millones</strong> de direcciones posibles. Parece mucho, pero en realidad <strong>se agotaron</strong> hace años. Por eso se creó IPv6 (con billones de direcciones), aunque IPv4 sigue siendo la más usada en redes locales.</p>
+        <div class="grid-2">
+            <div class="grid-card verde"><h4>🏠 IP privada</h4><p>Se usa <strong>dentro de una red local</strong> (tu casa, el aula). No es accesible directamente desde Internet. Rangos típicos: <code>192.168.x.x</code>, <code>10.x.x.x</code>, <code>172.16-31.x.x</code>.</p></div>
+            <div class="grid-card naranja"><h4>🌐 IP pública</h4><p>Es la dirección que te asigna tu proveedor de Internet. Es <strong>única en todo el mundo</strong> y permite que te conectes a Internet. El router traduce entre tu IP privada y tu IP pública (NAT).</p></div>
+        </div>
+        <p><strong>🎭 La máscara de subred:</strong> indica qué parte de la IP identifica a la <strong>red</strong> y qué parte identifica al <strong>dispositivo</strong> dentro de esa red. La máscara más común en redes domésticas es <code>255.255.255.0</code>. Con esta máscara, si dos dispositivos tienen IPs como <code>192.168.1.10</code> y <code>192.168.1.20</code>, pertenecen a la misma red porque los tres primeros números coinciden.</p>
+        <p><strong>🚪 Puerta de enlace (gateway):</strong> es la IP del router que da salida a Internet. Suele ser <code>192.168.1.1</code> o <code>192.168.0.1</code> en redes domésticas. Todo el tráfico que va hacia Internet pasa por la puerta de enlace.</p>
+        <p><strong>📕 DNS (Domain Name System):</strong> traduce nombres de dominio (<code>google.com</code>) a direcciones IP (<code>142.250.200.142</code>). Sin DNS, tendrías que memorizar las IPs de todas las páginas web que visitas. El DNS funciona como una "agenda telefónica" de Internet.</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Para que un ordenador tenga acceso a Internet necesita 4 parámetros: <strong>IP</strong> (su identificación en la red), <strong>máscara de subred</strong> (para saber qué dispositivos están en su misma red), <strong>puerta de enlace</strong> (el router que da salida a Internet) y <strong>DNS</strong> (para traducir nombres a IPs). Si falta cualquiera de estos 4, no podrás navegar.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.2 · Identifica tu configuración de red</div><p>Abre una terminal (cmd en Windows, Terminal en Ubuntu) y ejecuta <code>ipconfig</code> (Windows) o <code>ip addr</code> (Ubuntu). Anota:</p><ol class="styled"><li>Tu dirección IP</li><li>Tu máscara de subred</li><li>Tu puerta de enlace</li><li>El servidor DNS que estás usando</li></ol><p>¿Son IPs privadas o públicas? ¿Cómo lo sabes?</p><div class="respuesta-alumno"><p>Escribe aquí tus respuestas...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Cuál de estas direcciones IP es privada?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q18',this,'C')">A) 8.8.8.8 (Google DNS)</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q18',this,'C')">B) 216.58.201.100 (Google)</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q18',this,'C')">C) 192.168.1.5</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q18',this,'C')">D) 104.26.14.28 (Cloudflare)</label>
+            <div id="fb_q18" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Completa los parámetros de red</div><p>Un ordenador tiene IP <code>10.0.0.25</code> con máscara <code>255.255.255.0</code>. Responde:</p><ol class="styled"><li>¿Cuál es la dirección de red?</li><li>¿Cuántos dispositivos pueden conectarse como máximo a esta red?</li><li>Si la puerta de enlace es <code>10.0.0.1</code>, ¿está en la misma red que el ordenador?</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · IPv6, el futuro del direccionamiento</div><p>Investiga qué es <strong>IPv6</strong>. ¿Por qué se creó? ¿Cuántas direcciones tiene? ¿Por qué aún se usa IPv4 si IPv6 existe desde 1998? Busca cómo es una dirección IPv6 y compárala con una IPv4.</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 19: CONFIGURACIÓN DE RED EN WINDOWS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B19</span><h3>Configuración de red en Windows: IP fija, DHCP, perfiles de red</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-a · Preferencias del entorno personal (5%)</span><span class="ce-tag">RA2 CE-c · Conectividad servidor-cliente (5%)</span></div>
+        <p>En Windows, la configuración de red se gestiona desde <strong>Configuración → Red e Internet</strong> o desde el clásico <strong>Panel de control → Centro de redes y recursos compartidos</strong>. Un técnico informático debe saber configurar ambos métodos, pero también debe dominar la configuración desde la terminal (cmd o PowerShell).</p>
+        <p><strong>📋 Dos formas de obtener una IP:</strong></p>
+        <div class="grid-2">
+            <div class="grid-card verde"><h4>🔄 DHCP (Dynamic Host Configuration Protocol)</h4><p>El router asigna una IP <strong>automáticamente</strong> a cada dispositivo que se conecta. Es lo más cómodo para el usuario. El router "presta" una IP durante un tiempo y luego la renueva.</p></div>
+            <div class="grid-card azul"><h4>📌 IP fija (estática)</h4><p>El administrador configura la IP <strong>manualmente</strong>. La IP no cambia aunque se reinicie el ordenador o el router. Es obligatorio en servidores e impresoras de red.</p></div>
+        </div>
+        <p><strong>⚙️ Configurar IP fija en Windows (GUI):</strong> Configuración → Red e Internet → Ethernet/WiFi → Propiedades del adaptador → Protocolo de Internet versión 4 (TCP/IPv4) → Propiedades → "Usar la siguiente dirección IP".</p>
+        <p><strong>⌨️ Configurar IP fija desde terminal (netsh):</strong></p>
+        <pre><code>netsh interface ip set address "Ethernet" static 192.168.1.100 255.255.255.0 192.168.1.1
+netsh interface ip set dns "Ethernet" static 8.8.8.8</code></pre>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Configurar una <strong>IP fija</strong> es imprescindible en servidores e impresoras de red. Si la IP cambia cada día (DHCP), los clientes no sabrían dónde encontrar el servidor. Es como si el ayuntamiento cambiara el número de tu casa cada semana.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.3 · Configura IP fija en Windows</div><p>En tu VM de Windows, realiza:</p><ol class="styled"><li>Comprueba tu configuración actual con <code>ipconfig</code>.</li><li>Cambia la IP a fija: <code>192.168.100.50</code>, máscara <code>255.255.255.0</code>, puerta de enlace <code>192.168.100.1</code>, DNS <code>8.8.8.8</code>.</li><li>Vuelve a ejecutar <code>ipconfig</code> y verifica que los cambios se han aplicado.</li><li>Haz ping a la puerta de enlace: <code>ping 192.168.100.1</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos y resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué comando muestra la configuración IP en Windows?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q19',this,'C')">A) ip addr</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q19',this,'C')">B) ifconfig</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q19',this,'C')">C) ipconfig</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q19',this,'C')">D) netstat -a</label>
+            <div id="fb_q19" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Completa los comandos netsh</div><p>Completa para configurar IP fija <code>10.0.0.15/24</code> con puerta de enlace <code>10.0.0.1</code> y DNS <code>1.1.1.1</code>:</p><pre><code>netsh interface ip set address "_________" static _________ _________ _________
+netsh interface ip set dns "_________" static _________</code></pre></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · PowerShell para administración de red</div><p>Investiga los cmdlets: <code>Get-NetIPAddress</code>, <code>New-NetIPAddress</code>, <code>Set-DnsClientServerAddress</code>. Configura una IP fija usando SOLO PowerShell y documenta los comandos.</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación y comandos...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 20: CONFIGURACIÓN DE RED EN UBUNTU ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B20</span><h3>Configuración de red en Ubuntu: Netplan, IP fija y DHCP</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-a · Preferencias del entorno personal (5%)</span><span class="ce-tag">RA2 CE-c · Conectividad servidor-cliente (5%)</span></div>
+        <p>En Ubuntu, desde la versión 18.04 se usa <strong>Netplan</strong>, un sistema que utiliza archivos YAML para definir la configuración de red. Es muy diferente al método de Windows, pero una vez que lo entiendes, es muy potente y permite automatizar configuraciones.</p>
+        <div class="box-def"><div class="box-label">📌 ¿Qué es Netplan?</div>Netplan describe la configuración de red en archivos YAML y luego aplica esa configuración usando NetworkManager (escritorio) o systemd-networkd (servidores).</div>
+        <p><strong>📋 Configurar IP fija en Ubuntu (GUI):</strong> Configuración → Red → Engranaje junto a la conexión → pestaña IPv4 → Método: Manual → Introduce IP, máscara, puerta de enlace, DNS → Aplicar.</p>
+        <p><strong>📋 Configurar IP fija por CLI (Netplan):</strong></p>
+        <pre><code>sudo nano /etc/netplan/01-network-manager-all.yaml
+
+# Contenido para IP fija:
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses: [192.168.100.60/24]
+      routes:
+        - to: default
+          via: 192.168.100.1
+      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]
+
+sudo netplan apply</code></pre>
+        <div class="box-warning"><div class="box-label">⚠️ Cuidado con la sangría YAML</div>La sangría (espacios) es obligatoria y debe ser exacta. No uses tabuladores, solo espacios. Un archivo YAML mal indentado provocará que la configuración de red falle.</div>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>En Linux, <strong>todo es un archivo</strong>, incluida la configuración de red. Mientras que en Windows usas ventanas y menús, en Linux editas un archivo de texto que describe tu red. Esta filosofía permite automatizar configuraciones masivas.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.4 · Configura IP fija en Ubuntu</div><p>En tu VM de Ubuntu:</p><ol class="styled"><li>Ejecuta <code>ip addr show</code> y anota tu IP actual.</li><li>Configura IP fija por GUI: <code>192.168.100.70/24</code>, puerta de enlace <code>192.168.100.1</code>, DNS <code>8.8.8.8</code>.</li><li>Edita el archivo Netplan y añade un DNS secundario (<code>1.1.1.1</code>). Aplica con <code>sudo netplan apply</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos usados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué herramienta usa Ubuntu para configurar la red mediante archivos YAML?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q20',this,'C')">A) ifconfig</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q20',this,'C')">B) netsh</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q20',this,'C')">C) Netplan</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q20',this,'C')">D) nm-config</label>
+            <div id="fb_q20" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Identifica errores en Netplan</div><p>El siguiente archivo YAML tiene 3 errores. Encuéntralos y corrígelos:</p><pre><code>network:
+  version: 2
+  ethernets:
+    enp0s3:
+        dhcp4: no
+      addresses: 192.168.1.50/24
+      routes:
+        - to: default
+        via: 192.168.1.1</code></pre></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · nmcli: NetworkManager desde terminal</div><p>Investiga cómo usar <strong>nmcli</strong> para configurar la red en Ubuntu sin editar archivos Netplan. Configura una IP fija usando exclusivamente comandos <code>nmcli</code>.</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 21: COMPROBACIÓN DE CONECTIVIDAD ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B21</span><h3>Comprobación de conectividad: ping, traceroute, ipconfig, ifconfig</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-c · Conectividad servidor-cliente (5%)</span></div>
+        <p>Una vez configurada la red, hay que <strong>comprobar que funciona</strong>. Los comandos de diagnóstico de red son herramientas imprescindibles para cualquier técnico informático. Saber interpretarlos te permitirá resolver el 80% de los problemas de conexión en minutos.</p>
+        <p><strong>🔧 Comandos esenciales de diagnóstico de red:</strong></p>
+        <table>
+            <thead><tr><th>Comando</th><th>Windows</th><th>Ubuntu</th><th>¿Qué hace?</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Ver IP</strong></td><td><code>ipconfig</code></td><td><code>ip addr show</code></td><td>Muestra la configuración IP de todas las tarjetas de red</td></tr>
+                <tr><td><strong>Probar conectividad</strong></td><td><code>ping IP</code></td><td><code>ping -c 4 IP</code></td><td>Envía paquetes a un destino y mide si responde</td></tr>
+                <tr><td><strong>Rastrear ruta</strong></td><td><code>tracert IP</code></td><td><code>traceroute IP</code></td><td>Muestra todos los routers hasta llegar al destino</td></tr>
+                <tr><td><strong>Ver conexiones</strong></td><td><code>netstat -an</code></td><td><code>ss -tuln</code></td><td>Muestra todas las conexiones activas del sistema</td></tr>
+                <tr><td><strong>Probar DNS</strong></td><td><code>nslookup dominio</code></td><td><code>dig dominio</code></td><td>Consulta a qué IP corresponde un nombre de dominio</td></tr>
+            </tbody>
+        </table>
+        <p><strong>📊 Cómo interpretar un ping:</strong></p>
+        <ul class="icon-list">
+            <li><strong>Respuesta recibida + tiempo en ms:</strong> la conexión funciona correctamente.</li>
+            <li><strong>"Tiempo de espera agotado":</strong> el destino no responde. Puede estar apagado o bloqueando pings.</li>
+            <li><strong>"Host de destino inaccesible":</strong> no hay ruta para llegar al destino.</li>
+            <li><strong>4 enviados, 4 recibidos, 0 perdidos:</strong> conexión perfecta.</li>
+        </ul>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Cuando algo falla en la red, <strong>empieza siempre por lo más cercano y ve ampliando</strong>: (1) ping a tu propia IP, (2) ping a la puerta de enlace, (3) ping a 8.8.8.8, (4) ping a google.com. Este orden te dice exactamente dónde está el fallo.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.5 · Diagnóstico de conectividad</div><p>Realiza estas pruebas en ambas VMs:</p><ol class="styled"><li>Comprueba tu IP con <code>ipconfig</code> / <code>ip addr</code>.</li><li>Haz ping a tu propia IP.</li><li>Haz ping a la puerta de enlace.</li><li>Haz ping a <code>8.8.8.8</code>.</li><li>Haz ping a <code>google.com</code>.</li><li>Ejecuta <code>tracert google.com</code> / <code>traceroute google.com</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los resultados de cada paso...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué comprueba el comando ping?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q21',this,'B')">A) La velocidad de conexión en Mbps</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q21',this,'B')">B) Si un equipo está accesible en la red</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q21',this,'B')">C) Los puertos abiertos de un equipo</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q21',this,'B')">D) El nombre DNS de una IP</label>
+            <div id="fb_q21" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Diagnostica el problema</div><p>Un usuario dice "No tengo Internet". Según estas pruebas, ¿dónde está el fallo?</p><ol class="styled"><li>ping 127.0.0.1 → OK. ping 192.168.1.1 → Sin respuesta.</li><li>ping 127.0.0.1 → OK. ping 192.168.1.1 → OK. ping 8.8.8.8 → Sin respuesta.</li><li>ping 127.0.0.1 → OK. ping 192.168.1.1 → OK. ping 8.8.8.8 → OK. ping google.com → Sin respuesta.</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Wireshark</div><p>Investiga qué es <strong>Wireshark</strong>. Instálalo en Ubuntu y captura el tráfico mientras haces un ping a google.com. Localiza los paquetes ICMP.</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 22: GRUPOS DE TRABAJO ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B22</span><h3>Grupos de trabajo en Windows: configuración y limitaciones</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-a · Preferencias del entorno personal (5%)</span><span class="ce-tag">RA2 CE-d · Usar servicios para compartir recursos (10%)</span></div>
+        <p>Un <strong>grupo de trabajo</strong> es la forma más sencilla de conectar ordenadores en una red pequeña. Todos los equipos están al mismo nivel: ninguno controla a los demás. Cada ordenador gestiona sus propios usuarios y recursos de forma independiente.</p>
+        <div class="box-def"><div class="box-label">📌 ¿Cómo funciona?</div>Los ordenadores comparten un <strong>nombre de grupo</strong> (por defecto "WORKGROUP"). Cuando abres el Explorador → Red, ves todos los ordenadores de tu mismo grupo de trabajo.</div>
+        <p><strong>⚙️ Configurar:</strong> Configuración → Sistema → Acerca de → Cambiar nombre del equipo (avanzado) → Cambiar → Grupo de trabajo.</p>
+        <p><strong>⚠️ Limitaciones:</strong></p>
+        <ul class="icon-list">
+            <li>Máximo ~20 ordenadores.</li>
+            <li>Sin control centralizado: cada equipo tiene sus propias cuentas.</li>
+            <li>Contraseñas duplicadas: necesitas una cuenta en cada ordenador.</li>
+            <li>Seguridad débil: no hay políticas de seguridad comunes.</li>
+        </ul>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Un grupo de trabajo es como <strong>casas independientes</strong> en una urbanización. Un dominio es como un <strong>edificio de apartamentos</strong> con portero y normas comunes.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.6 · Configura un grupo de trabajo</div><p>En tus dos VMs de Windows:</p><ol class="styled"><li>Comprueba el nombre del grupo de trabajo actual.</li><li>Cámbialo a <code>CLASE-OACE</code> en ambas.</li><li>Reinicia y comprueba si aparecen en "Red" del Explorador.</li></ol><div class="respuesta-alumno"><p>Escribe aquí tus observaciones...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Cuántos PCs puede tener como máximo un grupo de trabajo en Windows?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q22',this,'C')">A) 5 equipos</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q22',this,'C')">B) 10 equipos</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q22',this,'C')">C) 20 equipos</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q22',this,'C')">D) Sin límite</label>
+            <div id="fb_q22" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Grupo de trabajo vs Dominio</div><p>Completa con SÍ o NO:</p><table><thead><tr><th>Característica</th><th>Grupo de trabajo</th><th>Dominio</th></tr></thead><tbody><tr><td>Control centralizado de usuarios</td><td>....</td><td>SÍ</td></tr><tr><td>Adecuado para &lt;20 PCs</td><td>....</td><td>....</td></tr><tr><td>Requiere servidor dedicado</td><td>....</td><td>SÍ</td></tr><tr><td>Cuentas de usuario locales</td><td>....</td><td>....</td></tr></tbody></table></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Active Directory</div><p>Investiga qué es <strong>Active Directory</strong> de Microsoft. ¿Qué ventajas tiene frente a un grupo de trabajo?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 23: CUENTAS DE USUARIO ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B23</span><h3>Introducción a las cuentas de usuario: tipos, privilegios y seguridad</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-b · Configurar y gestionar cuentas de usuario (20%)</span></div>
+        <p>Las <strong>cuentas de usuario</strong> son la base de la seguridad en cualquier sistema operativo multiusuario. Cada persona debe tener su propia cuenta, con su espacio privado y sus propios privilegios.</p>
+        <div class="box-def"><div class="box-label">📌 ¿Qué es una cuenta de usuario?</div>Una identidad digital que el SO reconoce. Cada cuenta tiene: <strong>nombre de usuario</strong>, <strong>contraseña</strong>, <strong>perfil</strong> (escritorio, documentos) y <strong>privilegios</strong> (lo que puede hacer).</div>
+        <p><strong>👑 Tipos según privilegios:</strong></p>
+        <div class="grid-2">
+            <div class="grid-card rojo"><h4>🔴 Administrador</h4><p>Puede hacer <strong>todo</strong>: instalar programas, cambiar configuraciones, crear/eliminar usuarios. Es la cuenta más poderosa y peligrosa.</p></div>
+            <div class="grid-card verde"><h4>🟢 Usuario estándar</h4><p>Solo puede usar programas ya instalados y trabajar con sus archivos. <strong>No puede</strong> instalar software ni cambiar configuraciones del sistema.</p></div>
+        </div>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p><strong>Nunca uses la cuenta de administrador para el día a día.</strong> Si ejecutas un virus como administrador, el virus tendrá poderes totales. Como usuario estándar, el daño será limitado.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.7 · Identifica tipos de cuenta</div><p>Responde:</p><ol class="styled"><li>¿Qué tipo de cuenta tienes en el aula? ¿Cómo lo has averiguado?</li><li>Crea en tu VM de Windows una cuenta estándar <code>becario</code>. Inicia sesión con ella e intenta cambiar la fecha. ¿Qué ocurre?</li></ol><div class="respuesta-alumno"><p>Escribe aquí tus respuestas...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Con qué tipo de cuenta debe trabajar un usuario en su día a día?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q23',this,'C')">A) Administrador, para tener todos los permisos</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q23',this,'C')">B) Invitado, para más anonimato</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q23',this,'C')">C) Estándar, por el principio del mínimo privilegio</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q23',this,'C')">D) Sistema, para acceder a todo</label>
+            <div id="fb_q23" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Clasifica las acciones</div><p>¿Administrador (A) o Estándar (E)?</p><ol class="styled"><li>Crear un documento → ....</li><li>Instalar un programa → ....</li><li>Cambiar la hora del sistema → ....</li><li>Eliminar otro usuario → ....</li><li>Navegar por Internet → ....</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · UAC (Control de Cuentas de Usuario)</div><p>Investiga qué es el <strong>UAC</strong> de Windows. ¿Por qué aparece esa pantalla que se oscurece cuando instalas programas? ¿Existe algo similar en Ubuntu?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 24: GESTIÓN DE CUENTAS EN WINDOWS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B24</span><h3>Creación y gestión de cuentas de usuario en Windows</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-b · Configurar y gestionar cuentas de usuario (20%)</span></div>
+        <p>En Windows, la gestión de usuarios se puede hacer por <strong>GUI</strong> (Configuración → Cuentas) o por <strong>CLI</strong> (cmd con <code>net user</code> o PowerShell). Como técnico, debes dominar ambos métodos.</p>
+        <p><strong>⌨️ Gestión por comandos (cmd):</strong></p>
+        <pre><code>net user                              # Listar usuarios
+net user NOMBRE CONTRASEÑA /add        # Crear usuario
+net user NOMBRE NUEVACONTRASEÑA        # Cambiar contraseña
+net user NOMBRE /delete                # Eliminar usuario
+net user NOMBRE /active:no             # Desactivar cuenta</code></pre>
+        <p><strong>📁 Carpetas personales:</strong> cada usuario tiene su carpeta en <code>C:\Users\</code>. Por defecto, otros usuarios no pueden acceder a ella.</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Los comandos <code>net user</code> funcionan en todas las versiones de Windows. Son rápidos, potentes y funcionan incluso cuando la interfaz gráfica falla.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.8 · Gestiona usuarios en Windows</div><p>Desde cmd como administrador:</p><ol class="styled"><li>Lista todos los usuarios con <code>net user</code>.</li><li>Crea: <code>trabajador1</code>, <code>trabajador2</code>, <code>trabajador3</code> (contraseña: <code>OACE2025</code>).</li><li>Desactiva <code>trabajador3</code>.</li><li>Elimina <code>trabajador3</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos exactos...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué comando crea el usuario "alumno1" en Windows desde cmd?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q24',this,'B')">A) adduser alumno1</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q24',this,'B')">B) net user alumno1 /add</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q24',this,'B')">C) useradd alumno1</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q24',this,'B')">D) create user alumno1 /new</label>
+            <div id="fb_q24" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Completa los comandos</div><p>Escribe el comando <code>net user</code> para:</p><ol class="styled"><li>Crear usuario <code>invitado</code> con contraseña <code>Temp1234</code> → .................................</li><li>Desactivar cuenta <code>invitado</code> → .................................</li><li>Cambiar contraseña a <code>Nueva4567</code> → .................................</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · PowerShell para usuarios</div><p>Investiga: <code>New-LocalUser</code>, <code>Get-LocalUser</code>, <code>Remove-LocalUser</code>. Crea un script que cree 5 usuarios de una vez desde un array.</p><div class="respuesta-alumno"><p>Escribe aquí tu script...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 25: GESTIÓN DE CUENTAS EN UBUNTU ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B25</span><h3>Creación y gestión de cuentas de usuario en Ubuntu</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-b · Configurar y gestionar cuentas de usuario (20%)</span></div>
+        <p>En Linux, la gestión de usuarios se hace principalmente desde la <strong>terminal</strong>. Aunque Ubuntu tiene una interfaz gráfica en Configuración → Usuarios, todo administrador de sistemas Linux debe dominar los comandos de gestión de usuarios.</p>
+        <p><strong>🐧 Comandos esenciales para gestión de usuarios en Linux:</strong></p>
+        <table>
+            <thead><tr><th>Comando</th><th>¿Qué hace?</th></tr></thead>
+            <tbody>
+                <tr><td><code>sudo useradd -m NOMBRE</code></td><td>Crea un usuario nuevo con carpeta personal</td></tr>
+                <tr><td><code>sudo passwd NOMBRE</code></td><td>Asigna o cambia la contraseña del usuario</td></tr>
+                <tr><td><code>sudo userdel NOMBRE</code></td><td>Elimina el usuario (sin borrar su carpeta)</td></tr>
+                <tr><td><code>sudo userdel -r NOMBRE</code></td><td>Elimina el usuario Y su carpeta personal</td></tr>
+                <tr><td><code>sudo usermod -L NOMBRE</code></td><td>Bloquea (desactiva) la cuenta</td></tr>
+                <tr><td><code>sudo usermod -U NOMBRE</code></td><td>Desbloquea la cuenta</td></tr>
+                <tr><td><code>cat /etc/passwd</code></td><td>Lista todos los usuarios del sistema</td></tr>
+                <tr><td><code>sudo usermod -aG GRUPO NOMBRE</code></td><td>Añade usuario a un grupo adicional</td></tr>
+            </tbody>
+        </table>
+        <p><strong>📁 Carpetas personales en Linux:</strong> cada usuario tiene su carpeta en <code>/home/NOMBRE/</code>. Para ver los permisos: <code>ls -l /home/</code>.</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>En Linux, los usuarios se guardan en <code>/etc/passwd</code> y las contraseñas cifradas en <code>/etc/shadow</code> (solo accesible por root). Nunca edites estos archivos directamente: usa los comandos <code>useradd</code>, <code>usermod</code> y <code>userdel</code>.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.9 · Gestiona usuarios en Ubuntu</div><p>Desde la terminal de Ubuntu:</p><ol class="styled"><li>Lista los usuarios con <code>cat /etc/passwd</code> (solo las últimas 10 líneas: <code>tail -10 /etc/passwd</code>).</li><li>Crea 3 usuarios: <code>trabajador1</code>, <code>trabajador2</code>, <code>trabajador3</code> con <code>sudo useradd -m NOMBRE</code>.</li><li>Asigna contraseña a cada uno con <code>sudo passwd NOMBRE</code>.</li><li>Bloquea a <code>trabajador3</code> con <code>sudo usermod -L trabajador3</code>.</li><li>Intenta iniciar sesión como <code>trabajador3</code>. ¿Qué ocurre?</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos y resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué opción de useradd crea también la carpeta personal en /home?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q25',this,'C')">A) -p (contraseña)</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q25',this,'C')">B) -g (grupo principal)</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q25',this,'C')">C) -m (make home)</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q25',this,'C')">D) -s (shell por defecto)</label>
+            <div id="fb_q25" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Relaciona comandos Linux</div><p>Une cada acción con su comando:</p><ol class="styled"><li>Crear usuario con carpeta → .........</li><li>Eliminar usuario y su carpeta → .........</li><li>Bloquear cuenta → .........</li><li>Añadir usuario a un grupo → .........</li></ol><p><em>Opciones: a) usermod -L, b) useradd -m, c) usermod -aG, d) userdel -r</em></p></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · El archivo /etc/sudoers</div><p>Investiga qué es el archivo <code>/etc/sudoers</code>. ¿Cómo se edita de forma segura (pista: <code>visudo</code>)? ¿Cómo darías privilegios de administrador a un usuario estándar sin revelar la contraseña de root?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 26: PERFILES DE USUARIO ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B26</span><h3>Perfiles de usuario: locales, móviles y obligatorios</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-b · Configurar y gestionar cuentas de usuario (20%)</span></div>
+        <p>Un <strong>perfil de usuario</strong> es el conjunto de archivos y configuraciones que definen el entorno de trabajo de una persona: su escritorio, sus documentos, sus marcadores del navegador, su fondo de pantalla... Cuando inicias sesión, Windows o Ubuntu cargan tu perfil para que encuentres todo como lo dejaste.</p>
+        <p><strong>📁 Tipos de perfiles en Windows:</strong></p>
+        <div class="grid-3">
+            <div class="grid-card azul"><h4>📌 Perfil local</h4><p>Se guarda en el disco duro de ESE ordenador. Si inicias sesión en otro PC, tu perfil no estará allí. Es el tipo por defecto en grupos de trabajo.</p></div>
+            <div class="grid-card verde"><h4>🔄 Perfil móvil (roaming)</h4><p>Se guarda en un servidor central. Al iniciar sesión en cualquier PC de la red, se descarga tu perfil. Al cerrar sesión, se guardan los cambios en el servidor. Requiere un dominio.</p></div>
+            <div class="grid-card naranja"><h4>🔒 Perfil obligatorio</h4><p>Es un perfil móvil que el usuario <strong>no puede modificar</strong>. Los cambios que hagas durante la sesión se descartan al cerrar sesión. Se usa en quioscos, bibliotecas y aulas.</p></div>
+        </div>
+        <p><strong>🐧 En Linux:</strong> cada usuario tiene su carpeta en <code>/home/</code> con todos sus archivos y configuraciones (en archivos ocultos que empiezan por punto: <code>.bashrc</code>, <code>.config</code>, etc.). El concepto de perfiles móviles y obligatorios existe pero se implementa de forma diferente (con NFS y scripts).</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>El perfil de un usuario contiene <strong>toda su vida digital en ese ordenador</strong>. Si el perfil se corrompe, el usuario puede perder sus configuraciones o incluso no poder iniciar sesión. Por eso es importante hacer copias de seguridad de los perfiles.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.10 · Explora los perfiles de usuario</div><p>Realiza estas tareas:</p><ol class="styled"><li>En Windows, ve a <code>C:\Users\</code> y enumera las carpetas de perfil que hay. ¿Coinciden con los usuarios del sistema?</li><li>En Ubuntu, ejecuta <code>ls -la /home/</code>. ¿Ves los mismos usuarios que en <code>/etc/passwd</code>?</li><li>En Windows, inicia sesión con un usuario, cambia el fondo de escritorio, cierra sesión y vuelve a entrar. ¿Se ha guardado el cambio?</li></ol><div class="respuesta-alumno"><p>Escribe aquí tus observaciones...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué tipo de perfil se descarga desde un servidor al iniciar sesión?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q26',this,'D')">A) Perfil local</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q26',this,'D')">B) Perfil obligatorio</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q26',this,'D')">C) Perfil temporal</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q26',this,'D')">D) Perfil móvil (itinerante)</label>
+            <div id="fb_q26" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Identifica el tipo de perfil</div><p>¿Qué tipo de perfil usarías en cada caso?</p><ol class="styled"><li>Un ordenador de la biblioteca pública → .........</li><li>Un empleado que usa diferentes PCs cada día → .........</li><li>Tu ordenador personal de casa → .........</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Perfiles en Linux con NFS</div><p>Investiga cómo se implementan los <strong>perfiles móviles en Linux</strong> usando NFS (Network File System). ¿Qué ventajas tiene montar <code>/home/</code> desde un servidor NFS?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 27: GRUPOS DE USUARIOS EN WINDOWS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B27</span><h3>Grupos de usuarios en Windows: tipos, ámbitos y gestión</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-b · Configurar y gestionar cuentas de usuario (20%)</span></div>
+        <p>Un <strong>grupo de usuarios</strong> es una colección de cuentas que comparten los mismos permisos. En lugar de dar permisos a 50 usuarios uno por uno, creas un grupo, le das los permisos al grupo, y añades a los 50 usuarios a ese grupo. Esto ahorra tiempo y reduce errores.</p>
+        <p><strong>👥 Grupos predefinidos importantes en Windows:</strong></p>
+        <table>
+            <thead><tr><th>Grupo</th><th>Descripción</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Administradores</strong></td><td>Control total del sistema. El grupo más poderoso.</td></tr>
+                <tr><td><strong>Usuarios</strong></td><td>Usuarios estándar sin privilegios especiales.</td></tr>
+                <tr><td><strong>Invitados</strong></td><td>Acceso muy limitado, sin contraseña por defecto.</td></tr>
+                <tr><td><strong>Usuarios avanzados</strong></td><td>Más privilegios que Usuarios pero menos que Administradores (obsoleto en versiones recientes).</td></tr>
+                <tr><td><strong>Operadores de copia de seguridad</strong></td><td>Pueden hacer backups de todo el sistema aunque no tengan permisos.</td></tr>
+            </tbody>
+        </table>
+        <p><strong>⌨️ Gestión de grupos desde cmd:</strong></p>
+        <pre><code>net localgroup                        # Listar grupos
+net localgroup NOMBRE /add             # Crear grupo
+net localgroup NOMBRE USUARIO /add     # Añadir usuario al grupo
+net localgroup NOMBRE USUARIO /delete  # Quitar usuario del grupo</code></pre>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Los grupos son la herramienta más potente para administrar permisos. <strong>Nunca des permisos a usuarios individuales</strong>: da permisos a grupos y luego añade usuarios a esos grupos. Si un empleado cambia de puesto, solo tienes que cambiar sus grupos, no revisar 50 carpetas.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.11 · Gestiona grupos en Windows</div><p>Desde cmd como administrador:</p><ol class="styled"><li>Lista los grupos con <code>net localgroup</code>.</li><li>Crea un grupo llamado <code>Ventas</code>.</li><li>Añade a <code>trabajador1</code> y <code>trabajador2</code> al grupo <code>Ventas</code>.</li><li>Comprueba los miembros del grupo con <code>net localgroup Ventas</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos exactos...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué comando lista todos los grupos locales en Windows?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q27',this,'B')">A) net group</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q27',this,'B')">B) net localgroup</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q27',this,'B')">C) groups</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q27',this,'B')">D) getlocalgroup</label>
+            <div id="fb_q27" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Completa los comandos de grupos</div><p>Escribe el comando para:</p><ol class="styled"><li>Crear grupo <code>Contabilidad</code> → .................................</li><li>Añadir usuario <code>maria</code> al grupo <code>Contabilidad</code> → .................................</li><li>Quitar usuario <code>maria</code> del grupo <code>Contabilidad</code> → .................................</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Grupos locales vs grupos de dominio</div><p>Investiga la diferencia entre <strong>grupos locales</strong> (los que has usado con <code>net localgroup</code>) y <strong>grupos de dominio</strong> (Active Directory). ¿Por qué en una empresa con 500 empleados no usarías grupos locales?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 28: GRUPOS DE USUARIOS EN UBUNTU ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B28</span><h3>Grupos de usuarios en Ubuntu: groupadd, usermod, groups</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-b · Configurar y gestionar cuentas de usuario (20%)</span></div>
+        <p>En Linux, los grupos funcionan de forma similar a Windows pero se gestionan con comandos diferentes. Cada usuario pertenece a un <strong>grupo principal</strong> (que se crea automáticamente con su nombre) y puede pertenecer a <strong>grupos adicionales</strong>.</p>
+        <p><strong>🐧 Comandos esenciales para grupos en Linux:</strong></p>
+        <table>
+            <thead><tr><th>Comando</th><th>¿Qué hace?</th></tr></thead>
+            <tbody>
+                <tr><td><code>cat /etc/group</code></td><td>Lista todos los grupos del sistema</td></tr>
+                <tr><td><code>sudo groupadd NOMBRE</code></td><td>Crea un grupo nuevo</td></tr>
+                <tr><td><code>sudo groupdel NOMBRE</code></td><td>Elimina un grupo</td></tr>
+                <tr><td><code>sudo usermod -aG GRUPO USUARIO</code></td><td>Añade usuario a un grupo adicional</td></tr>
+                <tr><td><code>sudo gpasswd -d USUARIO GRUPO</code></td><td>Quita usuario de un grupo</td></tr>
+                <tr><td><code>groups USUARIO</code></td><td>Muestra los grupos a los que pertenece un usuario</td></tr>
+            </tbody>
+        </table>
+        <p><strong>⚠️ Diferencia importante:</strong> el parámetro <code>-aG</code> (append Group) añade el grupo sin quitar los anteriores. Si usas solo <code>-G</code>, reemplazarás todos los grupos adicionales del usuario, lo que puede dejarlo sin acceso a recursos importantes.</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>En Linux, el grupo <strong>sudo</strong> es especial: los usuarios que pertenecen a él pueden ejecutar comandos como administrador usando <code>sudo</code>. Añadir un usuario a sudo es darle las llaves del sistema.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.12 · Gestiona grupos en Ubuntu</div><p>Desde la terminal:</p><ol class="styled"><li>Lista los grupos con <code>cat /etc/group | tail -15</code>.</li><li>Crea un grupo llamado <code>ventas</code> con <code>sudo groupadd ventas</code>.</li><li>Añade a <code>trabajador1</code> y <code>trabajador2</code> al grupo <code>ventas</code>.</li><li>Comprueba con <code>groups trabajador1</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos exactos...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué opción de usermod añade a un usuario a un grupo sin quitarlo de los demás?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q28',this,'C')">A) usermod -G grupo usuario</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q28',this,'C')">B) usermod -g grupo usuario</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q28',this,'C')">C) usermod -aG grupo usuario</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q28',this,'C')">D) usermod -add grupo usuario</label>
+            <div id="fb_q28" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Relaciona comandos de grupos</div><p>Une cada acción con su comando:</p><ol class="styled"><li>Crear grupo → .........</li><li>Añadir usuario a grupo → .........</li><li>Ver grupos de un usuario → .........</li><li>Quitar usuario de grupo → .........</li></ol><p><em>Opciones: a) groups USUARIO, b) groupadd, c) gpasswd -d, d) usermod -aG</em></p></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · El grupo sudo y /etc/sudoers</div><p>Investiga cómo funciona el grupo <strong>sudo</strong>. ¿Qué diferencia hay entre <code>su</code> y <code>sudo</code>? ¿Cómo configurarías sudo para que un usuario solo pueda ejecutar ciertos comandos como administrador?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 29: RECURSOS COMPARTIDOS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B29</span><h3>Recursos compartidos: concepto, tipos y seguridad</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-d · Usar servicios para compartir recursos (10%)</span><span class="ce-tag">RA2 CE-e · Asignar permisos a recursos compartidos (20%)</span></div>
+        <p>Un <strong>recurso compartido</strong> es cualquier elemento de un ordenador que se pone a disposición de otros usuarios de la red: carpetas, impresoras, escáneres, unidades de disco... Compartir recursos es la razón principal por la que existen las redes de ordenadores.</p>
+        <div class="box-def"><div class="box-label">📌 Tipos de recursos compartidos</div><strong>Carpetas compartidas:</strong> permiten que varios usuarios lean y escriban archivos en una misma ubicación de red, sin necesidad de enviarlos por correo o copiarlos a un USB.<br><strong>Impresoras compartidas:</strong> una sola impresora física puede ser usada por todos los ordenadores de la red.<br><strong>Unidades de red:</strong> una letra de unidad (ej: <code>Z:</code>) que apunta a una carpeta compartida en otro ordenador, facilitando el acceso.</div>
+        <p><strong>🔐 Seguridad en recursos compartidos:</strong> cuando compartes un recurso, debes decidir <strong>quién</strong> puede acceder y <strong>qué puede hacer</strong>. Los permisos de recurso compartido son la primera capa de seguridad. Pero ojo: en Windows, los permisos NTFS (que viste en el RA1) son una segunda capa que también se aplica. El permiso más restrictivo es el que prevalece.</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Compartir un recurso es como prestar las llaves de una habitación de tu casa. La llave del recurso compartido abre la puerta de la casa. Los permisos NTFS deciden qué muebles puedes tocar dentro. Si la puerta está cerrada, no puedes entrar aunque tengas permiso para tocar los muebles.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.13 · Identifica recursos compartidos</div><p>Responde:</p><ol class="styled"><li>En el aula, ¿hay carpetas compartidas a las que accedas? ¿Dónde las ves?</li><li>¿Hay alguna impresora compartida? ¿Cómo lo sabes?</li><li>Si compartes una carpeta con permisos de "Lectura" pero el archivo dentro tiene permiso NTFS "Control total", ¿puede otro usuario modificar el archivo desde la red? ¿Por qué?</li></ol><div class="respuesta-alumno"><p>Escribe aquí tus respuestas...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué permiso permite ver y copiar archivos pero NO modificarlos?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q29',this,'C')">A) Control total</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q29',this,'C')">B) Modificar / Cambiar</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q29',this,'C')">C) Lectura</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q29',this,'C')">D) Escritura solo</label>
+            <div id="fb_q29" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Identifica el tipo de recurso</div><p>Clasifica: ¿carpeta compartida, impresora compartida o unidad de red?</p><ol class="styled"><li><code>\\SRV01\Documentos</code> → .........</li><li><code>Z:</code> que apunta a <code>\\SRV01\Backups</code> → .........</li><li><code>\\SRV01\HP-LaserJet</code> → .........</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Protocolos de compartición</div><p>Investiga los protocolos <strong>SMB/CIFS</strong> (Windows) y <strong>NFS</strong> (Linux). ¿En qué se diferencian? ¿Cuál es más rápido? ¿Cuál usarías en una red mixta Windows+Linux?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 30: COMPARTIR CARPETAS EN WINDOWS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B30</span><h3>Compartir carpetas en Windows: permisos de recurso compartido</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-d · Usar servicios para compartir recursos (10%)</span><span class="ce-tag">RA2 CE-e · Asignar permisos a recursos compartidos (20%)</span></div>
+        <p>En Windows, compartir una carpeta es sencillo, pero configurar los <strong>permisos correctamente</strong> requiere entender los tres niveles de permisos de recurso compartido.</p>
+        <p><strong>📋 Compartir una carpeta (GUI):</strong> Botón derecho sobre la carpeta → Propiedades → pestaña Compartir → Compartir... → Elige usuarios y nivel de permiso → Compartir.</p>
+        <p><strong>🔐 Los 3 niveles de permisos de recurso compartido:</strong></p>
+        <div class="grid-3">
+            <div class="grid-card verde"><h4>📖 Lectura</h4><p>Pueden ver los archivos y carpetas, abrirlos y copiarlos. <strong>No pueden</strong> modificar, crear ni eliminar nada.</p></div>
+            <div class="grid-card naranja"><h4>✏️ Lectura y escritura</h4><p>Además de leer, pueden crear nuevos archivos, modificar los existentes y eliminar archivos.</p></div>
+            <div class="grid-card rojo"><h4>👑 Control total</h4><p>Igual que Lectura/Escritura, pero además pueden <strong>cambiar los permisos</strong> del recurso compartido.</p></div>
+        </div>
+        <p><strong>⌨️ Compartir desde cmd (net share):</strong></p>
+        <pre><code>net share NOMBRE=C:\Ruta                 # Compartir carpeta
+net share                                   # Listar recursos compartidos
+net share NOMBRE /delete                    # Dejar de compartir</code></pre>
+        <p><strong>🔗 Acceder a un recurso compartido:</strong> desde el Explorador, escribe en la barra de direcciones: <code>\\NOMBRE-DEL-EQUIPO\NOMBRE-DEL-RECURSO</code> (ej: <code>\\SRV01\Documentos</code>).</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Los permisos de recurso compartido <strong>solo se aplican cuando accedes por red</strong>. Si te sientas físicamente delante del ordenador donde está la carpeta, los permisos de recurso compartido no te afectan: solo se aplican los permisos NTFS.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.14 · Comparte carpetas en Windows</div><p>En tu VM de Windows:</p><ol class="styled"><li>Crea una carpeta <code>C:\Compartido\Publico</code> con un archivo de prueba.</li><li>Compártela con permisos de <strong>Lectura</strong> para "Todos".</li><li>Desde otra VM o desde la misma, intenta acceder a <code>\\localhost\Publico</code>.</li><li>Crea un archivo nuevo en esa carpeta desde la red. ¿Puedes? ¿Por qué?</li></ol><div class="respuesta-alumno"><p>Escribe aquí los resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Cuál es la sintaxis correcta para acceder a un recurso compartido desde Windows?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q30',this,'B')">A) //equipo/recurso</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q30',this,'B')">B) \\\\equipo\\recurso</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q30',this,'B')">C) smb://equipo/recurso</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q30',this,'B')">D) /equipo/recurso</label>
+            <div id="fb_q30" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Completa los comandos net share</div><p>Escribe el comando para:</p><ol class="styled"><li>Compartir <code>C:\Datos</code> como <code>DATOS</code> → .................................</li><li>Dejar de compartir <code>DATOS</code> → .................................</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Compartición administrativa</div><p>Investiga qué son los <strong>recursos compartidos administrativos</strong> en Windows (<code>C$</code>, <code>ADMIN$</code>, <code>IPC$</code>). ¿Para qué sirven? ¿Por qué llevan el símbolo <code>$</code> al final? ¿Cómo se accede a ellos?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 31: COMPARTIR CARPETAS EN UBUNTU ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B31</span><h3>Compartir carpetas en Ubuntu: Samba y el protocolo SMB</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-d · Usar servicios para compartir recursos (10%)</span><span class="ce-tag">RA2 CE-e · Asignar permisos a recursos compartidos (20%)</span></div>
+        <p>Para compartir carpetas entre Windows y Linux se usa <strong>Samba</strong>, una implementación libre del protocolo SMB/CIFS que permite que ordenadores Linux aparezcan en la red como si fueran Windows. Es la herramienta fundamental para integrar ambos sistemas en una misma red.</p>
+        <div class="box-def"><div class="box-label">📌 ¿Qué es Samba?</div>Samba es un software que implementa el protocolo <strong>SMB (Server Message Block)</strong> en Linux. Gracias a Samba, un Ubuntu puede compartir carpetas con Windows, acceder a carpetas compartidas de Windows e incluso actuar como controlador de dominio.</div>
+        <p><strong>📋 Compartir carpeta por GUI en Ubuntu:</strong> Botón derecho sobre la carpeta → Compartir carpeta → Activar "Compartir esta carpeta" → Opcional: permitir escritura, acceso de invitados.</p>
+        <p><strong>📋 Compartir carpeta con Samba (CLI):</strong></p>
+        <pre><code># Instalar Samba
+sudo apt install samba
+
+# Editar configuración
+sudo nano /etc/samba/smb.conf
+
+# Añadir al final del archivo:
+[Compartido]
+   path = /home/usuario/compartido
+   browseable = yes
+   read only = no
+   guest ok = no
+   valid users = @ventas
+
+# Reiniciar Samba
+sudo systemctl restart smbd</code></pre>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Samba es el "puente" entre Windows y Linux. Sin Samba, un ordenador Windows no podría ver ni acceder a las carpetas compartidas de un Ubuntu. Es una herramienta imprescindible en cualquier red con sistemas mixtos.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.15 · Comparte carpetas con Samba</div><p>En tu VM de Ubuntu:</p><ol class="styled"><li>Instala Samba con <code>sudo apt install samba</code>.</li><li>Crea una carpeta <code>~/compartido</code> y compártela por GUI.</li><li>Desde Windows, intenta acceder a <code>\\IP-DE-UBUNTU\compartido</code>.</li><li>Si no funciona, comprueba que el firewall no esté bloqueando Samba: <code>sudo ufw allow samba</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Cuál es el paquete correcto para instalar Samba en Ubuntu?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q31',this,'C')">A) apt install smb</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q31',this,'C')">B) apt install samba-server</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q31',this,'C')">C) sudo apt install samba</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q31',this,'C')">D) pip install samba</label>
+            <div id="fb_q31" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Configuración Samba</div><p>¿Qué línea añadirías a smb.conf para...?</p><ol class="styled"><li>Permitir solo lectura → .................................</li><li>Permitir solo usuarios del grupo <code>contabilidad</code> → .................................</li><li>Ocultar el recurso en la red → .................................</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · NFS vs Samba</div><p>Investiga <strong>NFS (Network File System)</strong>, el protocolo nativo de Linux para compartir archivos. ¿En qué se diferencia de Samba? ¿Cuándo usarías NFS y cuándo Samba?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 32: ACCESO A RECURSOS COMPARTIDOS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B32</span><h3>Acceso a recursos compartidos desde Windows y Ubuntu</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-f · Acceder a recursos compartidos (15%)</span></div>
+        <p>Una vez que los recursos están compartidos, los clientes necesitan <strong>acceder a ellos</strong>. Hay varias formas de hacerlo, desde la más visual (Explorador de archivos) hasta la más técnica (montaje permanente).</p>
+        <p><strong>🔗 Métodos de acceso en Windows:</strong></p>
+        <ul class="icon-list">
+            <li><strong>Explorador de archivos → Red:</strong> muestra los equipos cercanos y sus recursos compartidos.</li>
+            <li><strong>Barra de direcciones:</strong> escribe <code>\\EQUIPO\RECURSO</code> (ej: <code>\\192.168.1.10\Documentos</code>).</li>
+            <li><strong>Conectar a unidad de red:</strong> asigna una letra (Z:, X:) a un recurso compartido para acceder como si fuera un disco local.</li>
+        </ul>
+        <p><strong>🔗 Métodos de acceso en Ubuntu:</strong></p>
+        <ul class="icon-list">
+            <li><strong>Archivos → Otras ubicaciones:</strong> en la barra inferior, escribe <code>smb://EQUIPO/RECURSO</code>.</li>
+            <li><strong>Montaje manual:</strong> <code>sudo mount -t cifs //EQUIPO/RECURSO /mnt/punto -o username=USUARIO</code>.</li>
+            <li><strong>Montaje automático:</strong> añade una entrada en <code>/etc/fstab</code> para que el recurso se monte al arrancar.</li>
+        </ul>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Conectar una <strong>unidad de red</strong> (Windows) o <strong>montar un recurso</strong> (Linux) hace que una carpeta remota parezca local. Puedes guardar archivos arrastrando y soltando, como si estuvieras trabajando en tu propio disco duro. Es la forma más cómoda de trabajar con recursos compartidos a diario.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.16 · Accede a recursos compartidos</div><p>Realiza estas tareas:</p><ol class="styled"><li>Desde Windows, accede a <code>\\localhost\Publico</code>. ¿Ves los archivos?</li><li>Conecta una unidad de red (letra Z:) a ese recurso compartido.</li><li>Desde Ubuntu, accede a <code>smb://IP-DE-WINDOWS/Publico</code>.</li><li>Monta temporalmente el recurso en <code>/mnt/publico</code>.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos y resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Cómo se monta un recurso Samba en Ubuntu desde la terminal?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q32',this,'B')">A) mount -t smb //equipo/recurso /mnt/punto</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q32',this,'B')">B) sudo mount -t cifs //equipo/recurso /mnt/punto -o username=USER</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q32',this,'B')">C) smbmount //equipo/recurso /mnt/punto</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q32',this,'B')">D) net use Z: \\\\equipo\\recurso</label>
+            <div id="fb_q32" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Identifica la ruta correcta</div><p>Escribe la ruta correcta para acceder a la carpeta <code>Documentos</code> del equipo <code>SRV01</code>:</p><ol class="styled"><li>Desde Windows: <code>.................................</code></li><li>Desde Ubuntu (Samba): <code>.................................</code></li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Montaje automático en Linux</div><p>Investiga cómo añadir una entrada en <code>/etc/fstab</code> para que un recurso compartido Samba se monte automáticamente al arrancar Ubuntu. Crea la entrada y pruébala.</p><div class="respuesta-alumno"><p>Escribe aquí tu fstab y los resultados...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 33: PERMISOS DE RED EN WINDOWS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B33</span><h3>Permisos de red en Windows: diferencia entre permisos NTFS y permisos de recurso</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-e · Asignar permisos a recursos compartidos (20%)</span></div>
+        <p>En Windows, cuando accedes a un archivo a través de la red, se aplican <strong>DOS capas de permisos</strong>: los permisos del recurso compartido y los permisos NTFS del archivo. El permiso efectivo es el <strong>más restrictivo</strong> de los dos.</p>
+        <div class="box-def"><div class="box-label">📌 Analogía de las dos capas</div><p><strong>Permiso de recurso compartido:</strong> es la llave que abre la puerta de la casa. Decide si puedes entrar o no, y si entras con una linterna (lectura) o con herramientas (escritura).<br><strong>Permiso NTFS:</strong> es la llave de cada habitación dentro de la casa. Aunque hayas entrado, hay habitaciones a las que no podrás acceder si no tienes el permiso NTFS adecuado.<br><strong>Resultado:</strong> el permiso más restrictivo gana. Si el recurso compartido te da Control total pero NTFS te da solo Lectura, solo podrás leer.</p></div>
+        <p><strong>📊 Tabla de permisos efectivos:</strong></p>
+        <table>
+            <thead><tr><th>Permiso recurso compartido</th><th>Permiso NTFS</th><th>Permiso efectivo</th></tr></thead>
+            <tbody>
+                <tr><td>Control total</td><td>Control total</td><td>Control total</td></tr>
+                <tr><td>Control total</td><td>Lectura</td><td><strong>Lectura</strong> (NTFS más restrictivo)</td></tr>
+                <tr><td>Lectura</td><td>Control total</td><td><strong>Lectura</strong> (recurso más restrictivo)</td></tr>
+                <tr><td>Lectura</td><td>Lectura</td><td>Lectura</td></tr>
+            </tbody>
+        </table>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Para máxima seguridad: configura permisos de recurso compartido amplios (por ejemplo, "Cambiar" para Todos) y restringe con permisos NTFS granulares por usuario o grupo. Así, la administración es más sencilla y la seguridad más robusta.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.17 · Experimenta con permisos combinados</div><p>En tu VM de Windows:</p><ol class="styled"><li>Crea una carpeta <code>C:\Prueba</code> con un archivo dentro.</li><li>Comparte la carpeta como <code>Prueba</code> con permiso "Lectura" para Todos.</li><li>En permisos NTFS, da "Control total" a Todos.</li><li>Desde otra cuenta o desde red, intenta modificar el archivo. ¿Puedes? ¿Por qué?</li><li>Cambia el permiso del recurso a "Control total". ¿Ahora puedes?</li></ol><div class="respuesta-alumno"><p>Escribe aquí los resultados de cada prueba...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>Recurso compartido: Lectura. Permisos NTFS: Control total. ¿Qué puede hacer el usuario?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q33',this,'B')">A) Control total, porque NTFS es más amplio</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q33',this,'B')">B) Solo leer, porque siempre gana el más restrictivo</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q33',this,'B')">C) Modificar pero no eliminar</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q33',this,'B')">D) Nada, hay conflicto entre capas</label>
+            <div id="fb_q33" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Calcula el permiso efectivo</div><p>¿Cuál es el permiso efectivo en cada caso?</p><ol class="styled"><li>Recurso: Control total. NTFS: Modificar → .........</li><li>Recurso: Lectura. NTFS: Control total → .........</li><li>Recurso: Lectura. NTFS: Lectura → .........</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Permisos de recurso avanzados</div><p>Investiga los permisos avanzados de recurso compartido en Windows Server (no disponible en Windows 11 normal): <code>Set-SmbShare</code> en PowerShell. ¿Qué más puedes configurar?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 34: PERMISOS COMBINADOS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B34</span><h3>Permisos combinados: herencia, acumulación y resolución de conflictos</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-e · Asignar permisos a recursos compartidos (20%)</span><span class="ce-tag">RA2 CE-g · Normas de seguridad en recursos compartidos (25%)</span></div>
+        <p>Los permisos en Windows se <strong>heredan, se acumulan y a veces entran en conflicto</strong>. Entender estas tres reglas es fundamental para no dejar agujeros de seguridad.</p>
+        <p><strong>📐 Las tres reglas de los permisos en Windows:</strong></p>
+        <div class="grid-3">
+            <div class="grid-card azul"><h4>🧬 Herencia</h4><p>Por defecto, los archivos y subcarpetas <strong>heredan</strong> los permisos de la carpeta padre. Si cambias los permisos de una carpeta, todos los archivos dentro heredan esos permisos.</p></div>
+            <div class="grid-card verde"><h4>➕ Acumulación</h4><p>Si un usuario pertenece a varios grupos, sus permisos se <strong>suman</strong>. Si el grupo Ventas tiene Lectura y el grupo Contabilidad tiene Escritura, un usuario en ambos grupos tendrá Lectura+Escritura.</p></div>
+            <div class="grid-card naranja"><h4>❌ Denegación</h4><p>Un permiso <strong>Denegar</strong> siempre gana sobre cualquier permiso Permitir. Si un usuario pertenece a un grupo que tiene Permitir Control total pero también a un grupo que tiene Denegar Lectura, <strong>no podrá ni leer</strong>.</p></div>
+        </div>
+        <div class="box-warning"><div class="box-label">⚠️ Cuidado con Denegar</div><p>El permiso "Denegar" es muy poderoso: siempre prevalece. Úsalo solo cuando sea estrictamente necesario. Un error común es poner "Denegar" a un grupo y luego no entender por qué nadie puede acceder al recurso.</p></div>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Para auditar permisos complejos, usa la pestaña <strong>Seguridad efectiva</strong> en Propiedades → Seguridad → Opciones avanzadas → Acceso efectivo. Introduce un usuario y te dirá exactamente qué permisos tiene sobre ese archivo, resolviendo herencia, acumulación y denegación automáticamente.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.18 · Resuelve conflictos de permisos</div><p>Analiza este escenario: el usuario <code>juan</code> pertenece a los grupos <code>Ventas</code> (tiene Permiso Lectura en CarpetaX) y <code>Contabilidad</code> (tiene Permiso Escritura en CarpetaX).</p><ol class="styled"><li>¿Qué permisos efectivos tiene juan sobre CarpetaX?</li><li>Si al grupo <code>Contabilidad</code> se le añade Denegar Escritura en CarpetaX, ¿qué permisos tiene juan ahora?</li><li>¿Cómo usarías la herramienta "Acceso efectivo" para comprobarlo?</li></ol><div class="respuesta-alumno"><p>Escribe aquí tus respuestas...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>Un usuario tiene Permitir Escritura por un grupo y Denegar Escritura por otro. ¿Puede escribir?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q34',this,'B')">A) Sí, porque tiene Permitir en un grupo</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q34',this,'B')">B) No, porque Denegar siempre gana sobre Permitir</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q34',this,'B')">C) Depende de qué grupo se procesó primero</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q34',this,'B')">D) Solo si es administrador del equipo</label>
+            <div id="fb_q34" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Completa las reglas</div><p>Completa: "En Windows, los permisos se ........., se ......... y cuando hay conflicto, ......... siempre gana."</p></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Auditoría de permisos</div><p>Investiga cómo activar la <strong>auditoría de acceso a archivos</strong> en Windows. ¿Cómo puedes saber quién accedió a un archivo, cuándo y qué hizo? Configura la auditoría en una carpeta de prueba y genera eventos.</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 35: IMPRESORAS COMPARTIDAS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B35</span><h3>Impresoras compartidas en red: instalación, configuración y gestión</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-d · Usar servicios para compartir recursos (10%)</span></div>
+        <p>Compartir una impresora permite que todos los ordenadores de la red puedan imprimir en ella sin necesidad de cables USB ni de estar físicamente junto a la impresora. Es uno de los usos más comunes de las redes en oficinas y centros educativos.</p>
+        <p><strong>🖨️ Compartir una impresora en Windows:</strong> Configuración → Bluetooth y dispositivos → Impresoras y escáneres → Seleccionar impresora → Propiedades → pestaña Compartir → "Compartir esta impresora" → Asignar un nombre descriptivo.</p>
+        <p><strong>🖨️ Conectar a una impresora compartida desde otro Windows:</strong> Explorador de archivos → Red → Equipo que comparte la impresora → Botón derecho sobre la impresora → Conectar. Windows descargará e instalará el driver automáticamente.</p>
+        <p><strong>🖨️ Conectar a una impresora compartida desde Ubuntu:</strong> Configuración → Impresoras → Añadir → Impresora de red → Introducir la ruta <code>smb://EQUIPO/NOMBRE-IMPRESORA</code> o <code>ipp://EQUIPO/ipp</code>.</p>
+        <p><strong>📊 Gestión de la cola de impresión:</strong> desde "Dispositivos e impresoras", botón derecho en la impresora → "Ver qué se está imprimiendo". Puedes pausar, cancelar o reordenar trabajos.</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>Una impresora compartida es un periférico que <strong>da servicio a toda la red</strong>. Por eso, al igual que un servidor, debe tener una IP fija (si es impresora de red) o estar conectada a un equipo que siempre esté encendido. Si el ordenador que comparte la impresora se apaga, nadie puede imprimir.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.19 · Comparte y conecta una impresora</div><p>En tu VM de Windows:</p><ol class="styled"><li>Instala Microsoft Print to PDF (impresora virtual).</li><li>Compártela con el nombre <code>PDF-Compartida</code>.</li><li>Desde otra VM, conéctate a esa impresora compartida.</li><li>Imprime un documento de prueba. ¿Se genera el PDF?</li></ol><div class="respuesta-alumno"><p>Escribe aquí los resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué ocurre si el PC que comparte la impresora se apaga?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q35',this,'C')">A) La impresora sigue funcionando de forma autónoma</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q35',this,'C')">B) Solo fallan los trabajos en cola pendientes</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q35',this,'C')">C) Nadie de la red puede imprimir hasta que se encienda</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q35',this,'C')">D) La impresora envía error y se reinicia sola</label>
+            <div id="fb_q35" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Solución de problemas</div><p>Un compañero te dice "No puedo imprimir en la impresora compartida". Enumera 3 cosas que comprobarías:</p><ol class="styled"><li>..................................................</li><li>..................................................</li><li>..................................................</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Servidor de impresión CUPS</div><p>Investiga <strong>CUPS (Common Unix Printing System)</strong>. ¿Cómo se configura un servidor de impresión en Linux? ¿Puede Windows conectar a una impresora compartida por CUPS?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 36: SEGURIDAD EN RECURSOS COMPARTIDOS ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B36</span><h3>Seguridad en recursos compartidos: buenas prácticas y normas</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-g · Normas de seguridad en recursos compartidos (25%)</span></div>
+        <p>Compartir recursos es necesario, pero también es <strong>peligroso</strong> si no se aplican normas de seguridad. Un recurso mal configurado puede exponer datos confidenciales a toda la red o permitir que un usuario malintencionado borre archivos importantes.</p>
+        <p><strong>🔐 Normas de seguridad esenciales:</strong></p>
+        <ul class="icon-list">
+            <li><strong>Principio del mínimo privilegio:</strong> comparte con el mínimo permiso necesario. Si alguien solo necesita leer, no le des escritura.</li>
+            <li><strong>No compartas nunca "Todos" con Control total:</strong> es como dejar la puerta de casa abierta.</li>
+            <li><strong>Usa grupos, no usuarios individuales:</strong> asigna permisos a grupos, no a personas concretas.</li>
+            <li><strong>Revisa periódicamente los recursos compartidos:</strong> con <code>net share</code> o <code>smbstatus</code>. A veces se comparten carpetas y se olvidan.</li>
+            <li><strong>Protege con contraseña:</strong> nunca actives el acceso de invitado sin contraseña a recursos sensibles.</li>
+            <li><strong>Cifra los datos sensibles:</strong> si compartes información confidencial, usa EFS (Windows) o LUKS (Linux).</li>
+        </ul>
+        <div class="box-warning"><div class="box-label">⚠️ Error de seguridad muy común</div><p>Compartir <code>C:\</code> entero con permisos de Control total para "Todos". Esto permite a cualquier usuario de la red acceder a TODO el disco duro, incluidos archivos del sistema y datos personales. <strong>Nunca compartas la raíz de un disco.</strong></p></div>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>La seguridad en recursos compartidos se basa en <strong>capa de recurso + capa NTFS + sentido común</strong>. Ninguna configuración técnica puede compensar la falta de cuidado al decidir qué compartes y con quién.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.20 · Auditoría de seguridad</div><p>En tu VM de Windows:</p><ol class="styled"><li>Ejecuta <code>net share</code> y enumera todos los recursos compartidos.</li><li>Identifica cuáles son administrativos (acaban en $) y cuáles son compartidos por el usuario.</li><li>¿Hay algún recurso compartido que no debería estarlo?</li><li>Comprueba los permisos de cada recurso compartido. ¿Hay alguno con "Todos" y Control total?</li></ol><div class="respuesta-alumno"><p>Escribe aquí los resultados de la auditoría...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué comando de Windows muestra todos los recursos actualmente compartidos?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q36',this,'A')">A) net share</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q36',this,'A')">B) ipconfig /shares</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q36',this,'A')">C) dir \\\\localhost</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q36',this,'A')">D) net view /shares</label>
+            <div id="fb_q36" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Identifica malas prácticas</div><p>¿Qué hay de malo en estas configuraciones?</p><ol class="styled"><li>Compartir <code>C:\Users\</code> con Lectura para Todos → .........</li><li>Compartir una carpeta con Control total y sin contraseña → .........</li><li>Dar permisos a "Usuario1" en lugar de a un grupo → .........</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Cifrado de recursos compartidos</div><p>Investiga cómo se puede <strong>cifrar el tráfico SMB</strong> para que los datos que viajan por la red no puedan ser interceptados. ¿A partir de qué versión de SMB se soporta cifrado? ¿Está activado por defecto?</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 37: CORTAFUEGOS Y ANTIVIRUS DE RED ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B37</span><h3>Cortafuegos y antivirus de red: protección del tráfico y los recursos</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-g · Normas de seguridad en recursos compartidos (25%)</span></div>
+        <p>Un <strong>cortafuegos (firewall)</strong> es un programa o dispositivo que controla qué conexiones de red están permitidas y cuáles no. Actúa como un <strong>filtro</strong> entre tu ordenador y la red, bloqueando accesos no autorizados.</p>
+        <p><strong>🧱 Cortafuegos de Windows Defender:</strong> viene integrado en Windows. Por defecto, bloquea conexiones entrantes no solicitadas y permite las salientes. Cuando un programa necesita aceptar conexiones (como Samba o un servidor web), el firewall te pregunta si quieres permitirlo.</p>
+        <p><strong>🧱 Cortafuegos en Ubuntu (UFW - Uncomplicated Firewall):</strong></p>
+        <pre><code>sudo ufw status                  # Ver estado del firewall
+sudo ufw enable                   # Activar firewall
+sudo ufw allow samba              # Permitir tráfico Samba
+sudo ufw deny from 192.168.1.50   # Bloquear una IP específica</code></pre>
+        <p><strong>🛡️ Antivirus en red:</strong> además del antivirus local, en entornos empresariales se usan soluciones de seguridad que analizan el tráfico de red en busca de malware antes de que llegue a los ordenadores. Microsoft Defender for Endpoint y ClamAV en modo red son ejemplos.</p>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>El firewall es la <strong>primera línea de defensa</strong> de un sistema conectado a la red. Sin firewall, cualquier persona en tu misma red podría intentar conectarse a servicios de tu ordenador que no deberían ser accesibles.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.21 · Configura el firewall</div><p>Realiza estas tareas:</p><ol class="styled"><li>En Windows, comprueba el estado del firewall en "Seguridad de Windows → Firewall".</li><li>Crea una regla para permitir el tráfico SMB entrante.</li><li>En Ubuntu, activa UFW con <code>sudo ufw enable</code>.</li><li>Permite Samba con <code>sudo ufw allow samba</code>.</li><li>Comprueba que puedes seguir accediendo a los recursos compartidos.</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos y resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué comando activa el firewall UFW en Ubuntu?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q37',this,'C')">A) ufw start</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q37',this,'C')">B) ufw on</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q37',this,'C')">C) sudo ufw enable</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q37',this,'C')">D) sudo ufw activate</label>
+            <div id="fb_q37" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Cortafuegos en acción</div><p>¿Qué regla de firewall necesitarías en cada caso?</p><ol class="styled"><li>Permitir que otros PCs accedan a tus carpetas compartidas → .........</li><li>Bloquear todo el tráfico desde una IP sospechosa → .........</li><li>Permitir solo el tráfico web (puerto 80 y 443) → .........</li></ol></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · IDS/IPS</div><p>Investiga qué son los <strong>IDS (Sistema de Detección de Intrusos)</strong> e <strong>IPS (Sistema de Prevención de Intrusos)</strong>. ¿En qué se diferencian de un firewall? Busca ejemplos como Snort o Suricata.</p><div class="respuesta-alumno"><p>Escribe aquí tu investigación...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 38: COPIAS DE SEGURIDAD EN RED ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B38</span><h3>Copias de seguridad en red: estrategias y herramientas</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-g · Normas de seguridad en recursos compartidos (25%)</span></div>
+        <p>En el RA1 aprendiste a hacer copias de seguridad locales. Ahora, en un entorno de red, las copias de seguridad se vuelven más importantes porque afectan a <strong>múltiples usuarios</strong>. Un fallo de disco en un servidor de archivos puede suponer la pérdida de datos de decenas de personas.</p>
+        <p><strong>📊 Estrategias de backup en red:</strong></p>
+        <ul class="icon-list">
+            <li><strong>Backup centralizado:</strong> un servidor de backup recoge los datos de todos los equipos de la red y los almacena en un único lugar.</li>
+            <li><strong>NAS (Network Attached Storage):</strong> un dispositivo de almacenamiento conectado directamente a la red, dedicado exclusivamente a guardar copias de seguridad.</li>
+            <li><strong>Backup en la nube:</strong> los datos se copian a servidores remotos a través de Internet. Ideal para la copia "off-site" de la estrategia 3-2-1.</li>
+        </ul>
+        <p><strong>🔧 Herramientas:</strong></p>
+        <ul class="icon-list">
+            <li><strong>Windows Server Backup:</strong> permite hacer copias de seguridad de carpetas compartidas y del sistema completo.</li>
+            <li><strong>rsync en Linux:</strong> sincroniza carpetas entre equipos de la red de forma eficiente (solo copia los cambios).</li>
+            <li><strong>Déjà Dup con destino remoto:</strong> puede hacer backup a una carpeta compartida de red (Samba, NFS, SSH).</li>
+        </ul>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div><p>En una red, la estrategia 3-2-1 se aplica así: <strong>3 copias</strong> (original en el servidor + backup en NAS + backup en la nube), <strong>2 tipos de soporte</strong> (disco local del servidor + NAS dedicado), <strong>1 copia fuera</strong> (nube sincronizada cada noche).</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.22 · Backup en red con rsync</div><p>En tus VMs:</p><ol class="styled"><li>En Ubuntu, crea una carpeta <code>~/importante</code> con archivos de prueba.</li><li>Usa <code>rsync</code> para copiar esa carpeta a una carpeta compartida de Windows (necesitarás montar el recurso Samba primero).</li><li>Modifica un archivo y vuelve a ejecutar rsync. ¿Cuántos archivos copia la segunda vez?</li></ol><div class="respuesta-alumno"><p>Escribe aquí los comandos y resultados...</p></div></div>
+        
+        <div class="box-test">
+            <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+            <p><strong>¿Qué significa la estrategia de backup 3-2-1?</strong></p>
+            <label class="quiz-option" data-val="A" onclick="checkQuiz('q38',this,'B')">A) 3 backups al día, 2 semanales y 1 mensual</label>
+        <label class="quiz-option" data-val="B" onclick="checkQuiz('q38',this,'B')">B) 3 copias en 2 soportes distintos con al menos 1 copia fuera del lugar</label>
+        <label class="quiz-option" data-val="C" onclick="checkQuiz('q38',this,'B')">C) 3 tipos de backup: completo, incremental y diferencial</label>
+        <label class="quiz-option" data-val="D" onclick="checkQuiz('q38',this,'B')">D) 3 servidores con 2 discos cada uno y 1 NAS</label>
+            <div id="fb_q38" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+        </div>
+        <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Planifica backups en red</div><p>Una oficina tiene 10 empleados con portátiles y un servidor de archivos. Diseña una estrategia de backup 3-2-1 para este escenario.</p><div class="respuesta-alumno"><p>Escribe aquí tu plan...</p></div></div>
+        <div class="box-deepening"><div class="box-label">🚀 Profundización · Backup incremental con rsync</div><p>Investiga cómo usar <code>rsync</code> con la opción <code>--link-dest</code> para crear <strong>backups incrementales con snapshots</strong> que ocupen poco espacio. Implementa un script de backup diario.</p><div class="respuesta-alumno"><p>Escribe aquí tu script...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 39: REPASO INTEGRADO RA2 ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B39</span><h3>Repaso integrado RA2: redes, usuarios, grupos y recursos compartidos</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-b</span><span class="ce-tag">RA2 CE-c</span><span class="ce-tag">RA2 CE-d</span><span class="ce-tag">RA2 CE-e</span><span class="ce-tag">RA2 CE-f</span><span class="ce-tag">RA2 CE-g</span></div>
+        <p>Este bloque está dedicado a <strong>repasar y consolidar</strong> todos los conceptos del RA2 antes de la prueba integrada final. Vamos a resolver un caso práctico completo que engloba configuración de red, gestión de usuarios y grupos, compartición de recursos y seguridad.</p>
+        <div class="box-def"><div class="box-label">📌 Escenario de repaso: Empresa OACE Solutions</div><p>OACE Solutions tiene 3 departamentos (Ventas, Contabilidad, Administración) con 2 empleados cada uno. Disponen de un servidor Windows Server y un servidor Ubuntu, además de los PCs de los empleados.</p></div>
+        <p><strong>🧪 Tareas de repaso:</strong></p>
+        <ol class="styled">
+            <li><strong>Red:</strong> Configura IPs fijas para ambos servidores y asegura conectividad entre todos los equipos.</li>
+            <li><strong>Usuarios:</strong> Crea los 6 usuarios (2 por departamento) en Windows y los 6 equivalentes en Ubuntu.</li>
+            <li><strong>Grupos:</strong> Crea grupos Ventas, Contabilidad y Administración. Asigna cada usuario a su grupo.</li>
+            <li><strong>Recursos:</strong> Comparte una carpeta para cada departamento con permisos adecuados (solo el departamento puede escribir en su carpeta).</li>
+            <li><strong>Seguridad:</strong> Configura el firewall para permitir solo el tráfico necesario. Audita los recursos compartidos.</li>
+        </ol>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave del RA2</div><p>Una red no es solo cables y configuraciones: es un <strong>sistema de colaboración</strong>. La configuración técnica (IPs, usuarios, permisos) está al servicio de que las personas puedan trabajar juntas de forma <strong>segura y eficiente</strong>. Un fallo de seguridad puede exponer datos de toda la empresa; una mala configuración puede impedir que la gente trabaje.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Ejercicio 2.23 · Resuelve el escenario OACE Solutions</div><p>Implementa el escenario completo en tus VMs. Documenta cada paso (comandos, capturas) y prepara un informe final con la configuración de cada servidor.</p><div class="respuesta-alumno"><p>Adjunta aquí tu informe o indica dónde lo has entregado...</p></div></div>
+    </div></div>
+
+    <!-- ═══════════ BLOQUE 40: PRUEBA PRÁCTICA INTEGRADA RA2 ═══════════ -->
+    <div class="bloque"><div class="bloque-header"><span class="num">B40</span><h3>Prueba práctica integrada RA2: demuestra todo lo aprendido</h3><span class="duracion">⏱️ 110 min</span></div>
+    <div class="bloque-body">
+        <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-b</span><span class="ce-tag">RA2 CE-c</span><span class="ce-tag">RA2 CE-d</span><span class="ce-tag">RA2 CE-e</span><span class="ce-tag">RA2 CE-f</span><span class="ce-tag">RA2 CE-g</span></div>
+        <p>Esta prueba práctica final integra todos los conocimientos y habilidades adquiridos en el RA2. Dispones de 110 minutos para completar el escenario.</p>
+        <div class="box-def"><div class="box-label">📌 Escenario de la prueba</div><p>Te contratan para configurar la red de una pequeña oficina. Dispones de un servidor Windows 11 (que actuará como servidor de archivos) y un servidor Ubuntu (que actuará como servidor de impresión). Hay 3 empleados en la oficina. Debes dejar todo configurado y documentado.</p></div>
+        <p><strong>🧪 Tareas (con tiempo recomendado):</strong></p>
+        <ol class="styled">
+            <li><strong>RED (15 min):</strong> Configura IPs fijas en ambos servidores (subred 192.168.200.0/24). Verifica conectividad entre ellos.</li>
+            <li><strong>USUARIOS Y GRUPOS (20 min):</strong> Crea 3 usuarios en cada servidor. Crea grupos para los departamentos Finanzas y Marketing. Asigna usuarios a los grupos.</li>
+            <li><strong>RECURSOS COMPARTIDOS (25 min):</strong> En Windows, comparte una carpeta para Finanzas y otra para Marketing. Configura permisos para que solo el grupo adecuado pueda acceder. En Ubuntu, comparte una impresora virtual.</li>
+            <li><strong>ACCESO (15 min):</strong> Comprueba que los usuarios correctos pueden acceder a los recursos desde el otro servidor, y que los incorrectos no pueden.</li>
+            <li><strong>SEGURIDAD (15 min):</strong> Configura el firewall en ambos servidores. Audita los recursos compartidos. Documenta las normas de seguridad aplicadas.</li>
+            <li><strong>DOCUMENTACIÓN (20 min):</strong> Crea un documento con toda la configuración: IPs, usuarios, grupos, recursos compartidos, permisos, reglas de firewall.</li>
+        </ol>
+        <div class="box-key-concept"><div class="box-label">🔑 Concepto clave final del RA2</div><p>El RA2 te ha enseñado a <strong>conectar personas y recursos de forma segura</strong>. Has pasado de configurar un ordenador aislado (RA1) a gestionar una red completa con múltiples usuarios, permisos granulares y recursos compartidos. Estos conocimientos son la base del trabajo de cualquier administrador de sistemas.</p></div>
+        <div class="box-exercise"><div class="box-label">✏️ Entrega final del RA2</div><p>Al finalizar la prueba, entrega <strong>un único documento PDF</strong> que contenga:</p><ol class="styled"><li>Capturas de pantalla de cada paso (mínimo 10 capturas).</li><li>El documento de configuración completo.</li><li>Una reflexión (5 líneas) sobre qué parte del RA2 te ha resultado más útil.</li></ol><div class="respuesta-alumno"><p>Adjunta aquí tu documento o indica dónde lo has entregado...</p></div></div>
+    </div></div>
+
+    <footer>
+        📘 RA2 · Apuntes del Alumno · Configuración en entorno de red · 48 sesiones (B17–B40)<br>
+        Windows 11 + Ubuntu 24.04 LTS · VirtualBox · LibreOffice<br>
+        Material didáctico original · Versión sin respuestas · <strong>Conceptos clave, refuerzo y profundización incluidos</strong>
+    </footer>
+
+</div>
+<script>
+// ═══════════════════════════════════════════════════════
+// AUTOEVALUACIÓN: checklist al final de cada bloque
+// ═══════════════════════════════════════════════════════
+const checklists = {
+  17: ['Sé explicar qué es una red informática y sus tipos (PAN, LAN, WAN)','Conozco las topologías de red (estrella, bus, anillo, malla)','Identifico los elementos principales de una red (switch, router, AP, NIC)','He completado el Ejercicio 2.1 (identificación de la red del aula)'],
+  18: ['Entiendo qué es una IP y la diferencia entre IPv4 e IPv6','Sé distinguir IP pública de IP privada','Conozco la función de la máscara de subred, puerta de enlace y DNS','He completado el Ejercicio 2.2 (identifiqué mi configuración de red)'],
+  19: ['Sé configurar IP fija por DHCP y manual en Windows (GUI)','Conozco los comandos netsh para configurar IP y DNS desde terminal','Entiendo la diferencia entre perfil de red público y privado','He completado el Ejercicio 2.3 (configuré IP fija en Windows)'],
+  20: ['Sé configurar IP fija en Ubuntu por GUI y con Netplan','Entiendo la estructura YAML y la importancia de la sangría','Conozco comandos ip, route y resolvectl para verificar red','He completado el Ejercicio 2.4 (configuré IP fija en Ubuntu)'],
+  21: ['Domino ping, ipconfig/ip, tracert/traceroute y su interpretación','Sé diagnosticar problemas de red empezando por lo más cercano','Entiendo la diferencia entre ping a IP y ping a dominio','He completado el Ejercicio 2.5 (diagnóstico de conectividad)'],
+  22: ['Sé qué es un grupo de trabajo y cómo configurarlo en Windows','Conozco las limitaciones (20 PCs, sin control central, seguridad débil)','Entiendo la diferencia entre grupo de trabajo y dominio','He completado el Ejercicio 2.6 (configuré un grupo de trabajo)'],
+  23: ['Distingo cuenta administrador vs cuenta estándar y sus privilegios','Entiendo y aplico el principio del mínimo privilegio','Sé por qué no se debe usar cuenta admin para el día a día','He completado el Ejercicio 2.7 (creé y probé cuenta estándar)'],
+  24: ['Sé listar usuarios con net user','Sé crear, desactivar y eliminar usuarios con net user','Entiendo dónde se guardan las carpetas personales (C:\\Users\\)','He completado el Ejercicio 2.8 (gestioné usuarios en Windows)'],
+  25: ['Sé crear usuarios con useradd y asignar contraseñas con passwd','Sé bloquear y desbloquear cuentas con usermod -L / -U','Entiendo la diferencia entre userdel y userdel -r','He completado el Ejercicio 2.9 (gestioné usuarios en Ubuntu)'],
+  26: ['Sé qué es un perfil de usuario y dónde se almacena','Conozco los 3 tipos de perfil: local, móvil y obligatorio','Entiendo cuándo usar cada tipo de perfil','He completado el Ejercicio 2.10 (exploré perfiles de usuario)'],
+  27: ['Sé crear y gestionar grupos con net localgroup en Windows','Conozco los grupos predefinidos (Administradores, Usuarios, Invitados)','Entiendo por qué se usan grupos en lugar de permisos individuales','He completado el Ejercicio 2.11 (gestioné grupos en Windows)'],
+  28: ['Sé crear grupos con groupadd y eliminarlos con groupdel','Sé añadir/quitar usuarios con usermod -aG y gpasswd -d','Entiendo la diferencia entre -aG y -G en usermod','He completado el Ejercicio 2.12 (gestioné grupos en Ubuntu)'],
+  29: ['Entiendo qué es un recurso compartido y sus tipos','Conozco los 3 niveles de permisos: Lectura, Escritura, Control total','Sé que el permiso más restrictivo prevalece','He completado el Ejercicio 2.13 (identifiqué recursos compartidos)'],
+  30: ['Sé compartir carpetas en Windows por GUI','Conozco los comandos net share para compartir y listar','Sé acceder con \\\\EQUIPO\\RECURSO','He completado el Ejercicio 2.14 (compartí carpetas en Windows)'],
+  31: ['Sé instalar Samba con sudo apt install samba','Entiendo la estructura básica de smb.conf','Sé compartir carpetas en Ubuntu para que Windows las vea','He completado el Ejercicio 2.15 (compartí con Samba)'],
+  32: ['Sé acceder a recursos compartidos desde el Explorador de Windows','Sé montar recursos Samba en Ubuntu con mount -t cifs','Entiendo qué es una unidad de red y cómo conectarla','He completado el Ejercicio 2.16 (accedí a recursos compartidos)'],
+  33: ['Entiendo las dos capas de permisos: recurso compartido + NTFS','Sé que el permiso más restrictivo es el que prevalece','Puedo calcular permisos efectivos en casos prácticos','He completado el Ejercicio 2.17 (experimenté con permisos combinados)'],
+  34: ['Entiendo herencia, acumulación y denegación de permisos','Sé que Denegar siempre gana sobre Permitir','Sé usar la herramienta "Acceso efectivo" de Windows','He completado el Ejercicio 2.18 (resolví conflictos de permisos)'],
+  35: ['Sé compartir una impresora en Windows','Sé conectar a una impresora compartida desde Windows y Ubuntu','Entiendo la gestión de la cola de impresión','He completado el Ejercicio 2.19 (compartí y usé impresora)'],
+  36: ['Conozco las normas de seguridad en recursos compartidos','Aplico el principio del mínimo privilegio','Sé auditar recursos compartidos con net share','He completado el Ejercicio 2.20 (audité seguridad)'],
+  37: ['Entiendo qué es un firewall y para qué sirve','Sé activar y configurar UFW en Ubuntu','Sé crear reglas de firewall en Windows','He completado el Ejercicio 2.21 (configuré firewall)'],
+  38: ['Conozco estrategias de backup en red (NAS, nube, rsync)','Sé usar rsync para sincronizar carpetas entre equipos','Aplico la estrategia 3-2-1 en entornos de red','He completado el Ejercicio 2.22 (backup con rsync)'],
+  39: ['Puedo integrar IPs, usuarios, grupos y recursos en un solo escenario','Entiendo cómo se relacionan todos los conceptos del RA2','He completado el escenario OACE Solutions','He completado el Ejercicio 2.23 (repaso integrado)'],
+  40: ['Instalé y configuré la red completa desde cero de forma autónoma','Configuré usuarios, grupos, permisos y firewall correctamente','Documenté toda la configuración de forma profesional','He entregado la prueba final según las instrucciones']
+};
+
+document.querySelectorAll('.bloque').forEach((el, i) => {
+  const num = 17 + i;
+  el.id = 'b' + num;
+  const body = el.querySelector('.bloque-body');
+  if (body && checklists[num]) {
+    const items = checklists[num];
+    const div = document.createElement('div');
+    div.className = 'autoevaluacion';
+    div.innerHTML = `<div class="box-label">✅ Autoevaluación · Marca lo que ya dominas antes de pasar al siguiente bloque</div>
+      <ul>${items.map((t, j) => `<li id="ae${num}_${j}"><input type="checkbox" id="cb${num}_${j}"><label for="cb${num}_${j}">${t}</label></li>`).join('')}</ul>`;
+    body.appendChild(div);
+    items.forEach((_, j) => {
+      const cb = document.getElementById('cb' + num + '_' + j);
+      if (localStorage.getItem('ae' + num + '_' + j) === '1') { cb.checked = true; cb.closest('li').classList.add('done'); }
+      cb.addEventListener('change', () => { localStorage.setItem('ae' + num + '_' + j, cb.checked ? '1' : '0'); cb.closest('li').classList.toggle('done', cb.checked); });
+    });
+  }
+});
+
+// Construir navegación lateral dinámica
+const navLat = document.getElementById('navLateral');
+for (let i = 17; i <= 40; i++) {
+  const a = document.createElement('a');
+  a.href = '#b' + i;
+  a.title = 'B' + i;
+  a.textContent = i;
+  navLat.appendChild(a);
+}
+
+// RESPUESTAS EDITABLES
+const guardadoOk = document.getElementById('guardado-ok');
+let saveTimer;
+document.querySelectorAll('.respuesta-alumno').forEach((div, i) => {
+  const placeholder = div.querySelector('p')?.textContent?.trim() || 'Escribe aquí tu respuesta...';
+  div.innerHTML = ''; div.contentEditable = 'true'; div.setAttribute('data-placeholder', placeholder);
+  div.setAttribute('spellcheck', 'true');
+  const key = 'resp_ra2_' + i;
+  const saved = localStorage.getItem(key);
+  if (saved) div.innerHTML = saved;
+  div.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { localStorage.setItem(key, div.innerHTML); guardadoOk.classList.add('show'); setTimeout(() => guardadoOk.classList.remove('show'), 2000); }, 800);
+  });
+});
+
+// BOTÓN VOLVER ARRIBA
+const btnTop = document.getElementById('btnTop');
+window.addEventListener('scroll', () => btnTop.classList.toggle('visible', window.scrollY > 500));
+btnTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// RESALTAR BLOQUE ACTIVO EN NAV LATERAL
+const navLinks = document.querySelectorAll('.nav-lateral a');
+const ioObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting && e.intersectionRatio > 0.2) { navLinks.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id)); } });
+}, { threshold: [0.2, 0.5] });
+document.querySelectorAll('.bloque').forEach(el => ioObs.observe(el));
+
+// ── QUIZ ──────────────────────────────────────────────────────
+function checkQuiz(qId, el, correcta) {
+    const allOpts = document.querySelectorAll('[onclick*="' + qId + '"]');
+    allOpts.forEach(o => o.classList.add('bloqueada'));
+    const isCorrect = el.dataset.val === correcta;
+    el.classList.add(isCorrect ? 'correcta' : 'incorrecta');
+    if (!isCorrect) {
+        allOpts.forEach(o => { if (o.dataset.val === correcta) { o.classList.remove('bloqueada'); o.classList.add('correcta'); } });
+    }
+    const fb = document.getElementById('fb_' + qId);
+    if (fb) {
+        fb.style.display = 'block';
+        fb.style.background = isCorrect ? '#dcfce7' : '#fef2f2';
+        fb.style.color = isCorrect ? '#166534' : '#c53030';
+        fb.innerHTML = isCorrect ? '<strong>✅ ¡Correcto!</strong>' : '<strong>❌ Incorrecto.</strong> La respuesta correcta era la opción <strong>' + correcta + '</strong>.';
+    }
+}
+
+// ── PROGRESO ──────────────────────────────────────────────────
+function updateProgreso() {
+    const total = 24;
+    const completados = Array.from({length: total}, (_, i) => {
+        const num = 17 + i;
+        return [0,1,2,3].every(j => localStorage.getItem('ae' + num + '_' + j) === '1');
+    }).filter(Boolean).length;
+    const pct = Math.round(completados / total * 100);
+    const relleno = document.getElementById('progresoRelleno');
+    const texto = document.getElementById('progresoTexto');
+    if (relleno) relleno.style.width = pct + '%';
+    if (texto) texto.textContent = 'Has completado ' + completados + ' de ' + total + ' bloques (' + pct + '%)';
+    const hitos = [6, 12, 18, 24];
+    document.querySelectorAll('.insignia').forEach((ins, i) => {
+        ins.classList.toggle('ganada', completados >= hitos[i]);
+    });
+    const badge = document.getElementById('badgeProgreso');
+    if (badge) document.getElementById('badgeProgresoTxt').textContent = completados + '/24';
+}
+document.addEventListener('change', e => { if (e.target.type === 'checkbox') updateProgreso(); });
+updateProgreso();
+// Badge: visible al hacer scroll más allá de la barra de progreso
+const _badge = document.getElementById('badgeProgreso');
+const _progresoEl = document.getElementById('progresoGlobal');
+function updateBadgeVisibility() {
+    if (!_badge || !_progresoEl) return;
+    const limit = _progresoEl.offsetTop + _progresoEl.offsetHeight + 40;
+    _badge.style.display = window.scrollY > limit ? 'flex' : 'none';
+}
+window.addEventListener('scroll', updateBadgeVisibility, { passive: true });
+updateBadgeVisibility();
+
+</script>
+</body>
+</html>

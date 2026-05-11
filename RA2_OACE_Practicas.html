@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA2 · Prácticas de Laboratorio | OACE CFGB Informática</title>
+    
+    <style>
+        :root {
+            --azul-oscuro:#1a2744;--azul-medio:#2c5282;--azul:#3182ce;--azul-claro:#ebf4ff;
+            --verde:#166534;--verde-medio:#16a34a;--verde-claro:#f0fff4;
+            --naranja:#c05621;--naranja-claro:#fffaf0;
+            --rojo:#c53030;--rojo-claro:#fff5f5;--purpura:#6b46c1;--purpura-claro:#faf5ff;
+            --gris:#f7fafc;--gris-oscuro:#4a5568;--texto:#1a202c;--borde:#e2e8f0;
+            --sombra:0 4px 6px rgba(0,0,0,0.04),0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg:0 10px 25px rgba(0,0,0,0.06),0 4px 10px rgba(0,0,0,0.04);
+            --radio:12px;--radio-sm:8px;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--texto);background:#f0fdf4;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+        .navbar{position:sticky;top:0;z-index:200;background:var(--verde);height:48px;display:flex;align-items:center;padding:0 20px;gap:0;box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+        .nav-brand{display:flex;align-items:center;gap:9px;color:white;text-decoration:none;font-weight:700;font-size:14px;margin-right:20px;flex-shrink:0;}
+        .nav-brand .brand-badge{background:rgba(255,255,255,0.25);color:white;border-radius:6px;padding:3px 8px;font-size:12px;font-weight:800;}
+        .nav-links{display:flex;align-items:center;gap:3px;flex:1;overflow-x:auto;}
+        .nav-links::-webkit-scrollbar{display:none;}
+        .nav-link{color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;font-weight:600;padding:5px 13px;border-radius:18px;white-space:nowrap;transition:0.15s;border:1px solid transparent;}
+        .nav-link:hover{color:white;background:rgba(255,255,255,0.15);}
+        .nav-link.active{color:white;background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.35);}
+        .hero{background:linear-gradient(160deg,#14532d 0%,#166534 40%,#15803d 100%);color:white;padding:40px 32px 30px;position:relative;overflow:hidden;text-align:center;}
+        .hero::after{content:'';position:absolute;top:-80px;right:-120px;width:380px;height:380px;background:rgba(255,255,255,0.03);border-radius:50%;pointer-events:none;}
+        .hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:5px 16px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+        .hero h1{font-size:28px;font-weight:700;margin-bottom:6px;letter-spacing:-0.3px;}
+        .hero .subtitulo{font-size:15px;opacity:0.85;font-style:italic;}
+        .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;justify-content:center;}
+        .hero-meta span{background:rgba(255,255,255,0.12);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;}
+        .wrapper{max-width:1040px;margin:0 auto;padding:24px 20px 64px;}
+        .practica{background:white;border-radius:var(--radio);margin-bottom:32px;box-shadow:var(--sombra);border:1px solid var(--borde);overflow:hidden;}
+        .practica-header{background:linear-gradient(135deg,#14532d,#166534);color:white;padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+        .practica-badge{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;font-weight:800;font-size:13px;border-radius:8px;padding:6px 14px;white-space:nowrap;}
+        .practica-header h3{font-size:16px;font-weight:700;flex:1;}
+        .practica-meta{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
+        .practica-meta span{background:rgba(255,255,255,0.15);border-radius:14px;padding:4px 12px;font-size:12px;font-weight:600;white-space:nowrap;}
+        .practica-body{padding:22px 28px;}
+        .practica-body>p{margin-bottom:14px;}
+        .box-apuntes{background:#f0fff4;border:2px solid #22c55e;border-radius:var(--radio-sm);padding:14px 18px;margin-bottom:18px;display:flex;align-items:flex-start;gap:12px;}
+        .box-apuntes .icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+        .box-apuntes .content strong{display:block;color:var(--verde);font-size:13px;margin-bottom:4px;}
+        .box-apuntes .content p{font-size:13px;color:var(--gris-oscuro);margin:0;}
+        .box-apuntes .content a{color:var(--verde);font-weight:600;}
+        .pasos ol{margin:0 0 0 20px;}
+        .pasos ol li{padding:6px 0 6px 6px;border-bottom:1px solid #f0f0f0;}
+        .pasos ol li:last-child{border-bottom:none;}
+        .pasos ol li strong{color:var(--verde);}
+        .rubrica{background:var(--gris);border-radius:var(--radio-sm);padding:16px 20px;margin-top:18px;border:1px solid var(--borde);}
+        .rubrica h4{color:var(--verde);font-size:13px;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:12px;}
+        .rubrica table{width:100%;font-size:13px;border-collapse:collapse;}
+        .rubrica thead th{background:var(--verde);color:white;padding:8px 12px;text-align:left;font-weight:600;font-size:12px;}
+        .rubrica tbody td{padding:7px 12px;border-bottom:1px solid var(--borde);vertical-align:top;}
+        .rubrica tbody tr:nth-child(even){background:white;}
+        .entrega{background:#fff7ed;border-left:4px solid #ea580c;border-radius:0 var(--radio-sm) var(--radio-sm) 0;padding:14px 18px;margin-top:16px;}
+        .entrega .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c05621;margin-bottom:6px;}
+        .ce-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+        .ce-tag{font-size:10px;font-weight:700;background:var(--verde-claro);color:var(--verde);border:1px solid #a7f3d0;border-radius:16px;padding:3px 10px;}
+        ul.icon-list{list-style:none;padding-left:0;margin:10px 0;}
+        ul.icon-list li{padding:6px 0 6px 24px;position:relative;border-bottom:1px solid #f0f0f0;font-size:14px;}
+        ul.icon-list li::before{content:"▸";color:var(--verde-medio);position:absolute;left:6px;font-size:12px;top:8px;font-weight:bold;}
+        ul.icon-list li:last-child{border-bottom:none;}
+        code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;color:#1e40af;}
+        pre{background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.6;margin:12px 0;}
+        pre code{background:none;color:inherit;padding:0;}
+        .nav-lateral{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:150;display:flex;flex-direction:column;gap:2px;}
+        .nav-lateral a{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--verde);color:white;text-decoration:none;font-size:9px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.18);transition:transform 0.15s,background 0.15s;}
+        .nav-lateral a:hover{transform:scale(1.25);background:var(--azul-oscuro);}
+        .nav-lateral a.activo{background:var(--azul-oscuro);}
+        .btn-top{position:fixed;right:18px;bottom:24px;background:var(--verde);color:white;border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:18px;box-shadow:var(--sombra-lg);z-index:200;display:none;align-items:center;justify-content:center;}
+        .btn-top.visible{display:flex;}
+        footer{text-align:center;color:#a0aec0;font-size:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--borde);}
+
+        /* ── ENTREGA IA ── */
+        .ai-form { background: #f0f9ff; border: 2px solid #0ea5e9; border-radius: var(--radio-sm); padding: 18px 22px; margin-top: 18px; }
+        .ai-form .ai-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .ai-form .ai-badge { background: #0ea5e9; color: white; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 6px; }
+        .ai-form .ai-desc { font-size: 13px; color: #0369a1; }
+        .ai-field { margin-bottom: 12px; }
+        .ai-field label { display: block; font-size: 12px; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .ai-field label .req { color: #ef4444; margin-left: 2px; }
+        .ai-field input[type="text"], .ai-field textarea, .ai-field select {
+            width: 100%; border: 1.5px solid #bae6fd; border-radius: 6px; padding: 8px 12px;
+            font-size: 14px; font-family: inherit; background: white; color: var(--texto);
+            transition: border-color 0.2s;
+        }
+        .ai-field input[type="text"]:focus, .ai-field textarea:focus, .ai-field select:focus {
+            outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+        }
+        .ai-field textarea { resize: vertical; min-height: 70px; }
+        .ai-field .hint { font-size: 11px; color: #64748b; margin-top: 3px; font-style: italic; }
+        .ai-field select { cursor: pointer; }
+        .ai-submit { background: #0ea5e9; color: white; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 6px; }
+        .ai-submit:hover { background: #0284c7; }
+        .ai-submit:active { transform: scale(0.98); }
+        .ai-ok { display: none; background: #dcfce7; border: 2px solid #22c55e; border-radius: 8px; padding: 12px 16px; margin-top: 10px; font-size: 14px; color: #166534; font-weight: 600; }
+        .ai-ok.show { display: flex; align-items: center; gap: 8px; }
+        @media(max-width:720px){
+            .hero{padding:28px 16px;} .hero h1{font-size:22px;}
+            .practica-header{padding:12px 16px;} .practica-body{padding:16px;}
+            .practica-meta{margin-left:0;} .nav-lateral{display:none;}
+        }
+        @media print{
+            .navbar,.nav-lateral,.btn-top{display:none!important;}
+            @page{size:A4;margin:1.8cm 2cm 2cm 2cm;}
+            .practica{break-before:page;} .practica-header{break-after:avoid;}
+            body{background:white!important;} .wrapper{max-width:100%!important;padding:0!important;}
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar">
+    <a href="index.html" class="nav-brand"><span class="brand-badge">OACE</span><span>2º CFGB</span></a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA2_OACE_Alumno.html" class="nav-link">📘 Apuntes RA2</a>
+        <a href="RA2_OACE_Practicas.html" class="nav-link active">🧪 Prácticas RA2</a>
+    </div>
+</nav>
+<header class="hero">
+    <div class="hero-badge">🧪 PRÁCTICAS DE LABORATORIO · RA2</div>
+    <h1>🌐 RA2 · Prácticas de Configuración en Red</h1>
+    <p class="subtitulo">24 prácticas evaluables · Windows 11 + Ubuntu 24.04 · VirtualBox</p>
+    <div class="hero-meta">
+        <span>🐧 Windows & Linux</span>
+        <span>🖥️ VirtualBox</span>
+        <span>🔗 Redes y recursos compartidos</span>
+        <span>📋 24 prácticas · 48 sesiones</span>
+    </div>
+</header>
+<nav class="nav-lateral" id="navLateral">
+  <a href="#p2-1" title="P2.1">1</a>
+  <a href="#p2-2" title="P2.2">2</a>
+  <a href="#p2-3" title="P2.3">3</a>
+  <a href="#p2-4" title="P2.4">4</a>
+  <a href="#p2-5" title="P2.5">5</a>
+  <a href="#p2-6" title="P2.6">6</a>
+  <a href="#p2-7" title="P2.7">7</a>
+  <a href="#p2-8" title="P2.8">8</a>
+  <a href="#p2-9" title="P2.9">9</a>
+  <a href="#p2-10" title="P2.10">10</a>
+  <a href="#p2-11" title="P2.11">11</a>
+  <a href="#p2-12" title="P2.12">12</a>
+  <a href="#p2-13" title="P2.13">13</a>
+  <a href="#p2-14" title="P2.14">14</a>
+  <a href="#p2-15" title="P2.15">15</a>
+  <a href="#p2-16" title="P2.16">16</a>
+  <a href="#p2-17" title="P2.17">17</a>
+  <a href="#p2-18" title="P2.18">18</a>
+  <a href="#p2-19" title="P2.19">19</a>
+  <a href="#p2-20" title="P2.20">20</a>
+  <a href="#p2-21" title="P2.21">21</a>
+  <a href="#p2-22" title="P2.22">22</a>
+  <a href="#p2-23" title="P2.23">23</a>
+  <a href="#p2-24" title="P2.24">24</a>
+</nav>
+<button class="btn-top" id="btnTop" title="Volver arriba" aria-label="Volver al inicio">↑</button>
+<div class="wrapper">
+
+    <div class="practica" id="p2-1" data-nav="P2.1">
+        <div class="practica-header">
+            <span class="practica-badge">P2.1</span>
+            <h3>🧪 Explora la red del aula</h3>
+            <div class="practica-meta">
+                <span>📖 B17</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-c</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B17</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b17">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Identificar el tipo, topología y elementos de la red del aula o de casa.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>PC conectado a la red del aula o doméstica</li><li>Papel y bolígrafo para el esquema de red</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Abre cmd (Windows) y ejecuta <code>ipconfig /all</code>. Anota: nombre del adaptador, dirección IP, máscara, puerta de enlace y servidor DNS.</li><li>En Ubuntu, abre una terminal y ejecuta <code>ip addr show</code> e <code>ip route</code>. Anota los mismos datos.</li><li>Identifica el tipo de red: ¿es PAN, LAN o WAN? Justifica tu respuesta en 2 frases.</li><li>Localiza físicamente el switch y el router del aula. ¿Están en el mismo dispositivo o son aparatos separados?</li><li>Dibuja un esquema sencillo de la red: ordenadores → switch → router → Internet. Indica las IPs de al menos 3 equipos.</li><li>¿Qué topología tiene la red del aula? Explica por qué con un argumento concreto.</li><li>Documenta todo en un documento o captura de pantalla y entrégalo según las instrucciones del profesor.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Datos de red correctos (IP, máscara, gateway, DNS)</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Tipo de red identificado y justificado</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Esquema de red claro y correcto</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Topología identificada con argumento correcto</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p1">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p1_f0">Tipo de red del aula (PAN/LAN/WAN)<span class="req">*</span></label><input type="text" id="ai_p1_f0" name="ai_p1_f0" placeholder="Escribe exactamente: PAN, LAN o WAN"><p class="hint">Escribe exactamente: PAN, LAN o WAN</p></div><div class="ai-field"><label for="ai_p1_f1">Topología detectada<span class="req">*</span></label><select id="ai_p1_f1" name="ai_p1_f1"><option value="">— Elige una opción —</option><option value="Estrella">Estrella</option><option value="Bus">Bus</option><option value="Anillo">Anillo</option><option value="Malla">Malla</option><option value="No determinado">No determinado</option></select></div><div class="ai-field"><label for="ai_p1_f2">IP de tu PC (ejecuta ipconfig o ip addr)<span class="req">*</span></label><input type="text" id="ai_p1_f2" name="ai_p1_f2" placeholder="Ej: 192.168.1.45"><p class="hint">Ej: 192.168.1.45</p></div><div class="ai-field"><label for="ai_p1_f3">Máscara de subred<span class="req">*</span></label><input type="text" id="ai_p1_f3" name="ai_p1_f3" placeholder="Ej: 255.255.255.0"><p class="hint">Ej: 255.255.255.0</p></div><div class="ai-field"><label for="ai_p1_f4">Puerta de enlace<span class="req">*</span></label><input type="text" id="ai_p1_f4" name="ai_p1_f4" placeholder="Ej: 192.168.1.1"><p class="hint">Ej: 192.168.1.1</p></div><div class="ai-field"><label for="ai_p1_f5">Descripción del esquema de red (en texto)<span class="req">*</span></label><textarea id="ai_p1_f5" name="ai_p1_f5" rows="3" placeholder="Describe cómo están conectados los equipos: PC1→Switch→Router→Internet..."></textarea></div>
+                <button class="ai-submit" onclick="submitAI(1)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p1">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Entrega un documento (PDF o captura de pantalla) con el esquema dibujado y las respuestas.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-2" data-nav="P2.2">
+        <div class="practica-header">
+            <span class="practica-badge">P2.2</span>
+            <h3>🧪 Lee e interpreta tu configuración IP</h3>
+            <div class="practica-meta">
+                <span>📖 B18</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-c</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B18</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b18">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Leer la configuración de red del equipo e identificar IP privada, máscara, gateway y DNS.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>PC con Windows y Ubuntu (VirtualBox)</li><li>Acceso a terminal/cmd</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>En Windows, abre cmd y ejecuta <code>ipconfig /all</code>. Identifica y anota cada campo.</li><li>Determina si tu IP es privada o pública. Indica en qué rango (10.x.x.x, 172.16-31.x.x, o 192.168.x.x) está.</li><li>Calcula cuántas IPs puede tener tu red con esa máscara de subred. Pista: 255.255.255.0 → 254 equipos.</li><li>En Ubuntu, ejecuta <code>resolvectl status</code> y anota los servidores DNS configurados.</li><li>Comprueba si tus DNS funcionan: <code>nslookup google.com</code> (Windows) o <code>dig google.com</code> (Ubuntu).</li><li>Responde: ¿Qué pasaría si cambiaras la puerta de enlace a una IP incorrecta? Pruébalo y anota qué ocurre.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Campos de red correctamente identificados</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Tipo de IP (pública/privada) correcto con rango</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Cálculo de equipos en la subred correcto</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Prueba DNS realizada y documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">7 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p2">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p2_f0">Tu dirección IP<span class="req">*</span></label><input type="text" id="ai_p2_f0" name="ai_p2_f0" placeholder="Ej: 192.168.1.25"><p class="hint">Ej: 192.168.1.25</p></div><div class="ai-field"><label for="ai_p2_f1">¿Es privada o pública?<span class="req">*</span></label><select id="ai_p2_f1" name="ai_p2_f1"><option value="">— Elige una opción —</option><option value="Privada">Privada</option><option value="Pública">Pública</option></select></div><div class="ai-field"><label for="ai_p2_f2">Rango al que pertenece<span class="req">*</span></label><select id="ai_p2_f2" name="ai_p2_f2"><option value="">— Elige una opción —</option><option value="10.x.x.x">10.x.x.x</option><option value="172.16-31.x.x">172.16-31.x.x</option><option value="192.168.x.x">192.168.x.x</option><option value="Pública">Pública</option></select></div><div class="ai-field"><label for="ai_p2_f3">Tu máscara de subred<span class="req">*</span></label><input type="text" id="ai_p2_f3" name="ai_p2_f3" placeholder="Ej: 255.255.255.0"><p class="hint">Ej: 255.255.255.0</p></div><div class="ai-field"><label for="ai_p2_f4">Número máximo de equipos en tu red<span class="req">*</span></label><input type="text" id="ai_p2_f4" name="ai_p2_f4" placeholder="Ej: 254"><p class="hint">Ej: 254</p></div><div class="ai-field"><label for="ai_p2_f5">Resultado de nslookup google.com (primera línea)<span class="req">*</span></label><input type="text" id="ai_p2_f5" name="ai_p2_f5" placeholder="Ej: Server: 8.8.8.8 / Address: 142.250.x.x"><p class="hint">Ej: Server: 8.8.8.8 / Address: 142.250.x.x</p></div>
+                <button class="ai-submit" onclick="submitAI(2)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p2">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Captura de pantalla de ipconfig /all con los campos anotados y respuestas a las preguntas.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-3" data-nav="P2.3">
+        <div class="practica-header">
+            <span class="practica-badge">P2.3</span>
+            <h3>🧪 Configura IP fija en Windows</h3>
+            <div class="practica-meta">
+                <span>📖 B19</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-b</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B19</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b19">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Configurar una dirección IP estática en Windows 11 por GUI y verificar la conectividad.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Windows 11 (VirtualBox, red en modo Red interna o Solo anfitrión)</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Anota la configuración actual con <code>ipconfig</code> antes de hacer cambios.</li><li>Ve a Configuración → Red e Internet → Ethernet → Editar. Cambia a "Manual" (IPv4).</li><li>Introduce: IP <code>192.168.100.50</code>, máscara <code>255.255.255.0</code>, puerta de enlace <code>192.168.100.1</code>, DNS <code>8.8.8.8</code>.</li><li>Guarda y comprueba con <code>ipconfig</code> que los cambios se han aplicado correctamente.</li><li>Haz ping a la puerta de enlace: <code>ping 192.168.100.1</code>. ¿Hay respuesta? ¿Por qué puede que no la haya?</li><li>Ahora vuelve a configurar DHCP automático. Comprueba que recuperas una IP automática.</li><li>Documenta cada paso con capturas de pantalla.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Configuración IP fija correcta (todos los campos)</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Verificación con ipconfig correcta</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Análisis del resultado del ping</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Restauración a DHCP documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p3">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p3_f0">IP fija configurada<span class="req">*</span></label><input type="text" id="ai_p3_f0" name="ai_p3_f0" placeholder="Debe ser 192.168.100.50"><p class="hint">Debe ser 192.168.100.50</p></div><div class="ai-field"><label for="ai_p3_f1">Máscara configurada<span class="req">*</span></label><input type="text" id="ai_p3_f1" name="ai_p3_f1" placeholder="Debe ser 255.255.255.0"><p class="hint">Debe ser 255.255.255.0</p></div><div class="ai-field"><label for="ai_p3_f2">Gateway configurado<span class="req">*</span></label><input type="text" id="ai_p3_f2" name="ai_p3_f2" placeholder="Debe ser 192.168.100.1"><p class="hint">Debe ser 192.168.100.1</p></div><div class="ai-field"><label for="ai_p3_f3">Salida de ipconfig tras aplicar IP fija (copia el bloque relevante)<span class="req">*</span></label><textarea id="ai_p3_f3" name="ai_p3_f3" rows="3" placeholder="Copia el texto de la terminal: IPv4, Máscara, Puerta de enlace"></textarea></div><div class="ai-field"><label for="ai_p3_f4">Resultado del ping a la puerta de enlace<span class="req">*</span></label><select id="ai_p3_f4" name="ai_p3_f4"><option value="">— Elige una opción —</option><option value="Responde (TTL visible)">Responde (TTL visible)</option><option value="No responde (timeout)">No responde (timeout)</option><option value="Error de destino">Error de destino</option></select></div><div class="ai-field"><label for="ai_p3_f5">¿Por qué puede no responder el ping si la IP es correcta?<span class="req">*</span></label><textarea id="ai_p3_f5" name="ai_p3_f5" rows="3" placeholder="Explica en 1-2 frases"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(3)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p3">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas de la configuración estática aplicada y del proceso de vuelta a DHCP.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-4" data-nav="P2.4">
+        <div class="practica-header">
+            <span class="practica-badge">P2.4</span>
+            <h3>🧪 Configura IP fija en Ubuntu con Netplan</h3>
+            <div class="practica-meta">
+                <span>📖 B20</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-b</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B20</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b20">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Configurar una IP estática en Ubuntu 24.04 mediante el archivo Netplan y verificar la red.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Ubuntu 24.04 LTS</li><li>Editor de texto (nano o gedit)</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Ejecuta <code>ip addr show</code> y anota el nombre del adaptador (ej: enp0s3) y la IP actual.</li><li>Abre el archivo Netplan: <code>sudo nano /etc/netplan/00-installer-config.yaml</code></li><li>Configura IP estática <code>192.168.100.70/24</code>, gateway <code>192.168.100.1</code>, DNS <code>[8.8.8.8, 1.1.1.1]</code>. Respeta la sangría YAML.</li><li>Aplica los cambios: <code>sudo netplan apply</code></li><li>Verifica con <code>ip addr show</code> e <code>ip route</code> que la IP y el gateway son correctos.</li><li>Comprueba resolución DNS: <code>resolvectl status</code></li><li>Documenta el archivo YAML resultante y las verificaciones.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Archivo YAML correcto (sintaxis y contenido)</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Comando netplan apply sin errores</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Verificación ip addr e ip route correctas</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>DNS correctamente configurado y probado</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p4">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p4_f0">Nombre del adaptador de red en Ubuntu<span class="req">*</span></label><input type="text" id="ai_p4_f0" name="ai_p4_f0" placeholder="Ej: enp0s3, ens33, eth0"><p class="hint">Ej: enp0s3, ens33, eth0</p></div><div class="ai-field"><label for="ai_p4_f1">IP estática configurada<span class="req">*</span></label><input type="text" id="ai_p4_f1" name="ai_p4_f1" placeholder="Debe ser 192.168.100.70"><p class="hint">Debe ser 192.168.100.70</p></div><div class="ai-field"><label for="ai_p4_f2">Contenido del archivo Netplan (copia el bloque de configuración)<span class="req">*</span></label><textarea id="ai_p4_f2" name="ai_p4_f2" rows="3" placeholder="Pega el contenido de /etc/netplan/00-*.yaml"></textarea></div><div class="ai-field"><label for="ai_p4_f3">¿Hubo errores al ejecutar sudo netplan apply?<span class="req">*</span></label><select id="ai_p4_f3" name="ai_p4_f3"><option value="">— Elige una opción —</option><option value="No, aplicó correctamente">No, aplicó correctamente</option><option value="Sí (describe el error en el campo siguiente)">Sí (describe el error en el campo siguiente)</option></select></div><div class="ai-field"><label for="ai_p4_f4">Salida de ip addr show tras aplicar (línea con inet)<span class="req">*</span></label><input type="text" id="ai_p4_f4" name="ai_p4_f4" placeholder="Ej: inet 192.168.100.70/24"><p class="hint">Ej: inet 192.168.100.70/24</p></div><div class="ai-field"><label for="ai_p4_f5">Servidores DNS configurados<span class="req">*</span></label><input type="text" id="ai_p4_f5" name="ai_p4_f5" placeholder="Ej: 8.8.8.8, 1.1.1.1"><p class="hint">Ej: 8.8.8.8, 1.1.1.1</p></div>
+                <button class="ai-submit" onclick="submitAI(4)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p4">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Muestra el archivo YAML final y las capturas de ip addr e ip route.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-5" data-nav="P2.5">
+        <div class="practica-header">
+            <span class="practica-badge">P2.5</span>
+            <h3>🧪 Diagnóstico completo de conectividad</h3>
+            <div class="practica-meta">
+                <span>📖 B21</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-b</span><span class="ce-tag">RA2 CE-c</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B21</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b21">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Utilizar las herramientas de diagnóstico para verificar la conectividad paso a paso.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VMs Windows y Ubuntu con red configurada</li><li>Acceso a Internet en las VMs (modo NAT)</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>En Windows: <code>ipconfig</code> — anota la IP y el gateway.</li><li>Ping a tu propia IP: <code>ping 127.0.0.1</code>. ¿Qué verifica esto?</li><li>Ping a la puerta de enlace. Si no responde, ¿qué parte de la red falla?</li><li>Ping a <code>8.8.8.8</code>. Si falla: ¿hay problema de routing o de DNS?</li><li>Ping a <code>google.com</code>. Si este falla pero 8.8.8.8 funciona: ¿cuál es el problema?</li><li>Ejecuta <code>tracert google.com</code> (Windows) o <code>traceroute google.com</code> (Ubuntu). Anota cuántos saltos hay.</li><li>Repite los pasos 1-6 en Ubuntu usando <code>ip addr</code>, <code>ping</code> y <code>traceroute</code>.</li><li>Elabora una tabla comparativa Windows/Ubuntu con los resultados.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Diagnóstico Windows completo y documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Diagnóstico Ubuntu completo y documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Interpretación correcta de cada resultado</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Tabla comparativa clara y completa</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p5">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p5_f0">Resultado paso 2 (ping 127.0.0.1) — ¿qué verifica?<span class="req">*</span></label><input type="text" id="ai_p5_f0" name="ai_p5_f0" placeholder="Explica en 1 frase qué comprueba este ping"><p class="hint">Explica en 1 frase qué comprueba este ping</p></div><div class="ai-field"><label for="ai_p5_f1">Resultado paso 3 (ping gateway) — ¿responde?<span class="req">*</span></label><select id="ai_p5_f1" name="ai_p5_f1"><option value="">— Elige una opción —</option><option value="Sí, responde (TTL visible)">Sí, responde (TTL visible)</option><option value="No, timeout">No, timeout</option></select></div><div class="ai-field"><label for="ai_p5_f2">Resultado paso 4 (ping 8.8.8.8) — ¿responde?<span class="req">*</span></label><select id="ai_p5_f2" name="ai_p5_f2"><option value="">— Elige una opción —</option><option value="Sí, responde">Sí, responde</option><option value="No, timeout">No, timeout</option></select></div><div class="ai-field"><label for="ai_p5_f3">Resultado paso 5 (ping google.com) — ¿responde?<span class="req">*</span></label><select id="ai_p5_f3" name="ai_p5_f3"><option value="">— Elige una opción —</option><option value="Sí, responde">Sí, responde</option><option value="No, timeout">No, timeout</option></select></div><div class="ai-field"><label for="ai_p5_f4">Si ping 8.8.8.8 ✅ pero ping google.com ❌, ¿qué componente falla?<span class="req">*</span></label><select id="ai_p5_f4" name="ai_p5_f4"><option value="">— Elige una opción —</option><option value="La red local">La red local</option><option value="El router">El router</option><option value="Los servidores DNS">Los servidores DNS</option><option value="Internet">Internet</option></select></div><div class="ai-field"><label for="ai_p5_f5">Número de saltos en traceroute a google.com<span class="req">*</span></label><input type="text" id="ai_p5_f5" name="ai_p5_f5" placeholder="Escribe el número de líneas en tracert/traceroute"><p class="hint">Escribe el número de líneas en tracert/traceroute</p></div>
+                <button class="ai-submit" onclick="submitAI(5)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p5">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Tabla comparativa Windows vs Ubuntu con resultados y análisis de cada comando.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-6" data-nav="P2.6">
+        <div class="practica-header">
+            <span class="practica-badge">P2.6</span>
+            <h3>🧪 Configura un grupo de trabajo entre dos VMs</h3>
+            <div class="practica-meta">
+                <span>📖 B22</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-b</span><span class="ce-tag">RA2 CE-c</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B22</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b22">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Crear un grupo de trabajo Windows y verificar la visibilidad entre equipos.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>Dos VMs con Windows 11 en la misma red interna de VirtualBox</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>En cada VM: Configuración → Sistema → Acerca de → Nombre del equipo. Cambia el nombre a <code>PC-ALUMNO1</code> y <code>PC-ALUMNO2</code>.</li><li>En ambas VMs: botón derecho en "Este equipo" → Propiedades → Nombre del equipo → Cambiar → Grupo de trabajo: <code>CLASE-OACE</code>. Reinicia.</li><li>Comprueba con <code>ipconfig</code> que ambas VMs tienen IPs en la misma subred.</li><li>En PC-ALUMNO1, abre el Explorador de archivos → Red. ¿Aparece PC-ALUMNO2?</li><li>Si no aparece, ejecuta en cmd: <code>net view</code>. ¿Qué muestra?</li><li>Comprueba el acceso directo escribiendo en el Explorador: <code>\\PC-ALUMNO2</code> o <code>\\IP-DE-ALUMNO2</code>.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Nombres de equipo configurados correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Grupo de trabajo correcto en ambas VMs</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Visibilidad de red verificada (net view o Explorador)</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Análisis de limitaciones del grupo de trabajo</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p6">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p6_f0">Nombre del equipo VM1<span class="req">*</span></label><input type="text" id="ai_p6_f0" name="ai_p6_f0" placeholder="Debe ser PC-ALUMNO1"><p class="hint">Debe ser PC-ALUMNO1</p></div><div class="ai-field"><label for="ai_p6_f1">Nombre del equipo VM2<span class="req">*</span></label><input type="text" id="ai_p6_f1" name="ai_p6_f1" placeholder="Debe ser PC-ALUMNO2"><p class="hint">Debe ser PC-ALUMNO2</p></div><div class="ai-field"><label for="ai_p6_f2">Nombre del grupo de trabajo en ambas VMs<span class="req">*</span></label><input type="text" id="ai_p6_f2" name="ai_p6_f2" placeholder="Debe ser CLASE-OACE"><p class="hint">Debe ser CLASE-OACE</p></div><div class="ai-field"><label for="ai_p6_f3">Resultado de "net view" desde PC-ALUMNO1<span class="req">*</span></label><textarea id="ai_p6_f3" name="ai_p6_f3" rows="3" placeholder="Copia el texto de la terminal"></textarea></div><div class="ai-field"><label for="ai_p6_f4">¿Apareció PC-ALUMNO2 en el Explorador de archivos → Red?<span class="req">*</span></label><select id="ai_p6_f4" name="ai_p6_f4"><option value="">— Elige una opción —</option><option value="Sí, apareció automáticamente">Sí, apareció automáticamente</option><option value="Solo accesible por IP directa">Solo accesible por IP directa</option><option value="No, no apareció">No, no apareció</option></select></div><div class="ai-field"><label for="ai_p6_f5">Explica por qué puede no aparecer aunque el grupo sea correcto<span class="req">*</span></label><textarea id="ai_p6_f5" name="ai_p6_f5" rows="3" placeholder="Menciona el perfil de red y el descubrimiento de red"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(6)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p6">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas mostrando ambas VMs en el mismo grupo de trabajo y el resultado de net view.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-7" data-nav="P2.7">
+        <div class="practica-header">
+            <span class="practica-badge">P2.7</span>
+            <h3>🧪 Tipos de cuenta y mínimo privilegio</h3>
+            <div class="practica-meta">
+                <span>📖 B23</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B23</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b23">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Crear cuentas estándar y administrador, verificar diferencias de privilegios.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Windows 11</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Crea una cuenta estándar: <code>net user becario OACE2025 /add</code></li><li>Verifica que es una cuenta estándar (no aparece en Administradores): <code>net localgroup Administradores</code></li><li>Inicia sesión como <code>becario</code>. Intenta cambiar la fecha y hora del sistema. ¿Qué ocurre?</li><li>Intenta instalar un programa. ¿Qué ocurre? Anota el mensaje.</li><li>Vuelve al admin. Promueve <code>becario</code> a admin: <code>net localgroup Administradores becario /add</code></li><li>Vuelve a iniciar sesión como <code>becario</code> y repite los intentos. ¿Qué cambia?</li><li>Reflexión: ¿Por qué es importante el principio del mínimo privilegio? Escribe 3 razones.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Cuenta estándar creada y verificada</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Pruebas con cuenta estándar documentadas</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Pruebas con cuenta admin documentadas</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Reflexión sobre mínimo privilegio (3 razones)</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p7">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p7_f0">Comando usado para crear la cuenta becario<span class="req">*</span></label><input type="text" id="ai_p7_f0" name="ai_p7_f0" placeholder="Copia el comando exacto de cmd"><p class="hint">Copia el comando exacto de cmd</p></div><div class="ai-field"><label for="ai_p7_f1">¿Aparece becario en net localgroup Administradores?<span class="req">*</span></label><select id="ai_p7_f1" name="ai_p7_f1"><option value="">— Elige una opción —</option><option value="No (cuenta estándar correcta)">No (cuenta estándar correcta)</option><option value="Sí (error — es admin)">Sí (error — es admin)</option></select></div><div class="ai-field"><label for="ai_p7_f2">Resultado al intentar cambiar la fecha con cuenta estándar<span class="req">*</span></label><input type="text" id="ai_p7_f2" name="ai_p7_f2" placeholder="Describe el mensaje de error o lo que ocurrió"><p class="hint">Describe el mensaje de error o lo que ocurrió</p></div><div class="ai-field"><label for="ai_p7_f3">Resultado al intentar instalar un programa con cuenta estándar<span class="req">*</span></label><input type="text" id="ai_p7_f3" name="ai_p7_f3" placeholder="Describe el mensaje o diálogo que apareció"><p class="hint">Describe el mensaje o diálogo que apareció</p></div><div class="ai-field"><label for="ai_p7_f4">Escribe 2 razones por las que no se debe usar cuenta admin a diario<span class="req">*</span></label><textarea id="ai_p7_f4" name="ai_p7_f4" rows="3" placeholder="Escribe 2 razones por las que no se debe usar cuenta admin a diario"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(7)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p7">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas mostrando los intentos de la cuenta estándar y la cuenta admin, con la reflexión.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-8" data-nav="P2.8">
+        <div class="practica-header">
+            <span class="practica-badge">P2.8</span>
+            <h3>🧪 Gestión completa de usuarios en Windows</h3>
+            <div class="practica-meta">
+                <span>📖 B24</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B24</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b24">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Crear, listar, desactivar y eliminar cuentas de usuario en Windows desde cmd.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Windows 11</li><li>cmd abierto como administrador</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Lista los usuarios actuales: <code>net user</code></li><li>Crea tres usuarios: <code>net user trabajador1 OACE2025 /add</code>, <code>trabajador2</code>, <code>trabajador3</code>.</li><li>Verifica que los usuarios existen: <code>net user</code></li><li>Consulta detalles de trabajador1: <code>net user trabajador1</code>. Anota la cuenta de home.</li><li>Desactiva trabajador3: <code>net user trabajador3 /active:no</code>. Intenta iniciar sesión con él.</li><li>Vuelve a activar trabajador3: <code>net user trabajador3 /active:yes</code>.</li><li>Elimina trabajador3: <code>net user trabajador3 /delete</code>. Verifica con <code>net user</code>.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Los 3 usuarios creados correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Desactivación verificada con prueba de login</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Reactivación y eliminación documentadas</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Capturas de net user en cada paso</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p8">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p8_f0">Salida de "net user" tras crear los 3 usuarios<span class="req">*</span></label><textarea id="ai_p8_f0" name="ai_p8_f0" rows="3" placeholder="Copia el texto de la terminal"></textarea></div><div class="ai-field"><label for="ai_p8_f1">Comando exacto para desactivar trabajador3<span class="req">*</span></label><input type="text" id="ai_p8_f1" name="ai_p8_f1" placeholder=""></div><div class="ai-field"><label for="ai_p8_f2">¿Qué mensaje aparece al intentar iniciar sesión con trabajador3 desactivado?<span class="req">*</span></label><input type="text" id="ai_p8_f2" name="ai_p8_f2" placeholder=""></div><div class="ai-field"><label for="ai_p8_f3">Comando exacto para eliminar trabajador3<span class="req">*</span></label><input type="text" id="ai_p8_f3" name="ai_p8_f3" placeholder=""></div><div class="ai-field"><label for="ai_p8_f4">Salida de "net user" tras eliminar (¿aparece trabajador3?)<span class="req">*</span></label><select id="ai_p8_f4" name="ai_p8_f4"><option value="">— Elige una opción —</option><option value="No, fue eliminado correctamente">No, fue eliminado correctamente</option><option value="Sí, sigue apareciendo (error)">Sí, sigue apareciendo (error)</option></select></div>
+                <button class="ai-submit" onclick="submitAI(8)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p8">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas de cmd mostrando cada comando y su resultado.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-9" data-nav="P2.9">
+        <div class="practica-header">
+            <span class="practica-badge">P2.9</span>
+            <h3>🧪 Gestión completa de usuarios en Ubuntu</h3>
+            <div class="practica-meta">
+                <span>📖 B25</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B25</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b25">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Crear, bloquear y eliminar cuentas de usuario en Ubuntu desde la terminal.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Ubuntu 24.04</li><li>Terminal con sudo</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Lista los últimos usuarios creados: <code>tail -5 /etc/passwd</code></li><li>Crea tres usuarios con carpeta personal: <code>sudo useradd -m trabajador1</code>, <code>trabajador2</code>, <code>trabajador3</code>.</li><li>Asigna contraseña a cada uno: <code>sudo passwd trabajador1</code> (usa OACE2025 como contraseña).</li><li>Verifica la carpeta personal: <code>ls -la /home/</code></li><li>Bloquea trabajador3: <code>sudo usermod -L trabajador3</code>. Intenta <code>su trabajador3</code>. ¿Qué ocurre?</li><li>Desbloquea: <code>sudo usermod -U trabajador3</code>.</li><li>Elimina trabajador3 con su carpeta: <code>sudo userdel -r trabajador3</code>. Verifica con <code>ls /home/</code>.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>3 usuarios creados con carpeta personal</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Contraseñas asignadas correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">3 pts</td></tr><tr><td>Bloqueo verificado con su</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Eliminación completa (usuario + home) documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p9">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p9_f0">Comando para crear trabajador1 con carpeta personal<span class="req">*</span></label><input type="text" id="ai_p9_f0" name="ai_p9_f0" placeholder="Copia el comando exacto"><p class="hint">Copia el comando exacto</p></div><div class="ai-field"><label for="ai_p9_f1">Salida de "ls -la /home/" tras crear los 3 usuarios<span class="req">*</span></label><textarea id="ai_p9_f1" name="ai_p9_f1" rows="3" placeholder="Copia el texto de la terminal"></textarea></div><div class="ai-field"><label for="ai_p9_f2">Comando para bloquear trabajador3<span class="req">*</span></label><input type="text" id="ai_p9_f2" name="ai_p9_f2" placeholder=""></div><div class="ai-field"><label for="ai_p9_f3">¿Qué ocurre al ejecutar "su trabajador3" bloqueado?<span class="req">*</span></label><input type="text" id="ai_p9_f3" name="ai_p9_f3" placeholder="Copia el mensaje de error"><p class="hint">Copia el mensaje de error</p></div><div class="ai-field"><label for="ai_p9_f4">Comando para eliminar trabajador3 con su carpeta<span class="req">*</span></label><input type="text" id="ai_p9_f4" name="ai_p9_f4" placeholder=""></div><div class="ai-field"><label for="ai_p9_f5">¿Queda la carpeta /home/trabajador3 tras el userdel -r?<span class="req">*</span></label><select id="ai_p9_f5" name="ai_p9_f5"><option value="">— Elige una opción —</option><option value="No, fue eliminada (correcto)">No, fue eliminada (correcto)</option><option value="Sí, sigue ahí (faltó -r)">Sí, sigue ahí (faltó -r)</option></select></div>
+                <button class="ai-submit" onclick="submitAI(9)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p9">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas de terminal mostrando cada comando, /etc/passwd relevante y /home/ antes y después.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-10" data-nav="P2.10">
+        <div class="practica-header">
+            <span class="practica-badge">P2.10</span>
+            <h3>🧪 Explora los perfiles de usuario</h3>
+            <div class="practica-meta">
+                <span>📖 B26</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B26</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b26">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Observar y documentar los perfiles de usuario en Windows y Ubuntu.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VMs Windows y Ubuntu con al menos 2 usuarios creados</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>En Windows, abre el Explorador y navega a <code>C:\Users\</code>. Lista todas las carpetas.</li><li>Compara las carpetas con la lista de usuarios: <code>net user</code>. ¿Coinciden?</li><li>Inicia sesión con trabajador1. Personaliza el fondo de escritorio. Cierra sesión.</li><li>Inicia sesión de nuevo con trabajador1. ¿Se ha guardado el fondo? ¿Qué tipo de perfil es?</li><li>En Ubuntu, ejecuta <code>ls -la /home/</code>. Identifica las carpetas de perfil de cada usuario.</li><li>Entra como trabajador1 (<code>su - trabajador1</code>) y crea un archivo en su home. Sal y comprueba los permisos.</li><li>Documenta la diferencia entre perfil local (Windows) y directorio home (Ubuntu).</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Listado de perfiles Windows documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Prueba de persistencia del perfil local</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Exploración de /home en Ubuntu</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Comparativa Windows/Ubuntu de perfiles</td><td style="font-weight:700;color:var(--verde);text-align:right">7 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p10">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p10_f0">Carpetas en C:\Users\ (lista los nombres)<span class="req">*</span></label><textarea id="ai_p10_f0" name="ai_p10_f0" rows="3" placeholder="Ej: Default, Public, trabajador1, trabajador2..."></textarea></div><div class="ai-field"><label for="ai_p10_f1">¿Coinciden con la lista de net user?<span class="req">*</span></label><select id="ai_p10_f1" name="ai_p10_f1"><option value="">— Elige una opción —</option><option value="Sí, coinciden">Sí, coinciden</option><option value="No, hay carpetas de más">No, hay carpetas de más</option><option value="No, hay carpetas de menos">No, hay carpetas de menos</option></select></div><div class="ai-field"><label for="ai_p10_f2">Tras cambiar el fondo y volver a iniciar sesión, ¿se guardó?<span class="req">*</span></label><select id="ai_p10_f2" name="ai_p10_f2"><option value="">— Elige una opción —</option><option value="Sí, se guardó (perfil local funciona)">Sí, se guardó (perfil local funciona)</option><option value="No, volvió al fondo por defecto">No, volvió al fondo por defecto</option></select></div><div class="ai-field"><label for="ai_p10_f3">Carpetas en /home/ de Ubuntu (lista los nombres)<span class="req">*</span></label><input type="text" id="ai_p10_f3" name="ai_p10_f3" placeholder="Ej: trabajador1, trabajador2"><p class="hint">Ej: trabajador1, trabajador2</p></div><div class="ai-field"><label for="ai_p10_f4">Diferencia principal entre perfil local (Windows) y home (Ubuntu)<span class="req">*</span></label><textarea id="ai_p10_f4" name="ai_p10_f4" rows="3" placeholder="Explica en 2 frases"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(10)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p10">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Documento con capturas de C:\Users\ y /home/ y la comparativa explicada.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-11" data-nav="P2.11">
+        <div class="practica-header">
+            <span class="practica-badge">P2.11</span>
+            <h3>🧪 Gestión de grupos en Windows</h3>
+            <div class="practica-meta">
+                <span>📖 B27</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B27</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b27">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Crear grupos locales, añadir usuarios y verificar la membresía en Windows.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Windows 11 y usuarios trabajador1 y trabajador2 creados</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Lista los grupos locales existentes: <code>net localgroup</code></li><li>Crea el grupo Ventas: <code>net localgroup Ventas /add</code></li><li>Crea el grupo Contabilidad: <code>net localgroup Contabilidad /add</code></li><li>Añade trabajador1 a Ventas: <code>net localgroup Ventas trabajador1 /add</code></li><li>Añade trabajador2 a Ventas y a Contabilidad.</li><li>Verifica los miembros: <code>net localgroup Ventas</code> y <code>net localgroup Contabilidad</code>.</li><li>Elimina trabajador1 de Ventas: <code>net localgroup Ventas trabajador1 /delete</code>. Verifica.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Grupos creados correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Usuarios añadidos a grupos correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Verificación de membresía documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Eliminación de miembro documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p11">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p11_f0">Salida de "net localgroup" antes de crear grupos<span class="req">*</span></label><textarea id="ai_p11_f0" name="ai_p11_f0" rows="3" placeholder="Copia los grupos existentes"></textarea></div><div class="ai-field"><label for="ai_p11_f1">Comando para crear el grupo Ventas<span class="req">*</span></label><input type="text" id="ai_p11_f1" name="ai_p11_f1" placeholder=""></div><div class="ai-field"><label for="ai_p11_f2">Comando para añadir trabajador1 al grupo Ventas<span class="req">*</span></label><input type="text" id="ai_p11_f2" name="ai_p11_f2" placeholder=""></div><div class="ai-field"><label for="ai_p11_f3">Salida de "net localgroup Ventas" tras añadir miembros<span class="req">*</span></label><textarea id="ai_p11_f3" name="ai_p11_f3" rows="3" placeholder="Copia los miembros listados"></textarea></div><div class="ai-field"><label for="ai_p11_f4">Salida tras eliminar trabajador1 del grupo Ventas<span class="req">*</span></label><input type="text" id="ai_p11_f4" name="ai_p11_f4" placeholder="¿Aparece aún trabajador1? Sí/No"><p class="hint">¿Aparece aún trabajador1? Sí/No</p></div>
+                <button class="ai-submit" onclick="submitAI(11)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p11">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas de net localgroup mostrando los grupos y sus miembros.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-12" data-nav="P2.12">
+        <div class="practica-header">
+            <span class="practica-badge">P2.12</span>
+            <h3>🧪 Gestión de grupos en Ubuntu</h3>
+            <div class="practica-meta">
+                <span>📖 B28</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B28</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b28">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Crear grupos, añadir y eliminar usuarios de grupos en Ubuntu.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Ubuntu y usuarios trabajador1 y trabajador2 creados</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Lista los grupos actuales: <code>cat /etc/group | tail -10</code></li><li>Crea el grupo Ventas: <code>sudo groupadd ventas</code></li><li>Crea el grupo Contabilidad: <code>sudo groupadd contabilidad</code></li><li>Añade trabajador1 a ventas: <code>sudo usermod -aG ventas trabajador1</code></li><li>Añade trabajador2 a ventas y contabilidad: <code>sudo usermod -aG ventas,contabilidad trabajador2</code></li><li>Verifica los grupos de cada usuario: <code>groups trabajador1</code> y <code>groups trabajador2</code></li><li>Elimina trabajador1 del grupo ventas: <code>sudo gpasswd -d trabajador1 ventas</code>. Verifica.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Grupos creados correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>-aG usado correctamente (sin borrar grupos previos)</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Verificación con groups documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Eliminación con gpasswd documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p12">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p12_f0">Comando para crear el grupo ventas en Ubuntu<span class="req">*</span></label><input type="text" id="ai_p12_f0" name="ai_p12_f0" placeholder=""></div><div class="ai-field"><label for="ai_p12_f1">Comando para añadir trabajador1 a ventas (con -aG)<span class="req">*</span></label><input type="text" id="ai_p12_f1" name="ai_p12_f1" placeholder=""></div><div class="ai-field"><label for="ai_p12_f2">Salida de "groups trabajador2" tras añadirlo a ventas y contabilidad<span class="req">*</span></label><input type="text" id="ai_p12_f2" name="ai_p12_f2" placeholder="Ej: trabajador2 : trabajador2 ventas contabilidad"><p class="hint">Ej: trabajador2 : trabajador2 ventas contabilidad</p></div><div class="ai-field"><label for="ai_p12_f3">Diferencia entre -G y -aG en usermod (explica con tus palabras)<span class="req">*</span></label><textarea id="ai_p12_f3" name="ai_p12_f3" rows="3" placeholder="Diferencia entre -G y -aG en usermod (explica con tus palabras)"></textarea></div><div class="ai-field"><label for="ai_p12_f4">Comando para eliminar trabajador1 del grupo ventas<span class="req">*</span></label><input type="text" id="ai_p12_f4" name="ai_p12_f4" placeholder=""></div>
+                <button class="ai-submit" onclick="submitAI(12)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p12">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas de /etc/group y groups USUARIO antes y después de cada operación.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-13" data-nav="P2.13">
+        <div class="practica-header">
+            <span class="practica-badge">P2.13</span>
+            <h3>🧪 Identifica y clasifica recursos compartidos</h3>
+            <div class="practica-meta">
+                <span>📖 B29</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B29</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b29">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Reconocer los recursos compartidos existentes y clasificarlos por tipo y permiso.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM con Windows 11</li><li>cmd como administrador</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Ejecuta <code>net share</code> y anota todos los recursos compartidos.</li><li>Identifica los recursos administrativos (terminan en $): ¿cuáles son y para qué sirven?</li><li>Para cada recurso, anota su ruta local y el tipo de permiso predeterminado.</li><li>Crea una carpeta <code>C:\Compartida</code> con un archivo de texto dentro.</li><li>Compártela manualmente: botón derecho → Propiedades → Uso compartido.</li><li>Vuelve a ejecutar <code>net share</code>. ¿Aparece la nueva carpeta compartida?</li><li>Clasifica todos los recursos en una tabla: Nombre / Ruta / Tipo (admin/usuario) / Permiso.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>net share documentado con todos los recursos</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Identificación de recursos administrativos</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Carpeta creada y compartida correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Tabla de clasificación completa</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p13">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p13_f0">Salida completa de "net share"<span class="req">*</span></label><textarea id="ai_p13_f0" name="ai_p13_f0" rows="3" placeholder="Copia el texto de la terminal"></textarea></div><div class="ai-field"><label for="ai_p13_f1">Recursos administrativos identificados (los que acaban en $)<span class="req">*</span></label><input type="text" id="ai_p13_f1" name="ai_p13_f1" placeholder="Lista los nombres separados por comas"><p class="hint">Lista los nombres separados por comas</p></div><div class="ai-field"><label for="ai_p13_f2">¿Para qué sirve el recurso IPC$?<span class="req">*</span></label><input type="text" id="ai_p13_f2" name="ai_p13_f2" placeholder="Explica en 1 frase"><p class="hint">Explica en 1 frase</p></div><div class="ai-field"><label for="ai_p13_f3">Nombre de la nueva carpeta compartida que creaste<span class="req">*</span></label><input type="text" id="ai_p13_f3" name="ai_p13_f3" placeholder=""></div><div class="ai-field"><label for="ai_p13_f4">¿Apareció en net share tras compartirla?<span class="req">*</span></label><select id="ai_p13_f4" name="ai_p13_f4"><option value="">— Elige una opción —</option><option value="Sí">Sí</option><option value="No">No</option></select></div>
+                <button class="ai-submit" onclick="submitAI(13)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p13">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Tabla de clasificación de recursos y captura del net share antes y después.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-14" data-nav="P2.14">
+        <div class="practica-header">
+            <span class="practica-badge">P2.14</span>
+            <h3>🧪 Comparte carpetas en Windows</h3>
+            <div class="practica-meta">
+                <span>📖 B30</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B30</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b30">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Compartir carpetas en Windows con distintos permisos y acceder a ellas por red.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>Dos VMs Windows en la misma red interna</li><li>cmd como administrador</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>En PC-ALUMNO1, crea <code>C:\Documentos-Ventas</code> con 3 archivos de texto.</li><li>Comparte la carpeta con el nombre <code>Ventas</code> y permiso Lectura para Todos.</li><li>Comparte también <code>C:\Proyectos</code> con Control total para Todos.</li><li>Desde PC-ALUMNO2, accede a <code>\\PC-ALUMNO1\Ventas</code>. ¿Puedes leer? ¿Puedes modificar?</li><li>Accede a <code>\\PC-ALUMNO1\Proyectos</code>. ¿Puedes crear y modificar archivos? Documenta.</li><li>En PC-ALUMNO1, ejecuta <code>net share</code> para ver todos los recursos activos.</li><li>Elimina el recurso Proyectos: <code>net share Proyectos /delete</code>. Verifica desde ALUMNO2.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Carpetas creadas y compartidas correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Diferencia de permisos verificada desde otro equipo</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>net share documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">3 pts</td></tr><tr><td>Eliminación del recurso documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p14">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p14_f0">Ruta UNC para acceder a la carpeta Ventas desde PC-ALUMNO2<span class="req">*</span></label><input type="text" id="ai_p14_f0" name="ai_p14_f0" placeholder="Ej: \\PC-ALUMNO1\Ventas"><p class="hint">Ej: \\PC-ALUMNO1\Ventas</p></div><div class="ai-field"><label for="ai_p14_f1">¿Pudiste modificar archivos en Ventas (permiso Lectura)?<span class="req">*</span></label><select id="ai_p14_f1" name="ai_p14_f1"><option value="">— Elige una opción —</option><option value="No, denegado (correcto)">No, denegado (correcto)</option><option value="Sí (error de configuración)">Sí (error de configuración)</option></select></div><div class="ai-field"><label for="ai_p14_f2">¿Pudiste crear archivos en Proyectos (Control total)?<span class="req">*</span></label><select id="ai_p14_f2" name="ai_p14_f2"><option value="">— Elige una opción —</option><option value="Sí (correcto)">Sí (correcto)</option><option value="No (error de configuración)">No (error de configuración)</option></select></div><div class="ai-field"><label for="ai_p14_f3">Salida de "net share" mostrando ambos recursos<span class="req">*</span></label><textarea id="ai_p14_f3" name="ai_p14_f3" rows="3" placeholder="Salida de "net share" mostrando ambos recursos"></textarea></div><div class="ai-field"><label for="ai_p14_f4">Comando para eliminar el recurso Proyectos<span class="req">*</span></label><input type="text" id="ai_p14_f4" name="ai_p14_f4" placeholder=""></div>
+                <button class="ai-submit" onclick="submitAI(14)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p14">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas desde PC-ALUMNO2 mostrando los accesos correctos e incorrectos.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-15" data-nav="P2.15">
+        <div class="practica-header">
+            <span class="practica-badge">P2.15</span>
+            <h3>🧪 Instala y configura Samba en Ubuntu</h3>
+            <div class="practica-meta">
+                <span>📖 B31</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B31</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b31">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Instalar Samba, configurar una carpeta compartida y acceder desde Windows.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM Ubuntu</li><li>VM Windows en la misma red</li><li>Conexión a Internet en Ubuntu para instalar</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Instala Samba: <code>sudo apt update && sudo apt install samba -y</code></li><li>Crea la carpeta a compartir: <code>mkdir ~/compartida-linux</code> y añade un archivo de prueba.</li><li>Edita la configuración: <code>sudo nano /etc/samba/smb.conf</code>. Añade al final:<br><pre>[LinuxShare]
+   path = /home/TU_USUARIO/compartida-linux
+   browsable = yes
+   writable = yes
+   guest ok = yes</pre></li><li>Reinicia el servicio: <code>sudo systemctl restart smbd</code></li><li>Permite Samba en el firewall: <code>sudo ufw allow samba</code></li><li>Desde Windows, accede a <code>\\IP-UBUNTU\LinuxShare</code>. ¿Ves los archivos?</li><li>Crea un archivo desde Windows en la carpeta compartida. ¿Aparece en Ubuntu?</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Samba instalado y servicio activo</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>smb.conf configurado correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Acceso desde Windows verificado</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Creación de archivos bidireccional documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p15">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p15_f0">Resultado de "sudo systemctl status smbd" (Active: ...)<span class="req">*</span></label><input type="text" id="ai_p15_f0" name="ai_p15_f0" placeholder="Ej: Active: active (running)"><p class="hint">Ej: Active: active (running)</p></div><div class="ai-field"><label for="ai_p15_f1">Sección añadida a smb.conf (copia el bloque [LinuxShare])<span class="req">*</span></label><textarea id="ai_p15_f1" name="ai_p15_f1" rows="3" placeholder="Sección añadida a smb.conf (copia el bloque [LinuxShare])"></textarea></div><div class="ai-field"><label for="ai_p15_f2">Desde Windows, ¿pudiste acceder a \\IP-Ubuntu\LinuxShare?<span class="req">*</span></label><select id="ai_p15_f2" name="ai_p15_f2"><option value="">— Elige una opción —</option><option value="Sí, vi los archivos">Sí, vi los archivos</option><option value="No, error de acceso">No, error de acceso</option></select></div><div class="ai-field"><label for="ai_p15_f3">Desde Windows, ¿pudiste crear un archivo en la carpeta compartida?<span class="req">*</span></label><select id="ai_p15_f3" name="ai_p15_f3"><option value="">— Elige una opción —</option><option value="Sí, apareció en Ubuntu">Sí, apareció en Ubuntu</option><option value="No, sin permisos de escritura">No, sin permisos de escritura</option></select></div><div class="ai-field"><label for="ai_p15_f4">Comando UFW para permitir Samba<span class="req">*</span></label><input type="text" id="ai_p15_f4" name="ai_p15_f4" placeholder=""></div>
+                <button class="ai-submit" onclick="submitAI(15)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p15">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Captura de la sección de smb.conf y del acceso desde Windows.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-16" data-nav="P2.16">
+        <div class="practica-header">
+            <span class="practica-badge">P2.16</span>
+            <h3>🧪 Accede a recursos compartidos</h3>
+            <div class="practica-meta">
+                <span>📖 B32</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B32</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b32">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Acceder a carpetas compartidas desde Windows y Ubuntu usando distintos métodos.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VMs Windows y Ubuntu con carpetas compartidas previamente configuradas (prácticas 14 y 15)</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Desde Windows: Explorador de archivos → Red. ¿Ves los equipos disponibles?</li><li>Accede a un recurso compartido de Windows escribiendo la ruta UNC en la barra del Explorador.</li><li>Conecta una unidad de red (letra Z:) al recurso compartido Ventas. Comprueba en "Este equipo".</li><li>Desconecta la unidad de red. ¿Desaparece de "Este equipo"?</li><li>Desde Ubuntu, abre Archivos → Otras ubicaciones → Conectar al servidor. Escribe <code>smb://IP-WINDOWS/Ventas</code>.</li><li>Monta el recurso por terminal: <code>sudo mount -t cifs //IP-WINDOWS/Ventas /mnt/ventas -o guest</code></li><li>Verifica el montaje: <code>ls /mnt/ventas</code>. Desmonta: <code>sudo umount /mnt/ventas</code>.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Acceso por Explorador de Windows documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Unidad de red conectada y desconectada</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Acceso desde Ubuntu por GUI documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Montaje por terminal documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">8 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p16">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p16_f0">¿Aparecieron los equipos en Explorador → Red?<span class="req">*</span></label><select id="ai_p16_f0" name="ai_p16_f0"><option value="">— Elige una opción —</option><option value="Sí">Sí</option><option value="Solo con IP directa">Solo con IP directa</option><option value="No">No</option></select></div><div class="ai-field"><label for="ai_p16_f1">Letra de unidad de red asignada<span class="req">*</span></label><input type="text" id="ai_p16_f1" name="ai_p16_f1" placeholder="Ej: Z:"><p class="hint">Ej: Z:</p></div><div class="ai-field"><label for="ai_p16_f2">Resultado de "net use" mostrando la unidad conectada<span class="req">*</span></label><textarea id="ai_p16_f2" name="ai_p16_f2" rows="3" placeholder="Resultado de "net use" mostrando la unidad conectada"></textarea></div><div class="ai-field"><label for="ai_p16_f3">Comando de montaje Samba desde Ubuntu (copia el comando completo)<span class="req">*</span></label><input type="text" id="ai_p16_f3" name="ai_p16_f3" placeholder="sudo mount -t cifs ..."><p class="hint">sudo mount -t cifs ...</p></div><div class="ai-field"><label for="ai_p16_f4">Resultado de "ls /mnt/ventas" tras montar<span class="req">*</span></label><input type="text" id="ai_p16_f4" name="ai_p16_f4" placeholder="Lista los archivos que aparecieron"><p class="hint">Lista los archivos que aparecieron</p></div><div class="ai-field"><label for="ai_p16_f5">Comando para desmontar el recurso<span class="req">*</span></label><input type="text" id="ai_p16_f5" name="ai_p16_f5" placeholder=""></div>
+                <button class="ai-submit" onclick="submitAI(16)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p16">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas de los 4 métodos de acceso (Explorador, unidad de red, GUI Ubuntu, terminal Ubuntu).</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-17" data-nav="P2.17">
+        <div class="practica-header">
+            <span class="practica-badge">P2.17</span>
+            <h3>🧪 Permisos NTFS vs permisos de red</h3>
+            <div class="practica-meta">
+                <span>📖 B33</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-e</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B33</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b33">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Experimentar la combinación de permisos de red y NTFS para comprender cuál prevalece.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM Windows 11 con usuarios trabajador1 y trabajador2</li><li>Dos VMs en red para probar acceso remoto</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Crea la carpeta <code>C:\PruebaNTFS</code> con un archivo de texto.</li><li>Compártela con permiso "Lectura" para Todos (solo permiso de red).</li><li>En NTFS (Propiedades → Seguridad), da "Control total" a Todos.</li><li>Desde otra cuenta o equipo, intenta modificar el archivo. ¿Puedes? Anota el resultado.</li><li>Ahora cambia el permiso de red a "Control total". ¿Puedes modificar ahora?</li><li>Cambia el permiso de red de vuelta a "Lectura" pero el NTFS también a "Lectura". ¿Qué resultado obtienes?</li><li>Rellena la tabla: Recurso / NTFS / Permiso efectivo / ¿Puede modificar?</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Configuración de permisos correcta en los 3 escenarios</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Pruebas de acceso documentadas con capturas</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Tabla de permisos efectivos correcta</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Conclusión sobre la regla del más restrictivo</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p17">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p17_f0">Escenario 1: Recurso=Lectura, NTFS=Control total → ¿Qué puede hacer?<span class="req">*</span></label><select id="ai_p17_f0" name="ai_p17_f0"><option value="">— Elige una opción —</option><option value="Control total">Control total</option><option value="Solo leer">Solo leer</option><option value="Solo escribir">Solo escribir</option><option value="Nada">Nada</option></select></div><div class="ai-field"><label for="ai_p17_f1">Escenario 2: Recurso=Control total, NTFS=Lectura → ¿Qué puede hacer?<span class="req">*</span></label><select id="ai_p17_f1" name="ai_p17_f1"><option value="">— Elige una opción —</option><option value="Control total">Control total</option><option value="Solo leer">Solo leer</option><option value="Solo escribir">Solo escribir</option><option value="Nada">Nada</option></select></div><div class="ai-field"><label for="ai_p17_f2">Escenario 3: Recurso=Control total, NTFS=Control total → ¿Qué puede hacer?<span class="req">*</span></label><select id="ai_p17_f2" name="ai_p17_f2"><option value="">— Elige una opción —</option><option value="Control total">Control total</option><option value="Solo leer">Solo leer</option><option value="Solo escribir">Solo escribir</option><option value="Nada">Nada</option></select></div><div class="ai-field"><label for="ai_p17_f3">¿Pudiste modificar el archivo en el escenario 1?<span class="req">*</span></label><select id="ai_p17_f3" name="ai_p17_f3"><option value="">— Elige una opción —</option><option value="No (correcto — solo lectura)">No (correcto — solo lectura)</option><option value="Sí (error de configuración)">Sí (error de configuración)</option></select></div><div class="ai-field"><label for="ai_p17_f4">Explica en 1 frase la regla del permiso más restrictivo<span class="req">*</span></label><textarea id="ai_p17_f4" name="ai_p17_f4" rows="3" placeholder="Explica en 1 frase la regla del permiso más restrictivo"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(17)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p17">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Tabla de los 3 escenarios con los permisos y el resultado observado.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-18" data-nav="P2.18">
+        <div class="practica-header">
+            <span class="practica-badge">P2.18</span>
+            <h3>🧪 Resuelve conflictos de permisos combinados</h3>
+            <div class="practica-meta">
+                <span>📖 B34</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-e</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B34</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b34">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Reproducir escenarios de herencia, acumulación y denegación de permisos en Windows.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM Windows 11 con usuarios y grupos Ventas y Contabilidad creados</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Crea la carpeta <code>C:\CarpetaX</code> y compártela.</li><li>Asigna Permiso NTFS Lectura al grupo Ventas sobre CarpetaX.</li><li>Asigna Permiso NTFS Escritura al grupo Contabilidad sobre CarpetaX.</li><li>Añade trabajador2 a ambos grupos. Inicia sesión como trabajador2 e intenta crear un archivo en CarpetaX. ¿Puedes?</li><li>Ahora añade Denegar Escritura al grupo Contabilidad. Prueba de nuevo con trabajador2.</li><li>Usa Propiedades → Seguridad → Opciones avanzadas → Acceso efectivo para verificar los permisos de trabajador2.</li><li>Documenta los resultados en una tabla: Escenario / Grupos / Permiso esperado / Permiso real.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Permisos asignados correctamente a grupos</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Prueba de acumulación (Lectura+Escritura) documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Prueba de denegación documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Verificación con Acceso efectivo</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p18">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p18_f0">Escenario inicial: grupos Ventas(Lectura)+Contabilidad(Escritura). ¿Puede crear archivos trabajador2?<span class="req">*</span></label><select id="ai_p18_f0" name="ai_p18_f0"><option value="">— Elige una opción —</option><option value="Sí, puede crear archivos">Sí, puede crear archivos</option><option value="No, solo puede leer">No, solo puede leer</option></select></div><div class="ai-field"><label for="ai_p18_f1">Tras añadir Denegar Escritura a Contabilidad: ¿puede crear archivos trabajador2?<span class="req">*</span></label><select id="ai_p18_f1" name="ai_p18_f1"><option value="">— Elige una opción —</option><option value="No, Denegar bloquea todo">No, Denegar bloquea todo</option><option value="Sí, Permitir del otro grupo lo compensa">Sí, Permitir del otro grupo lo compensa</option></select></div><div class="ai-field"><label for="ai_p18_f2">Permiso efectivo según la herramienta "Acceso efectivo" de Windows<span class="req">*</span></label><input type="text" id="ai_p18_f2" name="ai_p18_f2" placeholder="Copia los permisos que muestra la herramienta"><p class="hint">Copia los permisos que muestra la herramienta</p></div><div class="ai-field"><label for="ai_p18_f3">Completa: "En Windows, los permisos se _____, se _____ y cuando hay conflicto, _____ siempre gana."<span class="req">*</span></label><textarea id="ai_p18_f3" name="ai_p18_f3" rows="3" placeholder="Rellena los tres huecos"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(18)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p18">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Tabla de escenarios con el permiso esperado y el resultado real.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-19" data-nav="P2.19">
+        <div class="practica-header">
+            <span class="practica-badge">P2.19</span>
+            <h3>🧪 Comparte e instala una impresora en red</h3>
+            <div class="practica-meta">
+                <span>📖 B35</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-d</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B35</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b35">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Compartir una impresora virtual en Windows y conectarse a ella desde otro equipo.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>Dos VMs Windows en la misma red</li><li>Microsoft Print to PDF disponible en ambas</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>En PC-ALUMNO1, ve a Configuración → Bluetooth y dispositivos → Impresoras y escáneres.</li><li>Selecciona "Microsoft Print to PDF" → Propiedades de la impresora → pestaña Compartir.</li><li>Activa "Compartir esta impresora" con el nombre <code>PDF-Red</code>.</li><li>Desde PC-ALUMNO2, abre el Explorador → Red → PC-ALUMNO1. ¿Ves la impresora?</li><li>Haz doble clic en PDF-Red para instalarla en PC-ALUMNO2.</li><li>Abre un documento en PC-ALUMNO2 e imprime en PDF-Red. ¿Se genera el PDF en PC-ALUMNO1?</li><li>Revisa la cola de impresión en PC-ALUMNO1: ¿aparece el trabajo enviado?</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Impresora compartida correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Instalación desde otro equipo documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Impresión remota verificada con PDF generado</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Cola de impresión revisada y documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p19">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p19_f0">Nombre de la impresora compartida<span class="req">*</span></label><input type="text" id="ai_p19_f0" name="ai_p19_f0" placeholder="Debe ser PDF-Red"><p class="hint">Debe ser PDF-Red</p></div><div class="ai-field"><label for="ai_p19_f1">¿Apareció la impresora en Explorador → Red → PC-ALUMNO1?<span class="req">*</span></label><select id="ai_p19_f1" name="ai_p19_f1"><option value="">— Elige una opción —</option><option value="Sí">Sí</option><option value="No">No</option></select></div><div class="ai-field"><label for="ai_p19_f2">¿Se instaló el driver automáticamente en PC-ALUMNO2?<span class="req">*</span></label><select id="ai_p19_f2" name="ai_p19_f2"><option value="">— Elige una opción —</option><option value="Sí">Sí</option><option value="No, tuve que buscarlo manualmente">No, tuve que buscarlo manualmente</option></select></div><div class="ai-field"><label for="ai_p19_f3">¿Se generó el PDF en PC-ALUMNO1 al imprimir desde PC-ALUMNO2?<span class="req">*</span></label><select id="ai_p19_f3" name="ai_p19_f3"><option value="">— Elige una opción —</option><option value="Sí, archivo PDF generado correctamente">Sí, archivo PDF generado correctamente</option><option value="No, error de impresión">No, error de impresión</option></select></div><div class="ai-field"><label for="ai_p19_f4">¿Dónde apareció el PDF generado? (ruta completa)<span class="req">*</span></label><input type="text" id="ai_p19_f4" name="ai_p19_f4" placeholder="Ej: C:\Users\usuario\Documentos\nombre.pdf"><p class="hint">Ej: C:\Users\usuario\Documentos\nombre.pdf</p></div>
+                <button class="ai-submit" onclick="submitAI(19)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p19">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas mostrando la impresora compartida, la instalación remota y el PDF generado.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-20" data-nav="P2.20">
+        <div class="practica-header">
+            <span class="practica-badge">P2.20</span>
+            <h3>🧪 Auditoría de seguridad de recursos compartidos</h3>
+            <div class="practica-meta">
+                <span>📖 B36</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-g</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B36</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b36">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Auditar los recursos compartidos de un equipo Windows e identificar vulnerabilidades.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM Windows 11 con varios recursos compartidos configurados</li><li>cmd como administrador</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Ejecuta <code>net share</code>. Lista todos los recursos compartidos activos.</li><li>Para cada recurso, consulta sus permisos: botón derecho → Propiedades → Uso compartido → Permisos.</li><li>Identifica recursos con permisos excesivos (Control total para Todos).</li><li>¿Hay recursos que no deberían estar compartidos? ¿Cuáles son y por qué?</li><li>Elimina un recurso inseguro con <code>net share NOMBRE /delete</code>.</li><li>Corrige los permisos de otro recurso: quita "Control total" y deja solo "Lectura".</li><li>Elabora un informe de seguridad con: recurso / permiso original / riesgo / acción correctiva.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Auditoría completa con net share</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Identificación de permisos excesivos</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Correcciones aplicadas y documentadas</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Informe de seguridad completo</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p20">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p20_f0">Salida de "net share" (copia todo el texto)<span class="req">*</span></label><textarea id="ai_p20_f0" name="ai_p20_f0" rows="3" placeholder="Salida de "net share" (copia todo el texto)"></textarea></div><div class="ai-field"><label for="ai_p20_f1">¿Hay algún recurso con "Todos" y Control total? (nombre)<span class="req">*</span></label><input type="text" id="ai_p20_f1" name="ai_p20_f1" placeholder="Si no hay ninguno, escribe "ninguno""><p class="hint">Si no hay ninguno, escribe "ninguno"</p></div><div class="ai-field"><label for="ai_p20_f2">Recurso que decidiste eliminar o corregir (nombre + razón en 1 frase)<span class="req">*</span></label><textarea id="ai_p20_f2" name="ai_p20_f2" rows="3" placeholder="Recurso que decidiste eliminar o corregir (nombre + razón en 1 frase)"></textarea></div><div class="ai-field"><label for="ai_p20_f3">¿Qué es una mala práctica compartir C:\ entero? Explica en 1 frase<span class="req">*</span></label><textarea id="ai_p20_f3" name="ai_p20_f3" rows="3" placeholder="¿Qué es una mala práctica compartir C:\ entero? Explica en 1 frase"></textarea></div><div class="ai-field"><label for="ai_p20_f4">Salida de "net share" tras las correcciones<span class="req">*</span></label><textarea id="ai_p20_f4" name="ai_p20_f4" rows="3" placeholder="Salida de "net share" tras las correcciones"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(20)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p20">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Informe de seguridad con los recursos auditados, riesgos identificados y correcciones.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-21" data-nav="P2.21">
+        <div class="practica-header">
+            <span class="practica-badge">P2.21</span>
+            <h3>🧪 Configura el firewall en Windows y Ubuntu</h3>
+            <div class="practica-meta">
+                <span>📖 B37</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-g</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B37</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b37">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Activar y configurar reglas de firewall en Windows Defender y UFW (Ubuntu).</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VMs Windows y Ubuntu</li><li>Samba configurado en Ubuntu (práctica 15)</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>En Windows, abre Seguridad de Windows → Firewall y protección de red. Comprueba el estado.</li><li>Crea una regla de entrada: Panel de control → Firewall → Configuración avanzada → Nueva regla → Puerto 445 (SMB) → Permitir.</li><li>En Ubuntu: <code>sudo ufw status</code>. ¿Está activo?</li><li>Activa UFW si no lo está: <code>sudo ufw enable</code></li><li>Permite Samba: <code>sudo ufw allow samba</code></li><li>Verifica que el acceso a la carpeta compartida Samba desde Windows sigue funcionando.</li><li>Prueba a bloquear una IP concreta: <code>sudo ufw deny from 192.168.100.200</code>. Verifica el estado.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Firewall Windows verificado y regla SMB creada</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>UFW activado correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Regla Samba añadida y verificada con acceso real</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr><tr><td>Regla de bloqueo por IP documentada</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p21">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p21_f0">Estado del firewall Windows antes de la práctica<span class="req">*</span></label><select id="ai_p21_f0" name="ai_p21_f0"><option value="">— Elige una opción —</option><option value="Activo">Activo</option><option value="Inactivo">Inactivo</option><option value="No comprobado">No comprobado</option></select></div><div class="ai-field"><label for="ai_p21_f1">Nombre y tipo de la regla de entrada SMB creada en Windows<span class="req">*</span></label><input type="text" id="ai_p21_f1" name="ai_p21_f1" placeholder="Ej: "Permitir SMB" — Puerto TCP 445"><p class="hint">Ej: "Permitir SMB" — Puerto TCP 445</p></div><div class="ai-field"><label for="ai_p21_f2">Salida de "sudo ufw status verbose" tras configurar Ubuntu<span class="req">*</span></label><textarea id="ai_p21_f2" name="ai_p21_f2" rows="3" placeholder="Copia el texto"></textarea></div><div class="ai-field"><label for="ai_p21_f3">¿Sigue funcionando el acceso a Samba tras activar UFW?<span class="req">*</span></label><select id="ai_p21_f3" name="ai_p21_f3"><option value="">— Elige una opción —</option><option value="Sí, acceso OK">Sí, acceso OK</option><option value="No, se bloqueó">No, se bloqueó</option></select></div><div class="ai-field"><label for="ai_p21_f4">Comando UFW para bloquear la IP 192.168.100.200<span class="req">*</span></label><input type="text" id="ai_p21_f4" name="ai_p21_f4" placeholder=""></div>
+                <button class="ai-submit" onclick="submitAI(21)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p21">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas del firewall Windows con la regla creada y del ufw status en Ubuntu.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-22" data-nav="P2.22">
+        <div class="practica-header">
+            <span class="practica-badge">P2.22</span>
+            <h3>🧪 Backup en red con rsync</h3>
+            <div class="practica-meta">
+                <span>📖 B38</span>
+                <span>⏱️ 55 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-g</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B38</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b38">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Realizar copias de seguridad entre dos VMs usando rsync y montar un recurso de red.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>VM Ubuntu con rsync instalado</li><li>Recurso Samba compartido montado en /mnt/backup</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>Crea en Ubuntu: <code>mkdir ~/importante</code> y añade 3 archivos con contenido.</li><li>Monta el recurso Samba de Windows en <code>/mnt/backup</code>: <code>sudo mount -t cifs //IP-WINDOWS/Proyectos /mnt/backup -o guest</code></li><li>Realiza el primer backup: <code>rsync -av ~/importante/ /mnt/backup/</code></li><li>Verifica que los archivos están en /mnt/backup: <code>ls -la /mnt/backup/</code></li><li>Modifica un archivo en ~/importante. Ejecuta rsync de nuevo.</li><li>Observa cuántos archivos transfiere la segunda vez. ¿Es más rápido? ¿Por qué?</li><li>Diseña una estrategia 3-2-1 para este escenario. Escríbela en un documento.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Montaje del recurso de red correcto</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Primer rsync completo documentado</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Rsync incremental verificado (solo transfiere cambios)</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Estrategia 3-2-1 documentada y razonada</td><td style="font-weight:700;color:var(--verde);text-align:right">6 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p22">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p22_f0">Comando rsync de la primera copia (copia el comando completo)<span class="req">*</span></label><input type="text" id="ai_p22_f0" name="ai_p22_f0" placeholder=""></div><div class="ai-field"><label for="ai_p22_f1">¿Cuántos archivos transfirió la primera vez?<span class="req">*</span></label><input type="text" id="ai_p22_f1" name="ai_p22_f1" placeholder="Ej: 3"><p class="hint">Ej: 3</p></div><div class="ai-field"><label for="ai_p22_f2">¿Cuántos archivos transfirió la segunda vez (tras modificar 1)?<span class="req">*</span></label><input type="text" id="ai_p22_f2" name="ai_p22_f2" placeholder="Ej: 1"><p class="hint">Ej: 1</p></div><div class="ai-field"><label for="ai_p22_f3">¿Por qué rsync solo transfiere el archivo modificado la segunda vez?<span class="req">*</span></label><textarea id="ai_p22_f3" name="ai_p22_f3" rows="3" placeholder="Explica en 1-2 frases"></textarea></div><div class="ai-field"><label for="ai_p22_f4">Estrategia 3-2-1 para tu escenario (describe las 3 copias)<span class="req">*</span></label><textarea id="ai_p22_f4" name="ai_p22_f4" rows="3" placeholder="Copia 1: ... Copia 2: ... Copia 3 (fuera): ..."></textarea></div>
+                <button class="ai-submit" onclick="submitAI(22)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p22">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Capturas de los dos rsync con los archivos transferidos y el documento de estrategia.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-23" data-nav="P2.23">
+        <div class="practica-header">
+            <span class="practica-badge">P2.23</span>
+            <h3>🧪 Escenario integrado OACE Solutions</h3>
+            <div class="practica-meta">
+                <span>📖 B39</span>
+                <span>⏱️ 110 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-b</span><span class="ce-tag">RA2 CE-c</span><span class="ce-tag">RA2 CE-d</span><span class="ce-tag">RA2 CE-e</span><span class="ce-tag">RA2 CE-f</span><span class="ce-tag">RA2 CE-g</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B39</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b39">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Implementar un escenario completo de red con usuarios, grupos, recursos compartidos y seguridad.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>2 VMs Windows y 1 VM Ubuntu en la misma red interna</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>RED: Configura IPs fijas en todos los equipos (subred 192.168.50.0/24). Verifica conectividad total.</li><li>USUARIOS Windows: Crea ventas1, ventas2, conta1, conta2, admin1, admin2 en una VM Windows.</li><li>USUARIOS Ubuntu: Crea los mismos usuarios en la VM Ubuntu con <code>useradd -m</code>.</li><li>GRUPOS Windows: Crea grupos Ventas, Contabilidad, Administracion. Asigna usuarios a sus grupos.</li><li>GRUPOS Ubuntu: Crea los mismos grupos y asigna usuarios.</li><li>RECURSOS: Comparte 3 carpetas en Windows (una por departamento). Samba en Ubuntu para 1 carpeta.</li><li>PERMISOS: Solo el grupo correspondiente puede escribir en su carpeta. Los demás solo leen o no tienen acceso.</li><li>SEGURIDAD: Configura el firewall en ambos. Audita recursos compartidos. Documenta.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Red configurada y conectividad total verificada</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Usuarios y grupos creados en Windows y Ubuntu</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Recursos compartidos con permisos correctos</td><td style="font-weight:700;color:var(--verde);text-align:right">5 pts</td></tr><tr><td>Firewall configurado y auditado</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Documentación completa del escenario</td><td style="font-weight:700;color:var(--verde);text-align:right">3 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p23">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p23_f0">IPs de los 3 equipos configurados<span class="req">*</span></label><textarea id="ai_p23_f0" name="ai_p23_f0" rows="3" placeholder="Ej: Windows-SRV: 192.168.50.10 / Ubuntu-SRV: 192.168.50.20"></textarea></div><div class="ai-field"><label for="ai_p23_f1">Resultado de ping entre servidores (¿responden?)<span class="req">*</span></label><select id="ai_p23_f1" name="ai_p23_f1"><option value="">— Elige una opción —</option><option value="Ambos responden">Ambos responden</option><option value="Solo uno responde">Solo uno responde</option><option value="Ninguno responde">Ninguno responde</option></select></div><div class="ai-field"><label for="ai_p23_f2">Grupos creados en Windows (lista)<span class="req">*</span></label><input type="text" id="ai_p23_f2" name="ai_p23_f2" placeholder="Ej: Ventas, Contabilidad, Administracion"><p class="hint">Ej: Ventas, Contabilidad, Administracion</p></div><div class="ai-field"><label for="ai_p23_f3">Salida de "net share" mostrando los recursos compartidos<span class="req">*</span></label><textarea id="ai_p23_f3" name="ai_p23_f3" rows="3" placeholder="Salida de "net share" mostrando los recursos compartidos"></textarea></div><div class="ai-field"><label for="ai_p23_f4">Salida de "sudo ufw status" en Ubuntu<span class="req">*</span></label><textarea id="ai_p23_f4" name="ai_p23_f4" rows="3" placeholder="Salida de "sudo ufw status" en Ubuntu"></textarea></div><div class="ai-field"><label for="ai_p23_f5">Dificultad principal encontrada durante la práctica<span class="req">*</span></label><textarea id="ai_p23_f5" name="ai_p23_f5" rows="3" placeholder="Describe qué fue lo más difícil y cómo lo resolviste"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(23)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p23">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Documento completo con IPs, usuarios, grupos, recursos, permisos y reglas de firewall de todo el escenario.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practica" id="p2-24" data-nav="P2.24">
+        <div class="practica-header">
+            <span class="practica-badge">P2.24</span>
+            <h3>🧪 Prueba práctica final RA2</h3>
+            <div class="practica-meta">
+                <span>📖 B40</span>
+                <span>⏱️ 110 min</span>
+            </div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA2 CE-a</span><span class="ce-tag">RA2 CE-b</span><span class="ce-tag">RA2 CE-c</span><span class="ce-tag">RA2 CE-d</span><span class="ce-tag">RA2 CE-e</span><span class="ce-tag">RA2 CE-f</span><span class="ce-tag">RA2 CE-g</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B40</strong> antes de realizar esta práctica.
+                    <a href="RA2_OACE_Alumno.html#b40">→ Abrir apuntes del RA2</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Superar la prueba práctica final integrando todos los conocimientos del RA2.</p>
+            <p><strong>🛠️ Material necesario:</strong></p>
+            <ul class="icon-list"><li>2 VMs (Windows + Ubuntu)</li><li>Entorno limpio: sin configuraciones previas</li></ul>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--verde);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol><li>RED (15 min): Configura IPs fijas en la subred 192.168.200.0/24. Verifica conectividad con ping.</li><li>USUARIOS (10 min): Crea 3 usuarios en Windows y 3 en Ubuntu con sus contraseñas.</li><li>GRUPOS (10 min): Crea grupos Finanzas y Marketing en ambos sistemas. Asigna 1-2 usuarios a cada grupo.</li><li>RECURSOS COMPARTIDOS (25 min): En Windows, comparte una carpeta por grupo con permisos correctos. En Ubuntu, comparte por Samba.</li><li>ACCESO (15 min): Verifica desde el otro equipo que los usuarios correctos pueden acceder y los incorrectos no.</li><li>SEGURIDAD (15 min): Activa firewall en ambos con las reglas necesarias. Ejecuta net share y muestra el resultado.</li><li>DOCUMENTACIÓN (20 min): Crea un documento con: IPs, usuarios, grupos, recursos, permisos y reglas de firewall.</li></ol>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                    <tbody><tr><td>Red configurada correctamente</td><td style="font-weight:700;color:var(--verde);text-align:right">3 pts</td></tr><tr><td>Usuarios y grupos en ambos sistemas</td><td style="font-weight:700;color:var(--verde);text-align:right">3 pts</td></tr><tr><td>Recursos compartidos con permisos correctos</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Acceso verificado (correcto e incorrecto)</td><td style="font-weight:700;color:var(--verde);text-align:right">4 pts</td></tr><tr><td>Firewall configurado y auditado</td><td style="font-weight:700;color:var(--verde);text-align:right">3 pts</td></tr><tr><td>Documentación completa y profesional</td><td style="font-weight:700;color:var(--verde);text-align:right">3 pts</td></tr></tbody>
+                </table>
+            </div>
+            <div class="entrega">
+                <div class="label">📤 Entrega</div>
+            <div class="ai-form" id="ai-form-p24">
+                <div class="ai-header">
+                    <span class="ai-badge">📋 Informe de resultados</span>
+                    <span class="ai-desc">Completa todos los campos con los resultados obtenidos en la práctica. Estos datos son necesarios para la evaluación.</span>
+                </div>
+                <div class="ai-field"><label for="ai_p24_f0">IPs configuradas en los dos equipos<span class="req">*</span></label><textarea id="ai_p24_f0" name="ai_p24_f0" rows="3" placeholder="Ej: Windows: 192.168.200.10 / Ubuntu: 192.168.200.20"></textarea></div><div class="ai-field"><label for="ai_p24_f1">Usuarios creados en Windows (lista)<span class="req">*</span></label><input type="text" id="ai_p24_f1" name="ai_p24_f1" placeholder=""></div><div class="ai-field"><label for="ai_p24_f2">Usuarios creados en Ubuntu (lista)<span class="req">*</span></label><input type="text" id="ai_p24_f2" name="ai_p24_f2" placeholder=""></div><div class="ai-field"><label for="ai_p24_f3">Grupos creados y usuarios asignados<span class="req">*</span></label><textarea id="ai_p24_f3" name="ai_p24_f3" rows="3" placeholder="Ej: Finanzas: usuario1, usuario2 / Marketing: usuario3"></textarea></div><div class="ai-field"><label for="ai_p24_f4">Salida de "net share" con todos los recursos compartidos<span class="req">*</span></label><textarea id="ai_p24_f4" name="ai_p24_f4" rows="3" placeholder="Salida de "net share" con todos los recursos compartidos"></textarea></div><div class="ai-field"><label for="ai_p24_f5">Prueba de acceso: ¿Usuario de Finanzas puede acceder a carpeta Finanzas?<span class="req">*</span></label><select id="ai_p24_f5" name="ai_p24_f5"><option value="">— Elige una opción —</option><option value="Sí (correcto)">Sí (correcto)</option><option value="No (error de configuración)">No (error de configuración)</option></select></div><div class="ai-field"><label for="ai_p24_f6">Prueba de acceso: ¿Usuario de Marketing puede acceder a carpeta Finanzas?<span class="req">*</span></label><select id="ai_p24_f6" name="ai_p24_f6"><option value="">— Elige una opción —</option><option value="No (correcto — acceso denegado)">No (correcto — acceso denegado)</option><option value="Sí (error — acceso incorrecto)">Sí (error — acceso incorrecto)</option></select></div><div class="ai-field"><label for="ai_p24_f7">Salida de "sudo ufw status" en Ubuntu<span class="req">*</span></label><textarea id="ai_p24_f7" name="ai_p24_f7" rows="3" placeholder="Salida de "sudo ufw status" en Ubuntu"></textarea></div>
+                <button class="ai-submit" onclick="submitAI(24)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ai-ok-p24">✅ Respuestas guardadas correctamente.</div>
+            </div>
+                <p>Un único PDF con capturas de cada fase y el documento de configuración completo.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        🧪 RA2 · Prácticas de Laboratorio · Configuración en entorno de red · 48 sesiones (B17–B40)<br>
+        Windows 11 + Ubuntu 24.04 LTS · VirtualBox · Material didáctico original
+    </footer>
+</div>
+
+<script>
+const btnTop = document.getElementById('btnTop');
+window.addEventListener('scroll', () => btnTop.classList.toggle('visible', window.scrollY > 400));
+btnTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+const navLinks = document.querySelectorAll('.nav-lateral a');
+const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) navLinks.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id));
+    });
+}, {threshold: 0.3});
+document.querySelectorAll('.practica').forEach(el => io.observe(el));
+</script>
+
+
+<script>
+function submitAI(pid) {
+    const form = document.getElementById('ai-form-p' + pid);
+    const fields = form.querySelectorAll('input,textarea,select');
+    const missing = Array.from(fields).filter(f => f.closest('.ai-field label .req') !== null && !f.value.trim());
+    // Save to localStorage
+    const data = {};
+    fields.forEach(f => { data[f.id] = f.value; });
+    localStorage.setItem('ai_p' + pid, JSON.stringify(data));
+    const ok = document.getElementById('ai-ok-p' + pid);
+    if (ok) ok.classList.add('show');
+    setTimeout(() => ok && ok.classList.remove('show'), 4000);
+}
+// Restore saved values
+document.addEventListener('DOMContentLoaded', () => {
+    for (let pid = 1; pid <= 24; pid++) {
+        const saved = localStorage.getItem('ai_p' + pid);
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                Object.entries(data).forEach(([id, val]) => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = val;
+                });
+            } catch(e) {}
+        }
+    }
+});
+</script>
+
+</body>
+</html>
