@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RA3 · Aplicaciones Ofimáticas | Apuntes del Alumno</title>
+    <style>
+        :root {
+            --azul-oscuro: #1a2744; --azul-medio: #2c5282; --azul: #3182ce; --azul-claro: #ebf4ff;
+            --verde: #276749; --verde-claro: #f0fff4; --naranja: #dd6b20; --naranja-claro: #fffaf0;
+            --rojo: #c53030; --rojo-claro: #fff5f5; --purpura: #6b46c1; --purpura-claro: #faf5ff;
+            --gris: #f7fafc; --gris-oscuro: #4a5568; --texto: #1a202c; --borde: #e2e8f0;
+            --sombra: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+            --radio: 12px; --radio-sm: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--texto); background: #fff7ed;
+            font-size: 15px; line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .navbar { position: sticky; top: 0; z-index: 200; background: var(--azul-oscuro); height: 48px; display: flex; align-items: center; padding: 0 20px; gap: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+        .nav-brand { display: flex; align-items: center; gap: 9px; color: white; text-decoration: none; font-weight: 700; font-size: 14px; margin-right: 20px; flex-shrink: 0; }
+        .nav-brand .brand-badge { background: var(--naranja); color: white; border-radius: 6px; padding: 3px 8px; font-size: 12px; font-weight: 800; }
+        .nav-links { display: flex; align-items: center; gap: 3px; flex: 1; overflow-x: auto; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-link { color: rgba(255,255,255,0.68); text-decoration: none; font-size: 13px; font-weight: 600; padding: 5px 13px; border-radius: 18px; white-space: nowrap; transition: 0.15s; border: 1px solid transparent; }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+        .nav-link.active { color: white; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); }
+        .nav-right { margin-left: auto; flex-shrink: 0; }
+
+        .hero {
+            background: linear-gradient(160deg, #7b341e 0%, #c05621 40%, #dd6b20 100%);
+            color: white; padding: 48px 40px 36px; position: relative; overflow: hidden;
+        }
+        .hero::after { content: ''; position: absolute; top: -80px; right: -120px; width: 380px; height: 380px; background: rgba(255,255,255,0.03); border-radius: 50%; pointer-events: none; }
+        .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 5px 16px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+        .hero h1 { font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; position: relative; z-index: 1; }
+        .hero .subtitulo { font-size: 15px; opacity: 0.82; font-style: italic; position: relative; z-index: 1; }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; position: relative; z-index: 1; }
+        .hero-meta span { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600; }
+
+        .wrapper { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; }
+        .bloque { background: white; border-radius: var(--radio); margin-bottom: 32px; box-shadow: var(--sombra); border: 1px solid var(--borde); overflow: hidden; }
+        .bloque-header { background: var(--gris); padding: 16px 24px; border-bottom: 1px solid var(--borde); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .bloque-header .num { background: var(--naranja); color: white; font-weight: 700; font-size: 14px; border-radius: 6px; padding: 6px 14px; white-space: nowrap; }
+        .bloque-header h3 { font-size: 17px; color: var(--azul-oscuro); font-weight: 650; flex: 1; }
+        .bloque-header .duracion { background: var(--naranja-claro); color: var(--naranja); font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 14px; white-space: nowrap; }
+        .bloque-body { padding: 24px 28px; }
+        .ce-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+        .ce-tag { font-size: 10px; font-weight: 700; background: var(--naranja-claro); color: var(--naranja); border: 1px solid #fed7aa; border-radius: 16px; padding: 3px 10px; }
+        .box-def { background: var(--naranja-claro); border-left: 4px solid var(--naranja); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-def .box-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--naranja); margin-bottom: 6px; }
+        .box-tip { background: #fffbeb; border-left: 4px solid #d69e2e; border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-tip .box-label { color: #975a16; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-warning { background: var(--rojo-claro); border-left: 4px solid var(--rojo); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-warning .box-label { color: var(--rojo); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-exercise { background: #fff7ed; border-left: 4px solid var(--naranja); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-exercise .box-label { color: var(--naranja); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-key-concept { background: #f0fff4; border-left: 4px solid var(--verde); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-key-concept .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-reinforcement { background: #f0fdf4; border: 2px dashed var(--verde); border-radius: var(--radio-sm); padding: 16px 20px; margin: 18px 0; }
+        .box-reinforcement .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-deepening { background: #faf5ff; border: 2px solid var(--purpura); border-radius: var(--radio-sm); padding: 16px 20px; margin: 18px 0; }
+        .box-deepening .box-label { color: var(--purpura); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .box-video-es { background: #fff7ed; border-left: 4px solid var(--naranja); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-video-es .box-label { color: var(--naranja); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 10px 0; border-radius: 8px; box-shadow: var(--sombra); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px; }
+
+        .box-test { background: #fefce8; border-left: 4px solid #ca8a04; border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 16px 20px; margin: 18px 0; }
+        .box-test .box-label { color: #92400e; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .quiz-option { display: block; padding: 8px 14px; margin: 4px 0; border: 2px solid var(--borde); border-radius: 8px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .quiz-option:hover { background: var(--naranja-claro); border-color: var(--naranja); }
+        .quiz-option.correcta { background: #dcfce7; border-color: #22c55e; color: #166534; font-weight: 600; pointer-events: none; }
+        .quiz-option.incorrecta { background: #fef2f2; border-color: #ef4444; color: #c53030; pointer-events: none; }
+        .quiz-option.bloqueada { pointer-events: none; opacity: 0.6; }
+
+        .progreso-global { background: white; border-radius: var(--radio); padding: 18px 24px; margin-bottom: 24px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); text-align: center; }
+        .progreso-global h3 { font-size: 16px; margin-bottom: 6px; color: var(--naranja); }
+        .progreso-barra { height: 14px; background: var(--borde); border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .progreso-relleno { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--naranja), #f97316); transition: width 0.5s; width: 0%; }
+        .progreso-texto { font-size: 13px; color: var(--gris-oscuro); }
+        .insignias { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center; }
+        .insignia { font-size: 28px; opacity: 0.3; transition: opacity 0.4s; filter: grayscale(1); }
+        .insignia.ganada { opacity: 1; filter: grayscale(0); animation: pop 0.5s ease; }
+        @keyframes pop { 0%{transform:scale(1)}50%{transform:scale(1.5)}100%{transform:scale(1)} }
+
+        .respuesta-alumno { background: #fefefe; border: 2px dotted #cbd5e1; border-radius: 8px; padding: 12px 16px; margin: 10px 0; min-height: 60px; }
+        .respuesta-alumno[contenteditable="true"] { cursor: text; background: #fefefe; color: var(--texto); font-style: normal; min-height: 70px; }
+        .respuesta-alumno[contenteditable="true"]:focus { border-color: var(--naranja); outline: 2px solid rgba(221,107,32,0.25); background: white; }
+        .respuesta-alumno[contenteditable="true"]:empty::before { content: attr(data-placeholder); color: #94a3b8; font-style: italic; pointer-events: none; }
+
+        .autoevaluacion { background: #f0fff4; border: 2px solid var(--verde); border-radius: var(--radio-sm); padding: 14px 20px; margin: 20px 0 4px; }
+        .autoevaluacion .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .autoevaluacion ul { list-style: none; padding: 0; margin: 0; }
+        .autoevaluacion ul li { padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; font-size: 14px; border-bottom: 1px solid #c6f6d5; }
+        .autoevaluacion ul li:last-child { border-bottom: none; }
+        .autoevaluacion ul li input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--verde); flex-shrink: 0; margin-top: 3px; cursor: pointer; }
+        .autoevaluacion ul li label { cursor: pointer; line-height: 1.5; }
+        .autoevaluacion ul li.done label { text-decoration: line-through; color: #68d391; }
+
+        .ra-card { background: white; border-radius: var(--radio); padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); }
+        .ra-card h2 { font-size: 20px; color: var(--azul-oscuro); font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
+        .peso-bar { height: 10px; background: var(--borde); border-radius: 5px; margin: 8px 0 16px; overflow: hidden; }
+        .peso-fill { height: 100%; border-radius: 5px; background: var(--naranja); }
+
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+        thead tr { background: var(--naranja); color: white; }
+        thead th { padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; }
+        tbody tr:nth-child(even) { background: var(--gris); }
+        tbody td { padding: 9px 14px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+
+        pre { background: #1e293b; color: #e2e8f0; padding: 14px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 12px 0; }
+        pre code { background: none; color: inherit; padding: 0; }
+        code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #1e40af; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
+        .grid-card { border: 1px solid var(--borde); border-radius: var(--radio-sm); padding: 16px 18px; background: #fafbfc; }
+        .grid-card.azul { border-top: 3px solid var(--azul); } .grid-card.azul h4 { color: var(--azul-medio); }
+        .grid-card.verde { border-top: 3px solid var(--verde); } .grid-card.verde h4 { color: var(--verde); }
+        .grid-card.naranja { border-top: 3px solid var(--naranja); } .grid-card.naranja h4 { color: var(--naranja); }
+
+        ul.icon-list { list-style: none; padding-left: 0; margin: 12px 0; }
+        ul.icon-list li { padding: 7px 0 7px 26px; position: relative; border-bottom: 1px solid #f0f0f0; }
+        ul.icon-list li::before { content: "▸"; color: var(--naranja); position: absolute; left: 6px; font-size: 13px; top: 8px; font-weight: bold; }
+
+        .btn-top { position: fixed; right: 18px; bottom: 24px; background: var(--naranja); color: white; border: none; border-radius: 50%; width: 42px; height: 42px; cursor: pointer; font-size: 18px; box-shadow: var(--sombra-lg); z-index: 200; display: none; align-items: center; justify-content: center; }
+        .btn-top.visible { display: flex; }
+
+        footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--borde); }
+
+
+        /* ── NAVEGACIÓN LATERAL ── */
+        .nav-lateral { position: fixed; right: 12px; top: 50%; transform: translateY(-50%); z-index: 150; display: flex; flex-direction: column; gap: 3px; }
+        .nav-lateral a { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--azul-oscuro); color: white; text-decoration: none; font-size: 10px; font-weight: 800; box-shadow: 0 2px 6px rgba(0,0,0,0.18); transition: transform 0.15s, background 0.15s; }
+        .nav-lateral a:hover { transform: scale(1.25); background: var(--azul); }
+        .nav-lateral a.activo { background: var(--naranja); transform: scale(1.15); }
+
+        /* ── BADGE PROGRESO FLOTANTE ── */
+        .badge-progreso { position: fixed; right: 68px; bottom: 76px; background: var(--naranja); color: white; border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; box-shadow: 0 3px 10px rgba(0,0,0,0.25); z-index: 199; cursor: pointer; display: none; align-items: center; gap: 6px; text-decoration: none; }
+        .badge-progreso:hover { background: #c05621; }
+
+
+        @media (max-width: 720px) {
+            .hero { padding: 28px 20px; } .hero h1 { font-size: 23px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; } .wrapper { padding: 16px 10px; } .bloque-body { padding: 16px; }
+            .nav-lateral, .badge-progreso { display: none !important; }
+        }
+        @media print {
+            .btn-top { display: none !important; }
+            @page { size: A4; margin: 1.8cm 2cm 2cm 2cm; }
+            .bloque { break-before: page; }
+            .respuesta-alumno { border: 1px dashed #cbd5e0 !important; min-height: 50px; }
+            body { background: white !important; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html" class="nav-brand">
+        <span class="brand-badge">OACE</span>
+        <span>2º CFGB</span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA3_OACE_Alumno.html" class="nav-link active">📘 Apuntes RA3</a>
+        <a href="RA3_OACE_Practicas.html" class="nav-link">🧪 Prácticas RA3</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-badge">📘 VERSIÓN ALUMNO · CFGB Informática</div>
+    <h1>📝 RA3 · Aplicaciones de un Paquete Ofimático</h1>
+    <p class="subtitulo">LibreOffice 24.8 · Writer · Calc · Base · Impress · 48 sesiones · 24 bloques</p>
+    <div class="hero-meta">
+        <span>✍️ Procesador de textos</span>
+        <span>📊 Hoja de cálculo</span>
+        <span>🗄️ Base de datos</span>
+        <span>🎨 Presentaciones</span>
+    </div>
+</header>
+
+
+<nav class="nav-lateral" id="navLateral">
+    <a href="#b41" title="B41">41</a>
+    <a href="#b42" title="B42">42</a>
+    <a href="#b43" title="B43">43</a>
+    <a href="#b44" title="B44">44</a>
+    <a href="#b45" title="B45">45</a>
+    <a href="#b46" title="B46">46</a>
+    <a href="#b47" title="B47">47</a>
+    <a href="#b48" title="B48">48</a>
+    <a href="#b49" title="B49">49</a>
+    <a href="#b50" title="B50">50</a>
+    <a href="#b51" title="B51">51</a>
+    <a href="#b52" title="B52">52</a>
+    <a href="#b53" title="B53">53</a>
+    <a href="#b54" title="B54">54</a>
+    <a href="#b55" title="B55">55</a>
+    <a href="#b56" title="B56">56</a>
+    <a href="#b57" title="B57">57</a>
+    <a href="#b58" title="B58">58</a>
+    <a href="#b59" title="B59">59</a>
+    <a href="#b60" title="B60">60</a>
+    <a href="#b61" title="B61">61</a>
+    <a href="#b62" title="B62">62</a>
+    <a href="#b63" title="B63">63</a>
+    <a href="#b64" title="B64">64</a>
+</nav>
+
+<a class="badge-progreso" id="badgeProgreso" href="#progresoGlobal" title="Ver progreso">
+    🏆 <span id="badgeProgresoTxt">0/24</span>
+</a>
+<button class="btn-top" id="btnTop" title="Volver arriba">↑</button>
+
+<div class="wrapper">
+
+
+    <!-- BARRA DE PROGRESO RA3 -->
+    <div class="progreso-global" id="progresoGlobal">
+        <h3>🏆 Tu progreso en el RA3</h3>
+        <div class="progreso-barra"><div class="progreso-relleno" id="progresoRelleno"></div></div>
+        <p class="progreso-texto" id="progresoTexto">Has completado 0 de 24 bloques</p>
+        <div class="insignias">
+            <span class="insignia" title="Primer paso: 6 bloques">🌱</span>
+            <span class="insignia" title="Aprendiz: 12 bloques">🌿</span>
+            <span class="insignia" title="Avanzado: 18 bloques">🌳</span>
+            <span class="insignia" title="Experto RA3: 24 bloques">🏅</span>
+        </div>
+    </div>
+
+    <!-- PORTADA RA3 -->
+    <div class="ra-card" style="border-top: 4px solid var(--naranja);">
+        <h2>🎯 RA3 – Utiliza aplicaciones de un paquete ofimático, relacionándolas con sus aplicaciones (30% · 48 sesiones)</h2>
+        <div class="peso-bar"><div class="peso-fill" style="width:100%"></div></div>
+        <table>
+            <thead><tr><th>Peso</th><th>Criterio de Evaluación</th><th>Sesiones</th></tr></thead>
+            <tbody>
+                <tr><td>35%</td><td><strong>CE-e)</strong> Operaciones básicas con hoja de cálculo y base de datos</td><td>17 ses</td></tr>
+                <tr><td>20%</td><td><strong>CE-g)</strong> Elaborar presentaciones multimedia con normas de diseño</td><td>10 ses</td></tr>
+                <tr><td>15%</td><td><strong>CE-b)</strong> Crear, modificar y manipular documentos</td><td>7 ses</td></tr>
+                <tr><td>10%</td><td><strong>CE-c)</strong> Formatear texto (tipos de letra, alineaciones)</td><td>5 ses</td></tr>
+                <tr><td>10%</td><td><strong>CE-f)</strong> Identificar funciones de aplicación de presentaciones</td><td>5 ses</td></tr>
+                <tr><td>5%</td><td><strong>CE-a)</strong> Describir funciones de procesador de textos</td><td>2 ses</td></tr>
+                <tr><td>5%</td><td><strong>CE-d)</strong> Guardar e imprimir documentos</td><td>2 ses</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ==================== BLOQUE 41 · INTRO WRITER ==================== -->
+    <div class="bloque" id="b41">
+        <div class="bloque-header">
+            <span class="num">B41</span>
+            <h3>Introducción a LibreOffice Writer · Entorno de trabajo y primeros pasos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-a · Describir funciones del procesador de textos (5%)</span></div>
+            <p>LibreOffice Writer es el procesador de textos del paquete ofimático LibreOffice. Su función principal es crear, editar y dar formato a documentos de texto como cartas, informes, currículums o trabajos académicos. Es una alternativa gratuita y de código abierto a Microsoft Word.</p>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Conoce LibreOffice Writer</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/GArVeJj8MHo" title="LibreOffice Writer · Introducción para Principiantes (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Elementos del entorno de Writer</div>
+            <ul>
+                <li><strong>Barra de menús:</strong> Archivo, Editar, Ver, Insertar, Formato, Tabla, Herramientas...</li>
+                <li><strong>Barras de herramientas:</strong> Estándar (guardar, abrir, imprimir) y Formato (negrita, alineación, tipo de letra).</li>
+                <li><strong>Regla:</strong> Para ajustar márgenes y tabulaciones.</li>
+                <li><strong>Área de trabajo:</strong> Donde se escribe el texto.</li>
+                <li><strong>Barra de estado:</strong> Muestra número de página, idioma, modo de inserción (INS).</li>
+            </ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📁 Formatos de archivo</h4>
+                <ul><li><strong>.odt</strong> → Formato nativo de Writer (OpenDocument Text)</li><li><strong>.docx</strong> → Compatible con Microsoft Word</li><li><strong>.pdf</strong> → Para distribuir sin posibilidad de edición</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>⌨️ Atajos de teclado básicos</h4>
+                <ul><li><strong>Ctrl + G</strong> → Guardar</li><li><strong>Ctrl + A</strong> → Abrir</li><li><strong>Ctrl + P</strong> → Imprimir</li><li><strong>Ctrl + Z</strong> → Deshacer</li><li><strong>Ctrl + Y</strong> → Rehacer</li></ul>
+                </div>
+            </div>
+
+            <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div>
+            <p>Writer es un procesador de textos, no un programa de diseño gráfico ni una hoja de cálculo. Está especializado en trabajar con texto, pero permite añadir imágenes, tablas y otros objetos para enriquecer los documentos.</p>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.1 · Explora Writer</div>
+            <p>Abre LibreOffice Writer y responde:</p>
+            <ol><li>¿En qué barra se encuentra el botón "Guardar"?</li><li>¿Cómo se cambia el tipo de letra de un texto seleccionado?</li><li>¿Qué indica la tecla "INS" en la barra de estado?</li><li>¿Qué extensión tiene por defecto un archivo de Writer?</li></ol>
+            <div class="respuesta-alumno" data-placeholder="Escribe aquí tus respuestas..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Cuál es la extensión por defecto de un documento de LibreOffice Writer?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q41',this,'C')">A) .docx</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q41',this,'C')">B) .txt</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q41',this,'C')">C) .odt</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q41',this,'C')">D) .pdf</label>
+                <div id="fb_q41" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación · Marca lo que ya dominas</div>
+            <ul><li id="ae41_0"><input type="checkbox" id="cb41_0"><label for="cb41_0"> Identifico las partes de la ventana de Writer (menús, barras, área de trabajo).</label></li>
+            <li id="ae41_1"><input type="checkbox" id="cb41_1"><label for="cb41_1"> Sé crear un documento nuevo y guardarlo como .odt.</label></li>
+            <li id="ae41_2"><input type="checkbox" id="cb41_2"><label for="cb41_2"> Conozco la diferencia entre .odt, .docx y .pdf.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 42 · FORMATO DE CARÁCTER Y PÁRRAFO ==================== -->
+    <div class="bloque" id="b42">
+        <div class="bloque-header">
+            <span class="num">B42</span>
+            <h3>Writer · Formato de carácter y párrafo · Negrita, alineaciones, interlineado</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-c · Formatear texto (10%)</span><span class="ce-tag">RA3 CE-b · Crear, modificar y manipular documentos (15%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Formato de texto en Writer</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/7RBeeGONMf0" title="LibreOffice Writer · Formato y primeros pasos (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <p>El <strong>formato de carácter</strong> afecta a palabras sueltas: tipo de letra (fuente), tamaño, negrita, cursiva, subrayado, color. El <strong>formato de párrafo</strong> afecta a bloques de texto: alineación, interlineado, sangrías y espacios antes/después.</p>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>✏️ Formato de carácter (atajos)</h4>
+                <ul><li><strong>Ctrl + N</strong> → Negrita</li><li><strong>Ctrl + K</strong> → Cursiva</li><li><strong>Ctrl + S</strong> → Subrayado</li><li><strong>Ctrl + M</strong> → Quitar formato directo</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>📐 Formato de párrafo (atajos)</h4>
+                <ul><li><strong>Ctrl + L</strong> → Alinear a la izquierda</li><li><strong>Ctrl + E</strong> → Centrar</li><li><strong>Ctrl + R</strong> → Alinear a la derecha</li><li><strong>Ctrl + J</strong> → Justificar</li></ul>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Interlineado</div>
+            <p>El interlineado es el espacio entre líneas de un mismo párrafo. Se configura en <strong>Formato → Párrafo → Sangrías y espacios → Interlineado</strong>. Los valores típicos son: Sencillo (1), 1.5 líneas y Doble (2).</p>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.2 · Aplica formato a un texto</div>
+            <p>Copia el siguiente texto y aplícale el formato indicado:</p>
+            <p><em>"El formato de texto es esencial para mejorar la legibilidad de los documentos. Un buen diseño facilita la comprensión del contenido."</em></p>
+            <ol><li>La primera frase ("El formato de texto...") como título: <strong>negrita, tamaño 14, color azul</strong>.</li>
+            <li>Todo el párrafo: <strong>justificado, interlineado 1.5, tipo de letra Arial tamaño 11</strong>.</li>
+            <li>La palabra "legibilidad" en <strong>cursiva y subrayada</strong>.</li></ol>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos que seguiste o pega el texto formateado..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué atajo de teclado aplica negrita al texto seleccionado?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q42',this,'B')">A) Ctrl + C</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q42',this,'B')">B) Ctrl + N</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q42',this,'B')">C) Ctrl + K</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q42',this,'B')">D) Ctrl + S</label>
+                <div id="fb_q42" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="box-reinforcement"><div class="box-label">🔧 Refuerzo · Relaciona conceptos</div>
+            <p>Une cada elemento con su tipo de formato:</p>
+            <ol><li>Tipo de letra → <em>Formato de ______</em></li><li>Interlineado → <em>Formato de ______</em></li><li>Alineación centrada → <em>Formato de ______</em></li><li>Color del texto → <em>Formato de ______</em></li></ol>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae42_0"><input type="checkbox" id="cb42_0"><label for="cb42_0"> Cambio el tipo, tamaño y estilo de la fuente (negrita, cursiva).</label></li>
+            <li id="ae42_1"><input type="checkbox" id="cb42_1"><label for="cb42_1"> Aplico alineaciones (izquierda, centrada, derecha, justificada).</label></li>
+            <li id="ae42_2"><input type="checkbox" id="cb42_2"><label for="cb42_2"> Configuro el interlineado de un párrafo.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 43 · TABLAS Y LISTAS EN WRITER ==================== -->
+    <div class="bloque" id="b43">
+        <div class="bloque-header">
+            <span class="num">B43</span>
+            <h3>Writer · Insertar y modificar tablas · Listas numeradas y con viñetas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b · Crear, modificar y manipular documentos (15%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Tablas y listas en Writer</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/zK3PwS4xV4w" title="LibreOffice Writer · Insertar y modificar tablas (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <p>Las <strong>tablas</strong> organizan información en filas y columnas. Son ideales para horarios, facturas o datos numéricos. Las <strong>listas</strong> (numeradas o con viñetas) ayudan a estructurar ideas y pasos.</p>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📊 Insertar una tabla</h4>
+                <ul><li>Menú: <strong>Tabla → Insertar → Tabla</strong></li><li>Selecciona número de filas y columnas</li><li>Atajo: <strong>Ctrl + F12</strong></li></ul>
+                </div>
+                <div class="grid-card azul"><h4>📝 Listas</h4>
+                <ul><li><strong>Listas con viñetas:</strong> Botón en barra de formato (●)</li><li><strong>Listas numeradas:</strong> Botón (1,2,3)</li><li>Atajos: <strong>F12</strong> (viñetas), <strong>Mayús + F12</strong> (numeración)</li></ul>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Modificar tablas</div>
+            <p>Una vez insertada la tabla, puedes:</p>
+            <ul><li><strong>Añadir filas/columnas:</strong> Botón derecho → Fila/Columna → Insertar</li>
+            <li><strong>Eliminar filas/columnas:</strong> Botón derecho → Eliminar fila/columna</li>
+            <li><strong>Combinar celdas:</strong> Seleccionar celdas → Botón derecho → Combinar celdas</li>
+            <li><strong>Bordes y fondos:</strong> Botón derecho → Tabla → Borde y fondo</li></ul>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.3 · Crea un horario de clase</div>
+            <p>Crea una tabla de 6 filas y 6 columnas. La primera fila serán los días (Lunes, Martes, Miércoles, Jueves, Viernes). La primera columna serán las horas (8:30-9:30, 9:30-10:30...). Rellena con asignaturas ficticias. Aplica un color de fondo a la fila de cabecera.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe cómo creaste la tabla o adjunta captura..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué atajo de teclado inserta una tabla en Writer?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q43',this,'B')">A) Ctrl + T</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q43',this,'B')">B) Ctrl + F12</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q43',this,'B')">C) Ctrl + L</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q43',this,'B')">D) Ctrl + K</label>
+                <div id="fb_q43" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae43_0"><input type="checkbox" id="cb43_0"><label for="cb43_0"> Sé insertar una tabla y añadir/eliminar filas o columnas.</label></li>
+            <li id="ae43_1"><input type="checkbox" id="cb43_1"><label for="cb43_1"> Uso listas numeradas y con viñetas.</label></li>
+            <li id="ae43_2"><input type="checkbox" id="cb43_2"><label for="cb43_2"> Combino celdas y aplico bordes a las tablas.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 44 · INSERTAR IMÁGENES Y FORMAS ==================== -->
+    <div class="bloque" id="b44">
+        <div class="bloque-header">
+            <span class="num">B44</span>
+            <h3>Writer · Insertar imágenes, formas y objetos · Ajuste de texto</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b · Crear, modificar y manipular documentos (15%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Imágenes en Writer</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/9FvDdXNe2fI" title="LibreOffice Writer · Insertar imágenes y ajuste de texto (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <p>Writer permite insertar imágenes (JPG, PNG, GIF) para hacer los documentos más atractivos. Puedes ajustar cómo se relaciona la imagen con el texto circundante.</p>
+
+            <div class="box-def"><div class="box-label">📌 Tipos de ajuste de texto</div>
+            <ul><li><strong>Página:</strong> La imagen se comporta como un carácter más.</li>
+            <li><strong>Ajuste:</strong> El texto fluye alrededor de la imagen (izquierda, derecha, alrededor).</li>
+            <li><strong>Contorno:</strong> El texto se ajusta al contorno de la imagen.</li>
+            <li><strong>Detrás/Encima:</strong> La imagen queda detrás o encima del texto.</li></ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>🖼️ Insertar imagen</h4>
+                <ul><li><strong>Insertar → Imagen → Desde archivo</strong></li><li>Arrastrar y soltar una imagen desde el explorador</li><li><strong>Copiar y pegar (Ctrl+C / Ctrl+V)</strong></li></ul>
+                </div>
+                <div class="grid-card azul"><h4>✂️ Modificar imagen</h4>
+                <ul><li><strong>Redimensionar:</strong> Tirar de las esquinas</li><li><strong>Recortar:</strong> Botón derecho → Recortar imagen</li><li><strong>Rotar:</strong> Usar los tiradores verdes</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.4 · Documento ilustrado</div>
+            <p>Crea un documento con el título "Mi ciudad favorita". Inserta dos imágenes de Internet (paisajes). Escribe un párrafo descriptivo de 5 líneas. Configura el ajuste de texto de las imágenes como "Ajuste" (el texto fluye alrededor).</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos o adjunta capturas..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué opción de ajuste hace que el texto fluya alrededor de la imagen?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q44',this,'B')">A) Página</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q44',this,'B')">B) Ajuste</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q44',this,'B')">C) Detrás</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q44',this,'B')">D) Encima</label>
+                <div id="fb_q44" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae44_0"><input type="checkbox" id="cb44_0"><label for="cb44_0"> Inserto imágenes desde archivo y desde el portapapeles.</label></li>
+            <li id="ae44_1"><input type="checkbox" id="cb44_1"><label for="cb44_1"> Cambio el ajuste de texto de las imágenes.</label></li>
+            <li id="ae44_2"><input type="checkbox" id="cb44_2"><label for="cb44_2"> Redimensiono y recorto imágenes.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 45 · ESTILOS Y PLANTILLAS ==================== -->
+    <div class="bloque" id="b45">
+        <div class="bloque-header">
+            <span class="num">B45</span>
+            <h3>Writer · Estilos y plantillas · Mantén la coherencia visual</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b · Crear, modificar y manipular documentos (15%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Estilos en Writer</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/0gvovKKfEAw" title="LibreOffice Writer · Estilos de párrafo y carácter (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 ¿Qué es un estilo?</div>
+            <p>Un <strong>estilo</strong> es un conjunto de formatos (tipo de letra, tamaño, color, interlineado, etc.) que se guarda con un nombre. Al aplicar el estilo a un texto, se aplican todos los formatos a la vez. Si modificas el estilo, todos los textos que lo usan se actualizan automáticamente.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📂 Tipos de estilos en Writer</h4>
+                <ul><li><strong>Estilos de párrafo:</strong> Afectan a párrafos completos (título, subtítulo, cuerpo de texto).</li>
+                <li><strong>Estilos de carácter:</strong> Afectan a palabras sueltas (énfasis, código, cita).</li>
+                <li><strong>Estilos de página:</strong> Definen márgenes, encabezados y pies de página.</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>📄 Plantillas</h4>
+                <ul><li>Una <strong>plantilla</strong> es un documento que contiene estilos predefinidos.</li>
+                <li>Al crear un documento desde una plantilla, hereda los estilos.</li>
+                <li>Ejemplos: carta comercial, informe académico, currículum.</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.5 · Crea y aplica estilos</div>
+            <p>Crea un documento con tres niveles de título (Título 1, Título 2, Título 3). Personaliza el estilo "Título 1": fuente Arial tamaño 18, negrita, color azul oscuro, centrado. Aplica el estilo a tus títulos y observa cómo cambian todos a la vez.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos para modificar un estilo..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué ventaja principal tienen los estilos frente al formato directo?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q45',this,'B')">A) Son más bonitos visualmente</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q45',this,'B')">B) Si modificas el estilo, todos los textos que lo usan se actualizan</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q45',this,'B')">C) Ocupan menos memoria</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q45',this,'B')">D) Solo los puede usar el administrador</label>
+                <div id="fb_q45" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae45_0"><input type="checkbox" id="cb45_0"><label for="cb45_0"> Entiendo qué es un estilo y para qué sirve.</label></li>
+            <li id="ae45_1"><input type="checkbox" id="cb45_1"><label for="cb45_1"> Modifico estilos predefinidos (Título 1, Título 2).</label></li>
+            <li id="ae45_2"><input type="checkbox" id="cb45_2"><label for="cb45_2"> Creo un documento desde una plantilla.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 46 · ENCABEZADOS, PIES E ÍNDICES ==================== -->
+    <div class="bloque" id="b46">
+        <div class="bloque-header">
+            <span class="num">B46</span>
+            <h3>Writer · Encabezados, pies de página e índices automáticos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b · Crear, modificar y manipular documentos (15%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Índices automáticos</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/ESb8OTWVPZ0" title="LibreOffice Writer · Índice automático y encabezados (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Encabezado y pie de página</div>
+            <p><strong>Encabezado:</strong> Zona superior de la página. Suele contener el título del documento o el nombre de la empresa.<br>
+            <strong>Pie de página:</strong> Zona inferior. Contiene número de página, fecha o autor.<br>
+            <strong>Inserción:</strong> Insertar → Encabezado y pie de página → Elegir estilo.</p>
+            </div>
+
+            <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div>
+            <p>Un <strong>índice automático</strong> (Tabla de contenidos) se genera a partir de los estilos de título (Título 1, Título 2...). Cuando modificas el documento, puedes actualizar el índice con un clic. No es necesario escribirlo manualmente.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📑 Insertar índice automático</h4>
+                <ul><li>Posiciona el cursor donde quieras el índice</li><li><strong>Insertar → Tabla de contenido y índice → Tabla de contenido</strong></li><li>Elige el nivel de profundidad (hasta Título 3, etc.)</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>🔄 Actualizar índice</h4>
+                <ul><li>Botón derecho sobre el índice → <strong>Actualizar índice/Actualizar todo</strong></li><li>También desde el menú contextual de la tabla</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.6 · Documento con índice</div>
+            <p>Crea un documento de 3 páginas con secciones usando Título 1, Título 2. Inserta encabezado con el título del documento y pie de página con número de página. Al final del documento, inserta un índice automático. Actualízalo después de añadir una nueva sección.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos y los resultados..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿De qué dependen los niveles de un índice automático en Writer?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q46',this,'C')">A) Del tamaño de la página</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q46',this,'C')">B) De la cantidad de imágenes</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q46',this,'C')">C) De los estilos de título aplicados (Título 1, Título 2...)</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q46',this,'C')">D) Del tipo de letra elegido</label>
+                <div id="fb_q46" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae46_0"><input type="checkbox" id="cb46_0"><label for="cb46_0"> Inserto encabezados y pies de página con números de página.</label></li>
+            <li id="ae46_1"><input type="checkbox" id="cb46_1"><label for="cb46_1"> Genero un índice automático a partir de los estilos de título.</label></li>
+            <li id="ae46_2"><input type="checkbox" id="cb46_2"><label for="cb46_2"> Actualizo el índice tras modificar el documento.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 47 · WRITER AVANZADO + REPASO ==================== -->
+    <div class="bloque" id="b47">
+        <div class="bloque-header">
+            <span class="num">B47</span>
+            <h3>Writer · Repaso integrado y prueba del procesador de textos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-d · Guardar e imprimir documentos (5%)</span></div>
+            
+            <div class="box-def"><div class="box-label">📌 Impresión de documentos</div>
+            <p>Antes de imprimir, usa <strong>Archivo → Vista preliminar</strong> para ver cómo quedará. Configura márgenes, orientación (vertical/horizontal) y escala. Para guardar como PDF: <strong>Archivo → Exportar como PDF</strong>.</p>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.7 · Informe completo con Writer</div>
+            <p>Crea un informe sobre "Ventajas del software libre". Debe incluir:</p>
+            <ol><li>Portada con título, autor y fecha.</li><li>Índice automático.</li>
+            <li>Al menos 3 secciones con Título 1 y Título 2.</li>
+            <li>Una tabla con 3 ventajas y 3 desventajas.</li>
+            <li>Al menos una imagen con ajuste de texto "Ajuste".</li>
+            <li>Encabezado con el título y pie con número de página.</li>
+            <li>Exporta el documento a PDF.</li></ol>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos o indica dónde has guardado el archivo..."></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación · Writer final</div>
+            <ul><li id="ae47_0"><input type="checkbox" id="cb47_0"><label for="cb47_0"> Soy capaz de crear un documento complejo con Writer.</label></li>
+            <li id="ae47_1"><input type="checkbox" id="cb47_1"><label for="cb47_1"> Uso estilos para mantener coherencia visual.</label></li>
+            <li id="ae47_2"><input type="checkbox" id="cb47_2"><label for="cb47_2"> Exporto documentos a PDF y los imprimo correctamente.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 48 · INTRO A CALC - LIBRO, HOJA, CELDA ==================== -->
+    <div class="bloque" id="b48">
+        <div class="bloque-header">
+            <span class="num">B48</span>
+            <h3>Introducción a LibreOffice Calc · Libros, hojas, celdas y rangos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Qué es una hoja de cálculo</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/v7JsP6svK5k" title="LibreOffice Calc · Introducción para Principiantes (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Conceptos fundamentales de Calc</div>
+            <ul><li><strong>Libro de cálculo:</strong> Archivo .ods que contiene varias hojas.</li>
+            <li><strong>Hoja:</strong> Cada pestaña dentro del libro (Hoja1, Hoja2...).</li>
+            <li><strong>Celda:</strong> Intersección de una fila y una columna. Se identifica por su letra de columna y número de fila (ej: A1, B3, F12).</li>
+            <li><strong>Rango:</strong> Conjunto de celdas (ej: A1:B5, C3:D10).</li></ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📁 Formatos de hoja de cálculo</h4>
+                <ul><li><strong>.ods:</strong> Formato nativo de Calc</li>
+                <li><strong>.xlsx:</strong> Formato de Microsoft Excel</li>
+                <li><strong>.csv:</strong> Valores separados por comas</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>⌨️ Navegación básica</h4>
+                <ul><li><strong>Flechas:</strong> Moverse entre celdas</li>
+                <li><strong>Tab:</strong> Avanza una columna a la derecha</li>
+                <li><strong>Enter:</strong> Avanza una fila hacia abajo</li>
+                <li><strong>Ctrl + Inicio:</strong> Ir a A1</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.8 · Explora Calc</div>
+            <p>Abre LibreOffice Calc. Responde:</p>
+            <ol><li>¿Cuántas hojas tiene un libro nuevo por defecto?</li>
+            <li>¿Cuál es la dirección de la celda en la fila 10, columna D?</li>
+            <li>¿Cómo se añade una nueva hoja?</li>
+            <li>¿Qué extensión tiene un archivo de Calc?</li></ol>
+            <div class="respuesta-alumno" data-placeholder="Escribe aquí tus respuestas..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué identifica a la celda que está en la fila 5, columna B?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q48',this,'B')">A) 5B</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q48',this,'B')">B) B5</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q48',this,'B')">C) FilaB5</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q48',this,'B')">D) Celda(5,B)</label>
+                <div id="fb_q48" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae48_0"><input type="checkbox" id="cb48_0"><label for="cb48_0"> Identifico las partes de la ventana de Calc.</label></li>
+            <li id="ae48_1"><input type="checkbox" id="cb48_1"><label for="cb48_1"> Sé navegar entre celdas usando el teclado.</label></li>
+            <li id="ae48_2"><input type="checkbox" id="cb48_2"><label for="cb48_2"> Entiendo qué es un rango de celdas.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 49 · DATOS BÁSICOS Y FORMATO EN CALC ==================== -->
+    <div class="bloque" id="b49">
+        <div class="bloque-header">
+            <span class="num">B49</span>
+            <h3>Calc · Introducir datos · Formato de celdas (números, fechas, texto)</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Tipos de datos en Calc</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/QnIJmDmk0YA" title="LibreOffice Calc · Tipos de datos y formato de celdas (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Tipos de datos en una celda</div>
+            <ul><li><strong>Texto:</strong> Cualquier combinación de letras. Se alinea a la izquierda por defecto.</li>
+            <li><strong>Número:</strong> Valores numéricos. Se alinea a la derecha.</li>
+            <li><strong>Fecha/Hora:</strong> Se reconoce automáticamente (ej: 25/12/2024).</li>
+            <li><strong>Fórmula:</strong> Empieza por <strong>=</strong> (ej: =A1+B1).</li></ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>🎨 Formato de celdas</h4>
+                <ul><li>Selecciona celdas → <strong>Formato → Celdas</strong> (o botón derecho → Formato de celdas)</li>
+                <li>Pestañas: <strong>Números</strong> (moneda, porcentaje, decimales), <strong>Fuente</strong>, <strong>Alineación</strong>, <strong>Bordes</strong></li>
+                </ul>
+                </div>
+                <div class="grid-card azul"><h4>⚡ Atajos útiles</h4>
+                <ul><li><strong>Ctrl + 1:</strong> Formato de celdas</li>
+                <li><strong>Ctrl + B:</strong> Negrita</li>
+                <li><strong>Ctrl + C / Ctrl + V:</strong> Copiar/Pegar</li>
+                </ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.9 · Tabla de gastos</div>
+            <p>Crea una hoja de cálculo con los siguientes datos:</p>
+            <table style="width:100%; background:#f0f0f0;"><tr><th>Concepto</th><th>Enero</th><th>Febrero</th></tr>
+            <tr><td>Alquiler</td><td>500</td><td>500</td></tr>
+            <tr><td>Luz</td><td>65</td><td>72</td></tr>
+            <tr><td>Agua</td><td>30</td><td>28</td></tr></table>
+            <p>Aplica formato: encabezados en negrita, números con dos decimales, bordes a toda la tabla.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe cómo aplicaste el formato..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Cómo se reconoce que un valor es una fórmula en Calc?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q49',this,'C')">A) Porque está en cursiva</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q49',this,'C')">B) Porque tiene color rojo</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q49',this,'C')">C) Empieza por el signo igual (=)</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q49',this,'C')">D) Termina con un punto y coma</label>
+                <div id="fb_q49" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae49_0"><input type="checkbox" id="cb49_0"><label for="cb49_0"> Distingo entre texto, número y fecha en una celda.</label></li>
+            <li id="ae49_1"><input type="checkbox" id="cb49_1"><label for="cb49_1"> Aplico formato de moneda, porcentaje y decimales.</label></li>
+            <li id="ae49_2"><input type="checkbox" id="cb49_2"><label for="cb49_2"> Uso bordes y colores de fondo para mejorar la presentación.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 50 · FÓRMULAS Y FUNCIONES BÁSICAS ==================== -->
+    <div class="bloque" id="b50">
+        <div class="bloque-header">
+            <span class="num">B50</span>
+            <h3>Calc · Fórmulas aritméticas · Funciones SUMA, PROMEDIO, CONTAR</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Fórmulas y funciones</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/6sWAxDkx94Y" title="LibreOffice Calc · Funciones SUMA, PROMEDIO y más (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Fórmulas y funciones</div>
+            <p><strong>Fórmula:</strong> Operación que introducimos en una celda, empezando por <strong>=</strong>. Ej: =A1+B1<br>
+            <strong>Función:</strong> Fórmula predefinida. Ej: =SUMA(A1:A10). Las funciones se escriben en MAYÚSCULAS.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>➕ Operadores aritméticos</h4>
+                <ul><li><strong>+</strong> Suma</li><li><strong>-</strong> Resta</li><li><strong>*</strong> Multiplicación</li><li><strong>/</strong> División</li><li><strong>^</strong> Potencia</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>📊 Funciones básicas</h4>
+                <ul><li><strong>=SUMA(rango)</strong> → Suma valores</li>
+                <li><strong>=PROMEDIO(rango)</strong> → Media aritmética</li>
+                <li><strong>=CONTAR(rango)</strong> → Cuenta números</li>
+                <li><strong>=MAX(rango)</strong> → Valor máximo</li>
+                <li><strong>=MIN(rango)</strong> → Valor mínimo</li></ul>
+                </div>
+            </div>
+
+            <div class="box-key-concept"><div class="box-label">🔑 Concepto clave</div>
+            <p>Al copiar una fórmula a otras celdas, Calc ajusta automáticamente las referencias relativas (A1 se convierte en A2, A3...). Si quieres que una celda NO cambie, usa <strong>referencias absolutas</strong> con el signo $ (ej: $A$1).</p>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.10 · Factura sencilla</div>
+            <p>Crea la siguiente factura y calcula los totales:</p>
+            <table style="width:100%; background:#f0f0f0;"><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>
+            <tr><td>Ratón</td><td>2</td><td>15</td><td>=B2*C2</td></tr>
+            <tr><td>Teclado</td><td>1</td><td>45</td><td>=B3*C3</td></tr>
+            <tr><td colspan="3"><strong>TOTAL</strong></td><td>=SUMA(D2:D3)</td></tr></table>
+            <p>Aplica formato moneda a los subtotales y al total.</p>
+            <div class="respuesta-alumno" data-placeholder="Escribe las fórmulas que usaste..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué función suma todos los valores del rango B2:B10?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q50',this,'C')">A) =TOTAL(B2:B10)</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q50',this,'C')">B) =SUMAR(B2;B10)</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q50',this,'C')">C) =SUMA(B2:B10)</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q50',this,'C')">D) =ADD(B2:B10)</label>
+                <div id="fb_q50" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae50_0"><input type="checkbox" id="cb50_0"><label for="cb50_0"> Creo fórmulas aritméticas con operadores básicos.</label></li>
+            <li id="ae50_1"><input type="checkbox" id="cb50_1"><label for="cb50_1"> Uso SUMA, PROMEDIO, CONTAR, MAX y MIN.</label></li>
+            <li id="ae50_2"><input type="checkbox" id="cb50_2"><label for="cb50_2"> Entiendo la diferencia entre referencia relativa y absoluta.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 51 · FUNCIÓN SI (CONDICIONAL) ==================== -->
+    <div class="bloque" id="b51">
+        <div class="bloque-header">
+            <span class="num">B51</span>
+            <h3>Calc · Función condicional SI · Toma de decisiones en hojas de cálculo</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Función SI</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/moilnbmcVZM" title="LibreOffice Calc · Función SI paso a paso (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Sintaxis de la función SI</div>
+            <p><strong>=SI(condición; valor_si_verdadero; valor_si_falso)</strong></p>
+            <p>Ejemplo: =SI(A1>=5; "Aprobado"; "Suspenso")<br>
+            Si A1 es mayor o igual a 5, escribe "Aprobado"; si no, escribe "Suspenso".</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>🔄 Operadores de comparación</h4>
+                <ul><li><strong>=</strong> Igual</li><li><strong><></strong> Distinto</li><li><strong>></strong> Mayor que</li><li><strong><</strong> Menor que</li><li><strong>>=</strong> Mayor o igual</li><li><strong><=</strong> Menor o igual</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>🧠 SI anidado</h4>
+                <p>Puedes poner un SI dentro de otro: =SI(A1>=9; "Sobresaliente"; SI(A1>=7; "Notable"; "Aprobado"))</p>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.11 · Calificaciones con SI</div>
+            <p>Crea una tabla con nombres y notas de 5 alumnos. Calcula en una columna "Resultado" (Aprobado si nota>=5, Suspenso si no). Añade otra columna "Mención" que escriba "Matrícula" si nota=10.</p>
+            <div class="respuesta-alumno" data-placeholder="Escribe las fórmulas que usaste..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué fórmula muestra "Aprobado" si B2>=5 y "Suspenso" si no?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q51',this,'B')">A) =SI(B2>=5: "Aprobado"; "Suspenso")</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q51',this,'B')">B) =SI(B2>=5; "Aprobado"; "Suspenso")</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q51',this,'B')">C) =IF(B2>=5,"Aprobado","Suspenso")</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q51',this,'B')">D) =CONDICION(B2>=5,"Aprobado","Suspenso")</label>
+                <div id="fb_q51" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae51_0"><input type="checkbox" id="cb51_0"><label for="cb51_0"> Escribo condiciones usando =, <>, >, <.</label></li>
+            <li id="ae51_1"><input type="checkbox" id="cb51_1"><label for="cb51_1"> Uso la función SI para tomar decisiones.</label></li>
+            <li id="ae51_2"><input type="checkbox" id="cb51_2"><label for="cb51_2"> Anido funciones SI para múltiples condiciones.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 52 · GRÁFICOS EN CALC ==================== -->
+    <div class="bloque" id="b52">
+        <div class="bloque-header">
+            <span class="num">B52</span>
+            <h3>Calc · Creación y personalización de gráficos (barras, líneas, sectores)</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Gráficos en Calc</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/M1ZvxIcEa1o" title="LibreOffice Calc · Crear gráficos de barras, líneas y sectores (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Tipos de gráficos</div>
+            <ul><li><strong>Gráfico de barras/columnas:</strong> Comparar categorías.</li>
+            <li><strong>Gráfico de líneas:</strong> Mostrar tendencias en el tiempo.</li>
+            <li><strong>Gráfico circular (sectores):</strong> Mostrar proporciones (porcentajes).</li></ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📊 Crear un gráfico</h4>
+                <ol><li>Selecciona los datos (incluyendo cabeceras)</li>
+                <li><strong>Insertar → Gráfico</strong></li>
+                <li>Elige tipo de gráfico</li>
+                <li>Añade título, etiquetas, leyenda</li></ol>
+                </div>
+                <div class="grid-card azul"><h4>✏️ Personalizar</h4>
+                <ul><li>Botón derecho sobre el gráfico → <strong>Editar</strong></li>
+                <li>Cambia colores, fuentes, ejes</li>
+                <li>Modifica el rango de datos (<strong>Rango de datos</strong>)</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.12 · Ventas por trimestre</div>
+            <p>Introduce los siguientes datos y crea un gráfico de barras:</p>
+            <table style="width:100%; background:#f0f0f0;"><tr><th>Trimestre</th><th>Ventas (€)</th></tr>
+            <tr><td>T1</td><td>12000</td></tr><tr><td>T2</td><td>15400</td></tr><tr><td>T3</td><td>13200</td></tr><tr><td>T4</td><td>18900</td></tr></table>
+            <p>Título: "Ventas anuales". Añade etiquetas en las barras.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos para crear el gráfico..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué tipo de gráfico es más adecuado para mostrar porcentajes de un total?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q52',this,'C')">A) Barras</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q52',this,'C')">B) Líneas</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q52',this,'C')">C) Circular (sectores)</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q52',this,'C')">D) Área</label>
+                <div id="fb_q52" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae52_0"><input type="checkbox" id="cb52_0"><label for="cb52_0"> Creo gráficos de barras, líneas y sectores.</label></li>
+            <li id="ae52_1"><input type="checkbox" id="cb52_1"><label for="cb52_1"> Personalizo títulos, colores y leyenda del gráfico.</label></li>
+            <li id="ae52_2"><input type="checkbox" id="cb52_2"><label for="cb52_2"> Cambio el rango de datos de un gráfico existente.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 53 · ORDENAR Y FILTRAR DATOS ==================== -->
+    <div class="bloque" id="b53">
+        <div class="bloque-header">
+            <span class="num">B53</span>
+            <h3>Calc · Ordenar y filtrar datos · Autofiltro y filtro avanzado</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Ordenar y filtrar en Calc</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/klAYTybwerU" title="LibreOffice Calc · Ordenar y filtrar datos (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Ordenar datos</div>
+            <p>Permite reordenar las filas según el valor de una columna (alfabéticamente, de mayor a menor, etc.).<br>
+            <strong>Selecciona los datos → Datos → Ordenar</strong>.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>🔍 Autofiltro</h4>
+                <ul><li><strong>Datos → Filtrar → Autofiltro</strong></li>
+                <li>Aparecen flechas en las cabeceras</li>
+                <li>Permite mostrar solo las filas que cumplen una condición</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>🧹 Filtro estándar</h4>
+                <ul><li>Más opciones que el autofiltro</li>
+                <li>Permite condiciones complejas (Y / O)</li>
+                <li><strong>Datos → Filtrar → Filtro estándar</strong></li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.13 · Lista de alumnos</div>
+            <p>Crea una tabla con 10 alumnos: Nombre, Edad, Nota. Ordena alfabéticamente por nombre. Luego filtra para mostrar solo los alumnos con nota >= 7. Desactiva el filtro para ver todos de nuevo.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué opción de Calc permite mostrar solo las filas que cumplen una condición?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q53',this,'B')">A) Ordenar</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q53',this,'B')">B) Filtrar</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q53',this,'B')">C) Validar datos</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q53',this,'B')">D) Agrupar</label>
+                <div id="fb_q53" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae53_0"><input type="checkbox" id="cb53_0"><label for="cb53_0"> Ordeno datos de forma ascendente y descendente.</label></li>
+            <li id="ae53_1"><input type="checkbox" id="cb53_1"><label for="cb53_1"> Uso el autofiltro para mostrar solo las filas que me interesan.</label></li>
+            <li id="ae53_2"><input type="checkbox" id="cb53_2"><label for="cb53_2"> Elimino filtros para ver todos los datos de nuevo.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 54 · IMPRESIÓN Y CONFIGURACIÓN DE PÁGINA ==================== -->
+    <div class="bloque" id="b54">
+        <div class="bloque-header">
+            <span class="num">B54</span>
+            <h3>Calc · Configurar página · Área de impresión · Encabezados y pies</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-d · Guardar e imprimir documentos (5%)</span></div>
+            
+            <div class="box-def"><div class="box-label">📌 Configurar página antes de imprimir</div>
+            <ul><li><strong>Formato → Página</strong> (márgenes, orientación, escala)</li>
+            <li><strong>Ver → Diseño de página</strong> (previsualizar)</li>
+            <li><strong>Área de impresión:</strong> Formato → Áreas de impresión → Definir</li></ul>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.14 · Prepara una hoja para imprimir</div>
+            <p>Usa la tabla de gastos del ejercicio 3.9. Configura la página para que quepa en una sola hoja (orientación horizontal, escala al 80%). Añade un encabezado con el título "Presupuesto familiar" y pie con número de página.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los cambios de configuración..."></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae54_0"><input type="checkbox" id="cb54_0"><label for="cb54_0"> Configuro márgenes, orientación y escala.</label></li>
+            <li id="ae54_1"><input type="checkbox" id="cb54_1"><label for="cb54_1"> Defino un área de impresión concreta.</label></li>
+            <li id="ae54_2"><input type="checkbox" id="cb54_2"><label for="cb54_2"> Añado encabezados y pies de página al imprimir.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 55 · REPASO CALC ==================== -->
+    <div class="bloque" id="b55">
+        <div class="bloque-header">
+            <span class="num">B55</span>
+            <h3>Calc · Repaso integrado · Presupuesto mensual completo</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo (35%)</span></div>
+            
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.15 · Presupuesto mensual completo</div>
+            <p>Crea una hoja de presupuesto mensual con:</p>
+            <ol><li>Ingresos: Salario (1.800€), Extras (200€). TOTAL = SUMA</li>
+            <li>Gastos fijos (alquiler 600, luz 80, agua 35, internet 40).</li>
+            <li>Gastos variables (alimentación 300, ocio 150, transporte 60).</li>
+            <li><strong>Ahorro = Total Ingresos - Total Gastos</strong></li>
+            <li>Gráfico circular de los gastos.</li>
+            <li>Fórmula SI: si el ahorro es mayor a 200, "Bien", si no "Revisar".</li>
+            <li>Exporta a PDF.</li></ol>
+            <div class="respuesta-alumno" data-placeholder="Describe tu hoja de cálculo..."></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación · Calc final</div>
+            <ul><li id="ae55_0"><input type="checkbox" id="cb55_0"><label for="cb55_0"> Creo un presupuesto completo con fórmulas.</label></li>
+            <li id="ae55_1"><input type="checkbox" id="cb55_1"><label for="cb55_1"> Uso SI para tomar decisiones automáticas.</label></li>
+            <li id="ae55_2"><input type="checkbox" id="cb55_2"><label for="cb55_2"> Añado gráficos y configuro la página para impresión.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 56 · BASE DE DATOS - INTRODUCCIÓN ==================== -->
+    <div class="bloque" id="b56">
+        <div class="bloque-header">
+            <span class="num">B56</span>
+            <h3>Introducción a LibreOffice Base · Bases de datos, tablas y registros</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con hoja de cálculo y base de datos (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Qué es una base de datos</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/ppYYSLHT5O0" title="LibreOffice Base · Introducción a tablas, consultas y formularios (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Conceptos de bases de datos</div>
+            <ul><li><strong>Base de datos:</strong> Conjunto de datos organizados para su fácil acceso y gestión.</li>
+            <li><strong>Tabla:</strong> Conjunto de datos sobre un tema específico (ej: tabla Clientes).</li>
+            <li><strong>Registro (fila):</strong> Cada entrada individual en la tabla (un cliente).</li>
+            <li><strong>Campo (columna):</strong> Cada atributo del registro (nombre, teléfono, email).</li>
+            <li><strong>Clave principal (PK):</strong> Campo que identifica cada registro de forma única (ej: ID_cliente).</li></ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📁 Tipos de campo comunes</h4>
+                <ul><li><strong>TEXTO/VARCHAR:</strong> Nombres, direcciones</li>
+                <li><strong>NÚMERO/INTEGER:</strong> Edades, cantidades</li>
+                <li><strong>FECHA/DATE:</strong> Fechas de nacimiento, pedidos</li>
+                <li><strong>MONEDA/CURRENCY:</strong> Precios, salarios</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>📂 Extensiones de Base</h4>
+                <ul><li><strong>.odb:</strong> Archivo de base de datos de LibreOffice</li>
+                <li>Puede trabajar con motores: HSQLDB (embebido) o MySQL, PostgreSQL</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.16 · Crea tu primera base de datos</div>
+            <p>Abre LibreOffice Base. Elige "Crear base de datos nueva". Crea una tabla llamada "Alumnos" con los campos: ID (clave principal, auto numérico), Nombre (texto), Apellidos (texto), Edad (número). Introduce 5 registros de prueba.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos o indica las dificultades encontradas..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué es un registro en una base de datos?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q56',this,'B')">A) Una columna de la tabla</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q56',this,'B')">B) Una fila completa de la tabla</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q56',this,'B')">C) El archivo completo .odb</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q56',this,'B')">D) El tipo de campo</label>
+                <div id="fb_q56" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae56_0"><input type="checkbox" id="cb56_0"><label for="cb56_0"> Entiendo los conceptos de tabla, registro y campo.</label></li>
+            <li id="ae56_1"><input type="checkbox" id="cb56_1"><label for="cb56_1"> Creo una nueva base de datos y una tabla.</label></li>
+            <li id="ae56_2"><input type="checkbox" id="cb56_2"><label for="cb56_2"> Introduzco registros en la tabla.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 57 · CONSULTAS EN BASE ==================== -->
+    <div class="bloque" id="b57">
+        <div class="bloque-header">
+            <span class="num">B57</span>
+            <h3>Base · Creación de consultas · Filtrar y ordenar datos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con base de datos (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Consultas en Base</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/NBZvYvLLfxk" title="LibreOffice Base · Tablas, formularios, consultas e informes (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 ¿Qué es una consulta?</div>
+            <p>Una <strong>consulta</strong> es una pregunta que hacemos a la base de datos. Devuelve un subconjunto de registros que cumplen ciertas condiciones. Las consultas se guardan y se pueden reutilizar.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>🔍 Crear una consulta (diseño)</h4>
+                <ol><li><strong>Consultas → Crear consulta en vista diseño</strong></li>
+                <li>Selecciona la tabla que quieras consultar</li>
+                <li>Arrastra los campos que quieras mostrar</li>
+                <li>Define criterios (Filtros)</li>
+                <li>Ordena por algún campo (Orden ascendente/descendente)</li>
+                <li>Ejecuta y guarda</li></ol>
+                </div>
+                <div class="grid-card azul"><h4>📝 Ejemplo de consulta</h4>
+                <p>Tabla: Alumnos(Campos: ID, Nombre, Edad, Ciudad)<br>
+                <strong>Consulta:</strong> Mostrar nombre y edad de los alumnos de "Madrid" con edad >= 18.</p>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.17 · Consulta de clientes</div>
+            <p>Con la tabla "Clientes" (ID, Nombre, Ciudad, Ventas), crea una consulta que muestre Nombre y Ventas de los clientes con ventas superiores a 1000€. Ordena de mayor a menor ventas.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe cómo creaste la consulta..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Para qué sirve una consulta en una base de datos?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q57',this,'C')">A) Para eliminar registros</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q57',this,'C')">B) Para cambiar la estructura de las tablas</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q57',this,'C')">C) Para extraer información filtrando y ordenando</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q57',this,'C')">D) Para crear nuevas bases de datos</label>
+                <div id="fb_q57" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae57_0"><input type="checkbox" id="cb57_0"><label for="cb57_0"> Creo consultas usando la vista diseño.</label></li>
+            <li id="ae57_1"><input type="checkbox" id="cb57_1"><label for="cb57_1"> Aplico criterios de filtro en las consultas.</label></li>
+            <li id="ae57_2"><input type="checkbox" id="cb57_2"><label for="cb57_2"> Ordeno los resultados de una consulta.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 58 · FORMULARIOS EN BASE ==================== -->
+    <div class="bloque" id="b58">
+        <div class="bloque-header">
+            <span class="num">B58</span>
+            <h3>Base · Formularios para introducir y editar datos fácilmente</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con base de datos (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Formularios en Base</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/CiZdvsYXK84" title="LibreOffice Base · Crear formularios (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 ¿Qué es un formulario?</div>
+            <p>Un <strong>formulario</strong> es una interfaz gráfica que facilita la introducción, modificación y visualización de datos en una tabla. Es más amigable que trabajar directamente en la tabla. Se usa para que los usuarios no técnicos puedan manejar la base de datos.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>🎨 Crear un formulario simple</h4>
+                <ol><li><strong>Formularios → Usar el asistente para crear un formulario</strong></li>
+                <li>Selecciona la tabla o consulta</li>
+                <li>Elige qué campos mostrar</li>
+                <li>Selecciona diseño (columnas, tabla)</li>
+                <li>Establece formato de fondo y colores</li></ol>
+                </div>
+                <div class="grid-card azul"><h4>✏️ Tipos de campos en formularios</h4>
+                <ul><li><strong>Formatted Field:</strong> Para números con formato</li>
+                <li><strong>Date Field:</strong> Para fechas (calendario)</li>
+                <li><strong>List Box:</strong> Para elegir de una lista</li>
+                <li><strong>Check Box:</strong> Para Sí/No</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.18 · Formulario de empleados</div>
+            <p>Crea un formulario para la tabla "Empleados" (ID, Nombre, Puesto, Salario). El formulario debe ser atractivo (fondo gris claro, campos con borde). Pruébalo añadiendo un nuevo empleado.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe los pasos para crear el formulario..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Cuál es la principal ventaja de usar formularios frente a las tablas?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q58',this,'B')">A) Los formularios son más rápidos</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q58',this,'B')">B) Son más fáciles e intuitivos para los usuarios</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q58',this,'B')">C) Los formularios evitan errores de duplicados</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q58',this,'B')">D) Los formularios ocupan menos espacio</label>
+                <div id="fb_q58" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae58_0"><input type="checkbox" id="cb58_0"><label for="cb58_0"> Creo formularios con el asistente de Base.</label></li>
+            <li id="ae58_1"><input type="checkbox" id="cb58_1"><label for="cb58_1"> Personalizo el diseño del formulario (colores, bordes).</label></li>
+            <li id="ae58_2"><input type="checkbox" id="cb58_2"><label for="cb58_2"> Añado nuevos registros usando el formulario.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 59 · INFORMES EN BASE ==================== -->
+    <div class="bloque" id="b59">
+        <div class="bloque-header">
+            <span class="num">B59</span>
+            <h3>Base · Informes para imprimir datos de forma profesional</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con base de datos (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Informes en Base</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/WJSfsQ1MYQE" title="LibreOffice Base · Crear informes (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 ¿Qué es un informe?</div>
+            <p>Un <strong>informe</strong> presenta los datos de la base de datos en un formato listo para imprimir. Los informes pueden incluir agrupaciones, totales, medias y otros cálculos. Son la salida profesional de la base de datos.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📄 Crear un informe (asistente)</h4>
+                <ol><li><strong>Informes → Usar el asistente para crear un informe</strong></li>
+                <li>Selecciona tabla o consulta</li>
+                <li>Elige qué campos mostrar</li>
+                <li>Define etiquetas y orden</li>
+                <li>Diseña el estilo (color, formato)</li></ol>
+                </div>
+                <div class="grid-card azul"><h4>🧮 Campos calculados en informes</h4>
+                <ul><li><strong>Suma:</strong> Total de una columna</li>
+                <li><strong>Promedio:</strong> Media de los valores</li>
+                <li><strong>Conteo:</strong> Número de registros</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.19 · Informe de ventas</div>
+            <p>Usando la tabla "Ventas" (Producto, Cantidad, Precio, Total = Cantidad * Precio), crea un informe que muestre todos los productos. Añade un pie de informe con la suma total de ventas.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe el proceso de creación del informe..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Para qué se usan los informes en una base de datos?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q59',this,'B')">A) Para introducir datos nuevos</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q59',this,'B')">B) Para presentar datos listos para imprimir</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q59',this,'B')">C) Para eliminar registros</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q59',this,'B')">D) Para modificar la estructura de las tablas</label>
+                <div id="fb_q59" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae59_0"><input type="checkbox" id="cb59_0"><label for="cb59_0"> Creo informes usando el asistente.</label></li>
+            <li id="ae59_1"><input type="checkbox" id="cb59_1"><label for="cb59_1"> Añado totales y promedios en los informes.</label></li>
+            <li id="ae59_2"><input type="checkbox" id="cb59_2"><label for="cb59_2"> Exporto informes a PDF para su distribución.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 60 · RELACIONES ENTRE TABLAS ==================== -->
+    <div class="bloque" id="b60">
+        <div class="bloque-header">
+            <span class="num">B60</span>
+            <h3>Base · Relaciones entre tablas · Claves foráneas · Integridad referencial</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con base de datos (35%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Relaciones en Base</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/RyhxOVP4cEM" title="LibreOffice Base · Relaciones entre tablas (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Tipos de relaciones</div>
+            <ul><li><strong>1 a N (uno a muchos):</strong> Un registro de la tabla A puede tener muchos registros en la tabla B (ej: 1 cliente → muchos pedidos).</li>
+            <li><strong>1 a 1 (uno a uno):</strong> Un registro en A se relaciona con solo uno en B.</li>
+            <li><strong>N a N (muchos a muchos):</strong> Requiere una tabla intermedia.</li>
+            </ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>🔗 Crear una relación</h4>
+                <ol><li><strong>Herramientas → Relaciones</strong></li>
+                <li>Añade las tablas que quieras relacionar</li>
+                <li>Arrastra el campo clave de una tabla a la otra</li>
+                <li>Elige tipo de relación (1 a N por defecto)</li>
+                <li>Activa "Integridad referencial" para evitar datos huérfanos</li></ol>
+                </div>
+                <div class="grid-card azul"><h4>🔐 Integridad referencial</h4>
+                <p>Evita que se borre un cliente si tiene pedidos asociados. También evita crear pedidos de un cliente que no existe.</p>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.20 · Relacionar Clientes y Pedidos</div>
+            <p>Crea dos tablas: Clientes (ID_cliente clave, Nombre, Teléfono) y Pedidos (ID_pedido clave, Fecha, Importe, ID_cliente foránea). Establece la relación 1 a N entre Cliente y Pedidos. Activa la integridad referencial. Añade un cliente y dos pedidos suyos.</p>
+            <div class="respuesta-alumno" data-placeholder="Describe cómo creaste las tablas y la relación..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué evita la integridad referencial?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q60',this,'B')">A) Evita que se borren todas las tablas</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q60',this,'B')">B) Evita registros huérfanos (pedidos sin cliente)</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q60',this,'B')">C) Evita que se modifiquen los campos clave</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q60',this,'B')">D) Evita que se creen índices</label>
+                <div id="fb_q60" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae60_0"><input type="checkbox" id="cb60_0"><label for="cb60_0"> Entiendo los tipos de relaciones (1 a N, 1 a 1).</label></li>
+            <li id="ae60_1"><input type="checkbox" id="cb60_1"><label for="cb60_1"> Creo relaciones entre tablas en el editor de relaciones.</label></li>
+            <li id="ae60_2"><input type="checkbox" id="cb60_2"><label for="cb60_2"> Activo y entiendo la integridad referencial.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 61 · REPASO BASE + PRUEBA ==================== -->
+    <div class="bloque" id="b61">
+        <div class="bloque-header">
+            <span class="num">B61</span>
+            <h3>Base · Proyecto integrador · Base de datos de biblioteca</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e · Operaciones básicas con base de datos (35%)</span></div>
+            
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.21 · Base de datos de biblioteca</div>
+            <p>Crea una base de datos para una biblioteca con:</p>
+            <ol><li>Tabla Socios (ID_socio, Nombre, Teléfono, Email)</li>
+            <li>Tabla Libros (ID_libro, Título, Autor, Año)</li>
+            <li>Tabla Prestamos (ID_prestamo, ID_socio, ID_libro, Fecha_prestamo, Fecha_devolucion)</li>
+            <li>Relaciona las tablas adecuadamente (1 a N).</li>
+            <li>Crea un formulario para introducir socios y otro para libros.</li>
+            <li>Crea una consulta que muestre los libros prestados actualmente (fecha_devolucion vacía).</li>
+            <li>Crea un informe de socios con dirección.</li></ol>
+            <div class="respuesta-alumno" data-placeholder="Describe tu base de datos o adjunta el archivo .odb..."></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación · Base final</div>
+            <ul><li id="ae61_0"><input type="checkbox" id="cb61_0"><label for="cb61_0"> Diseño una base de datos con varias tablas relacionadas.</label></li>
+            <li id="ae61_1"><input type="checkbox" id="cb61_1"><label for="cb61_1"> Creo formularios e informes profesionales.</label></li>
+            <li id="ae61_2"><input type="checkbox" id="cb61_2"><label for="cb61_2"> Utilizo consultas para extraer información relevante.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 62 · IMPRESS · INTRO Y DISEÑO ==================== -->
+    <div class="bloque" id="b62">
+        <div class="bloque-header">
+            <span class="num">B62</span>
+            <h3>Introducción a LibreOffice Impress · Creación de diapositivas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-f · Identificar funciones de aplicación de presentaciones (10%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Impress para principiantes</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/gy0GSR81pSg" title="LibreOffice Impress · Tutorial completo en español" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Elementos de Impress</div>
+            <ul><li><strong>Diapositiva:</strong> Cada pantalla de la presentación.</li>
+            <li><strong>Patrón de diapositivas:</strong> Plantilla de diseño para todas las diapositivas.</li>
+            <li><strong>Vista normal:</strong> Edición diapositiva por diapositiva.</li>
+            <li><strong>Vista esquema:</strong> Muestra solo los títulos y texto.</li>
+            <li><strong>Vista clasificador de diapositivas:</strong> Muestra todas las diapositivas en miniatura.</li></ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>📁 Formatos de presentación</h4>
+                <ul><li><strong>.odp:</strong> Formato nativo de Impress</li>
+                <li><strong>.pptx:</strong> Formato de PowerPoint</li>
+                <li><strong>.pdf:</strong> Para distribuir sin edición</li></ul>
+                </div>
+                <div class="grid-card azul"><h4>🎨 Insertar diapositivas</h4>
+                <ul><li><strong>Insertar → Diapositiva</strong> (o Ctrl + M)</li>
+                <li>Elige diseño (título, título y contenido, en blanco...)</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.22 · Mi primera presentación</div>
+            <p>Crea una presentación de 4 diapositivas sobre "Mis aficiones". Título, 2 diapositivas de contenido, 1 diapositiva de cierre. Aplica un tema de diseño (diseño de diapositiva → selecciona un patrón).</p>
+            <div class="respuesta-alumno" data-placeholder="Describe el contenido..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Cuál es la extensión por defecto de una presentación de Impress?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q62',this,'B')">A) .ppt</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q62',this,'B')">B) .odp</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q62',this,'B')">C) .odt</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q62',this,'B')">D) .odg</label>
+                <div id="fb_q62" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae62_0"><input type="checkbox" id="cb62_0"><label for="cb62_0"> Identifico las vistas de Impress (normal, clasificador, esquema).</label></li>
+            <li id="ae62_1"><input type="checkbox" id="cb62_1"><label for="cb62_1"> Creo una presentación con varias diapositivas.</label></li>
+            <li id="ae62_2"><input type="checkbox" id="cb62_2"><label for="cb62_2"> Aplico un patrón de diseño a toda la presentación.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 63 · TRANSICIONES Y ANIMACIONES ==================== -->
+    <div class="bloque" id="b63">
+        <div class="bloque-header">
+            <span class="num">B63</span>
+            <h3>Impress · Transiciones entre diapositivas y animaciones de objetos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-g · Elaborar presentaciones multimedia con normas de diseño (20%)</span></div>
+            
+            <div class="box-video-es">
+                <div class="box-label">🎥 Vídeo · Transiciones y animaciones</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/JFb2Z0zFRSg" title="LibreOffice Impress · Transiciones, sonidos y animaciones (español)" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="box-def"><div class="box-label">📌 Transición entre diapositivas</div>
+            <p><strong>Transición:</strong> Efecto visual al pasar de una diapositiva a la siguiente.<br>
+            <strong>Diapositivas → Transición de diapositiva</strong>. Puedes elegir disolvencia, cortinilla, empujar, etc. Configura duración y si es automática o por clic.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="grid-card naranja"><h4>✨ Animaciones de objetos</h4>
+                <p>Se aplican a elementos individuales (texto, imágenes). En vista <strong>Normal → Animación Personalizada</strong>. Puedes elegir entrada, énfasis, salida y trayectorias.</p>
+                <p><strong>Ejemplo:</strong> Un título puede "entrar volando", un párrafo "aparecer con disolvencia".</p>
+                </div>
+                <div class="grid-card azul"><h4>🎬 Consejos de diseño</h4>
+                <ul><li>No abuses de las animaciones (pueden distraer).</li>
+                <li>Usa transiciones suaves (disolvencia, empujar).</li>
+                <li>Mantén la coherencia: mismo tipo de transición en toda la presentación.</li>
+                <li>Las animaciones deben ayudar a contar la historia, no al revés.</li></ul>
+                </div>
+            </div>
+
+            <div class="box-exercise"><div class="box-label">✏️ Ejercicio 3.23 · Animaciones en tu presentación</div>
+            <p>Sobre la presentación "Mis aficiones" del ejercicio anterior:</p>
+            <ol><li>Añade una transición de diapositiva (disolvencia) entre todas las diapositivas.</li>
+            <li>Aplica animación de entrada al título de la primera diapositiva (volar, 0.5 segundos).</li>
+            <li>Aplica animación a una imagen o texto en otra diapositiva (aparecer con disolvencia).</li>
+            <li>Prueba la presentación en modo presentación (F5).</li></ol>
+            <div class="respuesta-alumno" data-placeholder="Describe las animaciones que añadiste..."></div>
+            </div>
+
+            <div class="box-test">
+                <div class="box-label">🧠 Test rápido · ¿Lo tienes claro?</div>
+                <p><strong>¿Qué diferencia hay entre transición y animación?</strong></p>
+                <label class="quiz-option" data-val="A" onclick="checkQuiz('q63',this,'B')">A) Transición es entre objetos, animación entre diapositivas</label>
+                <label class="quiz-option" data-val="B" onclick="checkQuiz('q63',this,'B')">B) Transición es entre diapositivas, animación entre objetos</label>
+                <label class="quiz-option" data-val="C" onclick="checkQuiz('q63',this,'B')">C) Son sinónimos</label>
+                <label class="quiz-option" data-val="D" onclick="checkQuiz('q63',this,'B')">D) Solo existen en PowerPoint</label>
+                <div id="fb_q63" style="margin-top:8px;font-size:13px;padding:8px 12px;border-radius:6px;display:none"></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación</div>
+            <ul><li id="ae63_0"><input type="checkbox" id="cb63_0"><label for="cb63_0"> Añado transiciones entre diapositivas.</label></li>
+            <li id="ae63_1"><input type="checkbox" id="cb63_1"><label for="cb63_1"> Aplico animaciones a objetos individuales.</label></li>
+            <li id="ae63_2"><input type="checkbox" id="cb63_2"><label for="cb63_2"> Configuro la duración y el inicio de las animaciones (al hacer clic, con anterior).</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOQUE 64 · PRESENTACIÓN FINAL Y PRUEBA RA3 ==================== -->
+    <div class="bloque" id="b64">
+        <div class="bloque-header">
+            <span class="num">B64</span>
+            <h3>Proyecto final RA3 · Presentación profesional integradora</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-g · Elaborar presentaciones multimedia (20%)</span><span class="ce-tag">Todos los CE del RA3</span></div>
+            
+            <div class="box-exercise"><div class="box-label">✏️ Prueba práctica final RA3 · Empresa OACE</div>
+            <p>Realiza una presentación profesional de 10 diapositivas sobre "Soluciones informáticas OACE". Debe incluir:</p>
+            <ol><li>Portada con título, subtítulo, autor y fecha.</li>
+            <li>Diapositiva con índice (con enlaces).</li>
+            <li>2 diapositivas de productos (usando tablas desde Writer o Calc).</li>
+            <li>1 diapositiva con gráfico de ventas (hecho en Calc e importado).</li>
+            <li>1 diapositiva con datos de clientes (tabla desde Base).</li>
+            <li>Transiciones coherentes y animaciones discretas.</li>
+            <li>Imágenes y formato consistente (misma fuente, colores corporativos).</li>
+            <li>Última diapositiva: "Gracias" y contacto.</li></ol>
+            <p><strong>Entrega:</strong> Archivo .odp y PDF de la presentación.</p>
+            <div class="respuesta-alumno" data-placeholder="Indica dónde has guardado los archivos o comparte enlace..."></div>
+            </div>
+
+            <div class="autoevaluacion"><div class="box-label">✅ Autoevaluación final RA3</div>
+            <ul><li id="ae64_0"><input type="checkbox" id="cb64_0"><label for="cb64_0"> Integro objetos de Writer, Calc y Base en la presentación.</label></li>
+            <li id="ae64_1"><input type="checkbox" id="cb64_1"><label for="cb64_1"> Aplico normas de diseño (colores, fuentes, espacio).</label></li>
+            <li id="ae64_2"><input type="checkbox" id="cb64_2"><label for="cb64_2"> Uso transiciones y animaciones de forma profesional.</label></li>
+            <li id="ae64_3"><input type="checkbox" id="cb64_3"><label for="cb64_3"> Exporto la presentación a PDF y entrego todos los archivos.</label></li></ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        📘 RA3 · Apuntes del Alumno · Aplicaciones de un paquete ofimático · 48 sesiones (B41–B64)<br>
+        LibreOffice 24.8 · Writer, Calc, Base, Impress · Material didáctico original
+    </footer>
+</div>
+
+<script>
+    // Función para los quizzes
+    function checkQuiz(qId, el, correcta) {
+        const allOpts = document.querySelectorAll(`[onclick*="${qId}"]`);
+        allOpts.forEach(o => o.classList.add('bloqueada'));
+        const isCorrect = el.dataset.val === correcta;
+        el.classList.add(isCorrect ? 'correcta' : 'incorrecta');
+        if (!isCorrect) {
+            allOpts.forEach(o => { if (o.dataset.val === correcta) { o.classList.remove('bloqueada'); o.classList.add('correcta'); } });
+        }
+        const fb = document.getElementById('fb_' + qId);
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.background = isCorrect ? '#dcfce7' : '#fef2f2';
+            fb.style.color = isCorrect ? '#166534' : '#c53030';
+            fb.innerHTML = isCorrect ? '✅ ¡Correcto!' : `❌ Incorrecto. La respuesta correcta era la opción ${correcta.toUpperCase()}.`;
+        }
+    }
+
+    // Guardado automático de respuestas
+    document.querySelectorAll('.respuesta-alumno').forEach((div, i) => {
+        const key = 'resp_ra3_' + i;
+        div.contentEditable = 'true';
+        const saved = localStorage.getItem(key);
+        if (saved) div.innerHTML = saved;
+        div.addEventListener('input', () => localStorage.setItem(key, div.innerHTML));
+    });
+
+    // Guardado de autoevaluación
+    document.querySelectorAll('.autoevaluacion input[type="checkbox"]').forEach(cb => {
+        const key = 'ae_' + cb.id;
+        if (localStorage.getItem(key) === '1') cb.checked = true;
+        cb.addEventListener('change', () => localStorage.setItem(key, cb.checked ? '1' : '0'));
+    });
+
+    // Botón volver arriba
+    const btnTop = document.getElementById('btnTop');
+    window.addEventListener('scroll', () => btnTop.classList.toggle('visible', window.scrollY > 500));
+    btnTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Progreso global del RA3 (24 bloques)
+    const _badge = document.getElementById('badgeProgreso');
+    const _progresoEl = document.getElementById('progresoGlobal');
+
+    function updateBadgeVisibility() {
+        if (!_badge) return;
+        _badge.style.display = window.scrollY > 300 ? 'flex' : 'none';
+    }
+    window.addEventListener('scroll', updateBadgeVisibility, { passive: true });
+
+    function updateProgreso() {
+        const total = 24;
+        let completados = 0;
+        // B64 has 4 checkboxes; all others have 3
+        const checkCounts = { 64: 4 };
+        for (let b = 41; b <= 64; b++) {
+            const maxItems = checkCounts[b] || 3;
+            let bloqueCompleto = true;
+            for (let i = 0; i < maxItems; i++) {
+                if (localStorage.getItem(`ae_cb${b}_${i}`) !== '1') bloqueCompleto = false;
+            }
+            if (bloqueCompleto) completados++;
+        }
+        const pct = Math.round(completados / total * 100);
+        const relleno = document.getElementById('progresoRelleno');
+        const texto = document.getElementById('progresoTexto');
+        if (relleno) relleno.style.width = pct + '%';
+        if (texto) texto.textContent = `Has completado ${completados} de ${total} bloques (${pct}%)`;
+        if (_badge) document.getElementById('badgeProgresoTxt').textContent = completados + '/24';
+        updateBadgeVisibility();
+
+        const hitos = [6, 12, 18, 24];
+        document.querySelectorAll('.insignia').forEach((ins, i) => {
+            ins.classList.toggle('ganada', completados >= hitos[i]);
+        });
+    }
+    document.addEventListener('change', e => { if (e.target.type === 'checkbox') updateProgreso(); });
+    updateProgreso();
+
+    // IntersectionObserver for nav-lateral
+    const _navLinks = document.querySelectorAll('.nav-lateral a');
+    const _bloques = document.querySelectorAll('.bloque');
+    const _io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting && e.intersectionRatio > 0.2) {
+                _navLinks.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id));
+            }
+        });
+    }, { threshold: 0.2 });
+    _bloques.forEach(el => _io.observe(el));
+</script>
+
+</body>
+</html>

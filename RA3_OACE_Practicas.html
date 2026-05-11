@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA3 · Prácticas de Laboratorio | OACE CFGB Informática</title>
+    
+    <style>
+        :root {
+            --azul-oscuro:#1a2744;--azul-medio:#2c5282;--azul:#3182ce;--azul-claro:#ebf4ff;
+            --naranja:#dd6b20;--naranja-claro:#fffaf0;
+            --verde:#166534;--verde-claro:#f0fff4;
+            --rojo:#c53030;--rojo-claro:#fff5f5;--purpura:#6b46c1;--purpura-claro:#faf5ff;
+            --gris:#f7fafc;--gris-oscuro:#4a5568;--texto:#1a202c;--borde:#e2e8f0;
+            --sombra:0 4px 6px rgba(0,0,0,0.04),0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg:0 10px 25px rgba(0,0,0,0.06),0 4px 10px rgba(0,0,0,0.04);
+            --radio:12px;--radio-sm:8px;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--texto);background:#fff7ed;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+        
+        .navbar{position:sticky;top:0;z-index:200;background:var(--azul-oscuro);height:48px;display:flex;align-items:center;padding:0 20px;gap:0;box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+        .nav-brand{display:flex;align-items:center;gap:9px;color:white;text-decoration:none;font-weight:700;font-size:14px;margin-right:20px;flex-shrink:0;}
+        .nav-brand .brand-badge{background:var(--naranja);color:white;border-radius:6px;padding:3px 8px;font-size:12px;font-weight:800;}
+        .nav-links{display:flex;align-items:center;gap:3px;flex:1;overflow-x:auto;}
+        .nav-links::-webkit-scrollbar{display:none;}
+        .nav-link{color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;font-weight:600;padding:5px 13px;border-radius:18px;white-space:nowrap;transition:0.15s;border:1px solid transparent;}
+        .nav-link:hover{color:white;background:rgba(255,255,255,0.15);}
+        .nav-link.active{color:white;background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.35);}
+        
+        .hero{background:linear-gradient(160deg,#7b341e 0%,#c05621 40%,#dd6b20 100%);color:white;padding:40px 32px 30px;position:relative;overflow:hidden;text-align:center;}
+        .hero::after{content:'';position:absolute;top:-80px;right:-120px;width:380px;height:380px;background:rgba(255,255,255,0.03);border-radius:50%;pointer-events:none;}
+        .hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:5px 16px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+        .hero h1{font-size:28px;font-weight:700;margin-bottom:6px;letter-spacing:-0.3px;}
+        .hero .subtitulo{font-size:15px;opacity:0.85;font-style:italic;}
+        .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;justify-content:center;}
+        .hero-meta span{background:rgba(255,255,255,0.12);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;}
+        
+        .wrapper{max-width:1040px;margin:0 auto;padding:24px 20px 64px;}
+        
+        .practica{background:white;border-radius:var(--radio);margin-bottom:32px;box-shadow:var(--sombra);border:1px solid var(--borde);overflow:hidden;}
+        .practica-header{background:linear-gradient(135deg,#7b341e,#c05621);color:white;padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+        .practica-badge{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;font-weight:800;font-size:13px;border-radius:8px;padding:6px 14px;white-space:nowrap;}
+        .practica-header h3{font-size:16px;font-weight:700;flex:1;}
+        .practica-meta{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
+        .practica-meta span{background:rgba(255,255,255,0.15);border-radius:14px;padding:4px 12px;font-size:12px;font-weight:600;white-space:nowrap;}
+        
+        .practica-body{padding:22px 28px;}
+        .ce-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+        .ce-tag{font-size:10px;font-weight:700;background:var(--naranja-claro);color:var(--naranja);border:1px solid #fed7aa;border-radius:16px;padding:3px 10px;}
+        
+        .box-apuntes{background:#fff7ed;border:2px solid #fed7aa;border-radius:var(--radio-sm);padding:14px 18px;margin-bottom:18px;display:flex;align-items:flex-start;gap:12px;}
+        .box-apuntes .icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+        .box-apuntes .content strong{display:block;color:var(--naranja);font-size:13px;margin-bottom:4px;}
+        .box-apuntes .content a{color:var(--naranja);font-weight:600;}
+        
+        .ai-form{background:#fef9f1;border:2px solid #fed7aa;border-radius:var(--radio-sm);padding:18px 22px;margin-top:18px;}
+        .ai-form .ai-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .ai-form .ai-badge{background:var(--naranja);color:white;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:6px;}
+        .ai-field{margin-bottom:12px;}
+        .ai-field label{display:block;font-size:12px;font-weight:700;color:var(--naranja);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+        .ai-field label .req{color:#ef4444;margin-left:2px;}
+        .ai-field input[type="text"],.ai-field textarea,.ai-field select{width:100%;border:1.5px solid #fed7aa;border-radius:6px;padding:8px 12px;font-size:14px;font-family:inherit;background:white;}
+        .ai-field input:focus,.ai-field textarea:focus,.ai-field select:focus{outline:none;border-color:var(--naranja);box-shadow:0 0 0 3px rgba(221,107,32,0.15);}
+        .ai-submit{background:var(--naranja);color:white;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;transition:0.2s;margin-top:6px;}
+        .ai-submit:hover{background:#c05621;}
+        .ai-ok{display:none;background:#dcfce7;border:2px solid #22c55e;border-radius:8px;padding:12px 16px;margin-top:10px;font-size:14px;color:#166534;font-weight:600;}
+        .ai-ok.show{display:flex;align-items:center;gap:8px;}
+        
+        .rubrica{background:var(--gris);border-radius:var(--radio-sm);padding:16px 20px;margin-top:18px;border:1px solid var(--borde);}
+        .rubrica h4{color:var(--naranja);font-size:13px;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:12px;}
+        .rubrica table{width:100%;font-size:13px;border-collapse:collapse;}
+        .rubrica thead th{background:var(--naranja);color:white;padding:8px 12px;text-align:left;font-weight:600;font-size:12px;}
+        .rubrica tbody td{padding:7px 12px;border-bottom:1px solid var(--borde);vertical-align:top;}
+        .rubrica tbody tr:nth-child(even){background:white;}
+        
+        .pasos ol{margin:0 0 0 20px;}
+        .pasos ol li{padding:6px 0 6px 6px;border-bottom:1px solid #f0f0f0;}
+        .pasos ol li:last-child{border-bottom:none;}
+        .pasos ol li strong{color:var(--naranja);}
+        
+        ul.icon-list{list-style:none;padding-left:0;margin:10px 0;}
+        ul.icon-list li{padding:6px 0 6px 24px;position:relative;border-bottom:1px solid #f0f0f0;font-size:14px;}
+        ul.icon-list li::before{content:"▸";color:var(--naranja);position:absolute;left:6px;font-size:12px;top:8px;font-weight:bold;}
+        
+        .btn-top{position:fixed;right:18px;bottom:24px;background:var(--naranja);color:white;border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:18px;box-shadow:var(--sombra-lg);z-index:200;display:none;align-items:center;justify-content:center;}
+        .btn-top.visible{display:flex;}
+        
+        footer{text-align:center;color:#a0aec0;font-size:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--borde);}
+        
+
+        /* ── NAVEGACIÓN LATERAL ── */
+        .nav-lateral { position: fixed; right: 10px; top: 50%; transform: translateY(-50%); z-index: 150; display: flex; flex-direction: column; gap: 2px; }
+        .nav-lateral a { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--naranja); opacity: 0.7; color: white; text-decoration: none; font-size: 8px; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.15s, opacity 0.15s; letter-spacing: -0.5px; }
+        .nav-lateral a:hover { opacity: 1; transform: scale(1.25); background: var(--naranja-oscuro, #7b341e); }
+        .nav-lateral a.activo { opacity: 1; background: var(--azul-oscuro); transform: scale(1.1); }
+        @media(max-width:720px){
+            .hero{padding:28px 16px;} .hero h1{font-size:22px;} .nav-lateral{display:none;}
+            .practica-header{padding:12px 16px;} .practica-body{padding:16px;}
+            .practica-meta{margin-left:0;}
+        }
+        @media print{
+            .navbar,.btn-top{display:none!important;}
+            @page{size:A4;margin:1.8cm 2cm 2cm 2cm;}
+            .practica{break-before:page;}
+            body{background:white!important;}
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <a href="index.html" class="nav-brand"><span class="brand-badge">OACE</span><span>2º CFGB</span></a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA3_OACE_Alumno.html" class="nav-link">📘 Apuntes RA3</a>
+        <a href="RA3_OACE_Practicas.html" class="nav-link active">🧪 Prácticas RA3</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-badge">🧪 PRÁCTICAS DE LABORATORIO · RA3</div>
+    <h1>📝 RA3 · Prácticas Ofimáticas</h1>
+    <p class="subtitulo">24 prácticas evaluables · LibreOffice 24.8 · Writer · Calc · Base · Impress</p>
+    <div class="hero-meta">
+        <span>✍️ Writer (B41-B47)</span>
+        <span>📊 Calc (B48-B55)</span>
+        <span>🗄️ Base (B56-B61)</span>
+        <span>🎨 Impress (B62-B64)</span>
+    </div>
+</header>
+
+
+<nav class="nav-lateral" id="navLateral">
+    <a href="#p3-1" title="P3.1">3.1</a>
+    <a href="#p3-2" title="P3.2">3.2</a>
+    <a href="#p3-3" title="P3.3">3.3</a>
+    <a href="#p3-4" title="P3.4">3.4</a>
+    <a href="#p3-5" title="P3.5">3.5</a>
+    <a href="#p3-6" title="P3.6">3.6</a>
+    <a href="#p3-7" title="P3.7">3.7</a>
+    <a href="#p3-8" title="P3.8">3.8</a>
+    <a href="#p3-9" title="P3.9">3.9</a>
+    <a href="#p3-10" title="P3.10">3.10</a>
+    <a href="#p3-11" title="P3.11">3.11</a>
+    <a href="#p3-12" title="P3.12">3.12</a>
+    <a href="#p3-13" title="P3.13">3.13</a>
+    <a href="#p3-14" title="P3.14">3.14</a>
+    <a href="#p3-15" title="P3.15">3.15</a>
+    <a href="#p3-16" title="P3.16">3.16</a>
+    <a href="#p3-17" title="P3.17">3.17</a>
+    <a href="#p3-18" title="P3.18">3.18</a>
+    <a href="#p3-19" title="P3.19">3.19</a>
+    <a href="#p3-20" title="P3.20">3.20</a>
+    <a href="#p3-21" title="P3.21">3.21</a>
+    <a href="#p3-22" title="P3.22">3.22</a>
+    <a href="#p3-23" title="P3.23">3.23</a>
+    <a href="#p3-24" title="P3.24">3.24</a>
+</nav>
+
+<button class="btn-top" id="btnTop">↑</button>
+
+<div class="wrapper">
+
+    <!-- ==================== PRÁCTICA 3.1 · B41 ==================== -->
+    <div class="practica" id="p3-1">
+        <div class="practica-header">
+            <span class="practica-badge">📝 P3.1</span>
+            <h3>Conoce LibreOffice Writer · Entorno y primeros pasos</h3>
+            <div class="practica-meta"><span>📖 B41</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-a</span><span class="ce-tag">RA3 CE-b</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B41</strong> antes de realizar esta práctica.
+                    <a href="RA3_OACE_Alumno.html#b41">→ Abrir apuntes del RA3</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Familiarizarse con el entorno de LibreOffice Writer y crear el primer documento.</p>
+            <p><strong>🛠️ Material necesario:</strong> PC con LibreOffice instalado (suite completa).</p>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--naranja);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol>
+                    <li>Abre LibreOffice Writer desde el menú de aplicaciones.</li>
+                    <li><strong>Identifica las siguientes partes:</strong> Barra de menús, barra de herramientas estándar, barra de formato, regla, área de trabajo y barra de estado.</li>
+                    <li>Escribe un pequeño texto de 5 líneas sobre "Qué es la ofimática".</li>
+                    <li>Guarda el documento en tu escritorio como <code>nombre_apellido_p31.odt</code>.</li>
+                    <li>Cierra Writer y vuelve a abrir el archivo desde el explorador de archivos para comprobar que se guardó correctamente.</li>
+                    <li>Exporta el documento a PDF: <strong>Archivo → Exportar como PDF</strong>. Guárdalo como <code>nombre_apellido_p31.pdf</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p31">
+                <div class="ai-header"><span class="ai-badge">📋 Informe de resultados</span><span class="ai-desc">Completa todos los campos. Estos datos son necesarios para la evaluación.</span></div>
+                <div class="ai-field"><label for="ai_p31_f0">Nombre del archivo .odt creado<span class="req">*</span></label><input type="text" id="ai_p31_f0" placeholder="ej: ana_garcia_p31.odt"></div>
+                <div class="ai-field"><label for="ai_p31_f1">¿En qué barra se encuentra el botón "Guardar"?<span class="req">*</span></label><input type="text" id="ai_p31_f1" placeholder="Barra estándar / Barra de herramientas"></div>
+                <div class="ai-field"><label for="ai_p31_f2">Ubicación donde guardaste el archivo<span class="req">*</span></label><input type="text" id="ai_p31_f2" placeholder="Ej: Escritorio"></div>
+                <div class="ai-field"><label for="ai_p31_f3">Extensión del archivo PDF generado<span class="req">*</span></label><input type="text" id="ai_p31_f3" placeholder=".pdf"></div>
+                <button class="ai-submit" onclick="guardarAI(31)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ok-p31">✅ Respuestas guardadas correctamente.</div>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica de evaluación (20 puntos)</h4>
+                <table><thead><tr><th>Criterio</th><th>Puntos</th></tr></thead>
+                <tbody>
+                    <tr><td>Documento creado y guardado como .odt</td><td style="text-align:right">5 pts</td></tr>
+                    <tr><td>Exportado correctamente a PDF</td><td style="text-align:right">5 pts</td></tr>
+                    <tr><td>Identificación correcta de las partes de Writer</td><td style="text-align:right">5 pts</td></tr>
+                    <tr><td>Contenido mínimo de 5 líneas coherente</td><td style="text-align:right">5 pts</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.2 · B42 ==================== -->
+    <div class="practica" id="p3-2">
+        <div class="practica-header">
+            <span class="practica-badge">✍️ P3.2</span>
+            <h3>Writer · Formato de carácter y párrafo</h3>
+            <div class="practica-meta"><span>📖 B42</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-c</span><span class="ce-tag">RA3 CE-b</span></div>
+            <div class="box-apuntes">
+                <span class="icon">📘</span>
+                <div class="content">
+                    <strong>Antes de empezar · Repasa en los apuntes del alumno</strong>
+                    <p>Asegúrate de haber leído y entendido el bloque <strong>B42</strong> antes de realizar esta práctica.
+                    <a href="RA3_OACE_Alumno.html#b42">→ Abrir apuntes del RA3</a></p>
+                </div>
+            </div>
+            <p><strong>🎯 Objetivo:</strong> Aplicar formato de texto (negrita, cursiva, tamaño) y formato de párrafo (alineación, interlineado).</p>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--naranja);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol>
+                    <li>Copia el siguiente texto en un nuevo documento de Writer:<br>
+                    <em>"El formato de texto es esencial para mejorar la legibilidad de los documentos. Un buen diseño facilita la comprensión del contenido. Las herramientas de formato permiten destacar ideas importantes y organizar la información de forma jerárquica."</em></li>
+                    <li>Aplica a la <strong>primera frase</strong> ("El formato de texto..."): negrita, tamaño 14, color naranja (#dd6b20).</li>
+                    <li>Aplica a la <strong>segunda frase</strong> ("Un buen diseño..."): cursiva, subrayado.</li>
+                    <li>Al <strong>párrafo completo</strong>: justificado, interlineado 1.5, tipo de letra Arial tamaño 11.</li>
+                    <li>La palabra "<strong>legibilidad</strong>" del primer párrafo debe ir en negrita y cursiva.</li>
+                    <li>Guarda el documento como <code>nombre_apellido_p32.odt</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p32">
+                <div class="ai-header"><span class="ai-badge">📋 Informe de resultados</span></div>
+                <div class="ai-field"><label for="ai_p32_f0">Atajo de teclado para negrita<span class="req">*</span></label><input type="text" id="ai_p32_f0" placeholder="Ctrl + ?"></div>
+                <div class="ai-field"><label for="ai_p32_f1">Atajo de teclado para cursiva<span class="req">*</span></label><input type="text" id="ai_p32_f1" placeholder="Ctrl + ?"></div>
+                <div class="ai-field"><label for="ai_p32_f2">Alineación aplicada al párrafo<span class="req">*</span></label><select id="ai_p32_f2"><option>Izquierda</option><option>Centrada</option><option>Derecha</option><option>Justificada</option></select></div>
+                <div class="ai-field"><label for="ai_p32_f3">Valor del interlineado aplicado<span class="req">*</span></label><input type="text" id="ai_p32_f3" placeholder="Ej: 1.5"></div>
+                <button class="ai-submit" onclick="guardarAI(32)">💾 Guardar respuestas</button>
+                <div class="ai-ok" id="ok-p32">✅ Respuestas guardadas.</div>
+            </div>
+            <div class="rubrica">
+                <h4>📊 Rúbrica (20 pts)</h4>
+                <table><thead><tr><th>Criterio</th><th>Pts</th></tr></thead>
+                <tbody><tr><td>Formato de carácter correcto (negrita, tamaño, color)</td><td style="text-align:right">6 pts</td></tr>
+                <tr><td>Formato de párrafo correcto (justificado, interlineado, fuente)</td><td style="text-align:right">7 pts</td></tr>
+                <tr><td>Uso de cursiva y subrayado</td><td style="text-align:right">4 pts</td></tr>
+                <tr><td>Archivo guardado correctamente</td><td style="text-align:right">3 pts</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.3 · B43 ==================== -->
+    <div class="practica" id="p3-3">
+        <div class="practica-header">
+            <span class="practica-badge">📊 P3.3</span>
+            <h3>Writer · Tablas y listas</h3>
+            <div class="practica-meta"><span>📖 B43</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B43</strong><p><a href="RA3_OACE_Alumno.html#b43">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Insertar y modificar tablas, y crear listas numeradas y con viñetas.</p>
+            <div class="pasos">
+                <p style="font-weight:700;color:var(--naranja);margin-bottom:8px;">📋 Procedimiento:</p>
+                <ol>
+                    <li>En un nuevo documento, crea un <strong>horario de clase</strong> con una tabla de 6 filas y 6 columnas.</li>
+                    <li>La primera fila: días de la semana (Lunes a Viernes) y una columna para "Hora".</li>
+                    <li>La primera columna: horas (8:30-9:30, 9:30-10:30, 10:30-11:30, 11:30-12:30, 12:30-13:30).</li>
+                    <li>Aplica un <strong>color de fondo</strong> a la fila de cabecera.</li>
+                    <li>Debajo de la tabla, crea una <strong>lista con viñetas</strong> con 3 tareas pendientes.</li>
+                    <li>Crea una <strong>lista numerada</strong> con los 5 pasos para crear una tabla.</li>
+                    <li>Guarda como <code>nombre_apellido_p33.odt</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p33">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Atajo para insertar tabla<span class="req">*</span></label><input type="text" id="ai_p33_f0" placeholder="Ctrl + F12"></div>
+                <div class="ai-field"><label>¿Cómo añadiste una nueva fila a la tabla?<span class="req">*</span></label><input type="text" id="ai_p33_f1" placeholder="Ej: Botón derecho → Fila → Insertar"></div>
+                <div class="ai-field"><label>¿Qué tipo de lista usaste para los pasos?<span class="req">*</span></label><select id="ai_p33_f2"><option>Viñetas</option><option>Numerada</option></select></div>
+                <button class="ai-submit" onclick="guardarAI(33)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p33">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td>Tabla creada correctamente</td><td style="text-align:right">7 pts</td></tr><tr><td>Formato de cabecera (color/fondo)</td><td style="text-align:right">4 pts</td></tr><tr><td>Lista con viñetas</td><td style="text-align:right">4 pts</td></tr><tr><td>Lista numerada</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.4 · B44 ==================== -->
+    <div class="practica" id="p3-4">
+        <div class="practica-header">
+            <span class="practica-badge">🖼️ P3.4</span>
+            <h3>Writer · Insertar imágenes y ajuste de texto</h3>
+            <div class="practica-meta"><span>📖 B44</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B44</strong><p><a href="RA3_OACE_Alumno.html#b44">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Insertar imágenes y configurar su ajuste de texto.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea un documento con título "Mi ciudad favorita".</li>
+                    <li>Busca en Internet dos imágenes de paisajes urbanos y guárdalas en tu equipo.</li>
+                    <li>Inserta la primera imagen en el documento y configura el ajuste de texto como <strong>"Ajuste" (el texto fluye alrededor)</strong>.</li>
+                    <li>Escribe un párrafo de 5 líneas describiendo por qué te gusta esa ciudad.</li>
+                    <li>Inserta la segunda imagen y configúrala como <strong>"Página" (como un carácter más)</strong>.</li>
+                    <li>Redimensiona ambas imágenes para que no ocupen más de un tercio de la página.</li>
+                    <li>Guarda como <code>nombre_apellido_p34.odt</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p34">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Opción de ajuste de la primera imagen<span class="req">*</span></label><select id="ai_p34_f0"><option>Ajuste</option><option>Página</option><option>Contorno</option><option>Detrás</option></select></div>
+                <div class="ai-field"><label>Opción de ajuste de la segunda imagen<span class="req">*</span></label><select id="ai_p34_f1"><option>Ajuste</option><option>Página</option><option>Contorno</option><option>Detrás</option></select></div>
+                <div class="ai-field"><label>¿Cómo redimensionaste las imágenes?<span class="req">*</span></label><input type="text" id="ai_p34_f2" placeholder="Ej: Tirando de las esquinas"></div>
+                <button class="ai-submit" onclick="guardarAI(34)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p34">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td>Imágenes insertadas correctamente</td><td style="text-align:right">6 pts</td></tr><tr><td>Ajuste de texto configurado correctamente</td><td style="text-align:right">6 pts</td></tr><tr><td>Redimensionado correcto</td><td style="text-align:right">4 pts</td></tr><tr><td>Párrafo descriptivo (5 líneas)</td><td style="text-align:right">4 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.5 · B45 ==================== -->
+    <div class="practica" id="p3-5">
+        <div class="practica-header">
+            <span class="practica-badge">🎨 P3.5</span>
+            <h3>Writer · Estilos y plantillas</h3>
+            <div class="practica-meta"><span>📖 B45</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B45</strong><p><a href="RA3_OACE_Alumno.html#b45">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Modificar estilos predefinidos y aplicar plantillas.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea un documento con tres niveles de título: Título 1, Título 2 y Título 3.</li>
+                    <li>Modifica el estilo <strong>"Título 1"</strong>: fuente Arial tamaño 18, negrita, color azul oscuro, centrado.</li>
+                    <li>Modifica el estilo <strong>"Título 2"</strong>: fuente Arial tamaño 14, negrita, color naranja, alineado a la izquierda.</li>
+                    <li>Aplica los estilos modificados a tus títulos.</li>
+                    <li>Guarda el documento como <code>nombre_apellido_p35.odt</code>.</li>
+                    <li>Crea una nueva plantilla (.ott) con estos estilos y guárdala como <code>plantilla_OACE.ott</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p35">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>¿Dónde se modifican los estilos?<span class="req">*</span></label><input type="text" id="ai_p35_f0" placeholder="Ej: Estilos en la barra lateral"></div>
+                <div class="ai-field"><label>Nombre del estilo modificado para Título 1<span class="req">*</span></label><input type="text" id="ai_p35_f1" placeholder="Título 1"></div>
+                <div class="ai-field"><label>Extensión de la plantilla creada<span class="req">*</span></label><input type="text" id="ai_p35_f2" placeholder=".ott"></div>
+                <button class="ai-submit" onclick="guardarAI(35)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p35">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td>Estilos modificados correctamente</td><td style="text-align:right">8 pts</td></tr><tr><td>Estilos aplicados a los títulos</td><td style="text-align:right">6 pts</td></tr><tr><td>Plantilla guardada como .ott</td><td style="text-align:right">6 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.6 · B46 ==================== -->
+    <div class="practica" id="p3-6">
+        <div class="practica-header">
+            <span class="practica-badge">📑 P3.6</span>
+            <h3>Writer · Índices automáticos, encabezados y pies</h3>
+            <div class="practica-meta"><span>📖 B46</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-b</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B46</strong><p><a href="RA3_OACE_Alumno.html#b46">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Insertar encabezados, pies de página e índice automático.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea un documento de 3 páginas con secciones usando Título 1 y Título 2.</li>
+                    <li>Inserta un <strong>encabezado</strong> con el título del documento.</li>
+                    <li>Inserta un <strong>pie de página</strong> con número de página (formato "Página X de Y").</li>
+                    <li>Al principio del documento, inserta un <strong>índice automático</strong> (Insertar → Tabla de contenido).</li>
+                    <li>Añade una nueva sección al final del documento.</li>
+                    <li>Actualiza el índice (botón derecho → Actualizar índice).</li>
+                    <li>Guarda como <code>nombre_apellido_p36.odt</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p36">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>¿Qué menú usaste para insertar encabezado?<span class="req">*</span></label><input type="text" id="ai_p36_f0" placeholder="Insertar → Encabezado"></div>
+                <div class="ai-field"><label>¿Cómo insertaste el número de página?<span class="req">*</span></label><input type="text" id="ai_p36_f1" placeholder="Insertar → Número de página"></div>
+                <div class="ai-field"><label>¿Cuántos niveles de título muestra tu índice?<span class="req">*</span></label><input type="text" id="ai_p36_f2" placeholder="Ej: 2"></div>
+                <button class="ai-submit" onclick="guardarAI(36)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p36">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td>Encabezado y pie configurados</td><td style="text-align:right">6 pts</td></tr><tr><td>Números de página correctos</td><td style="text-align:right">4 pts</td></tr><tr><td>Índice automático insertado</td><td style="text-align:right">5 pts</td></tr><tr><td>Índice actualizado tras cambios</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.7 · B47 ==================== -->
+    <div class="practica" id="p3-7">
+        <div class="practica-header">
+            <span class="practica-badge">📄 P3.7</span>
+            <h3>Writer · Prueba final integradora</h3>
+            <div class="practica-meta"><span>📖 B47</span><span>⏱️ 110 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-a</span><span class="ce-tag">RA3 CE-b</span><span class="ce-tag">RA3 CE-c</span><span class="ce-tag">RA3 CE-d</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B47</strong><p><a href="RA3_OACE_Alumno.html#b47">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Demostrar todas las habilidades de Writer en un informe profesional.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea un informe sobre <strong>"Ventajas del software libre"</strong> con:</li>
+                    <ul><li>Portada (título, autor, fecha)</li><li>Índice automático</li><li>3 secciones con Título 1 y Título 2</li><li>Una tabla con 3 ventajas y 3 desventajas</li><li>Al menos una imagen con ajuste "Ajuste"</li><li>Encabezado con el título del informe</li><li>Pie con número de página</li></ul>
+                    <li>Aplica estilos personalizados (Título 1 y Título 2 con tus formatos)</li>
+                    <li>Exporta el documento a PDF como <code>nombre_apellido_p37.pdf</code></li>
+                    <li>Guarda el original como <code>nombre_apellido_p37.odt</code></li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p37">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Número de páginas del informe<span class="req">*</span></label><input type="text" id="ai_p37_f0" placeholder="Ej: 4"></div>
+                <div class="ai-field"><label>¿El índice se actualizó correctamente?<span class="req">*</span></label><select id="ai_p37_f1"><option>Sí</option><option>No</option></select></div>
+                <div class="ai-field"><label>Nombre del archivo PDF entregado<span class="req">*</span></label><input type="text" id="ai_p37_f2" placeholder="nombre_apellido_p37.pdf"></div>
+                <button class="ai-submit" onclick="guardarAI(37)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p37">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Evaluación integral del informe completo</td></tr><tr><td>Estructura y contenido</td><td style="text-align:right">8 pts</td></tr><tr><td>Formato y estilos</td><td style="text-align:right">6 pts</td></tr><tr><td>Exportación a PDF</td><td style="text-align:right">3 pts</td></tr><tr><td>Entrega completa</td><td style="text-align:right">3 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.8 · B48 ==================== -->
+    <div class="practica" id="p3-8">
+        <div class="practica-header">
+            <span class="practica-badge">📊 P3.8</span>
+            <h3>Calc · Introducción y entorno de trabajo</h3>
+            <div class="practica-meta"><span>📖 B48</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B48</strong><p><a href="RA3_OACE_Alumno.html#b48">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Identificar los elementos de Calc y crear el primer libro de cálculo.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Abre LibreOffice Calc.</li>
+                    <li>Identifica: barra de menús, barra de fórmulas, etiquetas de columnas (A,B,C...), números de filas (1,2,3...), y pestañas de hojas.</li>
+                    <li>En la celda A1 escribe "Producto", en B1 "Precio", en C1 "Unidades".</li>
+                    <li>Rellena con 3 productos ficticios (ej: Ratón 15€ 2 unidades).</li>
+                    <li>Cambia el nombre de la hoja de "Hoja1" a "Inventario".</li>
+                    <li>Añade una nueva hoja llamada "Resumen".</li>
+                    <li>Guarda el libro como <code>nombre_apellido_p38.ods</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p38">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Extensión del archivo de Calc<span class="req">*</span></label><input type="text" id="ai_p38_f0" placeholder=".ods"></div>
+                <div class="ai-field"><label>Dirección de la celda en fila 5, columna C<span class="req">*</span></label><input type="text" id="ai_p38_f1" placeholder="C5"></div>
+                <div class="ai-field"><label>¿Cómo cambiaste el nombre de la hoja?<span class="req">*</span></label><input type="text" id="ai_p38_f2" placeholder="Doble clic en la pestaña"></div>
+                <button class="ai-submit" onclick="guardarAI(38)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p38">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Conocimiento del entorno de Calc</td></tr><tr><td>Identificación de elementos</td><td style="text-align:right">6 pts</td></tr><tr><td>Datos introducidos correctamente</td><td style="text-align:right">6 pts</td></tr><tr><td>Gestión de hojas (nombre y nueva)</td><td style="text-align:right">4 pts</td></tr><tr><td>Archivo guardado como .ods</td><td style="text-align:right">4 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.9 · B49 ==================== -->
+    <div class="practica" id="p3-9">
+        <div class="practica-header">
+            <span class="practica-badge">💰 P3.9</span>
+            <h3>Calc · Formato de celdas (números, fechas, moneda)</h3>
+            <div class="practica-meta"><span>📖 B49</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B49</strong><p><a href="RA3_OACE_Alumno.html#b49">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Aplicar formatos a celdas (moneda, porcentaje, fechas).</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea una tabla de gastos mensuales con: Concepto, Enero, Febrero, Marzo.</li>
+                    <li>Introduce: Alquiler (600, 600, 600), Luz (65, 72, 58), Agua (30, 28, 31), Internet (40, 40, 40).</li>
+                    <li>Aplica formato <strong>moneda</strong> (€) a los valores numéricos.</li>
+                    <li>Aplica <strong>negrita</strong> a las cabeceras y un <strong>color de fondo</strong>.</li>
+                    <li>Añade una columna "Total Trimestre" con la suma de cada concepto.</li>
+                    <li>Guarda como <code>nombre_apellido_p39.ods</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p39">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Atajo para abrir Formato de celdas<span class="req">*</span></label><input type="text" id="ai_p39_f0" placeholder="Ctrl + 1"></div>
+                <div class="ai-field"><label>Formato aplicado a los números (moneda, porcentaje...)<span class="req">*</span></label><input type="text" id="ai_p39_f1" placeholder="Moneda"></div>
+                <div class="ai-field"><label>Fórmula usada para calcular Total Trimestre de Alquiler<span class="req">*</span></label><input type="text" id="ai_p39_f2" placeholder="=SUMA(B2:D2)"></div>
+                <button class="ai-submit" onclick="guardarAI(39)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p39">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Formato de celdas correcto</td></tr><tr><td>Formato moneda aplicado</td><td style="text-align:right">6 pts</td></tr><tr><td>Negrita y fondo de cabeceras</td><td style="text-align:right">4 pts</td></tr><tr><td>Fórmula SUMA correcta</td><td style="text-align:right">5 pts</td></tr><tr><td>Archivo guardado</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.10 · B50 ==================== -->
+    <div class="practica" id="p3-10">
+        <div class="practica-header">
+            <span class="practica-badge">🧮 P3.10</span>
+            <h3>Calc · Fórmulas y funciones básicas (SUMA, PROMEDIO)</h3>
+            <div class="practica-meta"><span>📖 B50</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B50</strong><p><a href="RA3_OACE_Alumno.html#b50">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Utilizar fórmulas aritméticas y funciones SUMA, PROMEDIO, MAX, MIN.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea una tabla con las notas de 5 alumnos en 3 asignaturas: Matemáticas, Lengua, Ciencias.</li>
+                    <li>Calcula para cada alumno: <strong>Nota Media</strong> usando PROMEDIO.</li>
+                    <li>Calcula para cada asignatura: <strong>Máximo</strong>, <strong>Mínimo</strong> y <strong>Media de la clase</strong>.</li>
+                    <li>En una celda aparte, calcula la <strong>Media total de todos los alumnos</strong>.</li>
+                    <li>Guarda como <code>nombre_apellido_p310.ods</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p310">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Fórmula para la media de un alumno (ej: =PROMEDIO(B2:D2))<span class="req">*</span></label><input type="text" id="ai_p310_f0" placeholder="=PROMEDIO(B2:D2)"></div>
+                <div class="ai-field"><label>¿Qué función calcula el valor más alto de un rango?<span class="req">*</span></label><input type="text" id="ai_p310_f1" placeholder="MAX"></div>
+                <div class="ai-field"><label>Media total de todos los alumnos<span class="req">*</span></label><input type="text" id="ai_p310_f2" placeholder="(valor numérico)"></div>
+                <button class="ai-submit" onclick="guardarAI(310)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p310">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Uso correcto de funciones</td></tr><tr><td>PROMEDIO por alumno</td><td style="text-align:right">5 pts</td></tr><tr><td>MAX, MIN, PROMEDIO por asignatura</td><td style="text-align:right">8 pts</td></tr><tr><td>Media total correcta</td><td style="text-align:right">3 pts</td></tr><tr><td>Archivo guardado</td><td style="text-align:right">4 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.11 · B51 ==================== -->
+    <div class="practica" id="p3-11">
+        <div class="practica-header">
+            <span class="practica-badge">🔀 P3.11</span>
+            <h3>Calc · Función condicional SI</h3>
+            <div class="practica-meta"><span>📖 B51</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B51</strong><p><a href="RA3_OACE_Alumno.html#b51">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Utilizar la función SI para tomar decisiones automáticas.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Usando la tabla de notas de la práctica anterior, añade una columna "Resultado".</li>
+                    <li>Usa la función SI para mostrar "Aprobado" si la nota media es >=5, "Suspenso" si no.</li>
+                    <li>Añade otra columna "Mención" con SI anidado: "Sobresaliente" si nota>=9, "Notable" si nota>=7, "Bien" si nota>=6, "Suficiente" si nota>=5, "Insuficiente" si no.</li>
+                    <li>Guarda como <code>nombre_apellido_p311.ods</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p311">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Fórmula SI para "Aprobado" (nota media en E2)<span class="req">*</span></label><input type="text" id="ai_p311_f0" placeholder="=SI(E2>=5;\"Aprobado\";\"Suspenso\")"></div>
+                <div class="ai-field"><label>¿Qué símbolo se usa para "distinto de" en condiciones?<span class="req">*</span></label><input type="text" id="ai_p311_f1" placeholder="<>"></div>
+                <div class="ai-field"><label>Algún alumno con Sobresaliente (nombre y nota)<span class="req">*</span></label><input type="text" id="ai_p311_f2" placeholder="Ej: Ana - 9.5"></div>
+                <button class="ai-submit" onclick="guardarAI(311)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p311">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Función SI correcta</td></tr><tr><td>SI simple (Aprobado/Suspenso)</td><td style="text-align:right">6 pts</td></tr><tr><td>SI anidado con menciones</td><td style="text-align:right">8 pts</td></tr><tr><td>Resultados lógicos</td><td style="text-align:right">4 pts</td></tr><tr><td>Archivo guardado</td><td style="text-align:right">2 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.12 · B52 ==================== -->
+    <div class="practica" id="p3-12">
+        <div class="practica-header">
+            <span class="practica-badge">📈 P3.12</span>
+            <h3>Calc · Gráficos (barras, líneas, sectores)</h3>
+            <div class="practica-meta"><span>📖 B52</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B52</strong><p><a href="RA3_OACE_Alumno.html#b52">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Crear y personalizar gráficos a partir de datos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea una tabla con ventas trimestrales: T1 (12000€), T2 (15400€), T3 (13200€), T4 (18900€).</li>
+                    <li>Crea un <strong>gráfico de barras</strong> con título "Ventas anuales".</li>
+                    <li>Añade etiquetas de datos a las barras.</li>
+                    <li>Crea un <strong>gráfico circular (sectores)</strong> que muestre la proporción de cada trimestre.</li>
+                    <li>Inserta ambos gráficos en la misma hoja.</li>
+                    <li>Guarda como <code>nombre_apellido_p312.ods</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p312">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Rango de datos seleccionado para el gráfico<span class="req">*</span></label><input type="text" id="ai_p312_f0" placeholder="Ej: A1:B5"></div>
+                <div class="ai-field"><label>¿Qué tipo de gráfico usaste para proporciones?<span class="req">*</span></label><select id="ai_p312_f1"><option>Barras</option><option>Líneas</option><option>Circular</option></select></div>
+                <div class="ai-field"><label>Trimestre con mayores ventas<span class="req">*</span></label><input type="text" id="ai_p312_f2" placeholder="T4"></div>
+                <button class="ai-submit" onclick="guardarAI(312)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p312">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Gráficos correctos</td></tr><tr><td>Gráfico de barras con título y datos</td><td style="text-align:right">8 pts</td></tr><tr><td>Gráfico circular con proporciones</td><td style="text-align:right">8 pts</td></tr><tr><td>Archivo guardado</td><td style="text-align:right">4 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.13 · B53 ==================== -->
+    <div class="practica" id="p3-13">
+        <div class="practica-header">
+            <span class="practica-badge">🔍 P3.13</span>
+            <h3>Calc · Ordenar y filtrar datos</h3>
+            <div class="practica-meta"><span>📖 B53</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B53</strong><p><a href="RA3_OACE_Alumno.html#b53">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Ordenar datos y usar el autofiltro para mostrar subconjuntos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea una tabla con 10 empleados: Nombre, Departamento (Ventas, Marketing, IT, RRHH), Edad, Salario.</li>
+                    <li>Ordena la tabla alfabéticamente por Nombre. Después, ordena por Salario de mayor a menor.</li>
+                    <li>Activa el <strong>Autofiltro</strong> (Datos → Filtrar → Autofiltro).</li>
+                    <li>Filtra para mostrar solo los empleados del departamento "Ventas".</li>
+                    <li>Filtra para mostrar empleados con Salario > 2000€.</li>
+                    <li>Guarda como <code>nombre_apellido_p313.ods</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p313">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Opción usada para ordenar de mayor a menor salario<span class="req">*</span></label><select id="ai_p313_f0"><option>Ascendente</option><option>Descendente</option></select></div>
+                <div class="ai-field"><label>¿Cuántos empleados aparecen al filtrar por Ventas?<span class="req">*</span></label><input type="text" id="ai_p313_f1" placeholder="Ej: 3"></div>
+                <div class="ai-field"><label>¿Cómo se desactiva el filtro?<span class="req">*</span></label><input type="text" id="ai_p313_f2" placeholder="Datos → Filtrar → Quitar filtro"></div>
+                <button class="ai-submit" onclick="guardarAI(313)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p313">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Ordenación y filtrado</td></tr><tr><td>Ordenaciones correctas</td><td style="text-align:right">6 pts</td></tr><tr><td>Autofiltro activado correctamente</td><td style="text-align:right">4 pts</td></tr><tr><td>Filtro por departamento correcto</td><td style="text-align:right">5 pts</td></tr><tr><td>Filtro por salario correcto</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.14 · B54 ==================== -->
+    <div class="practica" id="p3-14">
+        <div class="practica-header">
+            <span class="practica-badge">🖨️ P3.14</span>
+            <h3>Calc · Configurar página e impresión</h3>
+            <div class="practica-meta"><span>📖 B54</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-d</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B54</strong><p><a href="RA3_OACE_Alumno.html#b54">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Configurar una hoja para imprimir correctamente (orientación, escala, encabezados).</p>
+            <div class="pasos">
+                <ol>
+                    <li>Usa la tabla de empleados de la práctica anterior.</li>
+                    <li>Configura la página: <strong>orientación horizontal</strong>, márgenes reducidos (1 cm).</li>
+                    <li>Define el <strong>área de impresión</strong> (solo los datos, sin columnas extras).</li>
+                    <li>Configura la escala para que quepa en <strong>una sola página</strong>.</li>
+                    <li>Añade un encabezado con "Listado de empleados" y pie con número de página.</li>
+                    <li>Exporta a PDF como <code>nombre_apellido_p314.pdf</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p314">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Orientación de página configurada<span class="req">*</span></label><select id="ai_p314_f0"><option>Vertical</option><option>Horizontal</option></select></div>
+                <div class="ai-field"><label>¿Cuántas páginas ocupa la hoja tras la configuración?<span class="req">*</span></label><input type="text" id="ai_p314_f1" placeholder="1"></div>
+                <div class="ai-field"><label>¿Qué menú usaste para definir el área de impresión?<span class="req">*</span></label><input type="text" id="ai_p314_f2" placeholder="Formato → Áreas de impresión"></div>
+                <button class="ai-submit" onclick="guardarAI(314)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p314">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Configuración de página correcta</td></tr><tr><td>Orientación y escala</td><td style="text-align:right">5 pts</td></tr><tr><td>Área de impresión definida</td><td style="text-align:right">5 pts</td></tr><tr><td>Encabezado y pie</td><td style="text-align:right">5 pts</td></tr><tr><td>Exportación a PDF</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.15 · B55 ==================== -->
+    <div class="practica" id="p3-15">
+        <div class="practica-header">
+            <span class="practica-badge">💰 P3.15</span>
+            <h3>Calc · Proyecto final: Presupuesto mensual</h3>
+            <div class="practica-meta"><span>📖 B55</span><span>⏱️ 110 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span><span class="ce-tag">RA3 CE-d</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B55</strong><p><a href="RA3_OACE_Alumno.html#b55">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Aplicar todos los conceptos de Calc en un presupuesto completo.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea un presupuesto mensual con:</li>
+                    <ul><li>Ingresos: Salario (1800€), Extras (200€). TOTAL INGRESOS = SUMA</li>
+                    <li>Gastos fijos: Alquiler (600), Luz (80), Agua (35), Internet (40)</li>
+                    <li>Gastos variables: Alimentación (300), Ocio (150), Transporte (60)</li>
+                    <li>TOTAL GASTOS = SUMA</li>
+                    <li>AHORRO = TOTAL INGRESOS - TOTAL GASTOS</li></ul>
+                    <li>Aplica formato moneda a todos los valores.</li>
+                    <li>Crea un gráfico circular de los gastos fijos.</li>
+                    <li>Usa la función SI: si el ahorro es >200, "Bien", si no "Revisar".</li>
+                    <li>Configura la página para imprimir en una hoja y exporta a PDF.</li>
+                    <li>Guarda como <code>nombre_apellido_p315.ods</code> y <code>.pdf</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p315">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>TOTAL INGRESOS<span class="req">*</span></label><input type="text" id="ai_p315_f0" placeholder="2000€"></div>
+                <div class="ai-field"><label>TOTAL GASTOS<span class="req">*</span></label><input type="text" id="ai_p315_f1" placeholder="1265€"></div>
+                <div class="ai-field"><label>AHORRO calculado<span class="req">*</span></label><input type="text" id="ai_p315_f2" placeholder="735€"></div>
+                <div class="ai-field"><label>Resultado de la función SI (Bien/Revisar)<span class="req">*</span></label><select id="ai_p315_f3"><option>Bien</option><option>Revisar</option></select></div>
+                <button class="ai-submit" onclick="guardarAI(315)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p315">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Presupuesto completo correcto</td></tr><tr><td>TOTALES correctos</td><td style="text-align:right">6 pts</td></tr><tr><td>Formato y gráfico</td><td style="text-align:right">5 pts</td></tr><tr><td>Función SI</td><td style="text-align:right">4 pts</td></tr><tr><td>Configuración de página y PDF</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.16 · B56 ==================== -->
+    <div class="practica" id="p3-16">
+        <div class="practica-header">
+            <span class="practica-badge">🗄️ P3.16</span>
+            <h3>Base · Crear una base de datos y primera tabla</h3>
+            <div class="practica-meta"><span>📖 B56</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B56</strong><p><a href="RA3_OACE_Alumno.html#b56">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Crear una base de datos y diseñar una tabla con campos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Abre LibreOffice Base y selecciona "Crear base de datos nueva".</li>
+                    <li>Guarda la base de datos como <code>nombre_apellido_p316.odb</code>.</li>
+                    <li>En vista diseño, crea una tabla "Alumnos" con los campos:</li>
+                    <ul><li>ID (clave principal, auto numérico)</li><li>Nombre (Texto, longitud 50)</li><li>Apellidos (Texto, longitud 100)</li><li>Edad (Número, entero)</li><li>Email (Texto, longitud 100)</li></ul>
+                    <li>Guarda la tabla.</li>
+                    <li>Añade 5 registros de prueba.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p316">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Extensión del archivo de Base<span class="req">*</span></label><input type="text" id="ai_p316_f0" placeholder=".odb"></div>
+                <div class="ai-field"><label>Nombre de la tabla creada<span class="req">*</span></label><input type="text" id="ai_p316_f1" placeholder="Alumnos"></div>
+                <div class="ai-field"><label>¿Cuál es la clave principal de la tabla?<span class="req">*</span></label><input type="text" id="ai_p316_f2" placeholder="ID"></div>
+                <div class="ai-field"><label>Número de registros añadidos<span class="req">*</span></label><input type="text" id="ai_p316_f3" placeholder="5"></div>
+                <button class="ai-submit" onclick="guardarAI(316)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p316">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Base de datos y tabla correctas</td></tr><tr><td>Base guardada como .odb</td><td style="text-align:right">4 pts</td></tr><tr><td>Tabla con campos adecuados</td><td style="text-align:right">8 pts</td></tr><tr><td>Clave principal definida</td><td style="text-align:right">4 pts</td></tr><tr><td>Registros añadidos</td><td style="text-align:right">4 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.17 · B57 ==================== -->
+    <div class="practica" id="p3-17">
+        <div class="practica-header">
+            <span class="practica-badge">🔍 P3.17</span>
+            <h3>Base · Consultas (filtros y ordenación)</h3>
+            <div class="practica-meta"><span>📖 B57</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B57</strong><p><a href="RA3_OACE_Alumno.html#b57">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Crear consultas para filtrar y ordenar datos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Sobre la tabla Productos (creada previamente con: ID, Nombre, Categoría, Precio, Stock).</li>
+                    <li>Crea una consulta que muestre Nombre y Precio de los productos con Precio > 50€.</li>
+                    <li>Crea una consulta que muestre productos de la categoría "Electrónica" ordenados por Precio ascendente.</li>
+                    <li>Crea una consulta que muestre productos con Stock < 10 unidades.</li>
+                    <li>Guarda cada consulta con un nombre descriptivo.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p317">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>¿Cómo se añaden campos a una consulta en vista diseño?<span class="req">*</span></label><input type="text" id="ai_p317_f0" placeholder="Arrastrando desde la tabla"></div>
+                <div class="ai-field"><label>Condición usada para filtrar Precio > 50€<span class="req">*</span></label><input type="text" id="ai_p317_f1" placeholder=">50"></div>
+                <div class="ai-field"><label>¿Cómo se ordenan los resultados en una consulta?<span class="req">*</span></label><input type="text" id="ai_p317_f2" placeholder="Campo Orden en la cuadrícula"></div>
+                <button class="ai-submit" onclick="guardarAI(317)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p317">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Consultas correctas</td></tr><tr><td>Consulta con filtro (Precio >50)</td><td style="text-align:right">6 pts</td></tr><tr><td>Consulta con filtro y ordenación</td><td style="text-align:right">7 pts</td></tr><tr><td>Consulta con filtro de Stock</td><td style="text-align:right">7 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.18 · B58 ==================== -->
+    <div class="practica" id="p3-18">
+        <div class="practica-header">
+            <span class="practica-badge">🎨 P3.18</span>
+            <h3>Base · Formularios para entrada de datos</h3>
+            <div class="practica-meta"><span>📖 B58</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B58</strong><p><a href="RA3_OACE_Alumno.html#b58">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Crear formularios para facilitar la introducción de datos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea un formulario para la tabla "Clientes" (ID, Nombre, Teléfono, Email).</li>
+                    <li>Usa el asistente de formularios.</li>
+                    <li>Personaliza el formulario: fondo gris claro, bordes en los campos.</li>
+                    <li>Añade un botón "Nuevo registro".</li>
+                    <li>Prueba el formulario añadiendo 3 nuevos clientes.</li>
+                    <li>Verifica que los nuevos registros aparecen en la tabla.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p318">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Nombre del formulario creado<span class="req">*</span></label><input type="text" id="ai_p318_f0" placeholder="Formulario_Clientes"></div>
+                <div class="ai-field"><label>¿Qué tipo de control usas para escribir texto?<span class="req">*</span></label><input type="text" id="ai_p318_f1" placeholder="Campo de texto"></div>
+                <div class="ai-field"><label>Número de clientes añadidos con el formulario<span class="req">*</span></label><input type="text" id="ai_p318_f2" placeholder="3"></div>
+                <button class="ai-submit" onclick="guardarAI(318)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p318">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Formulario correcto</td></tr><tr><td>Asistente de formularios usado</td><td style="text-align:right">6 pts</td></tr><tr><td>Personalización (colores, bordes)</td><td style="text-align:right">4 pts</td></tr><tr><td>Botón "Nuevo registro"</td><td style="text-align:right">4 pts</td></tr><tr><td>Datos añadidos correctamente</td><td style="text-align:right">6 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.19 · B59 ==================== -->
+    <div class="practica" id="p3-19">
+        <div class="practica-header">
+            <span class="practica-badge">📄 P3.19</span>
+            <h3>Base · Informes (listados imprimibles)</h3>
+            <div class="practica-meta"><span>📖 B59</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B59</strong><p><a href="RA3_OACE_Alumno.html#b59">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Crear informes profesionales a partir de tablas y consultas.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea un informe a partir de la tabla "Productos" usando el asistente.</li>
+                    <li>Incluye todos los campos.</li>
+                    <li>Agrupa los productos por "Categoría".</li>
+                    <li>En el pie de grupo, añade el <strong>total de productos por categoría</strong> (función Conteo).</li>
+                    <li>En el pie de página, añade fecha y hora actual.</li>
+                    <li>Exporta el informe a PDF como <code>nombre_apellido_p319.pdf</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p319">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Campo por el que agrupaste los productos<span class="req">*</span></label><input type="text" id="ai_p319_f0" placeholder="Categoría"></div>
+                <div class="ai-field"><label>¿Qué función usaste en el pie de grupo?<span class="req">*</span></label><input type="text" id="ai_p319_f1" placeholder="Conteo"></div>
+                <div class="ai-field"><label>¿Cómo insertaste la fecha en el pie?<span class="req">*</span></label><input type="text" id="ai_p319_f2" placeholder="Insertar → Fecha"></div>
+                <button class="ai-submit" onclick="guardarAI(319)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p319">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Informe correcto</td></tr><tr><td>Informe con todos los campos</td><td style="text-align:right">5 pts</td></tr><tr><td>Agrupación por categoría</td><td style="text-align:right">5 pts</td></tr><tr><td>Conteo en pie de grupo</td><td style="text-align:right">5 pts</td></tr><tr><td>Exportación a PDF</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.20 · B60 ==================== -->
+    <div class="practica" id="p3-20">
+        <div class="practica-header">
+            <span class="practica-badge">🔗 P3.20</span>
+            <h3>Base · Relaciones entre tablas</h3>
+            <div class="practica-meta"><span>📖 B60</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B60</strong><p><a href="RA3_OACE_Alumno.html#b60">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Relacionar tablas y aplicar integridad referencial.</p>
+            <div class="pasos">
+                <ol>
+                    <<li>Crea dos tablas: <strong>Clientes</strong> (ID_cliente, Nombre, Teléfono) y <strong>Pedidos</strong> (ID_pedido, ID_cliente, Fecha, Importe).</li>
+                    <li>Define ID_cliente en Pedidos como clave foránea.</li>
+                    <li>Crea una relación 1 a N entre Clientes y Pedidos.</li>
+                    <li>Activa la <strong>integridad referencial</strong> (no se puede borrar un cliente con pedidos).</li>
+                    <li>Añade un cliente y dos pedidos suyos.</li>
+                    <li>Intenta borrar el cliente. ¿Qué ocurre? (Debe dar error).</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p320">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Tipo de relación entre Clientes y Pedidos<span class="req">*</span></label><select id="ai_p320_f0"><option>1 a N</option><option>1 a 1</option><option>N a N</option></select></div>
+                <div class="ai-field"><label>¿Qué impide la integridad referencial?<span class="req">*</span></label><input type="text" id="ai_p320_f1" placeholder="No borrar clientes con pedidos"></div>
+                <div class="ai-field"><label>Número de pedidos del cliente<span class="req">*</span></label><input type="text" id="ai_p320_f2" placeholder="2"></div>
+                <button class="ai-submit" onclick="guardarAI(320)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p320">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Relaciones correctas</td></tr><tr><td>Tablas creadas correctamente</td><td style="text-align:right">5 pts</td></tr><tr><td>Relación 1 a N establecida</td><td style="text-align:right">6 pts</td></tr><tr><td>Integridad referencial activada</td><td style="text-align:right">5 pts</td></tr><tr><td>Prueba de integridad (error al borrar)</td><td style="text-align:right">4 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.21 · B61 ==================== -->
+    <div class="practica" id="p3-21">
+        <div class="practica-header">
+            <span class="practica-badge">📚 P3.21</span>
+            <h3>Base · Proyecto final: Biblioteca</h3>
+            <div class="practica-meta"><span>📖 B61</span><span>⏱️ 110 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-e</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B61</strong><p><a href="RA3_OACE_Alumno.html#b61">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Desarrollar una base de datos completa integrando todos los conceptos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea una base de datos para una biblioteca con:</li>
+                    <ul><li>Tabla <strong>Socios</strong> (ID_socio, Nombre, Teléfono, Email, Dirección)</li>
+                    <li>Tabla <strong>Libros</strong> (ID_libro, Título, Autor, Año, ISBN)</li>
+                    <li>Tabla <strong>Préstamos</strong> (ID_prestamo, ID_socio, ID_libro, Fecha_prestamo, Fecha_devolucion)</li></ul>
+                    <li>Establece relaciones: Socios 1 a N Préstamos, Libros 1 a N Préstamos.</li>
+                    <li>Crea un formulario para Socios y otro para Libros.</li>
+                    <li>Crea una consulta que muestre los préstamos activos (fecha_devolucion vacía).</li>
+                    <li>Crea un informe de Socios ordenado alfabéticamente.</li>
+                    <li>Guarda la base como <code>nombre_apellido_p321.odb</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p321">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Número de tablas en la base de datos<span class="req">*</span></label><input type="text" id="ai_p321_f0" placeholder="3"></div>
+                <div class="ai-field"><label>¿Qué campos forman la relación entre Socios y Préstamos?<span class="req">*</span></label><input type="text" id="ai_p321_f1" placeholder="ID_socio → ID_socio"></div>
+                <div class="ai-field"><label>Número de préstamos activos (según tu consulta)<span class="req">*</span></label><input type="text" id="ai_p321_f2" placeholder="Ej: 2"></div>
+                <button class="ai-submit" onclick="guardarAI(321)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p321">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Proyecto completo</td></tr><tr><td>Estructura de tablas correcta</td><td style="text-align:right">5 pts</td></tr><tr><td>Relaciones y formularios</td><td style="text-align:right">5 pts</td></tr><tr><td>Consulta de préstamos activos</td><td style="text-align:right">5 pts</td></tr><tr><td>Informe de socios</td><td style="text-align:right">5 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.22 · B62 ==================== -->
+    <div class="practica" id="p3-22">
+        <div class="practica-header">
+            <span class="practica-badge">🎨 P3.22</span>
+            <h3>Impress · Crear una presentación básica</h3>
+            <div class="practica-meta"><span>📖 B62</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-f</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B62</strong><p><a href="RA3_OACE_Alumno.html#b62">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Crear una presentación con diapositivas y aplicar un tema.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Abre LibreOffice Impress.</li>
+                    <li>Crea una presentación de 4 diapositivas sobre "Mis aficiones".</li>
+                    <li>Diapositiva 1: Título + subtítulo.</li>
+                    <li>Diapositivas 2 y 3: Contenido (texto e imágenes).</li>
+                    <li>Diapositiva 4: Cierre (frase final).</li>
+                    <li>Aplica un tema o diseño de diapositiva a toda la presentación.</li>
+                    <li>Guarda como <code>nombre_apellido_p322.odp</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p322">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Extensión del archivo de Impress<span class="req">*</span></label><input type="text" id="ai_p322_f0" placeholder=".odp"></div>
+                <div class="ai-field"><label>Número de diapositivas creadas<span class="req">*</span></label><input type="text" id="ai_p322_f1" placeholder="4"></div>
+                <div class="ai-field"><label>¿Cómo aplicaste el tema?<span class="req">*</span></label><input type="text" id="ai_p322_f2" placeholder="Barra lateral → Estilos de diapositiva"></div>
+                <button class="ai-submit" onclick="guardarAI(322)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p322">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Presentación básica correcta</td></tr><tr><td>Estructura de 4 diapositivas</td><td style="text-align:right">6 pts</td></tr><tr><td>Contenido coherente</td><td style="text-align:right">6 pts</td></tr><tr><td>Tema aplicado</td><td style="text-align:right">4 pts</td></tr><tr><td>Archivo guardado</td><td style="text-align:right">4 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.23 · B63 ==================== -->
+    <div class="practica" id="p3-23">
+        <div class="practica-header">
+            <span class="practica-badge">✨ P3.23</span>
+            <h3>Impress · Transiciones y animaciones</h3>
+            <div class="practica-meta"><span>📖 B63</span><span>⏱️ 55 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-g</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B63</strong><p><a href="RA3_OACE_Alumno.html#b63">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Añadir transiciones entre diapositivas y animaciones a objetos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Sobre la presentación de "Mis aficiones":</li>
+                    <li>Añade una <strong>transición</strong> (disolvencia) entre todas las diapositivas.</li>
+                    <li>Configura la duración de la transición en 1 segundo.</li>
+                    <li>Aplica <strong>animación de entrada</strong> al título de la primera diapositiva (volar desde izquierda).</li>
+                    <li>Aplica <strong>animación de entrada</strong> a una imagen de la segunda diapositiva (aparecer con disolvencia).</li>
+                    <li>Prueba la presentación en modo pantalla completa (F5).</li>
+                    <li>Guarda como <code>nombre_apellido_p323.odp</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p323">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Transición aplicada a todas las diapositivas<span class="req">*</span></label><input type="text" id="ai_p323_f0" placeholder="Disolvencia"></div>
+                <div class="ai-field"><label>Duración configurada (segundos)<span class="req">*</span></label><input type="text" id="ai_p323_f1" placeholder="1"></div>
+                <div class="ai-field"><label>¿Qué objeto animaste en la segunda diapositiva?<span class="req">*</span></label><input type="text" id="ai_p323_f2" placeholder="Imagen"></div>
+                <button class="ai-submit" onclick="guardarAI(323)">💾 Guardar</button>
+                <div class="ai-ok" id="ok-p323">✅ Guardado.</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica (20 pts)</h4><table><tbody><tr><td colspan="2">Transiciones y animaciones correctas</td></tr><tr><td>Transición configurada</td><td style="text-align:right">6 pts</td></tr><tr><td>Animación al título</td><td style="text-align:right">6 pts</td></tr><tr><td>Animación a imagen</td><td style="text-align:right">6 pts</td></tr><tr><td>Archivo guardado</td><td style="text-align:right">2 pts</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <!-- ==================== PRÁCTICA 3.24 · B64 ==================== -->
+    <div class="practica" id="p3-24">
+        <div class="practica-header">
+            <span class="practica-badge">🏆 P3.24</span>
+            <h3>Impress · Presentación profesional integradora</h3>
+            <div class="practica-meta"><span>📖 B64</span><span>⏱️ 110 min</span></div>
+        </div>
+        <div class="practica-body">
+            <div class="ce-bar"><span class="ce-tag">RA3 CE-g</span><span class="ce-tag">RA3 CE-f</span></div>
+            <div class="box-apuntes"><span class="icon">📘</span><div class="content"><strong>Antes de empezar · Repasa B64</strong><p><a href="RA3_OACE_Alumno.html#b64">→ Abrir apuntes</a></p></div></div>
+            <p><strong>🎯 Objetivo:</strong> Realizar una presentación profesional integrando todos los elementos ofimáticos.</p>
+            <div class="pasos">
+                <ol>
+                    <li>Crea una presentación de 10 diapositivas sobre "Soluciones informáticas OACE".</li>
+                    <li><strong>Diapositiva 1:</strong> Portada con título, subtítulo, autor y fecha.</li>
+                    <li><strong>Diapositiva 2:</strong> Índice con enlaces a las secciones.</li>
+                    <li><strong>Diapositivas 3-4:</strong> Productos (usa una tabla creada en Writer o Calc).</li>
+                    <li><strong>Diapositiva 5:</strong> Gráfico de ventas anuales (usa un gráfico de Calc).</li>
+                    <li><strong>Diapositiva 6:</strong> Datos de clientes (tabla desde Base).</li>
+                    <li><strong>Diapositivas 7-8:</strong> Equipo y servicios.</li>
+                    <li><strong>Diapositiva 9:</strong> Conclusiones.</li>
+                    <li><strong>Diapositiva 10:</strong> Gracias y contacto.</li>
+                    <li>Aplica transiciones coherentes y animaciones discretas.</li>
+                    <li>Exporta a PDF y guarda como .odp.</li>
+                    <li>Nombra los archivos: <code>nombre_apellido_p324.odp</code> y <code>.pdf</code>.</li>
+                </ol>
+            </div>
+            <div class="ai-form" id="ai-form-p324">
+                <div class="ai-header"><span class="ai-badge">📋 Informe</span></div>
+                <div class="ai-field"><label>Número total de diapositivas<span class="req">*</span></label><input type="text" id="ai_p324_f0" placeholder="10"></div>
+                <div class="ai-field"><label>¿Qué objeto de Calc incluiste?<span class="req">*</span></label><input type="text" id="ai_p324_f1" placeholder="Gráfico / Tabla"></div>
+                <div class="ai-field"><label>¿Usaste algún dato de Base?<span class="req">*</span></label><select id="ai_p324_f2"><option>Sí</option><option>No</option></select></div>
+                <div class="ai-field"><label>Nombre del archivo PDF entregado<span class="req">*</span></label><input type="text" id="ai_p324_f3" placeholder="nombre_apellido_p324.pdf"></div>
+                <button class="ai-submit" onclick="guardarAI(324)">💾 Guardar respuestas finales</button>
+                <div class="ai-ok" id="ok-p324">✅ Práctica final completada. ¡Enhorabuena!</div>
+            </div>
+            <div class="rubrica"><h4>📊 Rúbrica final (20 pts)</h4><table><tbody><tr><td colspan="2">Presentación profesional completa</td></tr>
+            <tr><td>Estructura y contenido (10 diapositivas)</td><td style="text-align:right">6 pts</td></tr>
+            <tr><td>Integración de objetos (tabla, gráfico)</td><td style="text-align:right">5 pts</td></tr>
+            <tr><td>Transiciones y animaciones adecuadas</td><td style="text-align:right">4 pts</td></tr>
+            <tr><td>Exportación a PDF y entrega</td><td style="text-align:right">5 pts</td></tr>
+            </tbody></table></div>
+        </div>
+    </div>
+
+    <footer>
+        🧪 RA3 · Prácticas de Laboratorio · Aplicaciones Ofimáticas · 48 sesiones (B41–B64)<br>
+        LibreOffice 24.8 · Material didáctico original · Completa los formularios para tu evaluación
+    </footer>
+</div>
+
+<script>
+    // Función para guardar respuestas en localStorage
+    function guardarAI(num) {
+        const form = document.getElementById(`ai-form-p${num}`);
+        if (!form) return;
+        const inputs = form.querySelectorAll('input, select, textarea');
+        const data = {};
+        inputs.forEach(inp => { data[inp.id] = inp.value; });
+        localStorage.setItem(`p3_${num}`, JSON.stringify(data));
+        const okMsg = document.getElementById(`ok-p${num}`);
+        if (okMsg) {
+            okMsg.classList.add('show');
+            setTimeout(() => okMsg.classList.remove('show'), 3000);
+        }
+    }
+
+    // Cargar respuestas guardadas al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        // IDs: P3.1-P3.9 → 31-39, P3.10-P3.24 → 310-324
+        const pids = [31,32,33,34,35,36,37,38,39,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324];
+        pids.forEach(i => {
+            const saved = localStorage.getItem(`p3_${i}`);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.entries(data).forEach(([id, val]) => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = val;
+                    });
+                } catch(e) {}
+            }
+        });
+    });
+
+    // Botón volver arriba
+    const btnTop = document.getElementById('btnTop');
+    window.addEventListener('scroll', () => btnTop.classList.toggle('visible', window.scrollY > 400));
+    btnTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    // IntersectionObserver for nav-lateral
+    const _navLinks = document.querySelectorAll('.nav-lateral a');
+    const _practicas = document.querySelectorAll('.practica');
+    const _io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting && e.intersectionRatio > 0.2) {
+                _navLinks.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id));
+            }
+        });
+    }, { threshold: 0.2 });
+    _practicas.forEach(el => _io.observe(el));
+
+</script>
+
+</body>
+</html>

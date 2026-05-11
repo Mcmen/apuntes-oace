@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>OACE · 2º CFGB Informática | Apuntes del Curso</title>
     <style>
+        html { scroll-behavior: smooth; }
         :root {
             --azul-oscuro: #1a2744; --azul-medio: #2c5282; --azul: #3182ce; --azul-claro: #ebf4ff;
             --verde: #276749; --verde-claro: #f0fff4; --naranja: #c05621; --naranja-claro: #fffaf0;
@@ -132,7 +133,10 @@
         .progress-global {
             margin-left: auto; background: var(--gris); border-radius: 10px;
             padding: 12px 20px; text-align: center; min-width: 120px;
+            text-decoration: none; display: block; cursor: pointer;
+            transition: background 0.15s, transform 0.15s;
         }
+        .progress-global:hover { background: #e2e8f0; transform: translateY(-2px); }
         .progress-global .pg-num { font-size: 22px; font-weight: 800; color: var(--azul); }
         .progress-global .pg-label { font-size: 11px; color: var(--gris-oscuro); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
 
@@ -291,15 +295,10 @@
             <span class="nav-dot ra2"></span>RA2 · Red
         </a>
         <a href="#ra3" class="nav-link">
-            <span class="nav-dot pendiente"></span>RA3 · Ofimática
+            <span class="nav-dot ra3"></span>RA3 · Ofimática
         </a>
         <a href="#ra4" class="nav-link">
             <span class="nav-dot pendiente"></span>RA4 · Internet
-        </a>
-    </div>
-    <div class="nav-right">
-        <a href="RA1_OACE_CFGB_Alumno.html" class="nav-link" style="background:rgba(49,130,206,0.25);color:white;border-color:rgba(49,130,206,0.5);">
-            📘 Apuntes RA1
         </a>
     </div>
 </nav>
@@ -339,22 +338,22 @@
             <h2>👋 ¡Bienvenido a tus apuntes de OACE!</h2>
             <p>Aquí tienes <strong>todo el material del curso</strong>: apuntes con vídeos y ejercicios interactivos, prácticas de laboratorio y el solucionario del profesor. Elige un bloque y ¡a trabajar!</p>
         </div>
-        <div class="progress-global">
+        <a href="#ra1" class="progress-global">
             <div class="pg-num">RA1</div>
             <div class="pg-label">Disponible</div>
-        </div>
-        <div class="progress-global">
+        </a>
+        <a href="#ra2" class="progress-global">
             <div class="pg-num">RA2</div>
             <div class="pg-label">Disponible</div>
-        </div>
-        <div class="progress-global">
+        </a>
+        <a href="#ra3" class="progress-global">
             <div class="pg-num">RA3</div>
-            <div class="pg-label">Próximamente...</div>
-        </div>
-        <div class="progress-global">
+            <div class="pg-label">Disponible</div>
+        </a>
+        <a href="#ra4" class="progress-global">
             <div class="pg-num">RA4</div>
             <div class="pg-label">Próximamente...</div>
-        </div>
+        </a>
     </div>
 
     <!-- ═══════════ RA1 ═══════════ -->
@@ -560,25 +559,48 @@
             <span class="ra-title">Utilizar aplicaciones de un paquete ofimático</span>
             <div class="ra-meta">
                 <span class="ra-sesiones">⏱️ 48 sesiones · 24 bloques</span>
-                <span class="estado pendiente">📅 Pendiente</span>
+                <span class="estado activo">✅ Disponible</span>
             </div>
         </div>
         <div class="ra-body naranja">
             <div class="quick-links">
-                <span class="qlink alumno disabled">
+                <a href="RA3_OACE_Alumno.html" class="qlink alumno">
                     <span class="qi">📘</span>
-                    <span class="qt">Apuntes del alumno<small>Disponible próximamente</small></span>
-                </span>
-                <span class="qlink practicas disabled">
+                    <span class="qt">Apuntes del alumno<small>LibreOffice Writer · Calc · Base · Impress</small></span>
+                </a>
+                <a href="RA3_OACE_Practicas.html" class="qlink practicas">
                     <span class="qi">🧪</span>
-                    <span class="qt">Prácticas de laboratorio<small>Disponible próximamente</small></span>
-                </span>
+                    <span class="qt">Prácticas de laboratorio<small>24 prácticas guiadas con rúbricas</small></span>
+                </a>
             </div>
-            <div class="coming-soon">
-                <div class="cs-icon">📊</div>
-                <strong>En preparación</strong>
-                Writer, Calc e Impress de LibreOffice · Procesador de textos, hojas de cálculo y presentaciones.
+            <div class="bloques-label">🗂️ Acceso directo a cada bloque</div>
+            <div class="bloque-grid">
+                <a href="RA3_OACE_Alumno.html#b41" class="bcard"><span class="bnum">B41</span><span class="bicon">✍️</span><span class="btitle">Writer · Introducción</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b42" class="bcard"><span class="bnum">B42</span><span class="bicon">🔤</span><span class="btitle">Writer · Formato</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b43" class="bcard"><span class="bnum">B43</span><span class="bicon">📋</span><span class="btitle">Writer · Tablas y listas</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b44" class="bcard"><span class="bnum">B44</span><span class="bicon">🖼️</span><span class="btitle">Writer · Imágenes</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b45" class="bcard"><span class="bnum">B45</span><span class="bicon">🎨</span><span class="btitle">Writer · Estilos</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b46" class="bcard"><span class="bnum">B46</span><span class="bicon">📄</span><span class="btitle">Writer · Encabezados e índices</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b47" class="bcard"><span class="bnum">B47</span><span class="bicon">🔁</span><span class="btitle">Writer · Repaso</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b48" class="bcard"><span class="bnum">B48</span><span class="bicon">📊</span><span class="btitle">Calc · Introducción</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b49" class="bcard"><span class="bnum">B49</span><span class="bicon">🔢</span><span class="btitle">Calc · Datos y formato</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b50" class="bcard"><span class="bnum">B50</span><span class="bicon">➕</span><span class="btitle">Calc · Fórmulas</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b51" class="bcard"><span class="bnum">B51</span><span class="bicon">❓</span><span class="btitle">Calc · Función SI</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b52" class="bcard"><span class="bnum">B52</span><span class="bicon">📈</span><span class="btitle">Calc · Gráficos</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b53" class="bcard"><span class="bnum">B53</span><span class="bicon">🔍</span><span class="btitle">Calc · Ordenar y filtrar</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b54" class="bcard"><span class="bnum">B54</span><span class="bicon">🖨️</span><span class="btitle">Calc · Impresión</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b55" class="bcard"><span class="bnum">B55</span><span class="bicon">🔁</span><span class="btitle">Calc · Repaso</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b56" class="bcard"><span class="bnum">B56</span><span class="bicon">🗄️</span><span class="btitle">Base · Introducción</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b57" class="bcard"><span class="bnum">B57</span><span class="bicon">🔎</span><span class="btitle">Base · Consultas</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b58" class="bcard"><span class="bnum">B58</span><span class="bicon">📝</span><span class="btitle">Base · Formularios</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b59" class="bcard"><span class="bnum">B59</span><span class="bicon">📑</span><span class="btitle">Base · Informes</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b60" class="bcard"><span class="bnum">B60</span><span class="bicon">🔗</span><span class="btitle">Base · Relaciones</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b61" class="bcard"><span class="bnum">B61</span><span class="bicon">📚</span><span class="btitle">Base · Proyecto BD</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b62" class="bcard"><span class="bnum">B62</span><span class="bicon">🎨</span><span class="btitle">Impress · Introducción</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b63" class="bcard"><span class="bnum">B63</span><span class="bicon">✨</span><span class="btitle">Impress · Transiciones</span><span class="bdur">⏱️ 110 min</span></a>
+                <a href="RA3_OACE_Alumno.html#b64" class="bcard" style="border-top:3px solid #ca8a04;background:#fffbeb"><span class="bnum" style="background:#ca8a04">B64</span><span class="bicon">🏆</span><span class="btitle">Proyecto final RA3</span><span class="bdur">⏱️ 110 min</span></a>
             </div>
+        </div>
         </div>
     </div>
 

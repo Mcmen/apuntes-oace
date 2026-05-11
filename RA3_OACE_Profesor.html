@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA3 · Guía del Profesor · Ofimática | OACE CFGB</title>
+    
+    <style>
+        :root {
+            --naranja: #dd6b20;
+            --naranja-oscuro: #7b341e;
+            --naranja-claro: #fff7ed;
+            --azul-oscuro: #1a2744;
+            --verde: #166534;
+            --verde-claro: #f0fdf4;
+            --rojo: #c53030;
+            --rojo-claro: #fff5f5;
+            --purpura: #6b46c1;
+            --purpura-claro: #faf5ff;
+            --gris: #f7fafc;
+            --gris-oscuro: #4a5568;
+            --texto: #1a202c;
+            --borde: #e2e8f0;
+            --sombra: 0 4px 6px rgba(0,0,0,0.04);
+            --sombra-lg: 0 10px 25px rgba(0,0,0,0.06);
+            --radio: 12px;
+            --radio-sm: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f5f3ff;
+            color: var(--texto);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        .navbar {
+            position: sticky; top: 0; z-index: 200;
+            background: var(--purpura);
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .nav-brand .brand-badge {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex: 1;
+            overflow-x: auto;
+        }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-link {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px 13px;
+            border-radius: 18px;
+            white-space: nowrap;
+            transition: 0.15s;
+            border: 1px solid transparent;
+        }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.15); }
+        .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.35);
+        }
+        .nav-right { margin-left: auto; flex-shrink: 0; }
+        .nav-solo {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: white;
+            border-radius: 14px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .hero {
+            background: linear-gradient(160deg, #2d1b69 0%, #3d2785 40%, #5b21b6 100%);
+            color: white;
+            padding: 40px 32px 30px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -120px;
+            width: 380px;
+            height: 380px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .hero h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .hero .subtitulo {
+            font-size: 15px;
+            opacity: 0.85;
+            font-style: italic;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+            justify-content: center;
+        }
+        .hero-meta span {
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .wrapper {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 24px 20px 64px;
+        }
+        .bloque {
+            background: white;
+            border-radius: var(--radio);
+            margin-bottom: 28px;
+            box-shadow: var(--sombra);
+            border: 1px solid var(--borde);
+            overflow: hidden;
+        }
+        .bloque-header {
+            background: linear-gradient(135deg, #2d1b69, #4c1d95);
+            color: white;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .num {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-weight: 800;
+            font-size: 13px;
+            border-radius: 7px;
+            padding: 5px 12px;
+            white-space: nowrap;
+        }
+        .bloque-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            flex: 1;
+        }
+        .bloque-header .duracion {
+            background: rgba(255,255,255,0.15);
+            border-radius: 14px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .bloque-body {
+            padding: 20px 26px;
+        }
+        .box-sol {
+            background: var(--purpura-claro);
+            border-left: 4px solid var(--purpura);
+            border-radius: 0 var(--radio-sm) var(--radio-sm) 0;
+            padding: 16px 20px;
+            margin: 14px 0;
+        }
+        .box-sol .box-label {
+            color: var(--purpura);
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .box-quiz {
+            background: #fefce8;
+            border: 2px solid #ca8a04;
+            border-radius: var(--radio-sm);
+            padding: 16px 20px;
+            margin: 14px 0;
+        }
+        .box-quiz .box-label {
+            color: #92400e;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .respuesta-correcta {
+            background: #dcfce7;
+            border-left: 3px solid #22c55e;
+            padding: 8px 14px;
+            border-radius: 0 6px 6px 0;
+            margin: 8px 0;
+            font-weight: 600;
+            color: #166534;
+        }
+        .box-nota {
+            background: #fff7ed;
+            border-left: 4px solid #ea580c;
+            border-radius: 0 var(--radio-sm) var(--radio-sm) 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+        .box-nota .box-label {
+            color: #c05621;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .box-error {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            border-radius: 0 var(--radio-sm) var(--radio-sm) 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+        .box-error .box-label {
+            color: var(--rojo);
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .rubrica-sol {
+            background: var(--gris);
+            border-radius: var(--radio-sm);
+            padding: 16px 20px;
+            margin-top: 18px;
+            border: 1px solid var(--borde);
+        }
+        .rubrica-sol h4 {
+            color: var(--purpura);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+        thead tr {
+            background: var(--purpura);
+            color: white;
+        }
+        thead th {
+            padding: 9px 13px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        tbody tr:nth-child(even) {
+            background: var(--gris);
+        }
+        tbody td {
+            padding: 8px 13px;
+            border-bottom: 1px solid var(--borde);
+            vertical-align: top;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #1e40af;
+        }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        .nav-lateral {
+            position: fixed;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .nav-lateral a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--purpura);
+            color: white;
+            text-decoration: none;
+            font-size: 9px;
+            font-weight: 800;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+            transition: transform 0.15s, background 0.15s;
+        }
+        .nav-lateral a:hover {
+            transform: scale(1.25);
+            background: var(--azul-oscuro);
+        }
+        .nav-lateral a.activo {
+            background: var(--azul-oscuro);
+        }
+        .btn-top {
+            position: fixed;
+            right: 18px;
+            bottom: 24px;
+            background: var(--purpura);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: var(--sombra-lg);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-top.visible {
+            display: flex;
+        }
+        footer {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 12px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--borde);
+        }
+        @media (max-width: 720px) {
+            .hero { padding: 28px 16px; }
+            .hero h1 { font-size: 22px; }
+            .bloque-body { padding: 14px; }
+            .nav-lateral { display: none; }
+        }
+        @media print {
+            .navbar, .nav-lateral, .btn-top { display: none !important; }
+            @page { size: A4; margin: 1.8cm 2cm 2cm 2cm; }
+            .bloque { break-before: page; }
+            .bloque-header { break-after: avoid; }
+            body { background: white !important; }
+            .wrapper { max-width: 100% !important; padding: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html" class="nav-brand">
+        <span class="brand-badge">OACE</span>
+        <span>2º CFGB</span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA3_OACE_Alumno.html" class="nav-link">📘 Apuntes RA3</a>
+        <a href="RA3_OACE_Practicas.html" class="nav-link">🧪 Prácticas RA3</a>
+        <a href="RA3_OACE_Profesor.html" class="nav-link active">📋 Guía Profesor</a>
+    </div>
+    <div class="nav-right"><span class="nav-solo">🔒 Solo profesor</span></div>
+</nav>
+
+<header class="hero">
+    <div class="hero-badge">🔒 GUÍA DEL PROFESOR · RA3 · USO EXCLUSIVO DOCENTE</div>
+    <h1>📋 RA3 · Guía del Profesor — Aplicaciones Ofimáticas</h1>
+    <p class="subtitulo">Soluciones de ejercicios · Respuestas de tests · Rúbricas de corrección · Notas didácticas · B41–B64</p>
+    <div class="hero-meta">
+        <span>📋 24 bloques</span>
+        <span>🧠 24 quizzes resueltos</span>
+        <span>💡 Notas didácticas</span>
+        <span>⚠️ Errores frecuentes</span>
+    </div>
+</header>
+
+<nav class="nav-lateral" id="navLateral">
+    <a href="#b41" title="B41">41</a>
+    <a href="#b42" title="B42">42</a>
+    <a href="#b43" title="B43">43</a>
+    <a href="#b44" title="B44">44</a>
+    <a href="#b45" title="B45">45</a>
+    <a href="#b46" title="B46">46</a>
+    <a href="#b47" title="B47">47</a>
+    <a href="#b48" title="B48">48</a>
+    <a href="#b49" title="B49">49</a>
+    <a href="#b50" title="B50">50</a>
+    <a href="#b51" title="B51">51</a>
+    <a href="#b52" title="B52">52</a>
+    <a href="#b53" title="B53">53</a>
+    <a href="#b54" title="B54">54</a>
+    <a href="#b55" title="B55">55</a>
+    <a href="#b56" title="B56">56</a>
+    <a href="#b57" title="B57">57</a>
+    <a href="#b58" title="B58">58</a>
+    <a href="#b59" title="B59">59</a>
+    <a href="#b60" title="B60">60</a>
+    <a href="#b61" title="B61">61</a>
+    <a href="#b62" title="B62">62</a>
+    <a href="#b63" title="B63">63</a>
+    <a href="#b64" title="B64">64</a>
+</nav>
+
+<button class="btn-top" id="btnTop">↑</button>
+
+<div class="wrapper">
+    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:16px 22px;margin-bottom:28px;text-align:center;">
+        <p style="font-size:15px;font-weight:700;color:#92400e;">🔒 DOCUMENTO CONFIDENCIAL — Solo para uso del profesorado</p>
+        <p style="font-size:13px;color:#92400e;margin-top:4px;">No distribuir a alumnos. Contiene soluciones completas de todos los ejercicios y tests del RA3.</p>
+    </div>
+
+    <!-- ==================== B41 ==================== -->
+    <div class="bloque" id="b41">
+        <div class="bloque-header">
+            <span class="num">B41</span>
+            <h3>Introducción a LibreOffice Writer · Entorno de trabajo</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B41</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) .odt</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 .odt es el formato nativo de Writer (OpenDocument Text). .docx es de Microsoft Word, .txt es texto plano sin formato, .pdf es para distribución.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.1 · Explora Writer</div>
+                <ul>
+                    <li><strong>¿En qué barra se encuentra el botón "Guardar"?</strong> → En la barra de herramientas estándar (la superior, junto a Nuevo y Abrir).</li>
+                    <li><strong>¿Cómo se cambia el tipo de letra de un texto seleccionado?</strong> → Desde la barra de herramientas de formato, desplegable de fuentes.</li>
+                    <li><strong>¿Qué indica la tecla "INS" en la barra de estado?</strong> → Alterna entre modo INSERCIÓN (inserta letras sin borrar) y SOBRESCRITURA (reemplaza caracteres).</li>
+                    <li><strong>¿Qué extensión tiene por defecto un archivo de Writer?</strong> → .odt</li>
+                </ul>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Muchos alumnos vienen de Microsoft Word y confunden extensiones. Insiste en que .odt es el formato estándar de LibreOffice, aunque puede exportar a .docx y .pdf.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes</div>
+                <p>No diferenciar entre "Guardar" (Ctrl+G) y "Guardar como". Explica la diferencia desde el primer día.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B42 ==================== -->
+    <div class="bloque" id="b42">
+        <div class="bloque-header">
+            <span class="num">B42</span>
+            <h3>Writer · Formato de carácter y párrafo</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B42</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Ctrl + N</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Ctrl + N (Negrita), Ctrl + K (Cursiva), Ctrl + S (Subrayado). Es importante que memoricen estos atajos.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.2 · Aplica formato</div>
+                <ul>
+                    <li><strong>Título:</strong> "El formato de texto..." → negrita, tamaño 14, centrado.</li>
+                    <li><strong>Párrafo completo:</strong> justificado (Ctrl+J), interlineado 1.5 (Formato → Párrafo → Interlineado → 1.5 líneas).</li>
+                    <li><strong>Palabra "legibilidad":</strong> seleccionar → Ctrl+K (cursiva) + Ctrl+S (subrayado).</li>
+                </ul>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>El formato de párrafo (justificado, interlineado) suele confundirse con el de carácter. Haz ejercicios donde tengan que aplicar AMBOS para que vean la diferencia.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B43 ==================== -->
+    <div class="bloque" id="b43">
+        <div class="bloque-header">
+            <span class="num">B43</span>
+            <h3>Writer · Tablas y listas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B43</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Ctrl + F12</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Ctrl+F12 inserta tabla. F12 solo aplica viñetas/numeración.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.3 · Horario de clase</div>
+                <ul>
+                    <li><strong>Tabla:</strong> 6 filas × 6 columnas.</li>
+                    <li><strong>Primera fila:</strong> Hora | Lunes | Martes | Miércoles | Jueves | Viernes.</li>
+                    <li><strong>Colores de fondo:</strong> Seleccionar fila de cabecera → Formato → Párrafo → Fondo (o tabla → propiedades).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B44 ==================== -->
+    <div class="bloque" id="b44">
+        <div class="bloque-header">
+            <span class="num">B44</span>
+            <h3>Writer · Insertar imágenes y ajuste de texto</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B44</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Ajuste</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 "Ajuste" hace que el texto fluya alrededor de la imagen. "Página" la trata como un carácter más.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.4 · Documento ilustrado</div>
+                <ul>
+                    <li><strong>Insertar imagen:</strong> Insertar → Imagen → Desde archivo.</li>
+                    <li><strong>Ajuste de texto:</strong> Botón derecho sobre imagen → Ajuste → Ajuste.</li>
+                    <li><strong>Redimensionar:</strong> Tirar de las esquinas manteniendo Mayús para proporción.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B45 ==================== -->
+    <div class="bloque" id="b45">
+        <div class="bloque-header">
+            <span class="num">B45</span>
+            <h3>Writer · Estilos y plantillas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B45</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Si modificas el estilo, todos los textos que lo usan se actualizan</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Esta es la gran ventaja de los estilos frente al formato directo: consistencia y actualización global.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.5 · Crea y aplica estilos</div>
+                <ul>
+                    <li><strong>Modificar estilo:</strong> Estilos en la barra lateral → Botón derecho sobre "Título 1" → Modificar.</li>
+                    <li><strong>Cambios:</strong> Fuente Arial, tamaño 18, negrita, color azul oscuro, centrado.</li>
+                    <li><strong>Aplicar:</strong> Seleccionar texto → hacer clic en el estilo modificado.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B46 ==================== -->
+    <div class="bloque" id="b46">
+        <div class="bloque-header">
+            <span class="num">B46</span>
+            <h3>Writer · Encabezados, pies e índices automáticos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B46</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) De los estilos de título aplicados (Título 1, Título 2...)</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Por eso es IMPORTANTE usar estilos de título, no solo negrita grande.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.6 · Documento con índice</div>
+                <ul>
+                    <li><strong>Encabezado:</strong> Insertar → Encabezado → Predeterminado.</li>
+                    <li><strong>Número de página:</strong> Insertar → Número de página.</li>
+                    <li><strong>Índice:</strong> Insertar → Tabla de contenido y índice → Tabla de contenido.</li>
+                    <li><strong>Actualizar:</strong> Botón derecho sobre el índice → Actualizar índice.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B47 ==================== -->
+    <div class="bloque" id="b47">
+        <div class="bloque-header">
+            <span class="num">B47</span>
+            <h3>Writer · Repaso integrado y prueba final</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.7 · Informe completo con Writer</div>
+                <p>El informe debe contener:</p>
+                <ul>
+                    <li><strong>Portada:</strong> título, autor, fecha (formato centrado, tamaño 20-24).</li>
+                    <li><strong>Índice automático:</strong> generado a partir de Título 1 y Título 2.</li>
+                    <li><strong>Secciones:</strong> mínimo 3 con estructura jerárquica.</li>
+                    <li><strong>Tabla de ventajas/desventajas:</strong> mínimo 3 filas, bordes y formato.</li>
+                    <li><strong>Imagen con ajuste "Ajuste":</strong> texto alrededor.</li>
+                    <li><strong>Encabezado y pie:</strong> título y número de página.</li>
+                    <li><strong>PDF exportado:</strong> Archivo → Exportar como PDF.</li>
+                </ul>
+            </div>
+            <div class="rubrica-sol">
+                <h4>📊 Rúbrica de corrección del informe final Writer (20 pts)</h4>
+                <table><thead><tr><th>Criterio</th><th>Pts</th></tr></thead>
+                <tbody>
+                    <tr><td>Portada completa (título, autor, fecha)</td><td style="text-align:right">3 pts</td></tr>
+                    <tr><td>Índice automático correcto y actualizado</td><td style="text-align:right">4 pts</td></tr>
+                    <tr><td>Estructura de secciones (Título 1 y 2)</td><td style="text-align:right">4 pts</td></tr>
+                    <tr><td>Tabla con formato y contenido</td><td style="text-align:right">3 pts</td></tr>
+                    <tr><td>Imagen con ajuste "Ajuste"</td><td style="text-align:right">3 pts</td></tr>
+                    <tr><td>Encabezado y pie de página</td><td style="text-align:right">2 pts</td></tr>
+                    <tr><td>Exportación a PDF correcta</td><td style="text-align:right">1 pts</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B48 ==================== -->
+    <div class="bloque" id="b48">
+        <div class="bloque-header">
+            <span class="num">B48</span>
+            <h3>Calc · Introducción y entorno de trabajo</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B48</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) B5</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Las columnas son letras, las filas números. B5 = columna B, fila 5.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.8 · Explora Calc</div>
+                <ul>
+                    <li><strong>¿Cuántas hojas tiene un libro nuevo por defecto?</strong> → 1 hoja (en versiones recientes de LibreOffice).</li>
+                    <li><strong>Dirección de la celda fila 10, columna D:</strong> → D10.</li>
+                    <li><strong>¿Cómo se añade una nueva hoja?</strong> → '+' junto a las pestañas de hoja.</li>
+                    <li><strong>Extensión de un archivo de Calc:</strong> → .ods.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B49 ==================== -->
+    <div class="bloque" id="b49">
+        <div class="bloque-header">
+            <span class="num">B49</span>
+            <h3>Calc · Datos básicos y formato de celdas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B49</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) Empieza por el signo igual (=)</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Sin el =, Calc trata el texto como tal, no como fórmula.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.9 · Tabla de gastos</div>
+                <pre><code>Formato moneda: Seleccionar celdas → Formato → Celdas → Números → Moneda (€)
+Negrita cabeceras: Seleccionar → Ctrl+N
+Bordes: Seleccionar rango → Formato → Celdas → Bordes</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B50 ==================== -->
+    <div class="bloque" id="b50">
+        <div class="bloque-header">
+            <span class="num">B50</span>
+            <h3>Calc · Fórmulas y funciones básicas (SUMA, PROMEDIO)</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B50</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) =SUMA(B2:B10)</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 En LibreOffice Calc, la función SUM en inglés es SUMA en español.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.10 · Factura sencilla</div>
+                <pre><code>Subtotal (D2): =B2*C2
+Subtotal (D3): =B3*C3
+TOTAL (D4): =SUMA(D2:D3)</code></pre>
+                <p>Para copiar la fórmula de D2 a D3, basta arrastrar el cuadro de relleno (esquina inferior derecha).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B51 ==================== -->
+    <div class="bloque" id="b51">
+        <div class="bloque-header">
+            <span class="num">B51</span>
+            <h3>Calc · Función condicional SI</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B51</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) =SI(B2>=5; "Aprobado"; "Suspenso")</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 En Calc se usa punto y coma (;) como separador de argumentos, no coma (,).</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.11 · Calificaciones con SI</div>
+                <pre><code>Resultado: =SI(E2>=5; "Aprobado"; "Suspenso")
+Mención: =SI(E2=10; "Matrícula"; SI(E2>=9; "Sobresaliente"; SI(E2>=7; "Notable"; "Aprobado")))</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B52 ==================== -->
+    <div class="bloque" id="b52">
+        <div class="bloque-header">
+            <span class="num">B52</span>
+            <h3>Calc · Gráficos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B52</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) Circular (sectores)</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 El gráfico circular muestra proporciones de un total (porcentajes).</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.12 · Ventas por trimestre</div>
+                <ul>
+                    <li><strong>Crear gráfico:</strong> Seleccionar datos → Insertar → Gráfico → Tipo Barras.</li>
+                    <li><strong>Título:</strong> En el asistente, pestaña "Títulos".</li>
+                    <li><strong>Etiquetas de datos:</strong> Botón derecho en la barra → Insertar etiquetas de datos.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B53 ==================== -->
+    <div class="bloque" id="b53">
+        <div class="bloque-header">
+            <span class="num">B53</span>
+            <h3>Calc · Ordenar y filtrar datos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B53</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Filtrar</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 El filtro muestra un subconjunto; ordenar solo cambia el orden.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.13 · Lista de alumnos</div>
+                <ul>
+                    <li><strong>Ordenar:</strong> Seleccionar datos → Datos → Ordenar → Columna "Nombre" → Ascendente.</li>
+                    <li><strong>Autofiltro:</strong> Datos → Filtrar → Autofiltro → flecha en "Nota" → Filtro estándar → Nota >= 7.</li>
+                    <li><strong>Quitar filtro:</strong> Datos → Filtrar → Quitar filtro.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B54 ==================== -->
+    <div class="bloque" id="b54">
+        <div class="bloque-header">
+            <span class="num">B54</span>
+            <h3>Calc · Configurar página e impresión</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.14 · Preparar hoja para imprimir</div>
+                <ul>
+                    <li><strong>Orientación horizontal:</strong> Formato → Página → Pestaña Página → Orientación horizontal.</li>
+                    <li><strong>Escala:</strong> Formato → Página → Hoja → Escalar para ajustar → 80%.</li>
+                    <li><strong>Encabezado:</strong> Formato → Página → Encabezado → Editar → escribir título.</li>
+                    <li><strong>Pie con número de página:</strong> Pie de página → Insertar → Número de página.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B55 ==================== -->
+    <div class="bloque" id="b55">
+        <div class="bloque-header">
+            <span class="num">B55</span>
+            <h3>Calc · Repaso integrado (Presupuesto)</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.15 · Presupuesto mensual completo</div>
+                <pre><code>TOTAL INGRESOS: =SUMA(B2:B3)  (suponiendo Salario en B2, Extras en B3)
+TOTAL GASTOS: =SUMA(B5:B11)   (todos los gastos)
+AHORRO: =B1-B4                (Total Ingresos - Total Gastos)
+SI: =SI(AHORRO>200; "Bien"; "Revisar")</code></pre>
+                <p><strong>Gráfico circular:</strong> Seleccionar los nombres de gastos y sus valores → Insertar gráfico → Circular.</p>
+                <p><strong>Valores esperados:</strong> Ingresos=2000€, Gastos Fijos=755€, Gastos Variables=510€, Total Gastos=1265€, Ahorro=735€ → "Bien".</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B56 ==================== -->
+    <div class="bloque" id="b56">
+        <div class="bloque-header">
+            <span class="num">B56</span>
+            <h3>Base · Introducción y primera tabla</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B56</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Una fila completa de la tabla</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Registro = fila, Campo = columna. Es importante que lo memoricen.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.16 · Crea tu primera base de datos</div>
+                <p><strong>Tabla "Alumnos":</strong></p>
+                <ul>
+                    <li>ID: INTEGER, clave principal, auto valor (AutoValorado)</li>
+                    <li>Nombre: VARCHAR(50)</li>
+                    <li>Apellidos: VARCHAR(100)</li>
+                    <li>Edad: INTEGER</li>
+                    <li>Email: VARCHAR(100)</li>
+                </ul>
+                <p><strong>Registros de prueba:</strong> 5 registros con datos ficticios.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B57 ==================== -->
+    <div class="bloque" id="b57">
+        <div class="bloque-header">
+            <span class="num">B57</span>
+            <h3>Base · Consultas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B57</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) Para extraer información filtrando y ordenando</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Las consultas NO modifican los datos originales, solo los muestran.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.17 · Consulta de clientes</div>
+                <p><strong>Consulta:</strong> Mostrar Nombre y Ventas de clientes con Ventas > 1000€, ordenado por Ventas desc.</p>
+                <ul>
+                    <li><strong>Campos:</strong> Nombre, Ventas</li>
+                    <li><strong>Criterio Ventas:</strong> >1000</li>
+                    <li><strong>Orden:</strong> Ventas → Descendente</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B58 ==================== -->
+    <div class="bloque" id="b58">
+        <div class="bloque-header">
+            <span class="num">B58</span>
+            <h3>Base · Formularios</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B58</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Son más fáciles e intuitivos para los usuarios</span></p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.18 · Formulario de empleados</div>
+                <ul>
+                    <li><strong>Asistente:</strong> Formularios → Usar asistente → seleccionar tabla Empleados.</li>
+                    <li><strong>Personalización:</strong> En modo edición, cambiar fondo (barras de herramientas de formulario).</li>
+                    <li><strong>Botón nuevo registro:</strong> Agregar desde barra de navegación o insertar botón.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B59 ==================== -->
+    <div class="bloque" id="b59">
+        <div class="bloque-header">
+            <span class="num">B59</span>
+            <h3>Base · Informes</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B59</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Para presentar datos listos para imprimir</span></p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.19 · Informe de ventas</div>
+                <ul>
+                    <li><strong>Asistente de informes:</strong> Seleccionar tabla Ventas.</li>
+                    <li><strong>Agrupar por:</strong> Producto (si existe).</li>
+                    <li><strong>Campos calculados:</strong> En pie de informe, añadir campo con función SUMA(Total).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B60 ==================== -->
+    <div class="bloque" id="b60">
+        <div class="bloque-header">
+            <span class="num">B60</span>
+            <h3>Base · Relaciones entre tablas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B60</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Evita registros huérfanos (pedidos sin cliente)</span></p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.20 · Relacionar Clientes y Pedidos</div>
+                <p><strong>Estructura de tablas:</strong></p>
+                <ul>
+                    <li><strong>Clientes:</strong> ID_cliente (PK, Auto numérico), Nombre, Teléfono</li>
+                    <li><strong>Pedidos:</strong> ID_pedido (PK), ID_cliente (FK), Fecha, Importe</li>
+                </ul>
+                <p><strong>Relación:</strong> Herramientas → Relaciones → arrastrar ID_cliente de Clientes a ID_cliente de Pedidos → 1 a N.</p>
+                <p><strong>Integridad referencial:</strong> Marcar opción → impide borrar cliente con pedidos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B61 ==================== -->
+    <div class="bloque" id="b61">
+        <div class="bloque-header">
+            <span class="num">B61</span>
+            <h3>Base · Proyecto final Biblioteca</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.21 · Base de datos de biblioteca</div>
+                <p><strong>Tablas requeridas:</strong></p>
+                <ul>
+                    <li><strong>Socios:</strong> ID_socio (PK), Nombre, Teléfono, Email, Dirección</li>
+                    <li><strong>Libros:</strong> ID_libro (PK), Título, Autor, Año, ISBN</li>
+                    <li><strong>Préstamos:</strong> ID_prestamo (PK), ID_socio (FK), ID_libro (FK), Fecha_prestamo, Fecha_devolucion</li>
+                </ul>
+                <p><strong>Relaciones:</strong> Socios → Préstamos (1 a N), Libros → Préstamos (1 a N).</p>
+                <p><strong>Consulta de préstamos activos:</strong> Condición "Fecha_devolucion ES NULO" (o IS NULL).</p>
+            </div>
+            <div class="rubrica-sol">
+                <h4>📊 Rúbrica Base de datos biblioteca (20 pts)</h4>
+                <table><thead><tr><th>Criterio</th><th>Pts</th></tr></thead>
+                <tbody><tr><td>Estructura correcta de las 3 tablas</td><td style="text-align:right">6 pts</td></tr>
+                <tr><td>Claves primarias y foráneas definidas</td><td style="text-align:right">4 pts</td></tr>
+                <tr><td>Relaciones establecidas (1 a N)</td><td style="text-align:right">4 pts</td></tr>
+                <tr><td>Consulta de préstamos activos</td><td style="text-align:right">3 pts</td></tr>
+                <tr><td>Formulario para Socios o Libros</td><td style="text-align:right">3 pts</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B62 ==================== -->
+    <div class="bloque" id="b62">
+        <div class="bloque-header">
+            <span class="num">B62</span>
+            <h3>Impress · Crear una presentación básica</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B62</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) .odp</span></p>
+                <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 .odp = OpenDocument Presentation, el nativo de Impress.</p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.22 · Mi primera presentación</div>
+                <ul>
+                    <li><strong>Diapositivas:</strong> 4 mínimo (portada, contenido x2, cierre).</li>
+                    <li><strong>Diseños:</strong> Usar "Título y contenido" para las diapositivas interiores.</li>
+                    <li><strong>Tema:</strong> Barra lateral → Estilos de diapositiva → elegir uno.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B63 ==================== -->
+    <div class="bloque" id="b63">
+        <div class="bloque-header">
+            <span class="num">B63</span>
+            <h3>Impress · Transiciones y animaciones</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-quiz">
+                <div class="box-label">🧠 Solución test rápido — B63</div>
+                <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Transición es entre diapositivas, animación entre objetos</span></p>
+            </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio 3.23 · Animaciones</div>
+                <ul>
+                    <li><strong>Transición:</strong> Vista normal → seleccionar diapositiva → panel derecho "Transición de diapositiva" → elegir disolvencia → aplicar a todas.</li>
+                    <li><strong>Animación título:</strong> Seleccionar título → Animación personalizada → Añadir → Entrada → Volar.</li>
+                    <li><strong>Animación imagen:</strong> Seleccionar imagen → Añadir → Entrada → Aparecer.</li>
+                    <li><strong>Duración:</strong> En el panel de animación/transición, ajustar "Duración" a 0.5-1 segundo.</li>
+                </ul>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Las animaciones son efectivas si se usan con moderación. Una presentación con demasiadas animaciones distrae al público.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== B64 ==================== -->
+    <div class="bloque" id="b64">
+        <div class="bloque-header" style="background:linear-gradient(135deg,#92400e,#b45309)">
+            <span class="num">B64</span>
+            <h3>Proyecto final RA3 · Presentación profesional integradora</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            <div class="box-sol">
+                <div class="box-label">📋 Solución · Presentación "Soluciones informáticas OACE"</div>
+                <p><strong>Contenido mínimo esperado:</strong></p>
+                <ul>
+                    <li>10 diapositivas</li>
+                    <li>Portada con título, autor y fecha</li>
+                    <li>Índice con enlaces (opcional, pero recomendado)</li>
+                    <li>Integración de tabla desde Writer/Calc (copiar y pegar manteniendo formato)</li>
+                    <li>Gráfico desde Calc (copiar como imagen o como objeto OLE)</li>
+                    <li>Datos de clientes desde Base (copiar tabla o vincular)</li>
+                    <li>Transiciones y animaciones discretas</li>
+                    <li>Exportación a PDF</li>
+                </ul>
+            </div>
+            <div class="rubrica-sol">
+                <h4>📊 Rúbrica de corrección de la prueba final RA3 (20 pts)</h4>
+                <table><thead><tr><th>Fase</th><th>Criterio</th><th>Pts</th></tr></thead>
+                <tbody>
+                    <tr><td>Estructura</td><td>10 diapositivas, portada, índice, cierre</td><td style="text-align:right">4 pts</td></tr>
+                    <tr><td>Contenido</td><td>Productos, servicios, equipo, conclusiones</td><td style="text-align:right">4 pts</td></tr>
+                    <tr><td>Integración Writer/Calc</td><td>Tabla (Writer/Calc) + Gráfico (Calc)</td><td style="text-align:right">4 pts</td></tr>
+                    <tr><td>Integración Base</td><td>Datos de clientes desde Base</td><td style="text-align:right">3 pts</td></tr>
+                    <tr><td>Transiciones/Animaciones</td><td>Coherentes, discretas, funcionales</td><td style="text-align:right">3 pts</td></tr>
+                    <tr><td>Exportación</td><td>Archivo .odp + .pdf entregados</td><td style="text-align:right">2 pts</td></tr>
+                </tbody></table>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Esta prueba evalúa la integración de todas las herramientas ofimáticas. Los alumnos pueden copiar tablas de Writer/Calc a Impress; lo importante es que sepan cómo hacerlo y mantener el formato.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        📋 RA3 · Guía del Profesor · OACE 2º CFGB Informática · Curso 2025/26<br>
+        Material didáctico original — Uso exclusivo docente — Confidencial
+    </footer>
+</div>
+
+<script>
+    // Botón volver arriba
+    const btnTop = document.getElementById('btnTop');
+    window.addEventListener('scroll', () => btnTop.classList.toggle('visible', window.scrollY > 400));
+    btnTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Navegación lateral activa
+    const navLinks = document.querySelectorAll('.nav-lateral a');
+    const bloques = document.querySelectorAll('.bloque');
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting && e.intersectionRatio > 0.3) {
+                navLinks.forEach(a => {
+                    a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id);
+                });
+            }
+        });
+    }, { threshold: 0.3 });
+    bloques.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

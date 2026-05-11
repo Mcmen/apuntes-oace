@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RA1 · Solucionario del Profesor | Configuración en Entorno Monousuario</title>
+    <style>
+
+        :root {
+            --azul-oscuro: #1a2744; --azul-medio: #2c5282; --azul: #3182ce; --azul-claro: #ebf4ff;
+            --verde: #276749; --verde-claro: #f0fff4; --naranja: #c05621; --naranja-claro: #fffaf0;
+            --rojo: #c53030; --rojo-claro: #fff5f5; --purpura: #6b46c1; --purpura-claro: #faf5ff;
+            --gris: #f7fafc; --gris-oscuro: #4a5568; --texto: #1a202c; --borde: #e2e8f0;
+            --sombra: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+            --radio: 12px; --radio-sm: 8px; --nav-h: 52px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--texto); background: #f4f7fb;
+            font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: sticky; top: 0; z-index: 200;
+            background: var(--azul-oscuro); height: var(--nav-h);
+            display: flex; align-items: center; padding: 0 20px; gap: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 9px; color: white;
+            text-decoration: none; font-weight: 700; font-size: 14px;
+            margin-right: 20px; flex-shrink: 0;
+        }
+        .nav-brand .brand-badge {
+            background: var(--azul); color: white; border-radius: 6px;
+            padding: 3px 8px; font-size: 12px; font-weight: 800;
+        }
+        .nav-links { display: flex; align-items: center; gap: 3px; flex: 1; overflow-x: auto; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-link {
+            color: rgba(255,255,255,0.68); text-decoration: none;
+            font-size: 13px; font-weight: 600; padding: 5px 13px;
+            border-radius: 18px; white-space: nowrap; transition: 0.15s;
+            border: 1px solid transparent;
+        }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+        .nav-link.active { color: white; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); }
+        .nav-right { margin-left: auto; flex-shrink: 0; }
+
+        /* ── HERO ── */
+        .hero {
+            color: white; padding: 44px 40px 56px;
+            position: relative; overflow: hidden;
+        }
+        .hero::after {
+            content: ''; position: absolute; top: -80px; right: -120px;
+            width: 380px; height: 380px; background: rgba(255,255,255,0.03);
+            border-radius: 50%; pointer-events: none;
+        }
+        .hero::before {
+            content: ''; position: absolute; bottom: -100px; left: -60px;
+            width: 300px; height: 300px; background: rgba(255,255,255,0.025);
+            border-radius: 50%; pointer-events: none;
+        }
+        .hero-badge {
+            display: inline-block; background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.22); border-radius: 20px;
+            padding: 5px 16px; font-size: 12px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px;
+            position: relative; z-index: 1;
+        }
+        .hero h1 {
+            font-size: 28px; font-weight: 700; margin-bottom: 8px;
+            letter-spacing: -0.3px; position: relative; z-index: 1; max-width: 700px;
+        }
+        .hero .subtitulo { font-size: 15px; opacity: 0.82; font-style: italic; position: relative; z-index: 1; }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; position: relative; z-index: 1; }
+        .hero-meta span {
+            background: rgba(255,255,255,0.12); border-radius: 20px;
+            padding: 5px 14px; font-size: 12px; font-weight: 600;
+        }
+
+        /* ── LAYOUT ── */
+        .page-layout {
+            display: flex; align-items: flex-start;
+            max-width: 1200px; margin: 0 auto; padding: 0 0 64px;
+        }
+
+        /* ── LATERAL NAV ── */
+        .nav-lateral {
+            width: 196px; flex-shrink: 0;
+            position: sticky; top: calc(var(--nav-h) + 16px);
+            max-height: calc(100vh - var(--nav-h) - 32px);
+            overflow-y: auto; overflow-x: hidden;
+            padding: 16px 0 16px 16px; scrollbar-width: thin;
+        }
+        .nav-lateral::-webkit-scrollbar { width: 3px; }
+        .nav-lateral::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 3px; }
+        .nav-titulo {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.2px; color: var(--gris-oscuro); padding: 4px 10px 10px;
+        }
+        .nav-item {
+            display: block; padding: 7px 10px; border-radius: 8px;
+            text-decoration: none; font-size: 12px; font-weight: 600;
+            color: var(--gris-oscuro); transition: 0.15s; margin-bottom: 2px;
+            border-left: 3px solid transparent; line-height: 1.3;
+        }
+        .nav-item:hover { background: white; color: var(--azul-medio); border-left-color: var(--borde); }
+        .nav-item.activo { background: var(--azul-claro); color: var(--azul-medio); border-left-color: var(--azul); }
+        .nav-sep { height: 1px; background: var(--borde); margin: 8px 10px; }
+
+        /* ── CONTENT ── */
+        .content { flex: 1; min-width: 0; padding: 24px 24px 0 16px; }
+
+        /* ── CARDS ── */
+        .ra-card {
+            background: white; border-radius: var(--radio); padding: 24px 28px;
+            margin-bottom: 24px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde);
+        }
+        .ra-card h2 { font-size: 19px; color: var(--azul-oscuro); font-weight: 700; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
+
+        /* ── TABLE ── */
+        table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+        thead tr { background: var(--azul-oscuro); color: white; }
+        thead th { padding: 9px 12px; text-align: left; font-weight: 600; font-size: 11px; }
+        tbody tr:nth-child(even) { background: var(--gris); }
+        tbody td { padding: 8px 12px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+
+        /* ── CODE ── */
+        code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #1e40af; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 10px 0; }
+        pre code { background: none; color: inherit; padding: 0; }
+
+        /* ── FOOTER ── */
+        footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 32px; padding: 20px; border-top: 1px solid var(--borde); }
+
+        /* ── BACK TO TOP ── */
+        #backTop {
+            position: fixed; right: 20px; bottom: 24px; z-index: 150;
+            background: var(--azul-oscuro); color: white; border: none;
+            border-radius: 50%; width: 40px; height: 40px; font-size: 16px;
+            cursor: pointer; box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            display: none; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        #backTop:hover { background: var(--azul-medio); transform: translateY(-2px); }
+
+
+        /* Teacher-specific */
+        .bloque { background: white; border-radius: var(--radio); margin-bottom: 28px; box-shadow: var(--sombra-lg); border: 1px solid var(--borde); overflow: hidden; }
+        .bloque-header { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 14px 22px; border-bottom: 1px solid #fcd34d; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .bloque-header .num { background: #d69e2e; color: white; font-weight: 700; font-size: 13px; border-radius: 6px; padding: 5px 12px; white-space: nowrap; }
+        .bloque-header h3 { font-size: 16px; color: #92400e; font-weight: 650; flex: 1; }
+        .bloque-header .duracion { background: #fef3c7; color: #92400e; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 14px; white-space: nowrap; border: 1px solid #fcd34d; }
+        .bloque-body { padding: 22px 26px; }
+        .solution-box { background: var(--verde-claro); border-left: 4px solid var(--verde); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 14px 18px; margin: 14px 0; }
+        .solution-box .box-label { color: var(--verde); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .teaching-box { background: var(--purpura-claro); border-left: 4px solid var(--purpura); border-radius: 0 var(--radio-sm) var(--radio-sm) 0; padding: 14px 18px; margin: 14px 0; }
+        .teaching-box .box-label { color: var(--purpura); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .rubrica-box { background: var(--rojo-claro); border: 2px solid var(--rojo); border-radius: var(--radio-sm); padding: 14px 18px; margin: 14px 0; }
+        .rubrica-box .box-label { color: var(--rojo); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+
+
+        @media (max-width: 860px) {
+            .nav-lateral { display: none; }
+            .content { padding: 16px 14px 0; }
+            .hero { padding: 28px 20px 40px; }
+            .hero h1 { font-size: 22px; }
+        }
+        @media (max-width: 520px) {
+            .hero h1 { font-size: 19px; }
+            .practica-header, .bloque-header { flex-wrap: wrap; }
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html" class="nav-brand">
+        <span class="brand-badge">OACE</span>
+        <span>2º CFGB</span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA1_OACE_CFGB_Alumno.html" class="nav-link">📘 Apuntes</a>
+        <a href="RA1_OACE_Practicas.html" class="nav-link">🧪 Prácticas</a>
+        <a href="RA1_OACE_Profesor.html" class="nav-link active">📙 Solucionario</a>
+    </div>
+    <div class="nav-right">
+        <span style="background:rgba(220,38,38,0.25);color:#fca5a5;border:1px solid rgba(220,38,38,0.4);border-radius:16px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">🔒 Solo profesor</span>
+    </div>
+</nav>
+
+<header class="hero" style="background: linear-gradient(160deg, #44337a 0%, #553c9a 40%, #6b46c1 100%);">
+    <div class="hero-badge">📙 Solucionario del Profesor · CFGB Informática</div>
+    <h1>💻 RA1 · Solucionario Completo</h1>
+    <p class="subtitulo">Respuestas a todos los ejercicios + tests rápidos + refuerzo + profundización + rúbricas + notas didácticas</p>
+    <div class="hero-meta">
+        <span>📝 Soluciones ejercicios</span>
+        <span>🎯 Tests rápidos</span>
+        <span>🔧 Refuerzo</span>
+        <span>🚀 Profundización</span>
+        <span>📊 Rúbricas</span>
+        <span>📋 Notas didácticas</span>
+    </div>
+</header>
+
+<div class="page-layout">
+    <nav class="nav-lateral">
+    <div class="nav-titulo">📙 RA1 · Solucionario</div>
+        <a href="#b1" class="nav-item">B1 · ¿Qué es un SO?</a>
+        <a href="#b2" class="nav-item">B2 · Tipos de SO</a>
+        <a href="#b3" class="nav-item">B3 · Arquitectura</a>
+        <a href="#b4" class="nav-item">B4 · Arranque</a>
+        <a href="#b5" class="nav-item">B5 · Windows en VM</a>
+        <a href="#b6" class="nav-item">B6 · Ubuntu Linux</a>
+        <a href="#b7" class="nav-item">B7 · Personalización</a>
+        <a href="#b8" class="nav-item">B8 · Archivos y rutas</a>
+        <a href="#b9" class="nav-item">B9 · Operaciones</a>
+        <a href="#b10" class="nav-item">B10 · Atributos</a>
+        <a href="#b11" class="nav-item">B11 · Permisos</a>
+        <a href="#b12" class="nav-item">B12 · Almacenamiento</a>
+        <a href="#b13" class="nav-item">B13 · Periféricos</a>
+        <a href="#b14" class="nav-item">B14 · Malware</a>
+        <a href="#b15" class="nav-item">B15 · Backups</a>
+        <a href="#b16" class="nav-item">B16 · 🎓 Prueba final</a>
+</nav>
+    <div class="content">
+        <div class="ra-card" style="border-top: 4px solid var(--purpura);">
+        <h2>📙 RA1 – Solucionario del Profesor · 16 Bloques</h2>
+        <p>Este documento contiene <strong>todas las soluciones</strong> a los ejercicios planteados en los apuntes del alumno, incluyendo los <strong>tests rápidos interactivos</strong>, ejercicios principales, ejercicios de refuerzo y de profundización. También incluye las <strong>rúbricas de corrección</strong> de las 16 prácticas y <strong>notas didácticas</strong> para cada bloque.</p>
+        <p><strong>⚠️ Uso exclusivo del profesor.</strong> No distribuir a los alumnos.</p>
+    </div>
+
+    <!-- ═══════════ B1 ═══════════ -->
+    <div class="bloque" id="b1" data-nav>
+        <div class="bloque-header">
+            <span class="num">B1</span>
+            <h3>Solucionario · ¿Qué es un sistema operativo? Funciones, tipos y ejemplos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.1 · Investigación de SO</div>
+                <p><strong>1. Cajero automático:</strong> La mayoría usa <strong>Windows Embedded / Windows IoT</strong> (versiones recortadas de Windows para dispositivos especializados). Algunos usan Linux. En España, muchos cajeros de grandes bancos migraron de Windows XP Embedded a Windows 10 IoT.</p>
+                <p><strong>2. PlayStation 5:</strong> Usa <strong>Orbis OS</strong>, un sistema operativo basado en <strong>FreeBSD</strong> (una variante de Unix de código abierto). No usa Linux directamente, aunque comparte raíces Unix.</p>
+                <p><strong>3. Tesla Model 3:</strong> La pantalla central ejecuta un <strong>Linux personalizado</strong> por Tesla, con una interfaz gráfica construida en Qt. El sistema de conducción autónoma usa un sistema operativo de tiempo real aparte.</p>
+                <p><strong>4. Router WiFi doméstico:</strong> La mayoría usan <strong>Linux embebido</strong> (OpenWrt, DD-WRT, Tomato, o firmware propietario del fabricante basado en Linux).</p>
+                <p><strong>5. Apple Watch:</strong> Usa <strong>watchOS</strong>, un sistema operativo basado en iOS y Darwin (Unix), desarrollado por Apple exclusivamente para el reloj.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.1 · Relaciona funciones del SO</div>
+                <p>1. Gestión del procesador → Cuando tienes varias pestañas del navegador abiertas y música de fondo, el SO reparte el tiempo de CPU entre todas.<br>
+                2. Gestión de la memoria → Al abrir LibreOffice Writer, el SO le asigna un espacio en la RAM, separado del que usa Firefox.<br>
+                3. Gestión del almacenamiento → Cuando guardas un archivo, el SO decide en qué sector del disco se escribe físicamente.<br>
+                4. Gestión de dispositivos → Al conectar un pendrive, el SO carga el driver correspondiente y lo hace accesible.<br>
+                5. Gestión de usuarios y seguridad → Cuando intentas instalar un programa, el SO te pide la contraseña del administrador.<br>
+                6. Interfaz de usuario → El escritorio con iconos y la barra de tareas que ves al encender el ordenador.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.1 · RTOS</div>
+                <p>Un <strong>RTOS (Real-Time Operating System)</strong> es un sistema operativo diseñado para garantizar que ciertas tareas se ejecutan en un plazo de tiempo máximo predecible. A diferencia de Windows o Linux (tiempo compartido), un RTOS no prioriza la "equidad" entre procesos sino el cumplimiento estricto de plazos.</p>
+                <p><strong>Tres ejemplos de dispositivos con RTOS:</strong><br>
+                1. <strong>Marca-pasos cardíaco:</strong> Si el SO no responde a tiempo, el impulso eléctrico podría llegar en el momento equivocado del ciclo cardíaco, causando una arritmia potencialmente fatal.<br>
+                2. <strong>Sistema de frenos ABS de un coche:</strong> Si el SO tarda más de unos milisegundos en responder al detectar el bloqueo de una rueda, el coche podría derrapar y perder el control.<br>
+                3. <strong>Control de vuelo fly-by-wire de un avión (Airbus A320):</strong> Las órdenes del piloto deben procesarse en tiempo real. Un retraso en la respuesta podría causar oscilaciones peligrosas o pérdida de control.</p>
+                <p><strong>¿Windows o Ubuntu para un avión?</strong> No. Ambos son sistemas de tiempo compartido y no pueden garantizar tiempos de respuesta. Un sistema de control de vuelo crítico usa RTOS certificados como VxWorks, Integrity-178B o QNX, que están diseñados y certificados específicamente para entornos donde un fallo puede costar vidas humanas.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B1</div>
+                <p><strong>1. Pregunta:</strong> ¿Cuál es la función principal de un sistema operativo?</p>
+                <p><strong>Respuesta correcta:</strong> A) Gestionar los recursos del ordenador y hacer de intermediario entre el hardware y las aplicaciones.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 El SO no es solo el escritorio (opción B) ni solo el antivirus (opción C). Su función es coordinar TODO: procesador, memoria, disco y aplicaciones.</p>
+                <p><strong>2. Pregunta:</strong> ¿Qué pasaría si no tuvieras sistema operativo?</p>
+                <p><strong>Respuesta correcta:</strong> A) El ordenador encendería pero no podrías hacer nada útil con él.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 El hardware se encendería (la CPU ejecutaría el POST), pero sin SO no habría interfaz, no podrías abrir programas ni gestionar archivos.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B2</div>
+                <p><strong>Pregunta:</strong> ¿Qué tipo de SO necesitas para controlar los frenos de un coche?</p>
+                <p><strong>Respuesta correcta:</strong> SO de tiempo real (RTOS).</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 Un portátil de clase usa SO de tiempo compartido (multitarea). Un móvil es multiusuario (con perfiles) y multitarea. Solo el control de frenos requiere respuesta garantizada en microsegundos → RTOS.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B3</div>
+                <p><strong>Pregunta:</strong> ¿Qué capa se encarga de detectar un USB que acabas de conectar?</p>
+                <p><strong>Respuesta correcta:</strong> Kernel + Drivers.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 El fondo de escritorio lo gestiona el Shell (GUI), no el kernel directamente. Ejecutar LibreOffice implica al kernel (lanzar proceso) pero la 'ejecución' visible es una responsabilidad del Shell. Detectar hardware nuevo es siempre Kernel + Driver.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B4</div>
+                <p><strong>Pregunta:</strong> ¿Qué es el POST?</p>
+                <p><strong>Respuesta correcta:</strong> Un chequeo rápido que hace el ordenador al encenderse.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 POST = Power On Self Test. No es el programa que abre el escritorio (eso es el bootloader + kernel) ni un virus. Es el firmware (BIOS/UEFI) comprobando que CPU, RAM y periféricos básicos funcionan antes de buscar el SO.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B5</div>
+                <p><strong>Pregunta:</strong> ¿Por qué usamos VirtualBox en lugar de instalar en el ordenador real?</p>
+                <p><strong>Respuesta correcta:</strong> Porque si algo sale mal, solo borramos la VM y empezamos de nuevo.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 VirtualBox NO es más rápido que el metal real (al contrario, hay sobrecarga de virtualización). No es obligatorio por ley. La ventaja real es el aislamiento y la recuperación fácil: un error en la VM no daña el sistema anfitrión.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B6</div>
+                <p><strong>Pregunta:</strong> ¿Qué significa LTS en Ubuntu 24.04 LTS?</p>
+                <p><strong>Respuesta correcta:</strong> Long Term Support: tiene 5 años de actualizaciones de seguridad.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 LTS no significa versión ligera ni es un acrónimo sin sentido. Las versiones no-LTS de Ubuntu tienen soporte de solo 9 meses. Para un entorno educativo o de trabajo, siempre se usa LTS.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B1</div>
+                <p><strong>Dificultad esperada:</strong> Los alumnos pueden confundir "multiusuario" con "varias cuentas en el mismo PC". Aclarar que un SO monousuario como MS-DOS ni siquiera tiene concepto de cuentas de usuario; todos comparten todo.</p>
+                <p><strong>Error común:</strong> Pensar que Linux es un SO "solo para hackers" o "sin interfaz gráfica". Conviene mostrar Ubuntu con GNOME desde el primer día para romper este mito.</p>
+                <p><strong>Pregunta trampa para debate:</strong> "¿Es Android un sistema operativo de escritorio?" Respuesta: No, está diseñado para pantallas táctiles y movilidad, aunque puede ejecutarse en tablets con teclado. Su kernel es Linux, pero no es una distribución GNU/Linux de escritorio.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B2 ═══════════ -->
+    <div class="bloque" id="b2" data-nav>
+        <div class="bloque-header">
+            <span class="num">B2</span>
+            <h3>Solucionario · Tipos de SO: clasificación y software libre vs propietario</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.2 · Clasificación de SO</div>
+                <table>
+                    <thead><tr><th>SO</th><th>Monousuario/Multiusuario</th><th>Monotarea/Multitarea</th><th>Bits</th><th>Libre/Propietario</th></tr></thead>
+                    <tbody>
+                        <tr><td>Windows 11</td><td>Multiusuario</td><td>Multitarea</td><td>64 bits</td><td>Propietario</td></tr>
+                        <tr><td>Ubuntu 24.04</td><td>Multiusuario</td><td>Multitarea</td><td>64 bits (hay versión 32)</td><td>Libre (GPL)</td></tr>
+                        <tr><td>MS-DOS 6.22</td><td>Monousuario</td><td>Monotarea</td><td>16 bits</td><td>Propietario (Microsoft)</td></tr>
+                        <tr><td>Android 14</td><td>Multiusuario (perfiles)</td><td>Multitarea</td><td>64 bits</td><td>Kernel libre, capa Google propietaria</td></tr>
+                        <tr><td>iOS 17 (iPhone)</td><td>Monousuario (por diseño)</td><td>Multitarea</td><td>64 bits</td><td>Propietario (Apple)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.2 · Identifica el tipo de SO</div>
+                <p>1. Brazo robótico en fábrica → <strong>Sistema operativo de tiempo real (RTOS)</strong>. Debe garantizar que el movimiento del brazo ocurre exactamente cuando se ordena, sin retrasos.<br>
+                2. Servidor con 50 empleados → <strong>SO multiusuario y multitarea</strong> (Windows Server, Ubuntu Server). Debe gestionar conexiones simultáneas.<br>
+                3. Portátil antiguo con 2 GB RAM → <strong>SO ligero de 32 bits</strong>. Lubuntu, Linux Mint Xfce o Windows 7 32-bit si hay licencia.<br>
+                4. Solo quiero software modificable → <strong>SO de código abierto</strong>. GNU/Linux en cualquiera de sus distribuciones libres.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.2 · Debate software libre</div>
+                <p><strong>Free Software Foundation (FSF):</strong> organización fundada en 1985 por Richard Stallman para promover el software libre. Defiende las 4 libertades: usar, estudiar, modificar y distribuir el software.</p>
+                <p><strong>Richard Stallman:</strong> programador y activista estadounidense. Creó el proyecto GNU (1983), la licencia GPL y sentó las bases del movimiento del software libre.</p>
+                <p><strong>Licencia GPL (General Public License):</strong> la licencia de software libre más usada. Exige que cualquier modificación del software también se distribuya como software libre (mecanismo "copyleft"). Linux, LibreOffice y la mayoría de herramientas del curso usan GPL.</p>
+                <p><strong>Argumentos a favor del software libre en la Administración Pública:</strong> transparencia (el código puede auditarse), soberanía tecnológica (no dependes de Microsoft o Apple), ahorro en licencias, posibilidad de adaptar el software a necesidades locales, fomento de la industria local.</p>
+                <p><strong>Argumentos a favor del software propietario:</strong> soporte técnico garantizado por contrato, integración con productos existentes, responsabilidad legal del fabricante, estándares de facto en muchas industrias.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B8</div>
+                <p><strong>Pregunta:</strong> ¿Qué extensión usa Writer (LibreOffice) para guardar documentos?</p>
+                <p><strong>Respuesta correcta:</strong> A) .odt (OpenDocument Text).</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 .docx es el formato de Microsoft Word (propietario). .pdf no es editable directamente. El formato nativo de LibreOffice Writer es .odt, aunque puede guardar en .docx para compatibilidad con Word.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B9</div>
+                <p><strong>Pregunta:</strong> ¿Qué comando crea una carpeta nueva?</p>
+                <p><strong>Respuesta correcta:</strong> A) mkdir (en ambos SO, Windows y Linux).</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 <code>rmdir</code> elimina carpetas vacías (remove directory). <code>newdir</code> no existe. <code>mkdir</code> = make directory, funciona igual en cmd.exe, PowerShell y bash.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B10</div>
+                <p><strong>Pregunta:</strong> ¿Qué atributo impide que un archivo sea modificado?</p>
+                <p><strong>Respuesta correcta:</strong> A) Solo lectura (R).</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 Oculto (H) solo esconde el archivo visualmente pero sigue siendo editable. Archivo (A) indica que el fichero ha sido modificado y pendiente de backup. Solo lectura (R) es el que bloquea la escritura.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B11</div>
+                <p><strong>Pregunta:</strong> ¿Qué permiso da <code>chmod 600 archivo</code>?</p>
+                <p><strong>Respuesta correcta:</strong> Solo el dueño puede leer y escribir. Nadie más.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 600 en octal = rw------- : dueño tiene r(4)+w(2)=6, grupo y otros tienen 0. No es que todos puedan (eso sería 666) ni que nadie pueda (eso sería 000).</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B12</div>
+                <p><strong>Pregunta:</strong> ¿Qué sistema de archivos NO permite guardar archivos de más de 4 GB?</p>
+                <p><strong>Respuesta correcta:</strong> A) FAT32.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 NTFS no tiene ese límite práctico (soporta archivos de hasta 16 TB). exFAT fue diseñado específicamente para superar el límite de 4 GB de FAT32. FAT32 usa entradas de 32 bits para el tamaño del archivo, lo que limita el máximo a 4.294.967.295 bytes (≈ 4 GB).</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B13</div>
+                <p><strong>Pregunta:</strong> Una impresora es un periférico de...</p>
+                <p><strong>Respuesta correcta:</strong> A) Salida.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 La impresora recibe datos del ordenador y los convierte en papel impreso → solo salida. Un escáner sería entrada. Una pantalla táctil sería E/S.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B14</div>
+                <p><strong>Pregunta:</strong> ¿Qué tipo de malware secuestra tus archivos y te pide dinero?</p>
+                <p><strong>Respuesta correcta:</strong> A) Ransomware.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 Un virus necesita un archivo huésped para propagarse. El adware muestra publicidad. El ransomware (ransom = rescate) cifra los archivos y exige pago para descifrarlos — WannaCry (2017) fue el ejemplo más famoso.</p>
+            </div>
+
+            
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Test rápido del alumno · B15</div>
+                <p><strong>Pregunta:</strong> La estrategia 3-2-1 significa...</p>
+                <p><strong>Respuesta correcta:</strong> 3 copias, 2 tipos de soporte, 1 copia fuera de casa/trabajo.</p>
+                <p style="font-size:13px;color:#4a5568;font-style:italic;margin-bottom:12px;">💡 No son 3 archivos ni intervalos de tiempo. La regla 3-2-1 garantiza que si tu casa se inunda o hay un incendio, la copia remota (nube, oficina de un familiar) sigue intacta.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B2</div>
+                <p><strong>Dificultad esperada:</strong> El concepto de "tiempo real" es difícil de entender porque los alumnos solo han usado sistemas de tiempo compartido. Conviene poner ejemplos de consecuencias catastróficas si un RTOS falla (accidente de avión, airbag que no se despliega).</p>
+                <p><strong>Error común:</strong> "Si es gratis es libre, si es de pago es propietario". Falso. Hay software libre de pago (Red Hat Enterprise Linux) y software propietario gratuito (Google Chrome, Adobe Acrobat Reader).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B3 ═══════════ -->
+    <div class="bloque" id="b3" data-nav>
+        <div class="bloque-header">
+            <span class="num">B3</span>
+            <h3>Solucionario · Arquitectura interna del SO: kernel, shell, sistema de archivos y drivers</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.3 · Identificación de capas del SO</div>
+                <p>1. Haces doble clic y se abre Writer → <strong>Kernel (gestión de procesos y memoria)</strong>. El kernel localiza el ejecutable de Writer en el disco, le asigna un espacio en la RAM y lo lanza como un nuevo proceso.<br>
+                2. Conectas un pendrive y aparece el Explorador → <strong>Kernel + Drivers</strong>. El driver USB detecta el dispositivo, informa al kernel, y el kernel notifica al shell (Explorador) que muestre la ventana.<br>
+                3. Escribes <code>dir</code> o <code>ls</code> → <strong>Shell (CLI)</strong>. El intérprete de comandos traduce la orden a llamadas al sistema que el kernel entiende.<br>
+                4. "Necesitas permisos de administrador" → <strong>Kernel (gestión de seguridad)</strong>. El kernel comprueba los permisos del archivo contra el usuario actual y deniega la operación.<br>
+                5. Cambias el fondo de escritorio → <strong>Shell (GUI)</strong>. La interfaz gráfica procesa tu acción y envía la orden de cambio al gestor de ventanas.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.3 · Dibuja la arquitectura del SO</div>
+                <p>El diagrama debe mostrar las capas en este orden (de abajo arriba):<br>
+                <strong>Hardware</strong> (CPU, RAM, disco, periféricos) → <strong>Kernel</strong> (gestión de procesos, memoria, E/S) → <strong>Drivers</strong> (controladores de dispositivos) y <strong>Sistema de archivos</strong> (NTFS/ext4) → <strong>Shell</strong> (GUI: escritorio, ventanas; CLI: cmd, bash) → <strong>Aplicaciones de usuario</strong> (LibreOffice, Firefox).</p>
+                <p>Cada capa solo se comunica con las capas inmediatamente adyacentes. Una aplicación no habla directamente con el hardware; siempre pasa por el kernel.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.3 · Diferencias entre shells</div>
+                <p><strong>cmd.exe:</strong> El shell tradicional de Windows, heredado de MS-DOS. Interpreta comandos simples como <code>dir</code>, <code>copy</code>, <code>del</code>. Muy limitado para scripting avanzado.</p>
+                <p><strong>PowerShell:</strong> Shell moderno de Microsoft (2006). <strong>Orientado a objetos:</strong> en lugar de pasar texto entre comandos como bash, PowerShell pasa objetos .NET completos. Esto permite acceder a propiedades y métodos de los objetos directamente. Ejemplo: <code>Get-Process | Where-Object {$_.CPU -gt 100}</code>.</p>
+                <p><strong>bash:</strong> Shell estándar en la mayoría de distribuciones Linux. Trabaja con <strong>flujos de texto</strong> usando pipes (<code>|</code>). Muy potente para procesar archivos de texto, logs y automatizar tareas del sistema.</p>
+                <p><strong>zsh:</strong> Shell moderno para Linux/macOS, compatible con bash pero con mejoras: autocompletado más inteligente, temas personalizables, corrección ortográfica de comandos. Es el shell por defecto en macOS desde Catalina.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B3</div>
+                <p><strong>Dificultad esperada:</strong> El concepto de "kernel" es abstracto. Una analogía útil: el kernel es como el motor de un coche; el shell es el volante y los pedales. No ves el motor, pero sin él no funciona nada.</p>
+                <p><strong>Demo impactante:</strong> Abrir el Administrador de tareas en Windows y mostrar la pestaña "Procesos". Todos esos procesos se están ejecutando "a la vez" gracias a la planificación del kernel. Luego abrir el Monitor del sistema en Ubuntu y hacer lo mismo.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B4 ═══════════ -->
+    <div class="bloque" id="b4" data-nav>
+        <div class="bloque-header">
+            <span class="num">B4</span>
+            <h3>Solucionario · Arranque del ordenador: BIOS/UEFI, POST, bootloader y carga del SO</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.4 · Exploración de la BIOS/UEFI</div>
+                <p><strong>Diferencias visuales BIOS vs UEFI:</strong> BIOS muestra una pantalla azul y gris con texto, navegable solo con teclado (Enter, flechas, Escape). UEFI muestra una interfaz gráfica más moderna, a menudo con el logo del fabricante, y permite usar el ratón.</p>
+                <p><strong>Orden de arranque típico:</strong> 1º USB, 2º DVD/Unidad óptica, 3º Disco duro/SSD, 4º Red (PXE).</p>
+                <p><strong>Secure Boot:</strong> En la mayoría de equipos de aula suele estar activado. Si está activado, solo arrancarán SO con bootloader firmado digitalmente (Windows, Ubuntu con Secure Boot soportado).</p>
+                <p><strong>Virtualización:</strong> Es muy frecuente que en equipos de aula esté DESACTIVADA por defecto. Si es el caso, VirtualBox no podrá ejecutar máquinas virtuales de 64 bits o funcionará muy lento. Esto requerirá que el profesor o el servicio técnico la activen.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.4 · Ordena la secuencia de arranque</div>
+                <p><strong>Orden correcto:</strong><br>
+                1. Se pulsó el botón de encendido<br>
+                2. Se ejecuta el firmware BIOS/UEFI<br>
+                3. POST (Power On Self Test) — comprobación de hardware<br>
+                4. Se elige el dispositivo de arranque según el orden configurado<br>
+                5. El bootloader carga el kernel del SO<br>
+                6. Se inicia el kernel y carga los drivers esenciales<br>
+                7. Se inician los servicios en segundo plano<br>
+                8. Aparece la pantalla de login</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.4 · Dual boot y reparación de arranque</div>
+                <p><strong>Dual boot Windows + Ubuntu:</strong> Cuando instalas Ubuntu después de Windows, GRUB detecta automáticamente la instalación de Windows y añade una entrada en su menú. Al arrancar, GRUB te pregunta cuál de los dos sistemas quieres iniciar.</p>
+                <p><strong>Partición EFI:</strong> En sistemas UEFI, existe una partición especial (normalmente de 100-500 MB, formateada en FAT32) que contiene los bootloaders de todos los SO instalados. Tanto Windows como Ubuntu guardan aquí sus gestores de arranque.</p>
+                <p><strong>Problema común:</strong> Tras una actualización grande de Windows, este puede sobreescribir el bootloader por defecto y "olvidarse" de Ubuntu. El ordenador arranca directamente Windows sin mostrar el menú de GRUB.</p>
+                <p><strong>Solución con Boot-Repair:</strong> 1) Arrancar desde un USB live de Ubuntu. 2) Instalar Boot-Repair: <code>sudo add-apt-repository ppa:yannubuntu/boot-repair && sudo apt update && sudo apt install boot-repair</code>. 3) Ejecutar Boot-Repair y elegir "Reparación recomendada". La herramienta reinstala GRUB y vuelve a detectar Windows.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B4</div>
+                <p><strong>Precaución:</strong> Antes de mandar al alumnado a explorar la BIOS/UEFI, asegúrate de que la BIOS no tiene contraseña puesta. Si la tiene, no podrán acceder o podrían bloquear el equipo.</p>
+                <p><strong>Error común:</strong> "La BIOS es lo mismo que el SO". La BIOS/UEFI es firmware, no forma parte del SO. Se ejecuta antes que el SO y su única misión es preparar el hardware y ceder el control al bootloader.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B5 ═══════════ -->
+    <div class="bloque" id="b5" data-nav>
+        <div class="bloque-header">
+            <span class="num">B5</span>
+            <h3>Solucionario · Instalación de Windows 11 en VirtualBox</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.5 · Documenta la instalación de Windows</div>
+                <p><strong>1. Tiempo de instalación:</strong> Típicamente 20-40 minutos dependiendo de la velocidad del disco del equipo anfitrión. Si el disco es SSD, más cerca de 20 min; si es HDD, más cerca de 40 min.</p>
+                <p><strong>2. Espacio ocupado por la VM:</strong> Recién instalado, el archivo .vdi ocupa entre 15 y 25 GB (aunque hayas asignado 60 GB, al ser dinámico solo ocupa lo que realmente se usa).</p>
+                <p><strong>3. Opciones de privacidad:</strong> Windows 11 pregunta sobre: ubicación, diagnóstico, anuncios personalizados, sugerencias de contenido, actividad en la nube... Es buena práctica desactivar la mayoría durante la instalación y revisarlas después.</p>
+                <p><strong>4. Cuenta Microsoft vs cuenta local:</strong> Windows 11 insiste en crear una cuenta Microsoft. Para crear una cuenta local: durante la instalación, en la pantalla de "inicia sesión", elegir "Opciones de inicio de sesión" → "Cuenta sin conexión" → "Experiencia limitada".</p>
+                <p><strong>5. RAM consumida en reposo:</strong> Windows 11 recién instalado consume entre 2.5 y 3.5 GB de RAM sin abrir ningún programa adicional.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.5 · Identifica errores de instalación</div>
+                <p>1. "No se encontró ningún dispositivo de arranque" → <strong>a) La ISO no está montada</strong> como unidad óptica en VirtualBox.<br>
+                2. "Este equipo no cumple los requisitos mínimos" → <strong>b) La RAM asignada es inferior a 4 GB</strong> o el TPM no está habilitado.<br>
+                3. "No se puede instalar Windows en este disco" → <strong>c) El disco está configurado como SSD NVMe sin driver.</strong> Cambiar a SATA en la configuración de la VM.<br>
+                4. "La virtualización está desactivada" → <strong>d) VT-x/AMD-V no está activado en la BIOS.</strong></p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.5 · Instalación desatendida</div>
+                <p>Un <strong>archivo de respuesta (autounattend.xml)</strong> es un archivo XML que contiene todas las respuestas que el instalador de Windows haría durante una instalación interactiva (idioma, teclado, particionado, clave de producto, usuario...). Permite automatizar la instalación sin intervención humana.</p>
+                <p><strong>Ventaja para 30 ordenadores:</strong> En lugar de sentarte 30 veces a responder las mismas preguntas, preparas un USB bootable con la ISO de Windows + el archivo <code>autounattend.xml</code> en la raíz. Arrancas los 30 equipos desde USB y se instalan solos.</p>
+                <p><strong>Herramienta oficial:</strong> <strong>Windows System Image Manager (WSIM)</strong>, incluido en el <strong>Windows ADK (Assessment and Deployment Kit)</strong>. Es una herramienta gráfica que permite generar y validar archivos de respuesta sin necesidad de escribir XML a mano.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B5</div>
+                <p><strong>Problema frecuente:</strong> Alumnos que asignan solo 2 GB de RAM a la VM de Windows 11. No arranca o va extremadamente lento. Insistir en que 4 GB es el mínimo funcional.</p>
+                <p><strong>Consejo:</strong> Si el aula tiene VirtualBox instalado pero la virtualización por hardware no está activada en BIOS, las VMs de 64 bits no funcionarán. Comprobadlo ANTES de esta sesión.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B6 ═══════════ -->
+    <div class="bloque" id="b6" data-nav>
+        <div class="bloque-header">
+            <span class="num">B6</span>
+            <h3>Solucionario · Instalación de Ubuntu Linux y comparativa con Windows</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.6 · Comparativa de instalaciones</div>
+                <p><strong>1. ¿Qué instalación fue más rápida?</strong> Ubuntu suele ser más rápido (15-25 min vs 20-40 min de Windows) porque tiene menos datos que copiar y no incluye tanta telemetría.</p>
+                <p><strong>2. Pantalla de inicio de sesión:</strong> Windows muestra una imagen de fondo con la hora y el nombre del último usuario. Ubuntu (GNOME) muestra un fondo más minimalista con el nombre del usuario y un campo de contraseña. Ambas son funcionales pero estéticamente diferentes.</p>
+                <p><strong>3. RAM consumida en reposo:</strong> Windows 11: 2.5-3.5 GB. Ubuntu 24.04 (GNOME): 1.2-1.8 GB. Ubuntu es más ligero. Procesos activos: Windows 150-200, Ubuntu 80-120.</p>
+                <p><strong>4. Software preinstalado en Ubuntu que no viene en Windows:</strong> LibreOffice completo, Thunderbird, reproductor de vídeo, visor de PDF, utilidad de discos. <strong>En Windows que no viene en Ubuntu:</strong> Edge, Paint, Bloc de notas, Xbox, Cortana.</p>
+                <p><strong>5. Creación de usuario:</strong> En Ubuntu es más simple: nombre, contraseña y ya. En Windows insiste en vincular a cuenta Microsoft (aunque se puede evitar con pasos adicionales).</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.6 · Completar la instalación</div>
+                <p>1. Writer debe abrirse y permitir guardar sin problemas. Si pide formato, usar .odt (formato nativo de Writer).<br>
+                2. Firefox debe abrirse y cargar páginas normalmente. Ubuntu incluye Firefox como snap.<br>
+                3. <code>ls -la</code> mostrará los archivos de la carpeta personal, incluyendo los ocultos (con punto).<br>
+                4. <code>df -h</code> debería mostrar que el sistema ocupa entre 8 y 12 GB (mucho menos que Windows).</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.6 · Otras distribuciones Linux</div>
+                <p><strong>Linux Mint:</strong> Basada en Ubuntu, interfaz Cinnamon (muy parecida a Windows en aspecto). Ideal para quien migra desde Windows. Incluye códecs multimedia de serie.<br>
+                <strong>Fedora Workstation:</strong> Distribución de vanguardia patrocinada por Red Hat. Usa GNOME puro, paquetes muy actualizados. Más orientada a desarrolladores y entusiastas.<br>
+                <strong>Debian:</strong> La "abuela" de Ubuntu. Extremadamente estable pero con software más antiguo. Ideal para servidores y equipos que no pueden permitirse fallos.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B6</div>
+                <p><strong>Momento "wow":</strong> Mostrar que Ubuntu ya viene con LibreOffice instalado y listo para usar. "Acabas de instalar el SO y ya puedes escribir documentos, hacer hojas de cálculo y presentaciones. En Windows tendrías que comprar Office o descargar algo adicional."</p>
+                <p><strong>Error común:</strong> Olvidar la contraseña de Ubuntu. En Linux, la contraseña se usa para TODO (instalar, configurar, actualizar). Si el alumno la olvida, en una VM se puede reiniciar en modo recovery, pero es un engorro.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B7 ═══════════ -->
+    <div class="bloque" id="b7" data-nav>
+        <div class="bloque-header">
+            <span class="num">B7</span>
+            <h3>Solucionario · Personalización del entorno, temas y accesibilidad</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.7 · Personaliza tu entorno</div>
+                <p>1-4. Tareas de personalización sin una respuesta "correcta" única. Se evalúa que hayan realizado los cambios solicitados (fondo, modo oscuro, anclaje de apps, organización del menú inicio).</p>
+                <p><strong>5. Experiencia con el lector de pantalla:</strong> Los alumnos suelen describir frustración, dificultad para ubicarse, lentitud. Reflexión esperada: "Ahora entiendo mejor las dificultades que enfrenta una persona con discapacidad visual al usar un ordenador. La accesibilidad no es un lujo, es una necesidad."</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.7 · Organiza tu espacio de trabajo</div>
+                <p>Verificar que la estructura de carpetas coincide exactamente con la solicitada, incluyendo la capitalización y los nombres correctos de las carpetas.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.7 · Extensiones de GNOME</div>
+                <p><strong>Extensiones populares de GNOME:</strong><br>
+                1. <strong>Dash to Dock:</strong> convierte el dock de Ubuntu en una barra más parecida a Windows (personalizable).<br>
+                2. <strong>GSConnect:</strong> integra el móvil Android con el escritorio (notificaciones, archivos, llamadas).<br>
+                3. <strong>OpenWeather:</strong> muestra el tiempo actual en la barra superior.</p>
+                <p><strong>Comparación con Widgets de Windows 11:</strong> los widgets de Windows son paneles informativos (noticias, clima, calendario) desarrollados por Microsoft. Las extensiones de GNOME son creadas por la comunidad, mucho más variadas y personalizables, pero con soporte menos garantizado.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B7</div>
+                <p><strong>Sensibilización:</strong> Al hacer la prueba del lector de pantalla, algunos alumnos se ríen al principio. Es un buen momento para hablar de respeto, inclusión y de por qué la accesibilidad es un derecho, no un extra.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B8 ═══════════ -->
+    <div class="bloque" id="b8" data-nav>
+        <div class="bloque-header">
+            <span class="num">B8</span>
+            <h3>Solucionario · Sistema de archivos: rutas, extensiones, estructura</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.8 · Rutas y extensiones</div>
+                <p><strong>Rutas absolutas típicas:</strong><br>
+                Windows: Documentos → <code>C:\Users\[usuario]\Documents</code>, Descargas → <code>C:\Users\[usuario]\Downloads</code>, Escritorio → <code>C:\Users\[usuario]\Desktop</code><br>
+                Ubuntu: Documentos → <code>/home/[usuario]/Documentos</code>, Descargas → <code>/home/[usuario]/Descargas</code>, Escritorio → <code>/home/[usuario]/Escritorio</code></p>
+                <p><strong>Ruta absoluta vs relativa:</strong> Absoluta empieza desde la raíz (C:\ o /). Relativa empieza desde la posición actual. Ejemplo: si estás en <code>/home/alumno/</code>, la ruta relativa <code>Documentos/archivo.txt</code> equivale a la absoluta <code>/home/alumno/Documentos/archivo.txt</code>.</p>
+                <p><strong>Extensiones de LibreOffice:</strong> Writer → <code>.odt</code>, Calc → <code>.ods</code>, Impress → <code>.odp</code>.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.8 · Identifica tipos de archivo</div>
+                <p>1. <code>presentacion.odp</code> → Presentación de LibreOffice Impress<br>
+                2. <code>foto_vacaciones.jpg</code> → Imagen (se abre con Visor de imágenes)<br>
+                3. <code>presupuesto_2025.ods</code> → Hoja de cálculo de LibreOffice Calc<br>
+                4. <code>carta_cliente.odt</code> → Documento de texto de LibreOffice Writer<br>
+                5. <code>musica_fondo.mp3</code> → Archivo de audio (reproductor multimedia)<br>
+                6. <code>comprimido.zip</code> → Archivo comprimido (se abre con el gestor de archivos)</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.8 · Permisos en Linux</div>
+                <p><strong><code>-rwxr-xr--</code></strong> se descompone así:<br>
+                - Primer guión: es un archivo normal (no directorio).<br>
+                - <code>rwx</code> (dueño): lectura, escritura y ejecución → octal 7<br>
+                - <code>r-x</code> (grupo): lectura y ejecución, sin escritura → octal 5<br>
+                - <code>r--</code> (otros): solo lectura → octal 4<br>
+                <strong>Octal equivalente: 754</strong></p>
+                <p>Para que solo el dueño pueda leer y escribir: <code>chmod 600 archivo</code> (dueño: rw-, grupo y otros: sin permisos).</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B8</div>
+                <p><strong>Error muy común:</strong> Los alumnos confunden las barras de Windows (\) con las de Linux (/). En Windows, <code>cd /</code> no funciona; en Linux, <code>cd \</code> no funciona. Conviene practicar esto explícitamente.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B9 ═══════════ -->
+    <div class="bloque" id="b9" data-nav>
+        <div class="bloque-header">
+            <span class="num">B9</span>
+            <h3>Solucionario · Operaciones con archivos y carpetas (GUI + terminal)</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.9 · Practica operaciones con archivos</div>
+                <p><strong>Comandos esperados (Windows CLI):</strong></p>
+                <pre><code>mkdir PRACTICAS
+cd PRACTICAS
+mkdir Modulo1\Apuntes Modulo1\Ejercicios Modulo2\Apuntes Modulo2\Ejercicios
+echo Notas del curso > Modulo1\Apuntes\notas.txt
+copy Modulo1\Apuntes\notas.txt Modulo2\Apuntes\notas_copia.txt
+move Modulo2\Apuntes\notas_copia.txt Modulo2\Ejercicios\
+del Modulo1\Apuntes\notas.txt  (va a la papelera)</code></pre>
+                <p><strong>Comandos esperados (Ubuntu CLI):</strong></p>
+                <pre><code>mkdir -p PRACTICAS/Modulo1/{Apuntes,Ejercicios} PRACTICAS/Modulo2/{Apuntes,Ejercicios}
+echo "Notas del curso" > PRACTICAS/Modulo1/Apuntes/notas.txt
+cp PRACTICAS/Modulo1/Apuntes/notas.txt PRACTICAS/Modulo2/Apuntes/notas_copia.txt
+mv PRACTICAS/Modulo2/Apuntes/notas_copia.txt PRACTICAS/Modulo2/Ejercicios/
+rm PRACTICAS/Modulo1/Apuntes/notas.txt  ⚠️ borrado PERMANENTE</code></pre>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.9 · Comandos básicos de terminal</div>
+                <p>1. <code>dir</code> → Lista archivos y carpetas en el directorio actual (Windows)<br>
+                2. <code>ls -la</code> → Lista archivos incluyendo ocultos, con detalles (Linux)<br>
+                3. <code>cd ..</code> → Sube al directorio padre (ambos)<br>
+                4. <code>mkdir practica</code> → Crea una carpeta llamada practica (ambos)<br>
+                5. <code>rm -rf carpeta</code> → Borra una carpeta y todo su contenido sin preguntar (Linux, muy peligroso)<br>
+                6. <code>copy a.txt b.txt</code> → Copia a.txt a b.txt (Windows)</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.9 · Scripts de automatización</div>
+                <p><strong>Script para Windows (.bat):</strong></p>
+                <pre><code>@echo off
+mkdir "%USERPROFILE%\Desktop\Backup"
+copy C:\Origen\*.txt "%USERPROFILE%\Desktop\Backup\"
+echo Copia finalizada
+pause</code></pre>
+                <p><strong>Script para Linux (.sh):</strong></p>
+                <pre><code>#!/bin/bash
+mkdir -p ~/Escritorio/Backup
+cp /ruta/origen/*.txt ~/Escritorio/Backup/
+echo "Copia finalizada"</code></pre>
+                <p>El script de Linux debe tener permisos de ejecución: <code>chmod +x script.sh</code>.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B9</div>
+                <p><strong>Momento crítico:</strong> Cuando los alumnos usan <code>rm</code> en Linux por primera vez. Insistir en que NO hay papelera en la terminal. Borrado = permanente. Recomendar <code>rm -i</code> para que pregunte antes de borrar.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B10 ═══════════ -->
+    <div class="bloque" id="b10" data-nav>
+        <div class="bloque-header">
+            <span class="num">B10</span>
+            <h3>Solucionario · Atributos de archivos: solo lectura, oculto, sistema</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.10 · Experimenta con atributos</div>
+                <p><strong>2. Solo lectura:</strong> Al intentar guardar cambios, el Bloc de notas (o cualquier editor) mostrará "Acceso denegado" o sugerirá "Guardar como" con otro nombre. No puedes sobrescribir un archivo de solo lectura.</p>
+                <p><strong>3. Atributo oculto:</strong> Sí, el archivo desaparece visualmente del escritorio. Para verlo: en el Explorador → pestaña Vista → marcar "Elementos ocultos".</p>
+                <p><strong>4. <code>attrib importante.txt</code>:</strong> Si tiene solo lectura y oculto, mostrará: <code>A  RH  C:\Users\...</code>. R = Read-only, H = Hidden. La A = Archive (está pendiente de backup porque fue modificado).</p>
+                <p><strong>5.</strong> Después de <code>attrib -r -h importante.txt</code>, el archivo vuelve a ser visible y editable.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.10 · Identifica atributos</div>
+                <p>1. Archivo de configuración consultable pero no modificable → <strong>Solo lectura (R)</strong><br>
+                2. Archivo del sistema que no debe verse ni tocarse → <strong>Oculto (H) + Sistema (S)</strong><br>
+                3. Documento modificado que necesita backup → <strong>Archivo (A)</strong>. Windows lo activa automáticamente al modificar el archivo.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.10 · ADS en NTFS</div>
+                <p>Los <strong>Alternate Data Streams (ADS)</strong> son una característica de NTFS que permite adjuntar datos ocultos a un archivo sin modificar su contenido visible. Por ejemplo: <code>echo "Hola" > archivo.txt:oculto.txt</code> crea un flujo alternativo llamado <code>oculto.txt</code> dentro de <code>archivo.txt</code>. El archivo parece normal, pero tiene datos escondidos.</p>
+                <p><strong>Para leerlo:</strong> <code>more &lt; archivo.txt:oculto.txt</code> o <code>notepad archivo.txt:oculto.txt</code>.</p>
+                <p><strong>Relevancia seguridad:</strong> Los ADS pueden ser usados por malware para ocultar código malicioso. Un antivirus debe escanear también los flujos alternativos. Para listar flujos: <code>dir /r</code> en cmd.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B11 ═══════════ -->
+    <div class="bloque" id="b11" data-nav>
+        <div class="bloque-header">
+            <span class="num">B11</span>
+            <h3>Solucionario · Permisos en Windows (NTFS) y Linux (chmod)</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.11 · Configura permisos</div>
+                <p><strong>Windows:</strong> Al quitar todos los permisos al usuario <code>Invitado</code> en la carpeta <code>Privada</code>, al iniciar sesión como ese usuario e intentar acceder a <code>C:\Privada\</code>, Windows mostrará: "No tiene permiso para acceder a esta carpeta". Si se quitaron incluso los permisos de "Listar contenido de carpeta", la carpeta ni siquiera será visible.</p>
+                <p><strong>Ubuntu:</strong> Después de <code>chmod 600 ~/confidencial.txt</code>, <code>ls -l</code> mostrará <code>-rw-------</code>. Solo el dueño puede leer y escribir. Si otro usuario intenta leerlo (<code>sudo -u otro cat ~/confidencial.txt</code>), obtendrá "Permission denied".</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.11 · Calcula permisos octales</div>
+                <p>1. <code>rwxr-xr-x</code> → <strong>755</strong> (rwx=7, r-x=5, r-x=5)<br>
+                2. <code>rw-r--r--</code> → <strong>644</strong> (rw-=6, r--=4, r--=4)<br>
+                3. <code>rwx------</code> → <strong>700</strong> (rwx=7, ---=0, ---=0)<br>
+                4. <code>chmod 754</code> → <strong>rwxr-xr--</strong> (dueño rwx, grupo r-x, otros r--)</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.11 · Permisos especiales</div>
+                <p><strong>SUID (Set User ID, octal 4---):</strong> Un archivo con SUID se ejecuta con los privilegios del PROPIETARIO del archivo, no del usuario que lo ejecuta. Ejemplo: <code>/usr/bin/passwd</code> pertenece a root, pero cualquier usuario puede cambiar su propia contraseña porque passwd tiene SUID activo. Sin SUID, un usuario normal no podría modificar /etc/shadow.</p>
+                <p><strong>SGID (Set Group ID, octal 2---):</strong> Similar pero para grupos. En una carpeta con SGID, los archivos creados dentro heredan el grupo de la carpeta, no el grupo del usuario que los crea. Muy útil en carpetas compartidas de trabajo en equipo.</p>
+                <p><strong>Sticky Bit (octal 1---):</strong> En una carpeta como <code>/tmp</code>, todos pueden crear archivos, pero solo el PROPIETARIO puede borrarlos, aunque otros tengan permiso de escritura en la carpeta. Sin Sticky Bit, cualquier usuario podría borrar archivos de otros en <code>/tmp</code>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B12 ═══════════ -->
+    <div class="bloque" id="b12" data-nav>
+        <div class="bloque-header">
+            <span class="num">B12</span>
+            <h3>Solucionario · Exploración de soportes de almacenamiento</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.12 · Administración de almacenamiento</div>
+                <p><strong>Windows:</strong> El Administrador de discos mostrará normalmente 1 disco (Disco 0) con 2-3 particiones (recuperación, arranque EFI, C:). C: suele ocupar la mayor parte del disco.</p>
+                <p><strong>Ubuntu:</strong> <code>lsblk -f</code> mostrará los discos con sus sistemas de archivos (ext4 para la raíz, vfat para EFI). <code>df -h</code> mostrará el espacio usado y disponible.</p>
+                <p><strong>FAT32:</strong> El tamaño máximo de archivo individual en FAT32 es <strong>4 GB</strong>. No podrás guardar archivos mayores que eso, aunque el disco tenga espacio libre.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.12 · Elige el sistema de archivos</div>
+                <p>1. Pendrive 64 GB para Windows/Mac/Linux → <strong>exFAT</strong>. Es compatible con los tres SO y no tiene el límite de 4 GB de FAT32.<br>
+                2. Disco para Ubuntu → <strong>ext4</strong>. Es el sistema de archivos nativo de Linux, ofrece buen rendimiento y journaling.<br>
+                3. Disco externo 4 TB para backups en Windows → <strong>NTFS</strong>. Soporta archivos enormes, tiene permisos y journaling. Para backups es ideal.<br>
+                4. Tarjeta SD de cámara antigua → <strong>FAT32</strong>. Muchas cámaras antiguas solo reconocen FAT32.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.12 · RAID</div>
+                <p><strong>RAID 0 (striping):</strong> Divide los datos entre 2 o más discos. Mejora la velocidad pero no hay redundancia. Si falla UN disco, se pierde TODO. Solo para velocidad.</p>
+                <p><strong>RAID 1 (mirroring):</strong> Duplica los datos en 2 discos idénticos. Si falla uno, el otro sigue funcionando. Capacidad = la del disco más pequeño. Ideal para el SO.</p>
+                <p><strong>RAID 5 (striping con paridad):</strong> Necesita mínimo 3 discos. Divide los datos y guarda información de paridad para reconstruir lo perdido si falla UN disco. Buen equilibrio velocidad/capacidad/redundancia. Muy usado en servidores.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B13 ═══════════ -->
+    <div class="bloque" id="b13" data-nav>
+        <div class="bloque-header">
+            <span class="num">B13</span>
+            <h3>Solucionario · Periféricos: drivers, administrador de dispositivos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.13 · Identificación de periféricos y drivers</div>
+                <p>Los alumnos deben identificar al menos 10 periféricos en el Administrador de dispositivos. La clasificación esperada es: teclado (entrada), ratón (entrada), monitor (salida), disco duro (E/S), tarjeta de red (E/S), tarjeta gráfica (salida), webcam (entrada), micrófono (entrada), altavoces (salida), impresora (salida).</p>
+                <p><strong>Driver de la tarjeta gráfica:</strong> Si es una VM de VirtualBox, el driver será "VirtualBox Graphics Adapter". La fecha y versión dependerán de la versión de VirtualBox y Guest Additions instaladas.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.13 · Clasifica periféricos</div>
+                <p>1. Escáner → <strong>Entrada</strong><br>
+                2. Proyector → <strong>Salida</strong><br>
+                3. Pantalla táctil → <strong>Entrada/Salida</strong> (muestra imágenes y recibe toques)<br>
+                4. Cascos con micrófono → <strong>Entrada/Salida</strong> (altavoces de salida, micrófono de entrada)<br>
+                5. Lector de código de barras → <strong>Entrada</strong></p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.13 · Drivers genéricos vs fabricante</div>
+                <p><strong>Driver genérico:</strong> incluido en Windows. Proporciona funcionalidad básica y suele ser estable. Ejemplo: el driver de impresora "HP Universal Print Driver" permite imprimir en casi cualquier HP, pero solo imprime, no escanea.</p>
+                <p><strong>Driver del fabricante:</strong> descargado de la web oficial. Ofrece todas las funciones, mejor rendimiento y a menudo herramientas adicionales. Ejemplo: el driver específico de una impresora HP multifunción permite escanear, ver niveles de tinta y usar funciones avanzadas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B14 ═══════════ -->
+    <div class="bloque" id="b14" data-nav>
+        <div class="bloque-header">
+            <span class="num">B14</span>
+            <h3>Solucionario · Antivirus y protección contra malware</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.14 · Configura tu protección antivirus</div>
+                <p><strong>Windows:</strong> El examen rápido suele tardar 1-3 minutos y analizar 20.000-50.000 archivos. Normalmente no encuentra amenazas (a menos que el equipo esté infectado).</p>
+                <p><strong>Ubuntu:</strong> ClamAV en una instalación limpia de Ubuntu no suele encontrar nada. El escaneo debería devolver "0 infected files".</p>
+                <p><strong>Test EICAR:</strong> Windows Defender debe detectar el archivo <code>eicar.com</code> inmediatamente al guardarlo (o incluso antes, al intentar crearlo) y ponerlo en cuarentena. Esto demuestra que el antivirus está funcionando en tiempo real.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.14 · Identifica el tipo de amenaza</div>
+                <p>1. Cifra documentos y pide rescate → <strong>Ransomware</strong><br>
+                2. Muestra publicidad invasiva → <strong>Adware</strong><br>
+                3. Se propaga solo por la red → <strong>Gusano (Worm)</strong></p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.14 · Caso WannaCry</div>
+                <p><strong>WannaCry (mayo 2017):</strong> Ataque de ransomware que afectó a más de 200.000 equipos en 150 países. Se propagaba automáticamente como un gusano usando la vulnerabilidad <strong>EternalBlue</strong> (MS17-010) en el protocolo SMB de Windows, supuestamente desarrollada por la NSA y filtrada por el grupo Shadow Brokers.</p>
+                <p><strong>Sectores más afectados:</strong> NHS (sanidad británica), Telefónica, Renault, FedEx. Muchos hospitales tuvieron que cancelar operaciones.</p>
+                <p><strong>Cómo se detuvo:</strong> El investigador Marcus Hutchins (@MalwareTech) descubrió que el malware intentaba conectar con un dominio no registrado. Al registrar ese dominio, activó accidentalmente un "kill switch" que detuvo la propagación.</p>
+                <p><strong>¿Podría repetirse?</strong> Sí. Aunque EternalBlue fue parcheado, constantemente se descubren nuevas vulnerabilidades. La defensa: mantener sistemas actualizados, backups offline y segmentación de red.</p>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B14</div>
+                <p><strong>Cuidado con el archivo EICAR:</strong> Algunos antivirus pueden alarmarse. Explicar antes que es INOFENSIVO, es un test estándar de la industria desde los años 90. Aún así, puede que el antivirus de algunos portátiles personales lo detecte y los alumnos se asusten.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B15 ═══════════ -->
+    <div class="bloque" id="b15" data-nav>
+        <div class="bloque-header">
+            <span class="num">B15</span>
+            <h3>Solucionario · Copias de seguridad y restauración</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Ejercicio 1.15 · Configura copias de seguridad</div>
+                <p><strong>Windows:</strong> El Historial de archivos debe mostrar la copia realizada. Al restaurar <code>doc3.txt</code>, el archivo aparece de nuevo en su ubicación original con su contenido intacto.</p>
+                <p><strong>Ubuntu:</strong> Déjà Dup debe completar el backup sin errores y permitir restaurar el archivo borrado.</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Refuerzo 1.15 · Planifica tu estrategia de backup</div>
+                <p><strong>Fotógrafo (500 GB):</strong> Estrategia 3-2-1: (1) original en el PC de trabajo, (2) backup diario incremental a disco externo de 2 TB, (3) backup semanal a NAS en otra habitación, (4) backup mensual completo a la nube (Backblaze, pCloud). Las fotos de bodas son irreemplazables: no hay "segunda oportunidad" para capturar ese momento.</p>
+                <p><strong>Estudiante (apuntes):</strong> (1) original en el portátil, (2) backup automático a la memoria USB de 32 GB al final de cada clase, (3) copia semanal en Google Drive o OneDrive gratuito (suficiente para documentos pequeños).</p>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Profundización 1.15 · Cifrado de copias de seguridad</div>
+                <p><strong>¿Por qué cifrar?</strong> Si subes tus copias de seguridad a la nube sin cifrar, el proveedor (Google, Microsoft, Dropbox) puede técnicamente acceder a tus archivos. Si hay una brecha de seguridad o una solicitud gubernamental, tus datos quedan expuestos.</p>
+                <p><strong>VeraCrypt:</strong> crea "volúmenes cifrados" (archivos grandes que actúan como discos virtuales). Todo lo que guardas dentro está cifrado con AES-256. Para la nube, subes el archivo del volumen. Necesitas descargarlo entero para descifrar un solo archivo.</p>
+                <p><strong>Cryptomator:</strong> cifra archivo por archivo antes de subirlos a la nube. Es transparente: ves tus archivos normalmente en una carpeta virtual, pero en Google Drive/OneDrive solo se ven archivos con nombres aleatorios y contenido cifrado. Mejor para backups en la nube porque no necesitas descargar todo el volumen.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ B16 ═══════════ -->
+    <div class="bloque" id="b16" data-nav>
+        <div class="bloque-header">
+            <span class="num">B16</span>
+            <h3>Solucionario · Prueba práctica integrada RA1</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+
+            <div class="solution-box">
+                <div class="box-label">✅ Solución · Prueba integrada RA1</div>
+                <p><strong>Criterios de verificación:</strong></p>
+                <ol>
+                    <li><strong>Instalación:</strong> VM con 4 GB RAM, 2 CPUs, 60 GB. Windows 11 instalado. Cuenta local <code>contabilidad</code> creada sin vincular a Microsoft.</li>
+                    <li><strong>Personalización:</strong> Fondo cambiado, modo oscuro activado, 4 apps ancladas en barra de tareas.</li>
+                    <li><strong>Estructura:</strong> Todas las carpetas y el archivo <code>plantilla_factura.txt</code> creados en las ubicaciones correctas.</li>
+                    <li><strong>Seguridad:</strong> <code>plantilla_factura.txt</code> tiene atributo R (solo lectura). Carpeta <code>Nominas</code> tiene atributo H (oculta). Windows Defender muestra todos los checks verdes. Protección contra ransomware activada.</li>
+                    <li><strong>Backup:</strong> Segundo disco añadido y formateado. Historial de archivos configurado con origen <code>C:\Empresa\</code> y destino el segundo disco. Primera copia ejecutada.</li>
+                    <li><strong>Documentación:</strong> <code>CONFIGURACION.txt</code> contiene todos los datos solicitados.</li>
+                </ol>
+            </div>
+
+            <div class="rubrica-box">
+                <div class="box-label">📊 Rúbrica de corrección · P1.16</div>
+                <table>
+                    <thead><tr><th>Criterio</th><th>Excelente (10 pts)</th><th>Aceptable (6.5 pts)</th><th>Insuficiente (3 pts)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CE-a: Instalación</strong></td><td>VM correcta, Windows instalado, cuenta local creada.</td><td>Instalación completada con 1 error menor.</td><td>VM no arranca o instalación fallida.</td></tr>
+                        <tr><td><strong>CE-b, CE-c: Personalización</strong></td><td>Fondo, modo oscuro, 4 apps ancladas.</td><td>2-3 apps ancladas.</td><td>1 o ninguna.</td></tr>
+                        <tr><td><strong>CE-e: Estructura</strong></td><td>Todas las carpetas y archivos creados.</td><td>Falta algún elemento.</td><td>Estructura no creada.</td></tr>
+                        <tr><td><strong>CE-d: Atributos</strong></td><td>Solo lectura y oculto aplicados.</td><td>Un atributo aplicado.</td><td>Ninguno.</td></tr>
+                        <tr><td><strong>CE-g: Seguridad y backup</strong></td><td>Defender configurado, backup funcionando.</td><td>Falta algún elemento.</td><td>No configurado.</td></tr>
+                        <tr><td><strong>Documentación</strong></td><td>CONFIGURACION.txt completo + 8 capturas.</td><td>Faltan 1-2 datos.</td><td>Documentación muy incompleta.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="teaching-box">
+                <div class="box-label">📝 Notas didácticas · B16</div>
+                <p><strong>Evaluación:</strong> Esta prueba cubre TODOS los criterios de evaluación del RA1. Si un alumno pasa esta prueba con más del 65%, se considera que ha superado el RA1. Si no, hay que identificar qué criterios concretos han fallado y recuperar solo esos.</p>
+                <p><strong>Tiempo:</strong> 110 minutos es justo pero suficiente si el alumno ha practicado durante el curso. Los alumnos que han faltado a las prácticas previas lo pasarán mal. Esto es intencionado: la práctica continua es necesaria para desarrollar la soltura con el sistema.</p>
+            </div>
+        </div>
+        <footer>
+        📙 RA1 · Solucionario del Profesor · Uso exclusivo del docente · No distribuir al alumnado<br>
+        Contiene soluciones de ejercicios, refuerzo, profundización y rúbricas de las 16 prácticas<br>
+        Material didáctico original
+    </footer>
+    </div>
+</div>
+
+<button id="backTop" title="Volver arriba">↑</button>
+
+<script>
+
+    // Lateral nav highlight
+    const sections = document.querySelectorAll('[data-nav]');
+    const navItems = document.querySelectorAll('.nav-item');
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navItems.forEach(n => n.classList.remove('activo'));
+                const m = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+                if (m) m.classList.add('activo');
+            }
+        });
+    }, { rootMargin: '-10% 0px -80% 0px' });
+    sections.forEach(s => io.observe(s));
+
+    // Back to top
+    const btn = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+        btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+    });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+</script>
+
+</body>
+</html>

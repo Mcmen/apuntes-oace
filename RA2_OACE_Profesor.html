@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA2 · Guía del Profesor | OACE CFGB Informática</title>
+    
+    <style>
+        :root {
+            --azul-oscuro:#1a2744;--azul-medio:#2c5282;--azul:#3182ce;--azul-claro:#ebf4ff;
+            --verde:#166534;--verde-claro:#f0fff4;--naranja:#c05621;--naranja-claro:#fffaf0;
+            --rojo:#c53030;--rojo-claro:#fff5f5;
+            --purpura:#5b21b6;--purpura-medio:#6d28d9;--purpura-claro:#f5f3ff;
+            --gris:#f7fafc;--gris-oscuro:#4a5568;--texto:#1a202c;--borde:#e2e8f0;
+            --sombra:0 4px 6px rgba(0,0,0,0.04),0 1px 3px rgba(0,0,0,0.06);
+            --sombra-lg:0 10px 25px rgba(0,0,0,0.06),0 4px 10px rgba(0,0,0,0.04);
+            --radio:12px;--radio-sm:8px;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--texto);background:#faf5ff;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+        .navbar{position:sticky;top:0;z-index:200;background:var(--purpura);height:48px;display:flex;align-items:center;padding:0 20px;gap:0;box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+        .nav-brand{display:flex;align-items:center;gap:9px;color:white;text-decoration:none;font-weight:700;font-size:14px;margin-right:20px;flex-shrink:0;}
+        .nav-brand .brand-badge{background:rgba(255,255,255,0.25);color:white;border-radius:6px;padding:3px 8px;font-size:12px;font-weight:800;}
+        .nav-links{display:flex;align-items:center;gap:3px;flex:1;overflow-x:auto;}
+        .nav-links::-webkit-scrollbar{display:none;}
+        .nav-link{color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;font-weight:600;padding:5px 13px;border-radius:18px;white-space:nowrap;transition:0.15s;border:1px solid transparent;}
+        .nav-link:hover{color:white;background:rgba(255,255,255,0.15);}
+        .nav-link.active{color:white;background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.35);}
+        .nav-right{margin-left:auto;flex-shrink:0;}
+        .nav-solo{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.35);color:white;border-radius:14px;padding:4px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+        .hero{background:linear-gradient(160deg,#2d1b69 0%,#3d2785 40%,#5b21b6 100%);color:white;padding:40px 32px 30px;position:relative;overflow:hidden;text-align:center;}
+        .hero::after{content:'';position:absolute;top:-80px;right:-120px;width:380px;height:380px;background:rgba(255,255,255,0.03);border-radius:50%;pointer-events:none;}
+        .hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:5px 16px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+        .hero h1{font-size:28px;font-weight:700;margin-bottom:6px;letter-spacing:-0.3px;}
+        .hero .subtitulo{font-size:15px;opacity:0.85;font-style:italic;}
+        .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;justify-content:center;}
+        .hero-meta span{background:rgba(255,255,255,0.12);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;}
+        .wrapper{max-width:1040px;margin:0 auto;padding:24px 20px 64px;}
+        .bloque{background:white;border-radius:var(--radio);margin-bottom:28px;box-shadow:var(--sombra);border:1px solid var(--borde);overflow:hidden;}
+        .bloque-header{background:linear-gradient(135deg,#2d1b69,#4c1d95);color:white;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+        .num{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;font-weight:800;font-size:13px;border-radius:7px;padding:5px 12px;white-space:nowrap;}
+        .bloque-header h3{font-size:15px;font-weight:700;flex:1;}
+        .bloque-header .duracion{background:rgba(255,255,255,0.15);border-radius:14px;padding:4px 12px;font-size:11px;font-weight:600;white-space:nowrap;}
+        .bloque-body{padding:20px 26px;}
+        .box-sol{background:#f5f3ff;border-left:4px solid var(--purpura);border-radius:0 var(--radio-sm) var(--radio-sm) 0;padding:16px 20px;margin:14px 0;}
+        .box-sol .box-label{color:var(--purpura);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+        .box-quiz{background:#fefce8;border:2px solid #ca8a04;border-radius:var(--radio-sm);padding:16px 20px;margin:14px 0;}
+        .box-quiz .box-label{color:#92400e;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+        .respuesta-correcta{background:#dcfce7;border-left:3px solid #22c55e;padding:8px 14px;border-radius:0 6px 6px 0;margin:8px 0;font-weight:600;color:#166534;}
+        .box-nota{background:#fff7ed;border-left:4px solid #ea580c;border-radius:0 var(--radio-sm) var(--radio-sm) 0;padding:14px 18px;margin:14px 0;}
+        .box-nota .box-label{color:#c05621;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+        .box-error{background:#fef2f2;border-left:4px solid #ef4444;border-radius:0 var(--radio-sm) var(--radio-sm) 0;padding:14px 18px;margin:14px 0;}
+        .box-error .box-label{color:var(--rojo);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+        code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;color:#1e40af;}
+        pre{background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0;}
+        pre code{background:none;color:inherit;padding:0;}
+        table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;}
+        thead tr{background:var(--purpura);color:white;}
+        thead th{padding:9px 13px;text-align:left;font-weight:600;font-size:12px;}
+        tbody tr:nth-child(even){background:var(--gris);}
+        tbody td{padding:8px 13px;border-bottom:1px solid var(--borde);vertical-align:top;}
+        ul.icon-list{list-style:none;padding-left:0;margin:10px 0;}
+        ul.icon-list li{padding:5px 0 5px 22px;position:relative;border-bottom:1px solid #f0f0f0;font-size:14px;}
+        ul.icon-list li::before{content:"▸";color:var(--purpura-medio);position:absolute;left:4px;font-size:12px;top:7px;font-weight:bold;}
+        ul.icon-list li:last-child{border-bottom:none;}
+        .nav-lateral{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:150;display:flex;flex-direction:column;gap:2px;}
+        .nav-lateral a{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--purpura);color:white;text-decoration:none;font-size:9px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.18);transition:transform 0.15s,background 0.15s;}
+        .nav-lateral a:hover{transform:scale(1.25);background:var(--azul-oscuro);}
+        .nav-lateral a.activo{background:var(--azul-oscuro);}
+        .btn-top{position:fixed;right:18px;bottom:24px;background:var(--purpura);color:white;border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:18px;box-shadow:var(--sombra-lg);z-index:200;display:none;align-items:center;justify-content:center;}
+        .btn-top.visible{display:flex;}
+        footer{text-align:center;color:#a0aec0;font-size:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--borde);}
+        @media(max-width:720px){.hero{padding:28px 16px;}.hero h1{font-size:22px;}.bloque-body{padding:14px;}.nav-lateral{display:none;}}
+        @media print{.navbar,.nav-lateral,.btn-top{display:none!important;}@page{size:A4;margin:1.8cm 2cm 2cm 2cm;}.bloque{break-before:page;}.bloque-header{break-after:avoid;}body{background:white!important;}.wrapper{max-width:100%!important;padding:0!important;}}
+    </style>
+
+</head>
+<body>
+<nav class="navbar">
+    <a href="index.html" class="nav-brand"><span class="brand-badge">OACE</span><span>2º CFGB</span></a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Inicio</a>
+        <a href="RA2_OACE_Alumno.html" class="nav-link">📘 Apuntes RA2</a>
+        <a href="RA2_OACE_Practicas.html" class="nav-link">🧪 Prácticas RA2</a>
+        <a href="RA2_OACE_Profesor.html" class="nav-link active">📋 Guía Profesor</a>
+    </div>
+    <div class="nav-right"><span class="nav-solo">🔒 Solo profesor</span></div>
+</nav>
+<header class="hero">
+    <div class="hero-badge">🔒 GUÍA DEL PROFESOR · RA2 · USO EXCLUSIVO DOCENTE</div>
+    <h1>📋 RA2 · Guía del Profesor — Configuración en Red</h1>
+    <p class="subtitulo">Soluciones de ejercicios · Respuestas de tests · Notas didácticas · B17–B40</p>
+    <div class="hero-meta">
+        <span>📋 24 bloques</span>
+        <span>🧠 22 quizzes resueltos</span>
+        <span>💡 Notas didácticas</span>
+        <span>⚠️ Errores frecuentes</span>
+    </div>
+</header>
+<nav class="nav-lateral" id="navLateral">
+  <a href="#b17" title="B17">17</a>
+  <a href="#b18" title="B18">18</a>
+  <a href="#b19" title="B19">19</a>
+  <a href="#b20" title="B20">20</a>
+  <a href="#b21" title="B21">21</a>
+  <a href="#b22" title="B22">22</a>
+  <a href="#b23" title="B23">23</a>
+  <a href="#b24" title="B24">24</a>
+  <a href="#b25" title="B25">25</a>
+  <a href="#b26" title="B26">26</a>
+  <a href="#b27" title="B27">27</a>
+  <a href="#b28" title="B28">28</a>
+  <a href="#b29" title="B29">29</a>
+  <a href="#b30" title="B30">30</a>
+  <a href="#b31" title="B31">31</a>
+  <a href="#b32" title="B32">32</a>
+  <a href="#b33" title="B33">33</a>
+  <a href="#b34" title="B34">34</a>
+  <a href="#b35" title="B35">35</a>
+  <a href="#b36" title="B36">36</a>
+  <a href="#b37" title="B37">37</a>
+  <a href="#b38" title="B38">38</a>
+  <a href="#b39" title="B39">39</a>
+  <a href="#b40" title="B40">40</a>
+</nav>
+<button class="btn-top" id="btnTop" title="Volver arriba" aria-label="Volver al inicio">↑</button>
+<div class="wrapper">
+    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:16px 22px;margin-bottom:28px;text-align:center;">
+        <p style="font-size:15px;font-weight:700;color:#92400e;">🔒 DOCUMENTO CONFIDENCIAL — Solo para uso del profesorado</p>
+        <p style="font-size:13px;color:#92400e;margin-top:4px;">No distribuir a alumnos. Contiene soluciones completas de todos los ejercicios y tests del RA2.</p>
+    </div>
+
+    <div class="bloque" id="b17">
+        <div class="bloque-header" >
+            <span class="num">B17</span>
+            <h3>Introducción a las redes informáticas</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B17</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) LAN (Local Area Network)</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Una aula es siempre una LAN. PAN = Bluetooth/USB (metros), WAN = Internet (países).</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.1 — Identifica los elementos de tu red:</strong></p>
+<ul class="icon-list">
+<li><strong>Tipo de red del aula:</strong> LAN. Los ordenadores del aula están en el mismo edificio, conectados por cable Ethernet o WiFi al switch del aula. La WAN sería la conexión del instituto a Internet.</li>
+<li><strong>Topología:</strong> Estrella. Todos los PCs se conectan al switch central. Si un cable se rompe, solo falla ese PC.</li>
+<li><strong>Elementos típicos del aula:</strong> 20-30 PCs (clientes), 1 switch (gestiona la red local), 1 router (sale a Internet), posiblemente 1 AP WiFi.</li>
+<li><strong>Medio de transmisión:</strong> Generalmente cable Cat5e o Cat6 (Ethernet) + WiFi para portátiles.</li>
+</ul>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Es muy común que los alumnos confundan el switch con el router. Insiste en que el switch conecta equipos en la LAN; el router conecta la LAN con Internet.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Dibujar el esquema de topología sin incluir el router como "salida a Internet". Recordarles que la WAN empieza más allá del router.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b18">
+        <div class="bloque-header" >
+            <span class="num">B18</span>
+            <h3>Direccionamiento IP</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B18</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) 192.168.1.5</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Rangos privados (RFC 1918): 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. Todo lo demás es público.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.2 — Identifica tu configuración de red:</strong></p>
+<pre><code># Windows: ipconfig /all
+# Ubuntu: ip addr show
+
+# Ejemplo de salida esperada:
+Dirección IPv4: 192.168.1.X    (privada — clase C)
+Máscara de subred: 255.255.255.0  (/24 — 254 equipos posibles)
+Puerta de enlace: 192.168.1.1   (el router)
+Servidores DNS: 8.8.8.8, 8.8.4.4 (Google) o los del ISP</code></pre>
+<p><strong>Cálculo de equipos:</strong> Máscara 255.255.255.0 → 256 - 2 = 254 equipos utilizables (se resta la dirección de red y la de broadcast).</p>
+<p><strong>¿IP pública o privada?</strong> 192.168.x.x siempre privada. Los alumnos pueden verificar buscando "mi ip" en Google para ver su IP pública.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>El concepto de máscara de subred es el más difícil. Usa la analogía: la máscara es como el código postal de una ciudad — distingue qué PCs están en tu misma "calle" (red local) y cuáles están en otra.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Escribir la máscara como /24 sin explicar que equivale a 255.255.255.0. Pide siempre que escriban las dos formas.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b19">
+        <div class="bloque-header" >
+            <span class="num">B19</span>
+            <h3>Configuración de red en Windows</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B19</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) ipconfig</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 ipconfig es el comando de Windows. ip addr es Linux. Mezclarlos es el error más común.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.3 — Configura IP fija en Windows:</strong></p>
+<pre><code># Verificación antes:
+ipconfig
+
+# Por GUI: Configuración → Red e Internet → Ethernet → Editar
+# Cambiar a Manual e introducir:
+IP: 192.168.100.50
+Máscara: 255.255.255.0 (o /24)
+Puerta de enlace: 192.168.100.1
+DNS preferido: 8.8.8.8
+
+# Verificación después:
+ipconfig
+# Debe mostrar la nueva IP
+
+# Volver a DHCP: cambiar de Manual a Automático (DHCP)</code></pre>
+<p><strong>Sobre el ping a la puerta de enlace:</strong> Si la VM está en modo NAT o Red interna sin un router configurado, el ping a 192.168.100.1 fallará porque esa IP no existe en la VM. Esto es esperable y didáctico: demuestra que una IP fija incorrecta impide la conectividad.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Aprovecha cuando el ping a la puerta de enlace falla para enseñar diagnóstico: primero confirmar la propia IP con ipconfig, luego verificar que la puerta de enlace existe en la red.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Olvidar restaurar DHCP después de la práctica, causando problemas de conectividad en la próxima sesión. Recuérdalo explícitamente al final.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b20">
+        <div class="bloque-header" >
+            <span class="num">B20</span>
+            <h3>Configuración de red en Ubuntu con Netplan</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B20</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) Netplan</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Netplan usa YAML desde Ubuntu 18.04. La sangría (espacios, NO tabuladores) es crítica.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.4 — Configura IP fija en Ubuntu:</strong></p>
+<pre><code># /etc/netplan/00-installer-config.yaml
+network:
+  version: 2
+  ethernets:
+    enp0s3:           # nombre del adaptador (verificar con ip addr)
+      dhcp4: no
+      addresses:
+        - 192.168.100.70/24
+      routes:
+        - to: default
+          via: 192.168.100.1
+      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]
+
+# Aplicar cambios:
+sudo netplan apply
+
+# Verificar:
+ip addr show enp0s3
+ip route
+resolvectl status</code></pre>
+<p><strong>Nota:</strong> El nombre del adaptador varía (enp0s3, ens33, eth0...). Los alumnos deben verificarlo con <code>ip addr</code> antes de editar el archivo.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>El error de sintaxis YAML más común es usar tabuladores en lugar de espacios. Si netplan apply falla con "mapping values are not allowed here", hay un problema de sangría. Pide que copien con nano y presten atención a la alineación.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Poner el nombre del adaptador incorrecto (enp0s3 cuando en realidad es enp0s8). Siempre verificar con ip addr antes.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b21">
+        <div class="bloque-header" >
+            <span class="num">B21</span>
+            <h3>Diagnóstico de conectividad</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B21</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Si un equipo está accesible en la red</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 ping envía paquetes ICMP Echo Request. La respuesta confirma accesibilidad. Sin respuesta: apagado, desconectado o firewall bloqueando ICMP.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.5 — Diagnóstico paso a paso:</strong></p>
+<table>
+<thead><tr><th>Paso</th><th>Comando</th><th>Si funciona</th><th>Si falla</th></tr></thead>
+<tbody>
+<tr><td>1. IP propia</td><td><code>ipconfig / ip addr</code></td><td>Tienes IP asignada</td><td>Sin IP: revisa adaptador</td></tr>
+<tr><td>2. Loopback</td><td><code>ping 127.0.0.1</code></td><td>TCP/IP funciona</td><td>TCP/IP roto</td></tr>
+<tr><td>3. Gateway</td><td><code>ping 192.168.x.1</code></td><td>Red local OK</td><td>Problema en LAN</td></tr>
+<tr><td>4. IP pública</td><td><code>ping 8.8.8.8</code></td><td>Internet OK (IP)</td><td>Sin salida a Internet</td></tr>
+<tr><td>5. DNS</td><td><code>ping google.com</code></td><td>DNS funciona</td><td>Fallo DNS (pero IP OK)</td></tr>
+</tbody>
+</table>
+<p><strong>Traceroute:</strong> Muestra todos los saltos (routers) entre tu equipo y el destino. Cada línea es un router. Los asteriscos (*) indican que ese router no responde a ICMP.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Este bloque es ideal para ejercicio de diagnóstico inverso: "el ping a google.com falla pero el ping a 8.8.8.8 funciona — ¿qué está roto?". La respuesta es DNS. Practica este tipo de razonamiento con los alumnos.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Asumir que si ping 8.8.8.8 funciona ya hay "Internet completo". Recuérdales que sin DNS no pueden navegar aunque haya conectividad IP.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b22">
+        <div class="bloque-header" >
+            <span class="num">B22</span>
+            <h3>Grupos de trabajo en Windows</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B22</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) 20 equipos</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Límite de 20 PCs en grupo de trabajo. Para más: dominio con Active Directory (Windows Server).</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.6 — Configura un grupo de trabajo:</strong></p>
+<pre><code># Cambiar nombre de equipo y grupo de trabajo:
+# Configuración → Sistema → Acerca de → Nombre del equipo → Cambiar
+# O por cmd (requiere reinicio):
+wmic computersystem where name="%computername%" call rename name="PC-ALUMNO1"
+
+# Verificar el grupo de trabajo:
+net config workstation | findstr "Workstation domain"
+
+# Ver equipos del grupo de trabajo:
+net view</code></pre>
+<p><strong>Por qué puede que no aparezcan en "Red":</strong> El descubrimiento de red requiere que el Servicio de Detección de redes esté activo y que el perfil de red sea "Privado". Con perfil "Público" se bloquea el descubrimiento.</p>
+<p><strong>Solución:</strong> Configuración → Red → Ethernet → Tipo de perfil → Privado. Luego activar "Descubrimiento de red" en Opciones avanzadas de uso compartido.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Los grupos de trabajo son adecuados para casa o pequeñas oficinas. Aprovecha para introducir el concepto de dominio: en el instituto, los PCs están en un dominio (no en un grupo de trabajo), lo que permite autenticación centralizada.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Esperar que los PCs aparezcan inmediatamente en "Red" tras cambiar el grupo. El descubrimiento de red puede tardar varios minutos o requerir activar el perfil de red privado.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b23">
+        <div class="bloque-header" >
+            <span class="num">B23</span>
+            <h3>Tipos de cuentas de usuario</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B23</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) Estándar, por el principio del mínimo privilegio</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 La cuenta estándar limita el daño potencial de malware y errores. El administrador solo se usa para tareas específicas.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.7 — Identifica tipos de cuenta:</strong></p>
+<pre><code># Ver el tipo de cuenta del usuario actual:
+net user %username%
+# Busca "Local Group Memberships" — si aparece *Administrators, es admin
+
+# Crear cuenta estándar:
+net user becario OACE2025 /add
+# (no añadir a Administradores = cuenta estándar por defecto)
+
+# Verificar que NO es admin:
+net localgroup Administradores</code></pre>
+<p><strong>Qué puede y no puede hacer una cuenta estándar:</strong></p>
+<table>
+<thead><tr><th>Acción</th><th>Estándar</th><th>Admin</th></tr></thead>
+<tbody>
+<tr><td>Cambiar la fecha/hora del sistema</td><td>❌ Solicita contraseña admin</td><td>✅</td></tr>
+<tr><td>Instalar programas (todos los usuarios)</td><td>❌</td><td>✅</td></tr>
+<tr><td>Instalar en AppData (solo este usuario)</td><td>✅ algunos</td><td>✅</td></tr>
+<tr><td>Navegar por internet</td><td>✅</td><td>✅</td></tr>
+<tr><td>Crear/editar documentos propios</td><td>✅</td><td>✅</td></tr>
+</tbody>
+</table>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>El principio del mínimo privilegio es uno de los fundamentos de la seguridad informática. Pregunta a los alumnos: "Si usas admin a diario y te infectas con un virus, ¿qué daño puede hacer el virus?" vs "¿Y si usas una cuenta estándar?"</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Creer que la cuenta estándar "no puede hacer nada". Puede hacer todo lo necesario para el trabajo diario; solo requiere autorización del admin para cambios del sistema.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b24">
+        <div class="bloque-header" >
+            <span class="num">B24</span>
+            <h3>Gestión de usuarios en Windows</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B24</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) net user alumno1 /add</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Sintaxis: net user NOMBRE [CONTRASEÑA] /add. Para ver info: net user NOMBRE. Para eliminar: net user NOMBRE /delete.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.8 — Comandos net user:</strong></p>
+<pre><code># Listar usuarios:
+net user
+
+# Crear usuarios:
+net user trabajador1 OACE2025 /add
+net user trabajador2 OACE2025 /add
+net user trabajador3 OACE2025 /add
+
+# Ver detalles:
+net user trabajador1
+
+# Desactivar:
+net user trabajador3 /active:no
+
+# Intentar login con trabajador3 → "La cuenta está desactivada"
+
+# Reactivar:
+net user trabajador3 /active:yes
+
+# Eliminar:
+net user trabajador3 /delete
+
+# Verificar:
+net user   # trabajador3 ya no aparece</code></pre>
+<p><strong>Carpeta personal:</strong> Al crear un usuario, Windows crea automáticamente <code>C:\Users\trabajador1</code> la primera vez que ese usuario inicia sesión. No se crea en el momento del <code>net user</code>.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>La diferencia entre /active:no (desactivar) y /delete (eliminar) es importante. Desactivar conserva los archivos y configuración del usuario; eliminar los borra. En entornos reales, primero se desactiva para asegurar que nadie los necesita antes de eliminar.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Ejecutar net user sin privilegios de administrador (cmd normal). Siempre recordar: "cmd como administrador" — clic derecho sobre cmd → Ejecutar como administrador.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b25">
+        <div class="bloque-header" >
+            <span class="num">B25</span>
+            <h3>Gestión de usuarios en Ubuntu</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B25</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) -m (make home)</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 -m crea /home/USUARIO. Sin -m el usuario existe pero no tiene carpeta personal. -r elimina también la carpeta al borrar el usuario.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.9 — Comandos en Ubuntu:</strong></p>
+<pre><code># Listar usuarios recientes:
+tail -5 /etc/passwd
+# Formato: nombre:x:UID:GID:info:home:shell
+
+# Crear con carpeta personal:
+sudo useradd -m trabajador1
+sudo useradd -m trabajador2
+sudo useradd -m trabajador3
+
+# Asignar contraseñas:
+sudo passwd trabajador1   # introducir OACE2025 dos veces
+
+# Verificar carpetas:
+ls -la /home/
+
+# Bloquear:
+sudo usermod -L trabajador3
+# Intentar su trabajador3 → "Authentication failure"
+
+# Desbloquear:
+sudo usermod -U trabajador3
+
+# Eliminar con carpeta:
+sudo userdel -r trabajador3
+ls /home/   # ya no está la carpeta</code></pre>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Diferencia entre useradd (bajo nivel, sin configuración extra) y adduser (script interactivo más amigable). Para CFGB es suficiente con useradd -m, pero adduser es más intuitivo. Ambos son válidos.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Usar userdel sin -r y dejar la carpeta personal huérfana en /home. Esto puede acumular "basura" en el sistema. Insiste en userdel -r cuando se elimine definitivamente un usuario.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b26">
+        <div class="bloque-header" >
+            <span class="num">B26</span>
+            <h3>Perfiles de usuario</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B26</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ D) Perfil móvil (itinerante)</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Perfil local: solo en ese PC. Móvil: servidor descarga al iniciar. Obligatorio: no guarda cambios, se reinicia siempre.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.10 — Perfiles de usuario:</strong></p>
+<table>
+<thead><tr><th>Tipo</th><th>Ubicación</th><th>Persistencia</th><th>Uso típico</th></tr></thead>
+<tbody>
+<tr><td><strong>Local</strong></td><td>C:\Users\usuario</td><td>Sí, solo en ese PC</td><td>Usuarios domésticos o de puesto fijo</td></tr>
+<tr><td><strong>Móvil</strong></td><td>Servidor (\\SRV\Perfiles\usuario)</td><td>Sí, en cualquier PC</td><td>Empleados con movilidad en la empresa</td></tr>
+<tr><td><strong>Obligatorio</strong></td><td>Servidor (solo lectura)</td><td>No (se reinicia)</td><td>Puestos públicos, quioscos, aulas</td></tr>
+</tbody>
+</table>
+<p><strong>En Ubuntu:</strong> El equivalente al perfil es el directorio home (/home/usuario). Es siempre local salvo que se configure NFS para montar el home desde un servidor.</p>
+<p><strong>Prueba de persistencia:</strong> Cambiar el fondo → cerrar sesión → volver a entrar → si el fondo se mantiene = perfil local funcionando correctamente.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Los perfiles obligatorios son interesantes para discutir en aula: los alumnos del instituto trabajan con perfiles obligatorios (sus cambios no persisten entre sesiones). Pregunta: "¿Por qué creéis que en el instituto vuestros cambios no se guardan al apagar?"</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Confundir perfil móvil con sincronización de nube (OneDrive). Son conceptos similares pero diferentes: el perfil móvil es una función del dominio Windows Server, no de un servicio de nube externo.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b27">
+        <div class="bloque-header" >
+            <span class="num">B27</span>
+            <h3>Grupos de usuarios en Windows</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B27</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) net localgroup</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 net localgroup = grupos locales (sin dominio). net group = grupos de dominio. El comando sin argumentos lista todos los grupos.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.11 — Grupos en Windows:</strong></p>
+<pre><code># Listar grupos:
+net localgroup
+
+# Grupos predefinidos importantes:
+# Administradores: control total del equipo
+# Usuarios: acceso estándar (donde caen las cuentas nuevas)
+# Invitados: acceso muy limitado
+
+# Crear grupos:
+net localgroup Ventas /add
+net localgroup Contabilidad /add
+
+# Añadir usuarios:
+net localgroup Ventas trabajador1 /add
+net localgroup Ventas trabajador2 /add
+net localgroup Contabilidad trabajador2 /add
+
+# Ver miembros:
+net localgroup Ventas
+
+# Eliminar usuario de grupo:
+net localgroup Ventas trabajador1 /delete
+
+# Eliminar grupo completo:
+net localgroup Ventas /delete</code></pre>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Los grupos son la base de la gestión de permisos a escala. En lugar de asignar permisos uno a uno a 100 usuarios, asignas permisos al grupo y mueves usuarios dentro/fuera. Esto es mucho más eficiente y fácil de auditar.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Añadir usuarios a Administradores sin querer. Si un alumno quiere poner un usuario en el grupo "Usuarios" (que ya está por defecto), puede confundirse con el comando y añadirlo accidentalmente a Administradores.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b28">
+        <div class="bloque-header" >
+            <span class="num">B28</span>
+            <h3>Grupos de usuarios en Ubuntu</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B28</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) usermod -aG grupo usuario</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 -a (append) es OBLIGATORIO con -G. Sin -a, -G reemplaza TODOS los grupos secundarios del usuario.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.12 — Grupos en Ubuntu:</strong></p>
+<pre><code># Ver grupos existentes:
+cat /etc/group | tail -10
+
+# Crear grupos:
+sudo groupadd ventas
+sudo groupadd contabilidad
+
+# Ver grupos del usuario (antes):
+groups trabajador1
+
+# Añadir a un grupo (-aG = append + Groups secundarios):
+sudo usermod -aG ventas trabajador1
+sudo usermod -aG ventas trabajador2
+sudo usermod -aG contabilidad trabajador2
+
+# Ver grupos (después):
+groups trabajador1
+groups trabajador2
+
+# Eliminar usuario de un grupo:
+sudo gpasswd -d trabajador1 ventas
+
+# Eliminar grupo:
+sudo groupdel ventas</code></pre>
+<p><strong>Truco:</strong> <code>id trabajador2</code> muestra UID, GID principal y todos los grupos secundarios en una línea.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>La diferencia -G vs -aG es un error muy frecuente en exámenes. Explica con un ejemplo: "trabajador2 está en sudo y ventas. Si ejecutas usermod -G contabilidad trabajador2 SIN -a, pierdes sudo y ventas. Con -aG, añade contabilidad y conserva los demás."</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Los cambios de grupo no se aplican a sesiones abiertas. El usuario debe cerrar sesión y volver a entrar para que los nuevos grupos estén activos. Esto confunde a muchos alumnos cuando comprueban groups y parece no haber cambiado.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b29">
+        <div class="bloque-header" >
+            <span class="num">B29</span>
+            <h3>Recursos compartidos: concepto y tipos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B29</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) Lectura</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Lectura: ver+copiar. Modificar/Cambiar: leer+escribir+modificar (sin borrar en red). Control total: todo, incluido borrar y cambiar permisos.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.13 — Identifica recursos compartidos:</strong></p>
+<pre><code># Windows — ver recursos compartidos:
+net share
+
+# Recursos administrativos (siempre presentes):
+# C$  → acceso a C:\ (solo admins)
+# ADMIN$  → directorio de Windows
+# IPC$  → comunicación entre procesos (no se puede deshabilitar)
+
+# Ejemplo de tabla de clasificación:
+# Nombre    | Ruta           | Tipo    | Permiso predeterminado
+# C$        | C:\            | Admin   | Administradores: Control total
+# ADMIN$    | C:\Windows     | Admin   | Administradores: Control total
+# IPC$      | -              | Admin   | Todos: Lectura
+# Ventas    | C:\Ventas      | Usuario | Todos: Lectura (si así se configuró)</code></pre>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Los recursos administrativos (C$, ADMIN$) sorprenden a los alumnos. Explica que $ al final del nombre hace el recurso "oculto" (no aparece en la navegación de red pero se puede acceder si conoces el nombre). Es una medida de seguridad básica para recursos administrativos.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Pensar que todos los recursos listados por net share son accesibles para cualquier usuario. Los administrativos (con $) solo son accesibles para administradores locales.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b30">
+        <div class="bloque-header" >
+            <span class="num">B30</span>
+            <h3>Compartir carpetas en Windows</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B30</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) \\\\equipo\\recurso</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Notación UNC (Universal Naming Convention): doble barra invertida + nombre de equipo + barra + nombre del recurso.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.14 — Compartir en Windows:</strong></p>
+<pre><code># Compartir por cmd:
+net share Ventas=C:\Documentos-Ventas /grant:Everyone,READ
+net share Proyectos=C:\Proyectos /grant:Everyone,FULL
+
+# Verificar:
+net share
+
+# Acceder desde otro equipo:
+\\PC-ALUMNO1\Ventas      (solo lectura)
+\\PC-ALUMNO1\Proyectos   (control total)
+
+# Eliminar recurso compartido:
+net share Proyectos /delete
+
+# IMPORTANTE: Si el acceso por nombre falla, usar la IP:
+\\192.168.x.x\Ventas</code></pre>
+<p><strong>Por qué puede fallar el acceso por nombre:</strong> Resolución de nombres en grupo de trabajo depende de NetBIOS o mDNS. Usar siempre la IP como alternativa si el nombre no resuelve.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Muestra la diferencia entre permiso de recurso (quién puede conectarse) y permiso NTFS (qué puede hacer una vez conectado). Aquí solo estamos configurando el permiso de recurso. Los NTFS se configuran en la pestaña Seguridad.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Confundir "barra" (/) con "barra invertida" (\). En Windows las rutas UNC usan barra invertida. En URLs y Linux se usa barra normal. Este error de tipografía causa muchos problemas.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b31">
+        <div class="bloque-header" >
+            <span class="num">B31</span>
+            <h3>Compartir carpetas en Ubuntu con Samba</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B31</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) sudo apt install samba</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Samba implementa el protocolo SMB/CIFS en Linux, permitiendo que Windows acceda a carpetas compartidas en Ubuntu como si fueran recursos Windows normales.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.15 — Configuración Samba:</strong></p>
+<pre><code># Instalar:
+sudo apt update && sudo apt install samba -y
+
+# Verificar servicio:
+sudo systemctl status smbd
+
+# Backup del archivo de configuración (buena práctica):
+sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.backup
+
+# Añadir al final de /etc/samba/smb.conf:
+[LinuxShare]
+   path = /home/alumno/compartida-linux
+   browsable = yes
+   writable = yes
+   guest ok = yes
+   create mask = 0664
+   directory mask = 0775
+
+# Reiniciar servicio:
+sudo systemctl restart smbd
+
+# Firewall:
+sudo ufw allow samba
+
+# Verificar que el recurso es visible:
+smbclient -L localhost -N</code></pre>
+<p><strong>Nota:</strong> guest ok = yes permite acceso sin contraseña. En producción se usaría autenticación Samba con <code>sudo smbpasswd -a usuario</code>.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Samba es un tema que impresiona a los alumnos porque "hace hablar a Linux y Windows". Aprovecha para discutir interoperabilidad: en el mundo real conviven servidores Linux y clientes Windows en la misma red.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>El error más común es no reiniciar smbd después de editar smb.conf. Los cambios no se aplican hasta reiniciar el servicio. También es frecuente olvidar el firewall ufw allow samba.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b32">
+        <div class="bloque-header" >
+            <span class="num">B32</span>
+            <h3>Acceso a recursos compartidos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B32</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) sudo mount -t cifs //equipo/recurso /mnt/punto -o username=USER</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 CIFS (Common Internet File System) es el protocolo. mount -t cifs es para recursos SMB/Samba. Requiere el paquete cifs-utils.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.16 — Métodos de acceso:</strong></p>
+<pre><code># Windows: Explorador → barra de direcciones:
+\\PC-ALUMNO1\Ventas     o     \\192.168.x.x\Ventas
+
+# Windows: Conectar unidad de red (Z:):
+net use Z: \\PC-ALUMNO1\Ventas /persistent:no
+# Verificar: net use
+# Desconectar: net use Z: /delete
+
+# Ubuntu: Gestor de archivos → Otras ubicaciones:
+smb://IP-WINDOWS/Ventas
+
+# Ubuntu: montar por terminal:
+sudo apt install cifs-utils   # si no está instalado
+sudo mkdir -p /mnt/ventas
+sudo mount -t cifs //192.168.x.x/Ventas /mnt/ventas -o guest
+
+# Verificar:
+ls /mnt/ventas
+
+# Desmontar:
+sudo umount /mnt/ventas</code></pre>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>La diferencia entre acceso temporal (mount) y acceso persistente (/etc/fstab) es importante para el nivel de profundización. Para CFGB, con el montaje temporal es suficiente.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Olvidar crear el punto de montaje (/mnt/ventas) antes de hacer mount. El directorio debe existir antes del montaje. mount -t cifs fallará si el directorio destino no existe.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b33">
+        <div class="bloque-header" >
+            <span class="num">B33</span>
+            <h3>Permisos NTFS vs permisos de recurso</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B33</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) Solo leer, porque siempre gana el más restrictivo</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Permiso efectivo = el más restrictivo entre permiso de recurso compartido y permiso NTFS. Siempre.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.17 — Tabla de permisos efectivos:</strong></p>
+<table>
+<thead><tr><th>Permiso recurso</th><th>Permiso NTFS</th><th>Permiso efectivo</th><th>¿Puede modificar?</th></tr></thead>
+<tbody>
+<tr><td>Lectura</td><td>Control total</td><td><strong>Lectura</strong></td><td>❌ No</td></tr>
+<tr><td>Control total</td><td>Lectura</td><td><strong>Lectura</strong></td><td>❌ No</td></tr>
+<tr><td>Control total</td><td>Control total</td><td><strong>Control total</strong></td><td>✅ Sí</td></tr>
+<tr><td>Lectura</td><td>Lectura</td><td><strong>Lectura</strong></td><td>❌ No</td></tr>
+</tbody>
+</table>
+<p><strong>Práctica recomendada en producción:</strong> Dar "Control total" a "Todos" en permiso de recurso y gestionar el acceso granular con NTFS. Así la administración es más sencilla.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>La analogía de la puerta y las habitaciones funciona muy bien: el permiso de recurso es la llave de la puerta principal. NTFS es la llave de cada habitación. Puedes tener llave del edificio pero no de una sala concreta, o al revés.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Creer que si el NTFS da Control total, el usuario tiene Control total aunque el recurso diga Lectura. Muchos alumnos olvidan que AMBAS capas se aplican y prevalece la más restrictiva.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b34">
+        <div class="bloque-header" >
+            <span class="num">B34</span>
+            <h3>Permisos combinados: herencia, acumulación y denegación</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B34</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) No, porque Denegar siempre gana sobre Permitir</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Denegar es el permiso más fuerte. Herencia: los hijos heredan del padre. Acumulación: grupos se suman. Pero Denegar cancela todo.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.18 — Escenario con trabajador2:</strong></p>
+<table>
+<thead><tr><th>Escenario</th><th>Ventas</th><th>Contabilidad</th><th>Permiso efectivo de trabajador2</th></tr></thead>
+<tbody>
+<tr><td>Inicial</td><td>Lectura</td><td>Escritura</td><td><strong>Lectura + Escritura = Modificar</strong> (acumulación)</td></tr>
+<tr><td>+Denegar Escritura a Contabilidad</td><td>Lectura</td><td>Denegar Escritura</td><td><strong>Solo Lectura</strong> (Denegar gana)</td></tr>
+</tbody>
+</table>
+<pre><code># Ver permisos efectivos en Windows:
+# Propiedades de la carpeta → Seguridad → Opciones avanzadas →
+# Acceso efectivo → Seleccionar usuario → Ver permisos efectivos</code></pre>
+<p><strong>Regla mnemotécnica para los alumnos:</strong> "D de Denegar, D de Dominante. Denegar siempre domina."</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Discute casos reales: en una empresa, si alguien del dpto. Legal necesita que un contratista externo NO pueda leer ciertos archivos aunque pertenezca a grupos que sí pueden, se usa Denegar. Pero hay que tener cuidado: si el admin está en ese grupo y se añade Denegar, ¡el admin tampoco podrá acceder!</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Añadir Denegar a un grupo donde también está el administrador. Esto puede bloquear el acceso incluso al admin. Siempre verificar con "Acceso efectivo" antes de aplicar Denegar en producción.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b35">
+        <div class="bloque-header" >
+            <span class="num">B35</span>
+            <h3>Impresoras compartidas en red</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B35</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) Nadie de la red puede imprimir hasta que se encienda</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 Una impresora compartida es un servicio que depende del equipo anfitrión. Sin anfitrión, sin servicio.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.19 — Pasos esperados:</strong></p>
+<pre><code># En PC-ALUMNO1:
+# Configuración → Bluetooth y dispositivos → Impresoras y escáneres
+# → Microsoft Print to PDF → Propiedades de la impresora → Compartir
+# → "Compartir esta impresora" → Nombre: PDF-Red → Aceptar
+
+# Desde PC-ALUMNO2:
+# Explorador → Red → PC-ALUMNO1 → (ver icono impresora PDF-Red)
+# Doble clic → "Conectar" → Windows instala el driver
+
+# Para imprimir desde ALUMNO2:
+# Cualquier documento → Imprimir → Seleccionar "PDF-Red en PC-ALUMNO1"
+# El PDF se genera en PC-ALUMNO1 (en su carpeta Documentos)
+
+# Cola de impresión en PC-ALUMNO1:
+# Configuración → Impresoras → PDF-Red → "Cola de impresión"</code></pre>
+<p><strong>Si la impresora no aparece en Red:</strong> Verificar que el descubrimiento de red está activo y el perfil de red es "Privado" en PC-ALUMNO1.</p>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>La cola de impresión es un recurso educativo valioso. Demuestra la diferencia entre "trabajo enviado" (spool) y "trabajo impreso". En redes empresariales, un servidor de impresión (print server) gestiona las colas de todos los usuarios.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>El PDF generado en la impresión remota aparece en el equipo que tiene la impresora compartida (PC-ALUMNO1), no en el que envió el trabajo (PC-ALUMNO2). Esto confunde a los alumnos que buscan el PDF en el equipo equivocado.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b36">
+        <div class="bloque-header" >
+            <span class="num">B36</span>
+            <h3>Seguridad en recursos compartidos</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B36</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ A) net share</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 net share lista todos los recursos activos. smbstatus hace lo mismo en Ubuntu/Samba.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.20 — Informe de seguridad modelo:</strong></p>
+<table>
+<thead><tr><th>Recurso</th><th>Permiso original</th><th>Riesgo</th><th>Acción correctiva</th></tr></thead>
+<tbody>
+<tr><td>Proyectos</td><td>Todos: Control total</td><td>🔴 Alto: cualquier usuario puede borrar archivos</td><td>Cambiar a Modificar para usuarios y Control total solo para admins</td></tr>
+<tr><td>C$</td><td>Admins: Control total</td><td>🟡 Bajo: solo admins</td><td>Mantener. Es recurso administrativo estándar.</td></tr>
+<tr><td>Documentos-Usuarios</td><td>Todos: Lectura</td><td>🟢 Bajo</td><td>Revisar si todos deben ver los documentos de todos</td></tr>
+</tbody>
+</table>
+<p><strong>Malas prácticas a identificar:</strong></p>
+<ul class="icon-list">
+<li>Compartir C:\ entero (exposición de todo el sistema)</li>
+<li>"Todos" con Control total sin contraseña</li>
+<li>Recursos compartidos olvidados sin usar (aumentan la superficie de ataque)</li>
+</ul>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Este bloque conecta con la asignatura de Seguridad Informática. Plantea el escenario: "Trabajas en una empresa y tu jefe te pide hacer una auditoría rápida de seguridad de los recursos compartidos. ¿Qué comandos usarías y qué buscarías?"</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Pensar que los recursos administrativos (C$, ADMIN$) son un fallo de seguridad que hay que eliminar. Son recursos de gestión legítimos; su seguridad viene de que solo los administradores pueden acceder a ellos.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b37">
+        <div class="bloque-header" >
+            <span class="num">B37</span>
+            <h3>Cortafuegos y antivirus de red</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B37</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ C) sudo ufw enable</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 ufw enable activa el firewall. ufw status verifica. ufw allow SERVICIO abre puertos. ufw deny FROM IP bloquea.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.21 — Comandos de firewall:</strong></p>
+<pre><code># Windows Defender Firewall:
+# Panel de control → Sistema y seguridad → Firewall
+# → Configuración avanzada → Reglas de entrada → Nueva regla
+# → Puerto → TCP → 445 → Permitir conexión
+
+# Ubuntu UFW:
+sudo ufw status verbose    # estado detallado
+sudo ufw enable            # activar
+sudo ufw allow samba       # equivale a: allow 137,138/udp allow 139,445/tcp
+sudo ufw allow 22/tcp      # SSH (si se usa)
+sudo ufw deny from 192.168.100.200  # bloquear IP
+
+# Ver todas las reglas:
+sudo ufw status numbered
+
+# Verificar que Samba sigue funcionando tras activar UFW:
+# Desde Windows: \\IP-Ubuntu\LinuxShare → debe funcionar</code></pre>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Activa UFW antes de configurar las reglas necesarias. Si un alumno hace ufw enable sin ufw allow samba, perderá el acceso a Samba inmediatamente. Primero las reglas, luego enable (o en el mismo comando).</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Activar UFW sin las reglas necesarias y "romper" el acceso a Samba que acababan de configurar. Es un buen momento de aprendizaje: muestra perfectamente para qué sirve el firewall.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b38">
+        <div class="bloque-header" >
+            <span class="num">B38</span>
+            <h3>Copias de seguridad en red</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+        <div class="box-quiz">
+            <div class="box-label">🧠 Solución test rápido — B38</div>
+            <p>Respuesta correcta: <span class="respuesta-correcta">✅ B) 3 copias en 2 soportes distintos con al menos 1 copia fuera del lugar</span></p>
+            <p style="font-size:13px;color:#92400e;margin-top:6px;">💡 3-2-1: 3 copias, 2 soportes diferentes, 1 fuera del lugar. Protege contra: fallo de hardware, incendio, robo.</p>
+        </div>
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.22 — rsync en red:</strong></p>
+<pre><code># Preparar:
+mkdir ~/importante
+echo "archivo1" > ~/importante/doc1.txt
+echo "archivo2" > ~/importante/doc2.txt
+echo "archivo3" > ~/importante/doc3.txt
+
+# Montar recurso Samba de Windows:
+sudo mkdir -p /mnt/backup
+sudo mount -t cifs //IP-WINDOWS/Proyectos /mnt/backup -o guest
+
+# Primer rsync (copia completa):
+rsync -av ~/importante/ /mnt/backup/backup-linux/
+# -a: archive (preserva permisos, timestamps...)
+# -v: verbose (muestra los archivos copiados)
+# Resultado: copia los 3 archivos
+
+# Modificar un archivo:
+echo "modificado" >> ~/importante/doc1.txt
+
+# Segundo rsync (incremental):
+rsync -av ~/importante/ /mnt/backup/backup-linux/
+# Resultado: solo transfiere doc1.txt (el modificado)
+# Los otros 2 no se tocan porque no cambiaron</code></pre>
+<p><strong>Estrategia 3-2-1 para el escenario:</strong></p>
+<ul class="icon-list">
+<li><strong>Copia 1:</strong> Original en el servidor Ubuntu</li>
+<li><strong>Copia 2:</strong> Backup en el servidor Windows (por rsync/Samba)</li>
+<li><strong>Copia 3:</strong> Backup automático diario a un servicio de nube (Google Drive, Nextcloud)</li>
+<li><strong>2 soportes:</strong> Disco del servidor Ubuntu + disco del servidor Windows</li>
+<li><strong>1 fuera:</strong> La copia en la nube (ubicación geográfica diferente)</li>
+</ul>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>rsync es una herramienta que puede sorprender gratamente a los alumnos. La segunda ejecución que solo transfiere 1 de 3 archivos muestra claramente el backup incremental. Menciona que con --link-dest se pueden hacer snapshots que parecen completos pero ocupan casi nada (solo los cambios).</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Confundir rsync (sincronización de archivos) con backup completo. rsync por defecto solo copia/actualiza archivos, no elimina en el destino los que se eliminaron en el origen. Para sincronización completa habría que usar --delete.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b39">
+        <div class="bloque-header" >
+            <span class="num">B39</span>
+            <h3>Repaso integrado RA2</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Ejercicio 2.23 — Solución del escenario OACE Solutions:</strong></p>
+<p><strong>1. Red (subred 192.168.50.0/24):</strong></p>
+<pre><code># Windows-SRV: IP 192.168.50.10, máscara /24, GW 192.168.50.1
+# Ubuntu-SRV: IP 192.168.50.20, máscara /24, GW 192.168.50.1
+# PCs empleados: DHCP o IPs estáticas .50-.60</code></pre>
+<p><strong>2-3. Usuarios y grupos (Windows):</strong></p>
+<pre><code>net user ventas1 OACE2025 /add & net user ventas2 OACE2025 /add
+net user conta1 OACE2025 /add & net user conta2 OACE2025 /add
+net user admin1 OACE2025 /add & net user admin2 OACE2025 /add
+net localgroup Ventas /add & net localgroup Contabilidad /add & net localgroup Administracion /add
+net localgroup Ventas ventas1 /add & net localgroup Ventas ventas2 /add
+(repetir para Contabilidad y Administracion)</code></pre>
+<p><strong>4. Recursos compartidos:</strong></p>
+<pre><code>net share CarpetaVentas=C:\Ventas /grant:Ventas,CHANGE
+net share CarpetaConta=C:\Contabilidad /grant:Contabilidad,CHANGE
+net share CarpetaAdmin=C:\Administracion /grant:Administracion,CHANGE</code></pre>
+<p><strong>5. Seguridad:</strong></p>
+<pre><code># Windows: verificar net share, revisar permisos con icacls
+# Ubuntu: sudo ufw status, sudo ufw allow samba</code></pre>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>Este es el bloque de repaso que permite ver si los alumnos pueden integrar todo lo aprendido. Deja tiempo suficiente (una sesión completa) y circula por los puestos. Los errores más comunes son de IP incorrecta en la subred y permisos mezclados entre grupos.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>No tener en cuenta el modo de red de VirtualBox. Para que dos VMs se vean entre sí, deben estar en la misma "Red interna" o "Solo anfitrión" en VirtualBox. En modo NAT cada VM tiene una red diferente y no se ven entre ellas.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloque" id="b40">
+        <div class="bloque-header" style="background:linear-gradient(135deg,#92400e,#b45309)">
+            <span class="num">B40</span>
+            <h3>Prueba práctica final RA2</h3>
+            <span class="duracion">⏱️ 110 min</span>
+        </div>
+        <div class="bloque-body">
+            
+            <div class="box-sol">
+                <div class="box-label">📋 Solución ejercicio</div>
+                <p><strong>Rúbrica de corrección de la prueba final:</strong></p>
+<table>
+<thead><tr><th>Fase</th><th>Criterio</th><th>Puntos</th></tr></thead>
+<tbody>
+<tr><td>Red</td><td>IPs correctas en la subred indicada, ping entre equipos funciona</td><td>3 pts</td></tr>
+<tr><td>Usuarios</td><td>3 usuarios en cada sistema con contraseñas asignadas</td><td>3 pts</td></tr>
+<tr><td>Grupos</td><td>Grupos Finanzas y Marketing creados, usuarios asignados correctamente</td><td>3 pts</td></tr>
+<tr><td>Recursos</td><td>Carpetas compartidas con permisos correctos (solo el grupo puede escribir)</td><td>4 pts</td></tr>
+<tr><td>Acceso</td><td>Usuario correcto accede ✅, usuario incorrecto no accede ❌</td><td>4 pts</td></tr>
+<tr><td>Firewall</td><td>UFW activo en Ubuntu con regla Samba, firewall Windows con regla SMB</td><td>3 pts</td></tr>
+<tr><td>Documentación</td><td>PDF completo con capturas de cada fase y doc de configuración</td><td>3 pts</td></tr>
+</tbody>
+</table>
+<p><strong>Errores comunes en la prueba:</strong></p>
+<ul class="icon-list">
+<li>Dar Control total donde solo se pedía Lectura</li>
+<li>Olvidar reiniciar Samba tras editar smb.conf</li>
+<li>No verificar el acceso desde el equipo remoto</li>
+<li>Documentación incompleta (capturas de solo una fase)</li>
+</ul>
+            </div>
+            <div class="box-nota">
+                <div class="box-label">🎓 Nota didáctica</div>
+                <p>La prueba evalúa autonomía: el alumno debe completar el escenario desde cero sin ayuda. Insiste en que documenten CADA PASO. Muchos alumnos lo hacen todo correcto pero la documentación es pobre, lo que baja la nota.</p>
+            </div>
+            <div class="box-error">
+                <div class="box-label">⚠️ Errores frecuentes de los alumnos</div>
+                <p>Entrar en pánico y resetear la VM porque algo no funciona. Recuérdales el diagnóstico por pasos: primero comprobar la red (ping), luego los usuarios, luego los permisos. El 90% de los problemas tienen solución sin resetear.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        📋 RA2 · Guía del Profesor · OACE 2º CFGB Informática · Curso 2025/26<br>
+        Material didáctico original — Uso exclusivo docente — Confidencial
+    </footer>
+</div>
+
+<script>
+const btnTop = document.getElementById('btnTop');
+window.addEventListener('scroll', () => btnTop.classList.toggle('visible', window.scrollY > 400));
+btnTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+const navLinks = document.querySelectorAll('.nav-lateral a');
+const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) navLinks.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id));
+    });
+}, {threshold: 0.2});
+document.querySelectorAll('.bloque').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
