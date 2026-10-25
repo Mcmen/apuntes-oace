@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RA4 — OACE: Emplea utilidades proporcionadas por Internet, configurándolas e identificando su funcionalidad y prestaciones.</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #eef1f5; color: #1a1a2e; line-height: 1.7; font-size: 15px; }
+    :root {
+      --azul: #1e3a5f; --azul-medio: #2d6a9f; --azul-claro: #dceeff;
+      --win: #2d6a9f; --win-light: #e6f0f9;
+      --linux: #b8542a; --linux-light: #fbeee6;
+      --critico: #b03a2e; --critico-light: #fdf0ee;
+      --importante: #8a6400; --importante-light: #fff9e6;
+      --complementario: #2d6a9f; --complementario-light: #e8f2fb;
+      --exito: #1a6b3a; --exito-light: #e2f0e6;
+      --gris: #667085; --borde: #dde3ec;
+      --sombra: 0 2px 8px rgba(30,58,95,0.07);
+    }
+
+    /* ── Cabecera ───────────────────────────────────────────── */
+    .nav-sor { position: sticky; top: 0; z-index: 100; background: var(--azul); padding: 0 24px; height: 52px; display: flex; align-items: center; }
+    .nav-brand { color: white; font-weight: 600; font-size: 15px; letter-spacing: 0.3px; max-width: 1080px; width: 100%; margin: 0 auto; }
+    .nav-brand span { color: #8fc7a0; font-weight: 700; }
+    .hero { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%); color: white; padding: 40px 24px 34px; text-align: left; }
+    .hero > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+    .hero h1 { font-size: 25px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; }
+    .hero-sub { font-size: 14px; opacity: 0.8; font-style: italic; margin-bottom: 20px; }
+    .hero-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+    .hero-meta span { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); padding: 4px 13px; border-radius: 20px; font-weight: 600; }
+
+    /* ── Columna medida ─────────────────────────────────────── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ── Ficha del RA ───────────────────────────────────────── */
+    .ra-info { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 24px; box-shadow: var(--sombra); }
+    .ra-info h2 { font-size: 18px; color: var(--azul); border-left: 4px solid var(--azul-medio); padding-left: 14px; margin-bottom: 18px; line-height: 1.4; }
+    .peso-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+    .peso-card { flex: 1; min-width: 120px; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; text-align: center; }
+    .peso-card .numero { font-size: 24px; font-weight: 700; color: var(--azul-medio); line-height: 1.2; }
+    .peso-card .label { font-size: 11px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.6px; }
+    .ce-criticos { background: var(--critico-light); border-left: 4px solid var(--critico); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 13px; }
+    .ce-criticos strong { color: var(--critico); }
+    .progress-bar { background: var(--borde); height: 8px; border-radius: 8px; overflow: hidden; margin: 14px 0 2px; }
+    .progress-fill { background: var(--exito); width: 0%; height: 100%; transition: width 0.3s; }
+
+    /* ── Índice ─────────────────────────────────────────────── */
+    .ce-index { background: white; border-radius: 10px; padding: 18px 26px; margin-bottom: 32px; box-shadow: var(--sombra); }
+    .ce-index-titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gris); margin-bottom: 12px; }
+    .ce-index-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ce-idx-item { display: flex; align-items: baseline; gap: 8px; padding: 5px 11px; border-radius: 6px; text-decoration: none; font-size: 12.5px; color: #2c3444; border: 1px solid var(--borde); background: #f7f9fc; transition: 0.15s; }
+    .ce-idx-item:hover { background: var(--azul-claro); border-color: var(--azul-medio); }
+    .ce-idx-critico { border-left: 3px solid var(--critico); }
+    .ce-idx-importante { border-left: 3px solid #d4a017; }
+    .ce-idx-complementario { border-left: 3px solid var(--azul-medio); }
+    .ce-idx-letra { font-weight: 800; font-size: 13px; color: var(--azul); }
+    .ce-idx-desc { color: #4a5568; }
+
+    /* ── Bloques: cabecera y cuerpo como dos tarjetas ───────── */
+    .bloque { background: transparent; border: none; box-shadow: none; margin-bottom: 40px; }
+    .bloque-header { background: white; border-left: 5px solid var(--azul-medio); border-radius: 0 8px 8px 0; padding: 15px 20px; margin-bottom: 16px; box-shadow: var(--sombra); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .bloque-titulo { display: flex; align-items: center; gap: 13px; }
+    .bloque-num { background: var(--azul-medio); color: white; font-weight: 700; border-radius: 6px; padding: 4px 11px; font-size: 14px; flex-shrink: 0; align-self: flex-start; margin-top: 3px; }
+    .bloque-num.critico { background: var(--critico); }
+    .bloque-info h3 { font-size: 18px; color: var(--azul); margin-bottom: 3px; line-height: 1.35; }
+    .bloque-info p { font-size: 12px; color: var(--gris); }
+    .bloque-sesiones { background: #f0f3f8; color: var(--gris); border: 1px solid var(--borde); padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+    .bloque-body { background: white; border-radius: 10px; padding: 24px 28px; box-shadow: var(--sombra); }
+
+    /* ── Escala tipográfica dentro del cuerpo ───────────────── */
+    .bloque-body h3 { font-size: 16px; color: var(--azul); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--borde); }
+    .bloque-body h4 { font-size: 15px; color: var(--azul); margin: 22px 0 10px; }
+    .bloque-body > h3:first-child, .bloque-body > h4:first-child { margin-top: 0; }
+    .bloque-body p { margin-bottom: 11px; }
+    .bloque-body p:last-child { margin-bottom: 0; }
+    .win-col h4, .linux-col h4, .ejercicio h5, .ejemplo-resuelto h5 { margin-top: 0; }
+
+    /* ── Listas ─────────────────────────────────────────────── */
+    .bloque-body ul, .bloque-body ol, .box-critico ul, .box-critico ol, .box-importante ul, .box-importante ol, .box-complementario ul, .box-complementario ol, .win-col ul, .win-col ol, .linux-col ul, .linux-col ol { padding-left: 20px; margin: 10px 0; }
+    .bloque-body li { margin-bottom: 6px; }
+    .bloque-body li::marker { color: var(--azul-medio); }
+
+    /* ── Dos columnas Windows / Linux ───────────────────────── */
+    .dual-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .win-col { background: var(--win-light); border: 1px solid #cfe0ee; border-top: 3px solid var(--win); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .win-col h4 { color: var(--win); font-size: 14px; margin-bottom: 10px; }
+    .linux-col { background: var(--linux-light); border: 1px solid #f0dcd0; border-top: 3px solid var(--linux); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .linux-col h4 { color: var(--linux); font-size: 14px; margin-bottom: 10px; }
+
+    /* ── Cajas semánticas ───────────────────────────────────── */
+    .box-critico, .box-importante, .box-complementario { border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 18px 0; }
+    .box-critico { background: var(--critico-light); border-left: 4px solid var(--critico); }
+    .box-importante { background: var(--importante-light); border-left: 4px solid #d4a017; }
+    .box-complementario { background: var(--complementario-light); border-left: 4px solid var(--complementario); }
+    .box-label { font-weight: 700; font-size: 12px; text-transform: none; letter-spacing: 0.3px; margin-bottom: 5px; display: block; }
+    .box-critico .box-label { color: var(--critico); }
+    .box-importante .box-label { color: var(--importante); }
+    .box-complementario .box-label { color: var(--complementario); }
+
+    /* ── Código y tablas ────────────────────────────────────── */
+    pre { background: #1e293b; color: #e2e8f0; padding: 13px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; font-family: 'Consolas', 'Courier New', monospace; margin: 14px 0; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    code { background: #eef2f7; padding: 1px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 13px; color: #1e3a5f; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0; border-radius: 8px; border: 1px solid var(--borde); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead tr { background: var(--azul); color: white; }
+    th { padding: 10px 14px; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f7f9fc; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Ejercicios ─────────────────────────────────────────── */
+    .ejercicio { background: #fdfaf2; border: 1px solid #eadfc2; border-left: 4px solid #d4a017; border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejercicio h5 { color: #7a5c00; margin-bottom: 4px; font-size: 14px; }
+    .nivel-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .nivel-basico { background: var(--exito-light); color: var(--exito); }
+    .nivel-medio { background: #fdf3d6; color: #7a5c00; }
+    .nivel-avanzado { background: var(--critico-light); color: var(--critico); }
+    .respuesta { background: white; border: 1px solid var(--borde); border-radius: 6px; padding: 12px; min-height: 76px; margin-top: 12px; outline: none; }
+    .respuesta:focus { border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(45,106,159,0.1); }
+    .respuesta:empty::before { content: attr(data-placeholder); color: #a0aec0; pointer-events: none; display: block; }
+    .solucion { margin-top: 12px; background: var(--exito-light); border-radius: 6px; padding: 2px 14px; }
+    .solucion summary { cursor: pointer; font-weight: 600; color: var(--exito); padding: 9px 0; list-style: revert; font-size: 13.5px; }
+    .solucion[open] summary { margin-bottom: 6px; }
+
+    /* ── Ejemplo resuelto, diagrama, checklist ──────────────── */
+    .ejemplo-resuelto { background: var(--exito-light); border-left: 4px solid var(--exito); border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejemplo-resuelto h5 { color: var(--exito); margin-bottom: 8px; font-size: 14px; }
+    .diagrama { margin: 22px 0; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 20px 14px; text-align: center; overflow-x: auto; }
+    .diagrama svg { max-width: 100%; height: auto; display: block; margin: 0 auto; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .diagrama figcaption { font-size: 12.5px; color: var(--gris); margin-top: 14px; font-style: italic; }
+    .checklist { background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 18px 20px; margin-top: 22px; }
+    .checklist strong { color: var(--azul); font-size: 14px; }
+    .checklist ul { list-style: none; padding: 0; margin-top: 10px; }
+    .checklist li { padding: 5px 0; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; border-bottom: 1px solid #eef1f5; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; margin-top: 5px; accent-color: var(--exito); }
+    .checklist li label { cursor: pointer; flex: 1; font-size: 14px; }
+
+    /* ── Varios ─────────────────────────────────────────────── */
+    hr.sep { border: none; border-top: 2px dashed var(--borde); margin: 24px 0; }
+    footer { text-align: center; padding: 28px 24px; color: var(--gris); font-size: 12px; border-top: 1px solid var(--borde); margin-top: 44px; background: white; }
+    .btn-top { position: fixed; bottom: 20px; right: 20px; background: var(--azul); color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 19px; opacity: 0; transition: 0.3s; z-index: 90; }
+    .btn-top.visible { opacity: 1; }
+    .progreso-badge { position: fixed; bottom: 20px; left: 20px; background: var(--azul); color: white; padding: 7px 15px; border-radius: 20px; font-size: 12.5px; font-weight: 600; z-index: 90; }
+
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .container { padding: 18px 14px 44px; }
+      .dual-columns { grid-template-columns: 1fr; gap: 12px; }
+      .hero { padding: 26px 18px 22px; }
+      .hero h1 { font-size: 19px; }
+      .bloque-body { padding: 16px 17px; }
+      .bloque-header { padding: 13px 15px; }
+      pre { font-size: 11.5px; }
+      th, td { padding: 7px 9px; font-size: 12px; }
+    }
+
+    /* ── Fotos reales ───────────────────────────────────────── */
+    .foto { margin: 22px 0; }
+    .foto-sm img { max-width: 620px; margin-left: auto; margin-right: auto; }
+    .foto img { width: 100%; border-radius: 10px; border: 1px solid var(--borde); display: block; }
+    .foto figcaption { font-size: 12.5px; color: var(--gris); margin-top: 10px; font-style: italic; text-align: center; }
+    .foto-pendiente { border: 2px dashed #c3cede; border-radius: 10px; background: #f7f9fc; padding: 26px 20px; text-align: center; color: var(--gris); }
+    .foto-pendiente .icono { font-size: 30px; display: block; margin-bottom: 8px; opacity: 0.6; }
+    .foto-pendiente .archivo { display: inline-block; font-family: 'Consolas', monospace; font-size: 12.5px; background: white; border: 1px solid var(--borde); border-radius: 4px; padding: 2px 8px; color: var(--azul); margin-top: 8px; }
+    .foto-pendiente .que { font-size: 13.5px; color: #4a5568; }
+
+    /* ── Rejilla de tarjetas de contenido ───────────────────── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { background: #f7f9fc; border: 1px solid var(--borde); border-top: 3px solid var(--azul-medio); border-radius: 8px; padding: 15px 17px; }
+    .card h4 { font-size: 14px; color: var(--azul); margin: 0 0 9px; display: flex; align-items: center; gap: 8px; }
+    .card h4 .ico { font-size: 18px; }
+    .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+    .card li { margin-bottom: 5px; }
+
+    /* ── Etiquetas de peligrosidad ──────────────────────────── */
+    .pel { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 8px; border-radius: 4px; letter-spacing: 0.4px; white-space: nowrap; }
+    .pel-baja    { background: #e2f0e6; color: #1a6b3a; }
+    .pel-media   { background: #fdf3d6; color: #7a5c00; }
+    .pel-alta    { background: #fbe6dd; color: #a0522d; }
+    .pel-critica { background: #f7dcd8; color: #8c2f22; }
+
+    /* ── Frase destacada, para romper el bloque de texto ────── */
+    .clave { font-size: 16px; line-height: 1.6; color: var(--azul); border-left: 4px solid #d4a017; padding: 4px 0 4px 16px; margin: 22px 0; font-weight: 600; }
+
+    /* ── Vídeo de apoyo: enlace, no incrustado ──────────────── */
+    .videos { display: flex; flex-direction: column; gap: 8px; margin: 18px 0; }
+    .video { display: flex; align-items: flex-start; gap: 12px; background: #fff; border: 1px solid var(--borde); border-left: 4px solid #a0302a; border-radius: 8px; padding: 12px 14px; text-decoration: none; color: inherit; box-shadow: var(--sombra); }
+    .video:hover { border-color: #a0302a; }
+    .video .play { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #a0302a; color: #fff; font-size: 11px; line-height: 26px; text-align: center; }
+    .video .txt { min-width: 0; }
+    .video .titulo { display: block; font-weight: 600; font-size: 14.5px; color: var(--azul); }
+    .video .desc { display: block; font-size: 13px; color: var(--gris); margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav-sor">
+  <div class="nav-brand">OACE &nbsp;<span>RA4</span></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Grado Básico Informática y Comunicaciones</div>
+  <h1>RA4: Emplea utilidades proporcionadas por Internet, configurándolas e identificando su funcionalidad y prestaciones.</h1>
+  <p class="hero-sub">Contenido técnico de nivel Grado Básico</p>
+  <div class="hero-meta">
+    <span>Peso: 18%</span>
+    <span>3 sesiones × 55 min</span>
+    <span>1 criterios de evaluación</span>
+    <span>1 CEs críticos</span>
+  </div>
+</div>
+<div class="container">
+<div class="ra-info">
+  <h2>RA4: Emplea utilidades proporcionadas por Internet, configurándolas e identificando su funcionalidad y prestaciones.</h2>
+  <div class="peso-grid">
+    <div class="peso-card"><div class="numero">18%</div><div class="label">Peso evaluación</div></div>
+    <div class="peso-card"><div class="numero">3</div><div class="label">Sesiones</div></div>
+    <div class="peso-card"><div class="numero">1</div><div class="label">Criterios</div></div>
+    <div class="peso-card"><div class="numero">1</div><div class="label">Críticos</div></div>
+  </div>
+  <div class="ce-criticos"><strong>CEs críticos:</strong> CE-d</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+<div class="ce-index">
+  <div class="ce-index-titulo">Índice RA4 — 1 criterios</div>
+  <div class="ce-index-links">
+    <a href="#ceD" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">d</span><span class="ce-idx-desc">Se han identificado los medios y procedimientos de seguridad durante el acceso a…</span></a>
+  </div>
+</div>
+<div class="bloque" id="ceD">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">d</div>
+      <div class="bloque-info">
+        <h3>Seguridad al acceder a páginas web: riesgos y fraudes</h3>
+        <p>CE-d · CRÍTICO · 3 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">3 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <p>Cada vez que escribes una dirección web y pulsas Intro, tu equipo envía una petición por internet a un <strong>servidor</strong> (un ordenador remoto que guarda la página) y recibe el contenido. En ese camino puede meterse un atacante. Este criterio trata dos cosas: los <strong>medios</strong> que protegen ese acceso (HTTPS, certificados, contraseñas fuertes) y los <strong>fraudes</strong> que intentan engañarte para que entregues tus datos o instales programas dañinos.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Término</th><th>Qué es</th><th>Cómo lo ves tú</th></tr></thead>
+        <tbody>
+          <tr><td>Navegador</td><td>Programa que pide y muestra páginas web</td><td>Chrome, Firefox o Edge</td></tr>
+          <tr><td>URL</td><td>Dirección única de una página. El <strong>nombre del host</strong> es lo que va entre <code>//</code> y la primera barra que aparece después del protocolo. El <strong>dominio real</strong> se obtiene tomando las dos últimas etiquetas del host, sin incluir subdominios como <code>www</code>. En sufijos compuestos como <code>.gob.es</code> hay que incluir también la etiqueta anterior: <code>agenciatributaria.gob.es</code>. Un <strong>subdominio</strong> es una etiqueta añadida a la izquierda del dominio, como <code>www</code> o <code>sede</code>.</td><td><code>https://www.correos.es/seguimiento</code> → host: <code>www.correos.es</code>; dominio real: <code>correos.es</code></td></tr>
+          <tr><td>HTTP / HTTPS</td><td>Conjunto de reglas para pedir páginas. HTTPS es lo mismo pero <strong>cifrado</strong>: los datos viajan ilegibles para quien los intercepte</td><td>Candado cerrado en la barra de direcciones</td></tr>
+          <tr><td>Certificado digital</td><td>Documento electrónico que emite una autoridad de confianza y garantiza que ese dominio es quien dice ser</td><td>Se consulta pulsando el candado</td></tr>
+          <tr><td>Cookie</td><td>Pequeño archivo que la web guarda en tu navegador para recordarte (sesión, idioma…)</td><td>Aviso de cookies al entrar</td></tr>
+          <tr><td>Phishing</td><td>Fraude que suplanta a una entidad real (banco, Correos, tu empresa) para robarte datos</td><td>Correo urgente con enlace raro</td></tr>
+          <tr><td>Malware / ransomware</td><td>Programa dañino. El ransomware cifra tus archivos y pide dinero para devolverlos</td><td>Archivos con extensión cambiada y aviso de rescate</td></tr>
+          <tr><td>2FA (doble factor)</td><td>Segundo comprobante además de la contraseña: un código al móvil, una app, una llave física</td><td>“Introduce el código de 6 dígitos”</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 710 150" role="img" aria-label="Fases de un fraude de phishing por correo electrónico">
+        <defs>
+          <marker id="flecha-d-ced" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <text x="355" y="22" text-anchor="middle" font-size="15" fill="#1a1a2e">Acceso a una web fraudulenta</text>
+        <rect x="10" y="40" width="150" height="70" rx="12" fill="#e8f2fb" stroke="#b03a2e" stroke-width="2"/>
+        <text x="85" y="70" text-anchor="middle" font-size="14" fill="#1a1a2e">Correo o SMS</text>
+        <text x="85" y="90" text-anchor="middle" font-size="12" fill="#667085">falso y urgente</text>
+        <line x1="160" y1="75" x2="188" y2="75" stroke="#667085" stroke-width="2" marker-end="url(#flecha-d-ced)"/>
+        <rect x="190" y="40" width="150" height="70" rx="12" fill="#e8f2fb" stroke="#b03a2e" stroke-width="2"/>
+        <text x="265" y="70" text-anchor="middle" font-size="14" fill="#1a1a2e">Enlace a web</text>
+        <text x="265" y="90" text-anchor="middle" font-size="12" fill="#667085">clonada</text>
+        <line x1="340" y1="75" x2="368" y2="75" stroke="#667085" stroke-width="2" marker-end="url(#flecha-d-ced)"/>
+        <rect x="370" y="40" width="150" height="70" rx="12" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="445" y="70" text-anchor="middle" font-size="14" fill="#1a1a2e">Víctima teclea</text>
+        <text x="445" y="90" text-anchor="middle" font-size="12" fill="#667085">usuario y clave</text>
+        <line x1="520" y1="75" x2="548" y2="75" stroke="#667085" stroke-width="2" marker-end="url(#flecha-d-ced)"/>
+        <rect x="550" y="40" width="150" height="70" rx="12" fill="#e8f2fb" stroke="#b03a2e" stroke-width="2"/>
+        <text x="625" y="70" text-anchor="middle" font-size="14" fill="#1a1a2e">El atacante</text>
+        <text x="625" y="90" text-anchor="middle" font-size="12" fill="#667085">roba la cuenta</text>
+      </svg>
+      <figcaption>Un fraude por phishing siempre sigue las mismas cuatro fases. Fíjate en que el punto débil no es la tecnología, sino el paso 3: el momento en que la víctima escribe sus datos.</figcaption>
+    </figure>
+
+    <h4>Riesgos y fraudes más habituales</h4>
+    <div class="cards">
+      <div class="card">
+        <h4><span class="ico">🎣</span> Phishing</h4>
+        <ul><li>Suplanta a tu banco, a Correos o a tu jefe. Usa la urgencia (“su cuenta será bloqueada en 24 h”).</li></ul>
+      </div>
+      <div class="card">
+        <h4><span class="ico">🛒</span> Tienda falsa</h4>
+        <ul><li>Precios imposibles, solo acepta transferencia y no publica datos fiscales ni teléfono.</li></ul>
+      </div>
+      <div class="card">
+        <h4><span class="ico">⬇️</span> Descargas trampa</h4>
+        <ul><li>“Instala este códec para ver el vídeo” o programas pirata: instalan malware.</li></ul>
+      </div>
+      <div class="card">
+        <h4><span class="ico">🔑</span> Robo de contraseñas</h4>
+        <ul><li>Reutilizar la misma clave en varios sitios: si cae una, caen todas.</li></ul>
+      </div>
+      <div class="card">
+        <h4><span class="ico">📶</span> Wi-Fi pública</h4>
+        <ul><li>Red abierta sin cifrado: otro usuario puede leer lo que envías.</li></ul>
+      </div>
+      <div class="card">
+        <h4><span class="ico">🧩</span> Ransomware</h4>
+        <ul><li>Entra por un enlace o adjunto y cifra tus archivos pidiendo un rescate.</li></ul>
+      </div>
+    </div>
+
+    <div class="clave">El candado HTTPS significa “esta conexión va cifrada”, NO “esta web es de fiar”. Una web de phishing también puede tener candado.</div>
+
+    <h4>Procedimientos de seguridad al navegar</h4>
+    <ol>
+      <li><strong>Leer la URL de derecha a izquierda.</strong> En <code>correos.es.aviso-paquete.top/login</code>, el dominio real es <code>aviso-paquete.top</code>, no Correos.</li>
+      <li><strong>Comprobar el certificado.</strong> En Chrome o Edge: clic en el icono a la izquierda de la barra de direcciones → “La conexión es segura” → “El certificado es válido”. Mira los campos “Emitido para” (debe coincidir con el dominio) y “Emitido por”. En Firefox: clic en el candado → “Conexión segura” → “Más información” → “Ver certificado”.</li>
+      <li><strong>Contraseñas distintas y largas</strong> (12 caracteres o más, con mayúsculas, números y símbolos) y activar <strong>2FA</strong> en el correo y en la banca.</li>
+      <li><strong>Mantener actualizados</strong> navegador y sistema operativo: las actualizaciones corrigen fallos que los atacantes aprovechan (visto en RA1).</li>
+      <li><strong>No instalar extensiones</strong> que no necesites y bloquear ventanas emergentes.</li>
+      <li><strong>No hacer banca ni compras</strong> desde una Wi-Fi pública abierta.</li>
+    </ol>
+
+    <p>Antes de usar el comando, recuerda dos conceptos básicos: una <strong>dirección IP</strong> es un número único que identifica a un equipo en una red (por ejemplo, <code>192.168.1.10</code> en una red local o <code>80.10.20.30</code> en internet). Un <strong>servidor DNS</strong> (<em>Domain Name System</em>) es el servicio que traduce los nombres de dominio legibles (<code>www.correos.es</code>) a direcciones IP; sin él tendríamos que memorizar números.</p>
+
+    <p>Para comprobar a qué IP apunta un dominio sospechoso, en Ubuntu abrimos el terminal (Ctrl+Alt+T, visto en RA1) y ejecutamos:</p>
+    <pre><code>ping -c 1 www.correos.es</code></pre>
+    <ul>
+      <li><code>ping</code>: envía un paquete a un equipo de la red para ver si responde y cuánto tarda.</li>
+      <li><code>-c 1</code>: <em>count = 1</em>; envía un solo paquete en lugar de estar repitiendo indefinidamente. Sin este flag el comando no pararía hasta pulsar Ctrl+C.</li>
+      <li><code>www.correos.es</code>: el dominio que queremos resolver. El sistema consulta al servidor DNS y muestra la IP en la primera línea del resultado.</li>
+    </ul>
+
+    <div class="dual-columns">
+      <div class="win-col"><h4>🪟 Windows 11</h4><p><strong>Microsoft Defender</strong> es el antivirus y la protección integrada de Windows: analiza descargas, archivos y procesos sospechosos. <strong>SmartScreen</strong> es el filtro de reputación de Edge/Windows: compara webs y descargas con listas de sitios peligrosos y avisa antes de abrirlas. Ubicación: Configuración → Privacidad y seguridad → Seguridad de Windows.</p></div>
+      <div class="linux-col"><h4>🐧 Ubuntu 24.04</h4><p>Firefox trae <strong>protección contra el rastreo</strong> y aviso de sitios engañosos activados por defecto. Ubicación: menú ☰ → Ajustes → Privacidad y seguridad.</p></div>
+    </div>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En <strong>Suministros Ríos S.L.</strong>, Marta (administrativa) recibe en Thunderbird un correo de <code>soporte@correos-notificacion.click</code> con el asunto “Su paquete está retenido: pague 2,99 € en 24 h” y un botón “Pagar ahora”.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>No pulsa el enlace. Pasa el ratón por encima y lee la URL que aparece abajo a la izquierda del navegador: <code>https://correos.es.aviso-paquete.top/pago</code>.</li>
+        <li>Lee la URL de derecha a izquierda: el dominio real es <code>aviso-paquete.top</code>. No es <code>correos.es</code>, aunque lo lleve delante para confundir. → Es phishing.</li>
+        <li>Comprueba el certificado por curiosidad: hay candado, pero está emitido para otro dominio. Confirma que HTTPS no garantiza legitimidad.</li>
+        <li>Detecta las señales de alarma: urgencia (24 h), trato genérico, cantidad pequeña para que nadie sospeche, y remitente que no pertenece al dominio oficial.</li>
+        <li>Actuación: no introduce datos, marca el correo como <em>spam</em> en Thunderbird, lo borra y avisa al responsable de la empresa.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>Un cliente de Tecnoparts SL quiere hacer un trámite con la Agencia Tributaria y os muestra tres enlaces. Indica cuál es legítimo y explica por qué los otros dos no lo son:</p>
+      <p>A) <code>https://sede.agenciatributaria.gob.es/tramites</code><br>
+         B) <code>https://agenciatributaria.gob.es.devolucion-2026.top/tramites</code><br>
+         C) <code>http://agenciatributaria-es.info/login</code></p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>A es la legítima.</strong> Razonamiento leyendo la URL de derecha a izquierda:</p>
+        <ul>
+          <li><strong>A:</strong> el nombre del host es <code>sede.agenciatributaria.gob.es</code>; la barra que sigue al dominio da paso a <code>/tramites</code>. El dominio registrable es <code>agenciatributaria.gob.es</code> (con el subdominio <code>sede</code> delante) y termina en <code>.gob.es</code>, sufijo reservado a la Administración General del Estado. Además usa HTTPS.</li>
+          <li><strong>B:</strong> el dominio real es <code>devolucion-2026.top</code>. Lo que aparece delante (<code>agenciatributaria.gob.es</code>) es solo un <em>subdominio decorativo</em> (un subdominio es una etiqueta añadida a la izquierda del dominio, como <code>www</code> o <code>sede</code>): el atacante lo crea para que la dirección parezca oficial. El dominio real termina en <code>.top</code>, no en <code>.gob.es</code>.</li>
+          <li><strong>C:</strong> dos fallos: usa <code>http</code> (sin cifrado, los datos viajarían en claro) y el dominio es <code>agenciatributaria-es.info</code>, con un guion y un sufijo que no pertenece a la Administración.</li>
+        </ul>
+        <p>Conclusión: aunque B y C tuvieran candado, no se introducen datos. Se escribe la dirección oficial a mano en el navegador en lugar de pulsar enlaces de correos.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En el aula, abre Chrome y visita <code>https://www.correos.es</code>. Pulsa el candado, abre el certificado y anota: para qué dominio se ha emitido, quién lo emite y su fecha de caducidad. Después, responde: si en el certificado pusiera como dominio <code>correos-seguimiento.click</code> mientras la barra de direcciones muestra <code>www.correos.es</code>, ¿qué significaría y qué harías? Por último, elabora una lista de <strong>4 señales</strong> que delatan un correo de phishing de una supuesta empresa de paquetería.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>Javier, compañero de Tecnoparts SL, ha introducido su usuario y contraseña corporativa en una web que le llegó por correo (“renovación de la cuenta de Microsoft 365”). Desde entonces el PC va lento, se abren ventanas emergentes solas y el navegador tiene una barra de búsqueda que él no instaló. Su equipo debe diagnosticar la situación y proponer un plan de actuación ordenado: qué se revisa primero, cómo se corta el daño, qué se cambia y con qué herramientas del taller se comprueba que el equipo ha quedado limpio. Justifica el orden de las acciones.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-d</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé leer una URL de derecha a izquierda e identificar el dominio real</label></li>
+        <li><label><input type="checkbox" class="check-item"> Distingo HTTP de HTTPS y sé qué protege exactamente el cifrado</label></li>
+        <li><label><input type="checkbox" class="check-item"> Localizo el candado y abro el certificado en Chrome, Edge y Firefox</label></li>
+        <li><label><input type="checkbox" class="check-item"> Reconozco al menos cuatro señales de phishing en un correo</label></li>
+        <li><label><input type="checkbox" class="check-item"> Explico por qué el candado NO significa que la web sea de fiar</label></li>
+        <li><label><input type="checkbox" class="check-item"> Aplico contraseñas distintas y activo la verificación en dos pasos (2FA)</label></li>
+        <li><label><input type="checkbox" class="check-item"> Uso el comando ping -c 1 para comprobar a qué IP apunta un dominio</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>El error más frecuente es responder “esa web es segura porque tiene candado”. El candado solo confirma que la conexión va cifrada; un sitio de phishing también usa HTTPS. La pregunta correcta que hay que hacerse siempre es <strong>“¿el dominio que leo es el dominio oficial?”</strong>. En el examen, si te dan una URL con el nombre de la empresa delante pero con otro dominio detrás (por ejemplo <code>banco.es.secure-login.top</code>), es phishing aunque muestre candado.</p>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="resumen">
+  <div class="bloque-header" style="border-left-color:#1a6b3a;">
+    <div class="bloque-titulo">
+      <div class="bloque-num" style="background:#1a6b3a;">★</div>
+      <div class="bloque-info">
+        <h3>Puntos clave — RA4</h3>
+        <p>Repasa esto antes del examen</p>
+      </div>
+    </div>
+  </div>
+  <div class="bloque-body">
+    <ol>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Distingue HTTP de HTTPS: HTTP no cifra y HTTPS sí, y comprueba el candado y que el certificado digital esté emitido por una autoridad de confianza en Chrome 130, Edge 130 y Firefox 131 en Windows 11 24H2, Windows Server 2025 y Ubuntu 24.04 LTS.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Reconoce las partes de una URL: host, dominio real, subdominio decorativo, dominio registrable y terminaciones como .gob.es o .top, y no confíes solo por el aspecto del nombre.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Identifica fraudes como phishing, tienda falsa, descargas trampa y robo de contraseñas, y desconfía de enlaces o formularios que pidan datos personales o bancarios.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Relaciona malware y ransomware con descargas inseguras, extensiones no fiables y ventanas emergentes, y usa Microsoft Defender y SmartScreen en Windows 11 24H2 para bloquear sitios engañosos.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Configura la protección contra el rastreo y revisa las cookies en Chrome 130, Edge 130 y Firefox 131 para limitar el seguimiento en páginas web.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Aplica contraseñas largas y activa la verificación en dos pasos o 2FA cuando accedas a servicios web, evitando reutilizar la misma contraseña.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Evita introducir datos sensibles en una Wi-Fi pública abierta y comprueba que la web use HTTPS antes de iniciar sesión o hacer compras.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> En Mozilla Thunderbird 128, detecta el spam y no abras enlaces ni archivos adjuntos de correos sospechosos, verificando siempre el remitente.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> En Ubuntu 24.04 LTS, usa ping -c 1 o count para comprobar si un dominio responde, y Ctrl+C para detener el comando si se queda en ejecución, relacionando dominio, servidor DNS (Domain Name System) y dirección IP.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Gestiona con cuidado las extensiones y las ventanas emergentes en Chrome 130, Edge 130 y Firefox 131, instalando solo las necesarias y evitando sitios engañosos.</li>
+    </ol>
+  </div>
+</div>
+</div>
+
+<footer>OACE · Grado Básico · RA4: Emplea utilidades proporcionadas por Internet, configurándolas e identificando su funcionalidad y prestaciones.</footer>
+
+<button class="btn-top" id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="progreso-badge" id="progresoBadge">Progreso: 0%</div>
+
+<script>
+
+  window.addEventListener('scroll', function() {
+    document.getElementById('btnTop').classList.toggle('visible', window.scrollY > 300);
+  });
+  function updateProgress() {
+    var all = document.querySelectorAll('.check-item');
+    var checked = document.querySelectorAll('.check-item:checked');
+    var pct = all.length > 0 ? Math.round((checked.length / all.length) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progresoBadge').textContent = 'Progreso: ' + pct + '%';
+    try { localStorage.setItem('progreso_ra4_oace', pct); } catch(e) {}
+  }
+  document.querySelectorAll('.check-item').forEach(function(cb, i) {
+    try { if (localStorage.getItem('cb_ra4_oace_' + i) === 'true') cb.checked = true; } catch(e) {}
+    cb.addEventListener('change', function() {
+      try { localStorage.setItem('cb_ra4_oace_' + i, cb.checked); } catch(e) {}
+      updateProgress();
+    });
+  });
+  document.querySelectorAll('.respuesta[contenteditable="true"]').forEach(function(div, i) {
+    try { var s = localStorage.getItem('resp_ra4_oace_' + i); if (s) div.innerHTML = s; } catch(e) {}
+    div.addEventListener('input', function() {
+      try { localStorage.setItem('resp_ra4_oace_' + i, div.innerHTML); } catch(e) {}
+    });
+  });
+  updateProgress();
+
+</script>
+</body>
+</html>

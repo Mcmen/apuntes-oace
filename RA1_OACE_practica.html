@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RA1 Prácticas — OACE</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #eef1f5; color: #1a1a2e; line-height: 1.7; font-size: 15px; }
+    :root {
+      --azul: #1e3a5f; --azul-medio: #2d6a9f; --azul-claro: #dceeff;
+      --win: #2d6a9f; --win-light: #e6f0f9;
+      --linux: #b8542a; --linux-light: #fbeee6;
+      --critico: #b03a2e; --critico-light: #fdf0ee;
+      --importante: #8a6400; --importante-light: #fff9e6;
+      --complementario: #2d6a9f; --complementario-light: #e8f2fb;
+      --exito: #1a6b3a; --exito-light: #e2f0e6;
+      --gris: #667085; --borde: #dde3ec;
+      --sombra: 0 2px 8px rgba(30,58,95,0.07);
+    }
+
+    /* ── Cabecera ───────────────────────────────────────────── */
+    .nav-sor { position: sticky; top: 0; z-index: 100; background: var(--azul); padding: 0 24px; height: 52px; display: flex; align-items: center; }
+    .nav-brand { color: white; font-weight: 600; font-size: 15px; letter-spacing: 0.3px; max-width: 1080px; width: 100%; margin: 0 auto; }
+    .nav-brand span { color: #8fc7a0; font-weight: 700; }
+    .hero { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%); color: white; padding: 40px 24px 34px; text-align: left; }
+    .hero > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+    .hero h1 { font-size: 25px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; }
+    .hero-sub { font-size: 14px; opacity: 0.8; font-style: italic; margin-bottom: 20px; }
+    .hero-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+    .hero-meta span { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); padding: 4px 13px; border-radius: 20px; font-weight: 600; }
+
+    /* ── Columna medida ─────────────────────────────────────── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ── Ficha del RA ───────────────────────────────────────── */
+    .ra-info { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 24px; box-shadow: var(--sombra); }
+    .ra-info h2 { font-size: 18px; color: var(--azul); border-left: 4px solid var(--azul-medio); padding-left: 14px; margin-bottom: 18px; line-height: 1.4; }
+    .peso-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+    .peso-card { flex: 1; min-width: 120px; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; text-align: center; }
+    .peso-card .numero { font-size: 24px; font-weight: 700; color: var(--azul-medio); line-height: 1.2; }
+    .peso-card .label { font-size: 11px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.6px; }
+    .ce-criticos { background: var(--critico-light); border-left: 4px solid var(--critico); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 13px; }
+    .ce-criticos strong { color: var(--critico); }
+    .progress-bar { background: var(--borde); height: 8px; border-radius: 8px; overflow: hidden; margin: 14px 0 2px; }
+    .progress-fill { background: var(--exito); width: 0%; height: 100%; transition: width 0.3s; }
+
+    /* ── Índice ─────────────────────────────────────────────── */
+    .ce-index { background: white; border-radius: 10px; padding: 18px 26px; margin-bottom: 32px; box-shadow: var(--sombra); }
+    .ce-index-titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gris); margin-bottom: 12px; }
+    .ce-index-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ce-idx-item { display: flex; align-items: baseline; gap: 8px; padding: 5px 11px; border-radius: 6px; text-decoration: none; font-size: 12.5px; color: #2c3444; border: 1px solid var(--borde); background: #f7f9fc; transition: 0.15s; }
+    .ce-idx-item:hover { background: var(--azul-claro); border-color: var(--azul-medio); }
+    .ce-idx-critico { border-left: 3px solid var(--critico); }
+    .ce-idx-importante { border-left: 3px solid #d4a017; }
+    .ce-idx-complementario { border-left: 3px solid var(--azul-medio); }
+    .ce-idx-letra { font-weight: 800; font-size: 13px; color: var(--azul); }
+    .ce-idx-desc { color: #4a5568; }
+
+    /* ── Bloques: cabecera y cuerpo como dos tarjetas ───────── */
+    .bloque { background: transparent; border: none; box-shadow: none; margin-bottom: 40px; }
+    .bloque-header { background: white; border-left: 5px solid var(--azul-medio); border-radius: 0 8px 8px 0; padding: 15px 20px; margin-bottom: 16px; box-shadow: var(--sombra); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .bloque-titulo { display: flex; align-items: center; gap: 13px; }
+    .bloque-num { background: var(--azul-medio); color: white; font-weight: 700; border-radius: 6px; padding: 4px 11px; font-size: 14px; flex-shrink: 0; align-self: flex-start; margin-top: 3px; }
+    .bloque-num.critico { background: var(--critico); }
+    .bloque-info h3 { font-size: 18px; color: var(--azul); margin-bottom: 3px; line-height: 1.35; }
+    .bloque-info p { font-size: 12px; color: var(--gris); }
+    .bloque-sesiones { background: #f0f3f8; color: var(--gris); border: 1px solid var(--borde); padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+    .bloque-body { background: white; border-radius: 10px; padding: 24px 28px; box-shadow: var(--sombra); }
+
+    /* ── Escala tipográfica dentro del cuerpo ───────────────── */
+    .bloque-body h3 { font-size: 16px; color: var(--azul); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--borde); }
+    .bloque-body h4 { font-size: 15px; color: var(--azul); margin: 22px 0 10px; }
+    .bloque-body > h3:first-child, .bloque-body > h4:first-child { margin-top: 0; }
+    .bloque-body p { margin-bottom: 11px; }
+    .bloque-body p:last-child { margin-bottom: 0; }
+    .win-col h4, .linux-col h4, .ejercicio h5, .ejemplo-resuelto h5 { margin-top: 0; }
+
+    /* ── Listas ─────────────────────────────────────────────── */
+    .bloque-body ul, .bloque-body ol, .box-critico ul, .box-critico ol, .box-importante ul, .box-importante ol, .box-complementario ul, .box-complementario ol, .win-col ul, .win-col ol, .linux-col ul, .linux-col ol { padding-left: 20px; margin: 10px 0; }
+    .bloque-body li { margin-bottom: 6px; }
+    .bloque-body li::marker { color: var(--azul-medio); }
+
+    /* ── Dos columnas Windows / Linux ───────────────────────── */
+    .dual-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .win-col { background: var(--win-light); border: 1px solid #cfe0ee; border-top: 3px solid var(--win); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .win-col h4 { color: var(--win); font-size: 14px; margin-bottom: 10px; }
+    .linux-col { background: var(--linux-light); border: 1px solid #f0dcd0; border-top: 3px solid var(--linux); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .linux-col h4 { color: var(--linux); font-size: 14px; margin-bottom: 10px; }
+
+    /* ── Cajas semánticas ───────────────────────────────────── */
+    .box-critico, .box-importante, .box-complementario { border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 18px 0; }
+    .box-critico { background: var(--critico-light); border-left: 4px solid var(--critico); }
+    .box-importante { background: var(--importante-light); border-left: 4px solid #d4a017; }
+    .box-complementario { background: var(--complementario-light); border-left: 4px solid var(--complementario); }
+    .box-label { font-weight: 700; font-size: 12px; text-transform: none; letter-spacing: 0.3px; margin-bottom: 5px; display: block; }
+    .box-critico .box-label { color: var(--critico); }
+    .box-importante .box-label { color: var(--importante); }
+    .box-complementario .box-label { color: var(--complementario); }
+
+    /* ── Código y tablas ────────────────────────────────────── */
+    pre { background: #1e293b; color: #e2e8f0; padding: 13px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; font-family: 'Consolas', 'Courier New', monospace; margin: 14px 0; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    code { background: #eef2f7; padding: 1px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 13px; color: #1e3a5f; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0; border-radius: 8px; border: 1px solid var(--borde); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead tr { background: var(--azul); color: white; }
+    th { padding: 10px 14px; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f7f9fc; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Ejercicios ─────────────────────────────────────────── */
+    .ejercicio { background: #fdfaf2; border: 1px solid #eadfc2; border-left: 4px solid #d4a017; border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejercicio h5 { color: #7a5c00; margin-bottom: 4px; font-size: 14px; }
+    .nivel-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .nivel-basico { background: var(--exito-light); color: var(--exito); }
+    .nivel-medio { background: #fdf3d6; color: #7a5c00; }
+    .nivel-avanzado { background: var(--critico-light); color: var(--critico); }
+    .respuesta { background: white; border: 1px solid var(--borde); border-radius: 6px; padding: 12px; min-height: 76px; margin-top: 12px; outline: none; }
+    .respuesta:focus { border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(45,106,159,0.1); }
+    .respuesta:empty::before { content: attr(data-placeholder); color: #a0aec0; pointer-events: none; display: block; }
+    .solucion { margin-top: 12px; background: var(--exito-light); border-radius: 6px; padding: 2px 14px; }
+    .solucion summary { cursor: pointer; font-weight: 600; color: var(--exito); padding: 9px 0; list-style: revert; font-size: 13.5px; }
+    .solucion[open] summary { margin-bottom: 6px; }
+
+    /* ── Ejemplo resuelto, diagrama, checklist ──────────────── */
+    .ejemplo-resuelto { background: var(--exito-light); border-left: 4px solid var(--exito); border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejemplo-resuelto h5 { color: var(--exito); margin-bottom: 8px; font-size: 14px; }
+    .diagrama { margin: 22px 0; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 20px 14px; text-align: center; overflow-x: auto; }
+    .diagrama svg { max-width: 100%; height: auto; display: block; margin: 0 auto; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .diagrama figcaption { font-size: 12.5px; color: var(--gris); margin-top: 14px; font-style: italic; }
+    .checklist { background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 18px 20px; margin-top: 22px; }
+    .checklist strong { color: var(--azul); font-size: 14px; }
+    .checklist ul { list-style: none; padding: 0; margin-top: 10px; }
+    .checklist li { padding: 5px 0; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; border-bottom: 1px solid #eef1f5; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; margin-top: 5px; accent-color: var(--exito); }
+    .checklist li label { cursor: pointer; flex: 1; font-size: 14px; }
+
+    /* ── Varios ─────────────────────────────────────────────── */
+    hr.sep { border: none; border-top: 2px dashed var(--borde); margin: 24px 0; }
+    footer { text-align: center; padding: 28px 24px; color: var(--gris); font-size: 12px; border-top: 1px solid var(--borde); margin-top: 44px; background: white; }
+    .btn-top { position: fixed; bottom: 20px; right: 20px; background: var(--azul); color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 19px; opacity: 0; transition: 0.3s; z-index: 90; }
+    .btn-top.visible { opacity: 1; }
+    .progreso-badge { position: fixed; bottom: 20px; left: 20px; background: var(--azul); color: white; padding: 7px 15px; border-radius: 20px; font-size: 12.5px; font-weight: 600; z-index: 90; }
+
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .container { padding: 18px 14px 44px; }
+      .dual-columns { grid-template-columns: 1fr; gap: 12px; }
+      .hero { padding: 26px 18px 22px; }
+      .hero h1 { font-size: 19px; }
+      .bloque-body { padding: 16px 17px; }
+      .bloque-header { padding: 13px 15px; }
+      pre { font-size: 11.5px; }
+      th, td { padding: 7px 9px; font-size: 12px; }
+    }
+
+    /* ── Fotos reales ───────────────────────────────────────── */
+    .foto { margin: 22px 0; }
+    .foto-sm img { max-width: 620px; margin-left: auto; margin-right: auto; }
+    .foto img { width: 100%; border-radius: 10px; border: 1px solid var(--borde); display: block; }
+    .foto figcaption { font-size: 12.5px; color: var(--gris); margin-top: 10px; font-style: italic; text-align: center; }
+    .foto-pendiente { border: 2px dashed #c3cede; border-radius: 10px; background: #f7f9fc; padding: 26px 20px; text-align: center; color: var(--gris); }
+    .foto-pendiente .icono { font-size: 30px; display: block; margin-bottom: 8px; opacity: 0.6; }
+    .foto-pendiente .archivo { display: inline-block; font-family: 'Consolas', monospace; font-size: 12.5px; background: white; border: 1px solid var(--borde); border-radius: 4px; padding: 2px 8px; color: var(--azul); margin-top: 8px; }
+    .foto-pendiente .que { font-size: 13.5px; color: #4a5568; }
+
+    /* ── Rejilla de tarjetas de contenido ───────────────────── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { background: #f7f9fc; border: 1px solid var(--borde); border-top: 3px solid var(--azul-medio); border-radius: 8px; padding: 15px 17px; }
+    .card h4 { font-size: 14px; color: var(--azul); margin: 0 0 9px; display: flex; align-items: center; gap: 8px; }
+    .card h4 .ico { font-size: 18px; }
+    .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+    .card li { margin-bottom: 5px; }
+
+    /* ── Etiquetas de peligrosidad ──────────────────────────── */
+    .pel { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 8px; border-radius: 4px; letter-spacing: 0.4px; white-space: nowrap; }
+    .pel-baja    { background: #e2f0e6; color: #1a6b3a; }
+    .pel-media   { background: #fdf3d6; color: #7a5c00; }
+    .pel-alta    { background: #fbe6dd; color: #a0522d; }
+    .pel-critica { background: #f7dcd8; color: #8c2f22; }
+
+    /* ── Frase destacada, para romper el bloque de texto ────── */
+    .clave { font-size: 16px; line-height: 1.6; color: var(--azul); border-left: 4px solid #d4a017; padding: 4px 0 4px 16px; margin: 22px 0; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<nav class="nav-sor">
+  <div class="nav-brand">OACE &nbsp;<span>RA1 Prácticas</span></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Grado Básico Informática y Comunicaciones</div>
+  <h1>RA1 — Prácticas: Configura equipos informáticos para su funcionamiento en un entorno monousuario, identificando la funcionalidad de la instalación.</h1>
+  <p class="hero-sub">Actividades de laboratorio — OACE</p>
+  <div class="hero-meta">
+    <span>7 prácticas</span>
+    <span>28 sesiones × 55 min</span>
+    <span>0 en taller</span>
+  </div>
+</div>
+<div class="container">
+<div class="ra-info">
+  <div class="peso-grid">
+    <div class="peso-card"><div class="numero">7</div><div class="label">Prácticas</div></div>
+    <div class="peso-card"><div class="numero">28</div><div class="label">Sesiones</div></div>
+    <div class="peso-card"><div class="numero">0</div><div class="label">En taller</div></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+<div class="bloque" id="practica-ceA" data-modalidad="aula">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">a</div>
+      <div class="bloque-info">
+        <h3>Práctica CE-a: Configuración de parámetros básicos de una instalación en Windows 11 y Ubuntu 24.04</h3>
+        <p>CE-a · CRÍTICO · 5 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">5 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <h4>Organización de las 5 sesiones</h4>
+    <ul>
+      <li><strong>Sesión 1:</strong> escenario, repaso de parámetros básicos y arranque de las máquinas virtuales.</li>
+      <li><strong>Sesión 2:</strong> práctica guiada básica: idioma, teclado, zona horaria y usuarios.</li>
+      <li><strong>Sesión 3:</strong> práctica guiada básica: nombre de equipo, red DHCP, actualizaciones y protección.</li>
+      <li><strong>Sesión 4:</strong> variación nivel medio con IP estática.</li>
+      <li><strong>Sesión 5:</strong> resolución de problemas, preguntas de reflexión, errores frecuentes y evaluación.</li>
+    </ul>
+
+    <h4>Escenario empresarial</h4>
+    <p>La empresa <strong>Reparaciones Eléctricas Hnos. Vidal S.L.</strong> acaba de recibir 12 equipos con <strong>Windows 11</strong> y 6 equipos con <strong>Ubuntu 24.04</strong>. Debes dejarlos listos para los operarios de taller. Cada equipo debe tener el sistema operativo instalado y funcionando con los parámetros correctos de idioma, teclado, zona horaria, usuario, nombre de equipo y red.</p>
+    <p>Datos de la empresa:</p>
+    <ul>
+      <li>Red local: <code>192.168.10.0/24</code></li>
+      <li>Puerta de enlace: <code>192.168.10.1</code></li>
+      <li>DNS: <code>8.8.8.8</code> y <code>1.1.1.1</code></li>
+      <li>Dominio interno: <code>talleres.hernandezvidal.local</code></li>
+      <li>Usuario local: <code>operario</code></li>
+      <li>Contraseña temporal: <code>Manzana2026!</code></li>
+      <li>Nombre del equipo asignado: <code>AULA-XX</code> donde XX es tu número de puesto</li>
+    </ul>
+    <p>Trabajarás sobre un equipo con Windows 11 y otro con Ubuntu 24.04, reales o virtuales. Para cada paso debes comprobar que el cambio se ha aplicado correctamente.</p>
+
+    <h4>Objetivos</h4>
+    <ul>
+      <li>Configurar idioma, distribución de teclado y zona horaria en ambos sistemas.</li>
+      <li>Crear una cuenta de usuario local con contraseña.</li>
+      <li>Cambiar el nombre del equipo.</li>
+      <li>Verificar la red con DHCP y probar la conexión a Internet.</li>
+      <li>Aplicar actualizaciones y comprobar la protección básica.</li>
+      <li>Adaptar la configuración a una IP estática cuando la empresa lo solicite.</li>
+      <li>Diagnosticar y corregir fallos habituales en la configuración básica.</li>
+      <li>Documentar las intervenciones y presentar evidencias.</li>
+    </ul>
+
+    <h4>Práctica guiada · Nivel básico</h4>
+    <p><span class="nivel-tag nivel-basico">BÁSICO</span></p>
+    <p>Sigue los pasos numerados. En cada paso tienes la ruta de Windows 11 y los comandos equivalentes en Ubuntu 24.04. Después de cada paso, comprueba que el resultado es correcto antes de continuar.</p>
+
+    <ol>
+      <li>
+        <p><strong>Configurar idioma y distribución de teclado</strong></p>
+        <div class="dual-columns">
+          <div class="win-col">
+            <p><strong>Windows 11</strong></p>
+            <p>Pulsa <code>Win + I</code> para abrir <strong>Configuración</strong>. Ve a <strong>Hora e idioma → Idioma y región</strong>. Añade el idioma <strong>Español (España)</strong>, ponlo en la primera posición y revisa que el teclado sea <strong>Spanish (Spain)</strong>.</p>
+            <p>Comando PowerShell equivalente (opcional):</p>
+            <p><code>Set-WinUserLanguageList -LanguageList es-ES -Force</code></p>
+            <p><code>-LanguageList</code> indica la lista de idiomas y <code>-Force</code> aplica el cambio sin pedir confirmación.</p>
+          </div>
+          <div class="linux-col">
+            <p><strong>Ubuntu 24.04</strong></p>
+            <p>Abre el terminal con <code>Ctrl + Alt + T</code> y ejecuta:</p>
+            <p><code>sudo localectl set-locale LANG=es_ES.UTF-8</code></p>
+            <p>Después configura el teclado:</p>
+            <p><code>sudo localectl set-x11keymap es</code></p>
+            <p><code>set-locale</code> ajusta el idioma del sistema y <code>set-x11keymap</code> ajusta el mapa de teclado gráfico.</p>
+          </div>
+        </div>
+        <p><em>Verificación:</em> cierra sesión y vuelve a entrar. Los menús deben estar en español. Abre el Bloc de notas o gedit y escribe <code>ñáéíóú</code>; deben aparecer correctamente.</p>
+      </li>
+
+      <li>
+        <p><strong>Configurar zona horaria y formato de fecha</strong></p>
+        <div class="dual-columns">
+          <div class="win-col">
+            <p><strong>Windows 11</strong></p>
+            <p>Ve a <strong>Configuración → Hora e idioma → Fecha y hora</strong>. Ajusta la zona horaria a <strong>Madrid</strong> y activa <strong>Establecer zona horaria automáticamente</strong> y <strong>Establecer hora automáticamente</strong>.</p>
+            <p>Comando PowerShell equivalente:</p>
+            <p><code>Set-TimeZone -Name "Romance Standard Time"</code></p>
+            <p><code>-Name</code> indica el identificador de zona horaria de Windows para Madrid.</p>
+          </div>
+          <div class="linux-col">
+            <p><strong>Ubuntu 24.04</strong></p>
+            <p>Ejecuta en terminal:</p>
+            <p><code>sudo timedatectl set-timezone Europe/Madrid</code></p>
+            <p>Comprueba con <code>timedatectl</code> que la zona horaria es <strong>Europe/Madrid</strong>.</p>
+          </div>
+        </div>
+        <p><em>Verificación:</em> la fecha y hora de la bandeja del sistema deben coincidir con la hora real del aula. En Ubuntu el comando <code>date</code> debe mostrar la hora correcta.</p>
+      </li>
+
+      <li>
+        <p><strong>Crear cuenta de usuario local</strong></p>
+        <div class="dual-columns">
+          <div class="win-col">
+            <p><strong>Windows 11</strong></p>
+            <p>Ve a <strong>Configuración → Cuentas → Familia y otros usuarios → Agregar usuario</strong>. Selecciona <strong>No tengo datos de inicio de sesión de esta persona</strong> y después <strong>Agregar un usuario sin una cuenta Microsoft</strong>. Crea el usuario <code>operario</code> con contraseña <code>Manzana2026!</code>.</p>
+            <p>Comando PowerShell equivalente:</p>
+            <p><code>New-LocalUser -Name "operario" -Password (ConvertTo-SecureString "Manzana2026!" -AsPlainText -Force) -FullName "Operario de taller" -Description "Cuenta local de operario"</code></p>
+            <p><code>-Name</code> asigna el nombre de usuario, <code>-Password</code> la contraseña, <code>-FullName</code> el nombre completo y <code>-Description</code> una descripción. Dentro del paréntesis, <code>-AsPlainText</code> convierte la contraseña en texto plano y <code>-Force</code> evita la confirmación.</p>
+          </div>
+          <div class="linux-col">
+            <p><strong>Ubuntu 24.04</strong></p>
+            <p>Ejecuta en terminal:</p>
+            <p><code>sudo useradd -m -s /bin/bash -c "Operario de taller" operario</code></p>
+            <p><code>-m</code> crea la carpeta personal del usuario, <code>-s</code> asigna la shell de inicio, <code>-c</code> añade el comentario o nombre completo.</p>
+            <p>Asigna contraseña:</p>
+            <p><code>sudo passwd operario</code></p>
+            <p>Escribe <code>Manzana2026!</code> cuando el sistema lo pida.</p>
+          </div>
+        </div>
+        <p><em>Verificación:</em> cierra la sesión actual e inicia sesión con <code>operario</code> y la contraseña indicada. Debe poder entrar correctamente.</p>
+      </li>
+
+      <li>
+        <p><strong>Cambiar el nombre del equipo</strong></p>
+        <div class="dual-columns">
+          <div class="win-col">
+            <p><strong>Windows 11</strong></p>
+            <p>Ve a <strong>Configuración → Sistema → Acerca de</strong>. Pulsa <strong>Cambiar nombre de este equipo</strong> y escribe <code>AULA-XX</code>.</p>
+            <p>Comando PowerShell equivalente:</p>
+            <p><code>Rename-Computer -NewName "AULA-XX" -Restart</code></p>
+            <p><code>-NewName</code> indica el nuevo nombre y <code>-Restart</code> reinicia el equipo para aplicar el cambio.</p>
+          </div>
+          <div class="linux-col">
+            <p><strong>Ubuntu 24.04</strong></p>
+            <p>Ejecuta en terminal:</p>
+            <p><code>sudo hostnamectl set-hostname AULA-XX</code></p>
+            <p>Comprueba con <code>hostname</code> que aparece <code>AULA-XX</code>.</p>
+          </div>
+        </div>
+        <p><em>Verificación:</em> en Windows, después del reinicio, abre <strong>Sistema → Acerca de</strong> y comprueba que el nombre es <code>AULA-XX</code>. En Ubuntu ejecuta <code>hostname</code>.</p>
+      </li>
+
+      <li>
+        <p><strong>Verificar red con DHCP</strong></p>
+        <div class="dual-columns">
+          <div class="win-col">
+            <p><strong>Windows 11</strong></p>
+            <p>Ve a <strong>Configuración → Red e Internet → Ethernet o Wi-Fi → Propiedades</strong>. Comprueba que la asignación de IP es <strong>Automática (DHCP)</strong>.</p>
+            <p>Comando para ver la configuración:</p>
+            <p><code>ipconfig /all</code></p>
+            <p><code>/all</code> muestra toda la información de red: IP, máscara, puerta de enlace y DNS.</p>
+          </div>
+          <div class="linux-col">
+            <p><strong>Ubuntu 24.04</strong></p>
+            <p>Ejecuta en terminal:</p>
+            <p><code>nmcli con show --active</code></p>
+            <p>Comprueba el nombre de la conexión activa. Después configura DHCP:</p>
+            <p><code>nmcli con mod "Wired connection 1" ipv4.method auto</code></p>
+            <p>Si el nombre de la conexión es distinto, sustitúyelo por el que hayas visto. También puedes renovar la IP con:</p>
+            <p><code>sudo dhclient -v</code></p>
+            <p><code>-v</code> activa el modo detallado para ver lo que hace el comando.</p>
+          </div>
+        </div>
+        <p><em>Verificación:</em> ejecuta <code>ping 192.168.10.1</code> para comprobar la puerta de enlace y <code>ping www.google.es</code> para comprobar DNS e Internet. Deben responder.</p>
+      </li>
+
+      <li>
+        <p><strong>Aplicar actualizaciones y comprobar protección básica</strong></p>
+        <div class="dual-columns">
+          <div class="win-col">
+            <p><strong>Windows 11</strong></p>
+            <p>Ve a <strong>Configuración → Windows Update</strong> y pulsa <strong>Buscar actualizaciones</strong>. Espera a que termine y reinicia si es necesario.</p>
+            <p>Abre <strong>Seguridad de Windows → Protección contra virus y amenazas</strong>. Comprueba que la protección está <strong>activa</strong> y pulsa <strong>Buscar actualizaciones</strong> en <strong>Definiciones de virus y amenazas</strong>.</p>
+          </div>
+          <div class="linux-col">
+            <p><strong>Ubuntu 24.04</strong></p>
+            <p>Ejecuta en terminal:</p>
+            <p><code>sudo apt update</code></p>
+            <p><code>sudo apt upgrade -y</code></p>
+            <p><code>-y</code> responde automáticamente sí a las preguntas de instalación. Para protección antivirus básica opcional:</p>
+            <p><code>sudo apt install clamav -y</code></p>
+            <p><code>sudo freshclam</code></p>
+            <p><code>freshclam</code> actualiza las definiciones de virus.</p>
+          </div>
+        </div>
+        <p><em>Verificación:</em> en Windows no deben quedar actualizaciones pendientes y la protección debe mostrar un icono verde. En Ubuntu el sistema debe indicar que no hay actualizaciones pendientes y <code>freshclam</code> debe completar sin errores.</p>
+      </li>
+    </ol>
+
+    <h4>Variación · Nivel medio</h4>
+    <p><span class="nivel-tag nivel-medio">MEDIO</span></p>
+    <p>El jefe de taller necesita que el equipo <strong>AULA-10</strong>, que va a usarse en la red de producción, tenga <strong>IP estática</strong>. Configúralo con estos datos:</p>
+    <ul>
+      <li>IP: <code>192.168.10.20</code></li>
+      <li>Máscara: <code>255.255.255.0</code></li>
+      <li>Puerta de enlace: <code>192.168.10.1</code></li>
+      <li>DNS: <code>8.8.8.8</code> y <code>1.1.1.1</code></li>
+    </ul>
+    <p>En Windows 11 usa <strong>Configuración → Red e Internet → Ethernet → Propiedades → Asignación de IP → Editar</strong> y selecciona <strong>Manual</strong>. En Ubuntu 24.04 usa <code>nmcli con mod</code> con los parámetros <code>ipv4.addresses</code>, <code>ipv4.gateway</code> y <code>ipv4.dns</code>. No olvides cambiar <code>ipv4.method</code> a <code>manual</code>.</p>
+    <p>Verifica que hay conexión con <code>ping 192.168.10.1</code> y <code>ping www.google.es</code>.</p>
+    <div class="ejercicio">
+      <p><strong>Tarea nivel medio:</strong> documenta los pasos exactos que has seguido y las capturas de pantalla de la configuración IP estática en ambos sistemas.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí los pasos, comandos y verificación de la IP estática..."></div>
+    </div>
+
+    <h4>Resolución de problemas · Nivel avanzado</h4>
+    <p><span class="nivel-tag nivel-avanzado">AVANZADO</span></p>
+    <p>El equipo <strong>AULA-05</strong> no tiene acceso a Internet. Al comprobar la IP en Windows con <code>ipconfig</code> o en Ubuntu con <code>ip a</code>, aparece una dirección <code>169.254.x.x</code>. Además, la fecha es del año 2019, el teclado escribe símbolos en lugar de vocales acentuadas y el nombre del equipo es <code>DESKTOP-ABC123</code>.</p>
+    <p>Debes diagnosticar y corregir todos los fallos. Para cada síntoma indica: causa probable, comprobación realizada y solución aplicada. Después comprueba que el equipo navega correctamente.</p>
+    <div class="ejercicio">
+      <p><strong>Tarea nivel avanzado:</strong> entrega un informe de diagnóstico con capturas del estado anterior y del estado final después de tu intervención.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Describe aquí el diagnóstico, las comprobaciones y las soluciones de cada fallo..."></div>
+    </div>
+
+    <h4>Preguntas de reflexión</h4>
+    <div class="ejercicio">
+      <ol>
+        <li>¿Por qué una IP <code>169.254.x.x</code> indica un fallo y no es válida en la red de la empresa?</li>
+        <li>¿Qué diferencia existe entre cerrar sesión y apagar el equipo para aplicar cambios de idioma?</li>
+        <li>¿Por qué el DNS es necesario para navegar con nombres de dominio aunque tengas IP y puerta de enlace configuradas?</li>
+        <li>¿Qué riesgos tiene dejar una cuenta de operario sin contraseña en un taller?</li>
+        <li>¿Por qué conviene activar las actualizaciones automáticas en equipos de producción?</li>
+      </ol>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tus respuestas razonadas..."></div>
+    </div>
+
+    <h4>Errores frecuentes y diagnóstico</h4>
+    <ul>
+      <li><strong>Los menús están en inglés tras instalar Windows.</strong> Síntoma: textos en inglés. Solución: añadir Español en Configuración → Hora e idioma → Idioma y región, subirlo y cerrar sesión.</li>
+      <li><strong>La letra ñ o los acentos escriben otro carácter.</strong> Síntoma: teclado en distribución inglesa. Solución: cambiar la distribución a Spanish (Spain) en Windows o usar <code>localectl set-x11keymap es</code> en Ubuntu.</li>
+      <li><strong>La hora aparece desfasada.</strong> Síntoma: fecha o hora atrasada o adelantada. Solución: comprobar la zona horaria y activar el ajuste automático; en Ubuntu <code>timedatectl set-timezone Europe/Madrid</code>.</li>
+      <li><strong>Sin conexión con IP 169.254.x.x.</strong> Síntoma: no navega. Solución: revisar cable, activar DHCP, renovar IP con <code>ipconfig /release</code> y <code>ipconfig /renew</code> en Windows o <code>sudo dhclient -v</code> en Ubuntu.</li>
+      <li><strong>No puedes cambiar el nombre del equipo.</strong> Síntoma: acceso denegado. Solución: usar una cuenta de administrador y, en Windows, reiniciar después del cambio.</li>
+    </ul>
+
+    <h4>Rúbrica de evaluación</h4>
+    <ul>
+      <li><strong>Configuración de idioma, teclado y zona horaria:</strong> 1 = no realizado, 2 = realizado con ayuda, 3 = realizado y verificado, 4 = realizado, verificado y documentado con capturas.</li>
+      <li><strong>Creación de cuenta local y nombre de equipo:</strong> 1 = no realizado, 2 = realizado con ayuda, 3 = realizado y verificado, 4 = realizado, verificado y con comunicación al usuario.</li>
+      <li><strong>Verificación de red DHCP y conectividad:</strong> 1 = no realizado, 2 = realizado con ayuda, 3 = realizado y verificado con ping, 4 = realizado, verificado y explicado.</li>
+      <li><strong>Actualizaciones y protección básica:</strong> 1 = no realizado, 2 = realizado con ayuda, 3 = realizado y verificado, 4 = realizado, verificado y registrado.</li>
+      <li><strong>Variación de IP estática:</strong> 1 = no realizado, 2 = realizado con ayuda, 3 = realizado y verificado, 4 = realizado, verificado y documentado.</li>
+      <li><strong>Diagnóstico de fallos:</strong> 1 = no realizado, 2 = identifica un fallo con ayuda, 3 = diagnostica y corrige los fallos, 4 = diagnostica, corrige y elabora informe claro.</li>
+      <li><strong>Preguntas de reflexión y documentación:</strong> 1 = no responde, 2 = responde de forma superficial, 3 = responde correctamente, 4 = responde con ejemplos y fundamentación.</li>
+    </ul>
+
+    <h4>Checklist de entrega</h4>
+    <ul class="checklist">
+      <li><label><input type="checkbox" class="check-item"> Captura de pantalla de Configuración con idioma, teclado y zona horaria correctos.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de la cuenta local creada y del nombre de equipo cambiado.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de <code>ping 192.168.10.1</code> y <code>ping www.google.es</code> con respuesta correcta.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de la IP estática configurada en el equipo de la variación.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Informe de diagnóstico de fallos con capturas del antes y el después.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Respuestas razonadas a las preguntas de reflexión.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Rúbrica de evaluación autoevaluada y firmada.</label></li>
+    </ul>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ CRITERIO DE EVALUACIÓN CRÍTICO</div>
+      <p>Para superar este CE-a, el alumno debe demostrar que sabe <strong>configurar los parámetros básicos de una instalación</strong> en un equipo real o virtual: idioma, teclado, zona horaria, cuenta local, nombre de equipo, red con DHCP o IP estática, actualizaciones y protección básica. Debe <strong>verificar el funcionamiento</strong> de cada cambio y <strong>diagnosticar al menos un fallo</strong> relacionado con estos parámetros. No basta con describir los pasos: hay que ejecutarlos y presentar evidencias de que el equipo queda utilizable.</p>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="practica-ceB" data-modalidad="aula">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num">b</div>
+      <div class="bloque-info">
+        <h3>Práctica CE-b: Personalización del entorno de trabajo en Windows 11 y Ubuntu 24.04</h3>
+        <p>CE-b · complementario · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <h4>Escenario empresarial</h4>
+    <p>La empresa <strong>TecnoAula Servicios Informáticos</strong> ha contratado a una nueva administrativa, Marta, que ocupará un despacho con dos equipos: uno con <strong>Windows 11</strong> (IP 192.168.10.11) y otro con <strong>Ubuntu 24.04</strong> (IP 192.168.10.12). Como auxiliar informático, debes dejar ambos equipos personalizados según sus preferencias antes de su incorporación.</p>
+    <p>Marta ha solicitado:</p>
+    <ul>
+      <li>Fondo de escritorio con la imagen corporativa (ya descargada en <code>C:\Wallpapers\corp.jpg</code> en Windows y en <code>/home/marta/Imágenes/corp.png</code> en Ubuntu).</li>
+      <li>Tema oscuro en ambos sistemas.</li>
+      <li>Tamaño de letra un 20% mayor para mejorar la lectura.</li>
+      <li>Que los archivos PDF se abran con el lector rápido de cada sistema.</li>
+      <li>Activar el alto contraste en el equipo Ubuntu para facilitar su uso en el turno de tarde.</li>
+    </ul>
+
+    <h4>Objetivos</h4>
+    <p>Al terminar esta práctica serás capaz de:</p>
+    <ul>
+      <li>Cambiar el fondo de escritorio y el tema en Windows 11 y Ubuntu 24.04.</li>
+      <li>Configurar el tamaño del texto y la escala de la interfaz.</li>
+      <li>Establecer aplicaciones predeterminadas para tipos de archivo.</li>
+      <li>Aplicar opciones básicas de accesibilidad (alto contraste).</li>
+      <li>Verificar que los cambios se guardan correctamente por usuario.</li>
+    </ul>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4><span class="nivel-tag nivel-basico">Nivel básico</span> Práctica guiada – Windows 11</h4>
+        <ol>
+          <li>
+            <strong>Cambiar el fondo de escritorio:</strong>
+            <ul>
+              <li>Abre <strong>Configuración</strong> con <kbd>tecla Windows</kbd> + <kbd>I</kbd>.</li>
+              <li>Ve a <strong>Personalización</strong> → <strong>Fondo</strong>.</li>
+              <li>En el desplegable <em>Personalizar el fondo</em>, elige <strong>Imagen</strong>.</li>
+              <li>Haz clic en <strong>Examinar</strong> y selecciona <code>C:\Wallpapers\corp.jpg</code>.</li>
+            </ul>
+            <p><strong>Verificación:</strong> el escritorio debe mostrar la imagen corporativa de forma inmediata.</p>
+          </li>
+          <li>
+            <strong>Aplicar tema oscuro:</strong>
+            <ul>
+              <li>Dentro de <strong>Personalización</strong>, selecciona <strong>Temas</strong>.</li>
+              <li>En <em>Elegir tema</em>, marca <strong>Oscuro</strong>.</li>
+            </ul>
+            <p><strong>Verificación:</strong> la barra de tareas y las ventanas cambian a tonos oscuros.</p>
+          </li>
+          <li>
+            <strong>Aumentar tamaño de texto:</strong>
+            <ul>
+              <li>En <strong>Configuración</strong> → <strong>Accesibilidad</strong> → <strong>Tamaño del texto</strong>.</li>
+              <li>Desliza el control hasta <strong>120%</strong> y pulsa <strong>Aplicar</strong>.</li>
+            </ul>
+            <p><strong>Verificación:</strong> las letras de menús y ventanas se ven más grandes.</p>
+          </li>
+          <li>
+            <strong>Establecer lector PDF predeterminado:</strong>
+            <ul>
+              <li>En <strong>Configuración</strong> → <strong>Aplicaciones</strong> → <strong>Aplicaciones predeterminadas</strong>.</li>
+              <li>Busca <strong>.pdf</strong> en la lista y haz clic en el programa actual.</li>
+              <li>Elige <strong>Microsoft Edge</strong> (o el lector rápido indicado).</li>
+            </ul>
+            <p><strong>Verificación:</strong> al hacer doble clic en un archivo PDF se abre con el programa elegido.</p>
+          </li>
+        </ol>
+      </div>
+      <div class="linux-col">
+        <h4><span class="nivel-tag nivel-basico">Nivel básico</span> Práctica guiada – Ubuntu 24.04</h4>
+        <ol>
+          <li>
+            <strong>Cambiar el fondo de escritorio:</strong>
+            <p>Abre una terminal con <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> y ejecuta:</p>
+            <pre><code>gsettings set org.gnome.desktop.background picture-uri 'file:///home/marta/Imágenes/corp.png'</code></pre>
+            <p><strong>Comentario del comando:</strong></p>
+            <ul>
+              <li><code>gsettings</code>: herramienta para modificar ajustes del escritorio GNOME.</li>
+              <li><code>set</code>: indica que vamos a asignar un nuevo valor.</li>
+              <li><code>org.gnome.desktop.background</code>: esquema que controla el fondo de pantalla.</li>
+              <li><code>picture-uri</code>: clave que guarda la ruta de la imagen.</li>
+              <li><code>'file:///home/marta/Imágenes/corp.png'</code>: ruta en formato URI (con <code>file://</code> delante).</li>
+            </ul>
+            <p><strong>Verificación:</strong> ejecuta <code>gsettings get org.gnome.desktop.background picture-uri</code>. Debe devolver la misma ruta.</p>
+          </li>
+          <li>
+            <strong>Aplicar tema oscuro:</strong>
+            <pre><code>gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'</code></pre>
+            <p><code>color-scheme</code> indica si el sistema usa tonos claros (<code>'prefer-light'</code>) u oscuros (<code>'prefer-dark'</code>).</p>
+            <p><strong>Verificación:</strong> ejecuta <code>gsettings get org.gnome.desktop.interface color-scheme</code>. Debe devolver <code>'prefer-dark'</code>.</p>
+          </li>
+          <li>
+            <strong>Aumentar tamaño de texto (escala de texto):</strong>
+            <pre><code>gsettings set org.gnome.desktop.interface text-scaling-factor 1.2</code></pre>
+            <p>El factor <code>1.2</code> significa un 20% más grande que el tamaño estándar (<code>1.0</code>).</p>
+            <p><strong>Verificación:</strong> en la terminal escribe <code>gsettings get org.gnome.desktop.interface text-scaling-factor</code>. Debe mostrar <code>1.2</code>.</p>
+          </li>
+          <li>
+            <strong>Establecer lector PDF predeterminado:</strong>
+            <pre><code>xdg-mime default org.gnome.Evince.desktop application/pdf</code></pre>
+            <p><strong>Comentario:</strong></p>
+            <ul>
+              <li><code>xdg-mime default</code>: asigna una aplicación por defecto para un tipo de archivo.</li>
+              <li><code>org.gnome.Evince.desktop</code>: archivo .desktop de la aplicación Evince (lector de PDF).</li>
+              <li><code>application/pdf</code>: tipo MIME del archivo PDF.</li>
+            </ul>
+            <p><strong>Verificación:</strong> ejecuta <code>xdg-mime query default application/pdf</code>. Debe responder <code>org.gnome.Evince.desktop</code>.</p>
+          </li>
+          <li>
+            <strong>Activar alto contraste:</strong>
+            <pre><code>gsettings set org.gnome.desktop.interface gtk-theme 'HighContrast'</code></pre>
+            <p>El tema <code>HighContrast</code> aplica colores de alto contraste a las ventanas y controles.</p>
+            <p><strong>Verificación:</strong> las ventanas cambian a un diseño con bordes y colores fuertemente contrastados.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <h4><span class="nivel-tag nivel-medio">Nivel medio</span> Variación – Adaptación a otro usuario</h4>
+    <p>La empresa decide crear un segundo perfil para un becario, Luis, que utilizará el mismo equipo Ubuntu. Sus preferencias son:</p>
+    <ul>
+      <li>Fondo de pantalla distinto: <code>/home/luis/Imágenes/verano.png</code>.</li>
+      <li>Tema claro en lugar de oscuro.</li>
+      <li>Escala de texto al 100% (sin aumento).</li>
+      <li>Lector PDF predeterminado: Okular (<code>org.kde.okular.desktop</code>).</li>
+    </ul>
+    <div class="ejercicio">
+      <p>Escribe en la siguiente caja los comandos exactos (uno por línea) que ejecutarías para dejar el perfil de Luis con esas preferencias. Recuerda utilizar <code>gsettings</code> y <code>xdg-mime</code>.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí los comandos para el perfil de Luis..."></div>
+    </div>
+    <p><strong>Verificación global:</strong> inicia sesión con el usuario Luis y comprueba que el fondo, tema, tamaño de texto y lector PDF coinciden con lo pedido.</p>
+
+    <h4><span class="nivel-tag nivel-avanzado">Nivel avanzado</span> Resolución de problemas</h4>
+    <div class="box-critico">
+      <div class="box-label">INCIDENCIA</div>
+      <p>Al intentar aplicar el fondo corporativo en el equipo Ubuntu, el comando <code>gsettings set ...</code> no da error, pero al reiniciar el equipo vuelve a aparecer el fondo por defecto. Además, al comprobar la ruta con <code>gsettings get org.gnome.desktop.background picture-uri</code> se obtiene <code>'file:///home/marta/Imágenes/corp.png'</code>, pero el archivo no se muestra.</p>
+    </div>
+    <p>Tu tarea es diagnosticar y corregir el fallo. Sigue estos pasos:</p>
+    <ol>
+      <li>Comprueba si el archivo <code>corp.png</code> existe realmente con <code>ls -l /home/marta/Imágenes/corp.png</code>. Si no existe, créalo o descárgalo.</li>
+      <li>Verifica los permisos del archivo: <code>ls -l /home/marta/Imágenes/corp.png</code>. Si no eres el propietario o falta permiso de lectura, el sistema no podrá cargarlo.</li>
+      <li>Corrige los permisos si es necesario con <code>chmod 644 /home/marta/Imágenes/corp.png</code> (lectura para todos, escritura solo para el propietario).</li>
+      <li>Vuelve a aplicar el fondo y reinicia la sesión para comprobar que persiste.</li>
+    </ol>
+    <div class="ejercicio">
+      <p>Explica en la caja cuál era la causa más probable del fallo y qué pasos seguiste para resolverlo.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Describe el diagnóstico y la solución..."></div>
+    </div>
+
+    <h4>Preguntas de reflexión</h4>
+    <div class="ejercicio">
+      <p><strong>Pregunta 1:</strong> ¿Cuál es la principal diferencia entre “preferencias personales” y “configuración del sistema”? Pon un ejemplo de cada una.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 2:</strong> En Ubuntu usaste el comando <code>gsettings</code>. ¿Qué ocurriría si ejecutas ese comando con un usuario que no tiene permisos de administrador? ¿Afecta a otros usuarios?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 3:</strong> ¿Por qué crees que Marta pidió un tema oscuro y mayor tamaño de texto? Relaciónalo con la accesibilidad y la fatiga visual.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 4:</strong> Si Marta se queja de que los PDF no se abren con el lector que elegiste, ¿qué comando utilizarías en Ubuntu para comprobar la aplicación predeterminada y cómo la cambiarías?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Indica el comando de consulta y el de cambio..."></div>
+    </div>
+
+    <h4>Errores frecuentes y diagnóstico</h4>
+    <ul>
+      <li><strong>Síntoma:</strong> El fondo en Ubuntu no cambia tras ejecutar <code>gsettings</code>.<br>
+        <strong>Diagnóstico:</strong> La ruta del archivo está mal escrita o falta el prefijo <code>file://</code>. Revisa el comando y ejecuta <code>gsettings get</code> para ver el valor almacenado.</li>
+      <li><strong>Síntoma:</strong> El tema oscuro se aplica solo a algunas aplicaciones y no a todo el sistema.<br>
+        <strong>Diagnóstico:</strong> Es posible que la aplicación no soporte el tema oscuro o necesite reiniciarse. Cierra y abre la aplicación o reinicia la sesión.</li>
+      <li><strong>Síntoma:</strong> El alto contraste en Ubuntu hace ilegibles algunos botones.<br>
+        <strong>Diagnóstico:</strong> El tema <code>HighContrast</code> no siempre combina bien con todos los programas. Prueba con <code>gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-dark'</code> y activa la opción de alto contraste desde <strong>Configuración → Accesibilidad → Ver</strong>.</li>
+      <li><strong>Síntoma:</strong> En Windows el cambio de fondo no se guarda al reiniciar.<br>
+        <strong>Diagnóstico:</strong> Puede que el usuario no tenga permisos para modificar el fondo (política de equipo). Comprueba con el administrador si existe una directiva de grupo que lo impida.</li>
+    </ul>
+
+    <h4>Rúbrica de evaluación</h4>
+    <table class="tabla-rubrica">
+      <thead>
+        <tr>
+          <th>Criterio</th>
+          <th>Insuficiente</th>
+          <th>Suficiente</th>
+          <th>Bien</th>
+          <th>Excelente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cambia el fondo de escritorio en ambos SO</td>
+          <td>No realiza el cambio o lo hace mal en los dos</td>
+          <td>Lo consigue solo en un SO</td>
+          <td>Lo consigue en ambos pero con ayuda</td>
+          <td>Lo realiza de forma autónoma y verifica</td>
+        </tr>
+        <tr>
+          <td>Aplica tema oscuro y alto contraste</td>
+          <td>No aplica ninguno</td>
+          <td>Aplica uno de los dos</td>
+          <td>Aplica ambos con alguna duda</td>
+          <td>Aplica ambos y explica el comando</td>
+        </tr>
+        <tr>
+          <td>Configura aplicaciones predeterminadas</td>
+          <td>No cambia ninguna</td>
+          <td>Cambia solo en un SO</td>
+          <td>Cambia en ambos con apoyo</td>
+          <td>Cambia y comprueba con xdg-mime</td>
+        </tr>
+        <tr>
+          <td>Resolución de problemas avanzados</td>
+          <td>No identifica la causa</td>
+          <td>Identifica pero no corrige</td>
+          <td>Corrige con guía</td>
+          <td>Diagnostica y soluciona autónomamente</td>
+        </tr>
+        <tr>
+          <td>Uso de comandos y verificación</td>
+          <td>No utiliza comandos</td>
+          <td>Usa comandos sin verificar</td>
+          <td>Verifica parcialmente</td>
+          <td>Ejecuta y verifica todos los pasos</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Checklist de entrega</h4>
+    <p>Antes de finalizar la práctica, asegúrate de tener completo lo siguiente:</p>
+    <ul class="checklist">
+      <li><label><input type="checkbox" class="check-item"> Capturas de pantalla de los fondos de escritorio en Windows 11 y Ubuntu 24.04 con la imagen corporativa aplicada.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Terminal de Ubuntu mostrando la salida de <code>gsettings get</code> para <code>color-scheme</code>, <code>text-scaling-factor</code> y <code>picture-uri</code>.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de la configuración de aplicaciones predeterminadas en Windows y salida de <code>xdg-mime query</code> en Ubuntu.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Respuestas a las preguntas de reflexión en las cajas correspondientes.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Comandos de la variación para Luis escritos y verificados.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Incidencia avanzada resuelta y explicada en la caja de diagnóstico.</label></li>
+    </ul>
+  </div>
+</div>
+<div class="bloque" id="practica-ceC" data-modalidad="aula">
+  <div class="bloque-header">
+    <div class="bloque-num">c</div>
+    <div class="bloque-info">
+      <h3>Práctica CE-c: Preparación del entorno de trabajo con la interfaz de usuario</h3>
+      <p>CE-c · importante · 4 sesiones</p>
+    </div>
+    <span class="bloque-sesiones">4 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <p>En esta práctica aprenderás a <strong>utilizar los elementos de la interfaz de usuario</strong> para preparar el entorno de trabajo en los sistemas operativos <strong>Windows 11</strong> y <strong>Ubuntu 24.04 (GNOME)</strong>. Organizarás ventanas, crearás accesos directos, anclarás aplicaciones y usarás escritorios virtuales, tal como lo harías como auxiliar informático en una empresa real.</p>
+
+    <h3>a) Escenario empresarial</h3>
+    <div class="box-critico">
+      <div class="box-label">Contexto profesional</div>
+      <p>La empresa <strong>TecnoAula Formación S.L.</strong> dispone de un aula de informática con 20 equipos. Diez equipos tienen <strong>Windows 11</strong> y diez tienen <strong>Ubuntu 24.04</strong>. Como auxiliar informático, tu tarea es <strong>preparar los equipos para impartir un curso de iniciación a la ofimática</strong>. Debes dejar el entorno de trabajo listo para que los alumnos puedan trabajar con rapidez y sin distracciones.</p>
+      <p>Datos técnicos del aula:</p>
+      <ul>
+        <li>Servidor de archivos: <code>192.168.10.1</code></li>
+        <li>Ruta compartida en Windows: <code>\\192.168.10.1\recursos</code></li>
+        <li>Ruta compartida en Ubuntu: <code>//192.168.10.1/recursos</code></li>
+        <li>Usuario local de cada equipo: <code>auxiliar</code></li>
+        <li>Contraseña: <code>Aux@2025</code></li>
+        <li>Aplicaciones necesarias: navegador web, editor de textos, calculadora y explorador de archivos.</li>
+      </ul>
+    </div>
+
+    <h3>b) Objetivos de la práctica</h3>
+    <p>Al finalizar esta práctica, el alumno demostrará que sabe:</p>
+    <ul>
+      <li>Identificar los elementos principales de la interfaz de usuario en Windows 11 y Ubuntu 24.04.</li>
+      <li>Organizar ventanas en pantalla utilizando atajos de teclado y el ratón.</li>
+      <li>Crear accesos directos a aplicaciones, archivos y carpetas en el escritorio.</li>
+      <li>Anclar aplicaciones a la barra de tareas (Windows) o al dock (Ubuntu).</li>
+      <li>Crear, cambiar y cerrar escritorios virtuales para separar tareas.</li>
+      <li>Preparar un entorno de trabajo ordenado y eficiente según las indicaciones de un responsable.</li>
+    </ul>
+
+    <div class="checklist">
+      <p><strong>Material necesario:</strong></p>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Equipo con Windows 11 (o máquina virtual) con permisos de administrador local.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Equipo con Ubuntu 24.04 (o máquina virtual) con usuario con permisos sudo.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Acceso a los recursos compartidos <code>\\192.168.10.1\recursos</code> (puede simularse con una carpeta compartida en el aula).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Cuaderno o documento digital para anotar las verificaciones.</label></li>
+      </ul>
+    </div>
+
+    <h3>c) Práctica guiada <span class="nivel-tag nivel-basico">Nivel básico</span></h3>
+    <p>A continuación realizarás los pasos <strong>uno a uno</strong> en cada sistema. Sigue el orden indicado y verifica cada paso antes de continuar.</p>
+
+    <h4>Parte 1: Windows 11</h4>
+    <ol>
+      <li>
+        <strong>Inicia sesión</strong> con el usuario <code>auxiliar</code> y contraseña <code>Aux@2025</code>.
+        <p><em>Verificación:</em> Aparece el escritorio de Windows 11 con la barra de tareas en la parte inferior.</p>
+      </li>
+      <li>
+        <strong>Abre las aplicaciones necesarias</strong>: navegador (Edge o Chrome), explorador de archivos y calculadora.
+        <p>Haz clic en el botón <strong>Inicio</strong> (logotipo de Windows) y escribe el nombre de cada aplicación en el buscador. Al aparecer, pulsa <kbd>Enter</kbd> o haz clic en su icono.</p>
+        <p><em>Verificación:</em> Tres ventanas abiertas visibles en la barra de tareas (iconos con subrayado).</p>
+      </li>
+      <li>
+        <strong>Organiza las ventanas en pantalla dividida</strong>.
+        <p>Selecciona la ventana del <strong>explorador de archivos</strong> y pulsa <kbd>Windows</kbd> + <kbd>←</kbd>. Luego selecciona el <strong>navegador web</strong> y pulsa <kbd>Windows</kbd> + <kbd>→</kbd>. Ahora cada ventana ocupa la mitad de la pantalla.</p>
+        <p><em>Verificación:</em> El explorador aparece en la mitad izquierda y el navegador en la derecha. La barra de tareas muestra ambos iconos.</p>
+      </li>
+      <li>
+        <strong>Crea un acceso directo en el escritorio a la carpeta compartida</strong>.
+        <p>Haz clic derecho en un espacio vacío del escritorio → <strong>Nuevo</strong> → <strong>Acceso directo</strong>. En el campo de ubicación escribe: <code>\\192.168.10.1\recursos</code> y pulsa <strong>Siguiente</strong>. Asigna el nombre <code>Recursos_Aula</code> y pulsa <strong>Finalizar</strong>.</p>
+        <p><em>Verificación:</em> Aparece un icono nuevo en el escritorio con el nombre <code>Recursos_Aula</code> y al hacer doble clic se abre la carpeta compartida.</p>
+      </li>
+      <li>
+        <strong>Ancla el explorador de archivos a la barra de tareas</strong>.
+        <p>Haz clic derecho sobre el icono del explorador en la barra de tareas → <strong>Anclar a la barra de tareas</strong>. Si ya está anclado, el menú mostrará <strong>Desanclar de la barra de tareas</strong>; en ese caso déjalo como está.</p>
+        <p><em>Verificación:</em> El icono del explorador permanece en la barra de tareas incluso después de cerrar la ventana.</p>
+      </li>
+      <li>
+        <strong>Ancla una aplicación al menú Inicio</strong>.
+        <p>Haz clic en <strong>Inicio</strong>, busca <strong>Bloc de notas</strong>. Haz clic derecho sobre él → <strong>Anclar a Inicio</strong>.</p>
+        <p><em>Verificación:</em> El icono del Bloc de notas aparece en la sección "Anclado" del menú Inicio.</p>
+      </li>
+      <li>
+        <strong>Crea un escritorio virtual para el curso</strong>.
+        <p>Pulsa <kbd>Windows</kbd> + <kbd>Tab</kbd> para abrir la <strong>Vista de tareas</strong>. En la parte superior, haz clic en <strong>Nuevo escritorio</strong>. Se creará el <strong>Escritorio 2</strong>.</p>
+        <p><em>Verificación:</em> Aparecen dos miniaturas de escritorios en la parte superior. Al hacer clic en <strong>Escritorio 2</strong>, el escritorio queda vacío.</p>
+      </li>
+      <li>
+        <strong>Mueve la ventana del navegador al nuevo escritorio</strong>.
+        <p>Vuelve a abrir la Vista de tareas (<kbd>Windows</kbd> + <kbd>Tab</kbd>). Arrastra la miniatura del navegador desde el Escritorio 1 hasta la miniatura del Escritorio 2. Luego haz clic en Escritorio 2 para entrar.</p>
+        <p><em>Verificación:</em> Al entrar en Escritorio 2, solo está abierta la ventana del navegador. El Escritorio 1 conserva el explorador y la calculadora.</p>
+      </li>
+      <li>
+        <strong>Cierra el escritorio virtual</strong>.
+        <p>Abre la Vista de tareas y sitúa el cursor sobre <strong>Escritorio 2</strong>. Haz clic en la <strong>X</strong> que aparece para cerrarlo. La ventana del navegador regresa automáticamente al Escritorio 1.</p>
+        <p><em>Verificación:</em> Solo queda el Escritorio 1 y la ventana del navegador está de nuevo en él.</p>
+      </li>
+    </ol>
+
+    <h4>Parte 2: Ubuntu 24.04 (GNOME)</h4>
+    <ol>
+      <li>
+        <strong>Inicia sesión</strong> con el usuario <code>auxiliar</code> y contraseña <code>Aux@2025</code>.
+        <p><em>Verificación:</em> Aparece el escritorio GNOME con el dock vertical a la izquierda y el panel superior.</p>
+      </li>
+      <li>
+        <strong>Abre las aplicaciones necesarias</strong>: navegador (Firefox), archivos (Nautilus) y calculadora.
+        <p>Pulsa la tecla <strong>Super</strong> (tecla con logotipo de Windows) para abrir <strong>Actividades</strong>. Escribe el nombre de la aplicación en el buscador y pulsa <kbd>Enter</kbd>. También puedes hacer clic en el icono en el dock si ya está anclado.</p>
+        <p><em>Verificación:</em> Tres ventanas abiertas; en el dock aparecen los iconos con un punto naranja indicando que están en ejecución.</p>
+      </li>
+      <li>
+        <strong>Organiza las ventanas en pantalla dividida</strong>.
+        <p>Arrastra la ventana de <strong>Archivos</strong> hacia el borde izquierdo de la pantalla hasta que se resalte la mitad y suéltala. Arrastra la ventana del <strong>navegador</strong> hacia el borde derecho. También puedes usar los atajos <kbd>Super</kbd> + <kbd>←</kbd> y <kbd>Super</kbd> + <kbd>→</kbd>.</p>
+        <p><em>Verificación:</em> Archivos ocupa la mitad izquierda y Firefox la mitad derecha.</p>
+      </li>
+      <li>
+        <strong>Añade un acceso directo a la carpeta compartida en el escritorio</strong>.
+        <p>Instala el soporte para accesos directos en escritorio si no está activo: abre una terminal (<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>) y ejecuta <code>gnome-extensions enable desktop-icons@gnome-shell-extensions.gcampax.github.com</code> (comprobable con <code>gnome-extensions list --enabled</code>). Luego en Archivos, navega a <strong>Otras ubicaciones</strong> y escribe <code>smb://192.168.10.1/recursos</code>. Con la carpeta montada, arrastra el icono de la carpeta al escritorio manteniendo <kbd>Ctrl</kbd> + <kbd>Shift</kbd> (o usa el menú contextual → <strong>Crear enlace</strong>).</p>
+        <p><em>Verificación:</em> Aparece un enlace en el escritorio llamado <code>recursos</code> que al hacer doble clic abre la carpeta compartida.</p>
+      </li>
+      <li>
+        <strong>Ancla una aplicación al dock</strong>.
+        <p>Con la aplicación <strong>Calculadora</strong> abierta, haz clic derecho sobre su icono en el dock → <strong>Fijar en el panel</strong>. Si ya está fijada, la opción será <strong>Desfijar del panel</strong>; en ese caso no hagas nada.</p>
+        <p><em>Verificación:</em> El icono de la Calculadora permanece en el dock tras cerrar la ventana.</p>
+      </li>
+      <li>
+        <strong>Añade una aplicación favorita en Actividades</strong>.
+        <p>Pulsa <strong>Super</strong> para abrir Actividades, busca <strong>Gedit</strong> (editor de textos). Haz clic derecho sobre su icono → <strong>Añadir a favoritos</strong>.</p>
+        <p><em>Verificación:</em> El icono de Gedit aparece en el dock como favorito.</p>
+      </li>
+      <li>
+        <strong>Crea un escritorio virtual</strong>.
+        <p>Abre Actividades (<strong>Super</strong>). En la parte superior verás <strong>Actividades</strong> y justo debajo una fila de miniaturas de escritorios. Haz clic en el signo <strong>+</strong> para añadir un nuevo escritorio.</p>
+        <p><em>Verificación:</em> Aparece una miniatura adicional encima del dock. Al hacer clic en ella se muestra un escritorio vacío.</p>
+      </li>
+      <li>
+        <strong>Mueve una ventana a otro escritorio</strong>.
+        <p>En Actividades, arrastra la miniatura de la ventana de <strong>Calculadora</strong> hacia la miniatura del nuevo escritorio. Luego entra en ese escritorio.</p>
+        <p><em>Verificación:</em> La calculadora solo está visible en el escritorio nuevo.</p>
+      </li>
+      <li>
+        <strong>Cierra el escritorio virtual</strong>.
+        <p>En Actividades, coloca el cursor sobre la miniatura del escritorio adicional y pulsa la <strong>X</strong> que aparece. La calculadora regresa al escritorio original.</p>
+        <p><em>Verificación:</em> Solo queda un escritorio y la calculadora aparece en él.</p>
+      </li>
+    </ol>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 1.</strong> Después de completar los pasos anteriores, describe con tus palabras la diferencia entre <strong>anclar una aplicación a la barra de tareas (Windows)</strong> y <strong>fijar una aplicación al dock (Ubuntu)</strong>. ¿Qué ventaja común ofrecen ambas acciones?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tu respuesta..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 2.</strong> ¿Qué tecla debes pulsar en Windows 11 para abrir la Vista de tareas y crear un escritorio virtual? ¿Y en Ubuntu para abrir Actividades? Anota los atajos y compáralos.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tu respuesta..."></div>
+    </div>
+
+    <h3>d) Variación <span class="nivel-tag nivel-medio">Nivel medio</span></h3>
+    <p>El responsable de TecnoAula Formación S.L. te pide ahora que prepares <strong>otro equipo</strong> para un curso de <strong>edición de imágenes</strong>. Los requisitos cambian:</p>
+    <ul>
+      <li>En Windows 11: anclar a la barra de tareas el <strong>Paint</strong> y el <strong>Explorador de archivos</strong>. Crear un acceso directo en el escritorio a la carpeta <code>\\192.168.10.1\imagenes</code> con el nombre <code>Imagenes_Curso</code>. Organizar las ventanas del Explorador y Paint en pantalla dividida (izquierda y derecha). Crear un escritorio virtual llamado <strong>Diseño</strong> y mover allí la ventana de Paint.</li>
+      <li>En Ubuntu 24.04: fijar en el dock el <strong>GIMP</strong> (si está instalado) o en su defecto <strong>Gedit</strong>. Crear un enlace en el escritorio a <code>smb://192.168.10.1/imagenes</code> con el nombre <code>Imagenes_Curso</code>. Organizar las ventanas de Archivos y GIMP en pantalla dividida. Crear un escritorio virtual llamado <strong>Diseño</strong> y mover allí la ventana de GIMP.</li>
+    </ul>
+    <div class="ejercicio">
+      <p><strong>Ejercicio 3.</strong> Adapta los pasos de la práctica guiada para cumplir estos nuevos requisitos. Anota los pasos que cambian y las diferencias que encuentres entre los dos sistemas.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí los pasos adaptados y diferencias..."></div>
+    </div>
+
+    <h3>e) Resolución de problemas <span class="nivel-tag nivel-avanzado">Nivel avanzado</span></h3>
+    <p>Durante la preparación de un equipo con <strong>Windows 11</strong>, un compañero te informa de que <strong>no puede organizar las ventanas con los atajos de teclado</strong> (<kbd>Windows</kbd> + <kbd>←</kbd> / <kbd>→</kbd>). Las ventanas se quedan estáticas y no se redimensionan. Además, al hacer clic derecho sobre un icono del escritorio no aparece la opción <strong>Nuevo → Acceso directo</strong>.</p>
+    <p><strong>Diagnóstico y solución:</strong></p>
+    <ol>
+      <li>Abre la configuración de <strong>Multitarea</strong>: ve a <strong>Inicio</strong> → <strong>Configuración</strong> → <strong>Sistema</strong> → <strong>Multitarea</strong>. Verifica que la opción <strong>Ajustar ventanas</strong> está activada. Si está desactivada, actívala y prueba de nuevo los atajos.</li>
+      <li>Para el acceso directo: comprueba si el escritorio está <strong>protegido contra escritura</strong> o si la carpeta del escritorio tiene permisos restringidos. Haz clic derecho sobre el escritorio → <strong>Propiedades</strong> → pestaña <strong>Seguridad</strong>. Asegúrate de que el usuario <code>auxiliar</code> tiene <strong>Control total</strong> sobre la carpeta <code>C:\Users\auxiliar\Desktop</code>.</li>
+      <li>Si el problema persiste, crea el acceso directo desde el <strong>Explorador de archivos</strong>: navega a la ruta <code>\\192.168.10.1\recursos</code>, haz clic derecho sobre la carpeta → <strong>Enviar a</strong> → <strong>Escritorio (crear acceso directo)</strong>.</li>
+    </ol>
+    <div class="ejercicio">
+      <p><strong>Ejercicio 4.</strong> Explica con tus palabras cuál era la causa más probable del fallo y cómo la detectaste. ¿Qué pasos seguirías si el problema fuera en Ubuntu 24.04 (por ejemplo, que el dock no aparezca o que no se pueda fijar una aplicación)?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí el diagnóstico y solución para Ubuntu..."></div>
+    </div>
+
+    <h3>Preguntas de reflexión</h3>
+    <div class="ejercicio">
+      <p><strong>Pregunta 1.</strong> ¿Por qué es útil anclar aplicaciones a la barra de tareas o al dock en lugar de abrirlas cada vez desde el menú Inicio o Actividades? Razona tu respuesta pensando en la rapidez y comodidad del usuario.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tu reflexión..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 2.</strong> ¿En qué situaciones crees que es ventajoso utilizar <strong>escritorios virtuales</strong>? Pon dos ejemplos concretos de tareas que separarías en escritorios distintos.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tu reflexión..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 3.</strong> Al crear un acceso directo a una carpeta compartida, ¿qué diferencias encuentras entre Windows y Ubuntu en cuanto al método y la ruta utilizada? ¿Qué ventaja tiene usar un acceso directo en lugar de navegar cada vez hasta la carpeta?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tu reflexión..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 4.</strong> ¿Qué elemento de la interfaz de usuario te parece más útil para organizar el trabajo diario: la barra de tareas/dock, los escritorios virtuales o los accesos directos? Justifica tu elección con argumentos basados en lo aprendido.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tu reflexión..."></div>
+    </div>
+
+    <h3>Errores frecuentes y diagnóstico</h3>
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <ul>
+          <li><strong>Síntoma:</strong> Al pulsar <kbd>Windows</kbd> + <kbd>←</kbd> la ventana no se ajusta.<br><strong>Solución:</strong> Verificar que la opción <strong>Ajustar ventanas</strong> está activada en Configuración → Sistema → Multitarea.</li>
+          <li><strong>Síntoma:</strong> El acceso directo creado no abre la carpeta compartida y muestra un error de red.<br><strong>Solución:</strong> Comprobar que la ruta <code>\\192.168.10.1\recursos</code> es accesible desde el Explorador y que el equipo está conectado a la red correcta.</li>
+          <li><strong>Síntoma:</strong> No se puede anclar una aplicación porque el menú contextual no muestra la opción.<br><strong>Solución:</strong> La aplicación debe estar abierta o ser una aplicación de escritorio clásica. Algunas apps UWP pueden requerir anclarse desde el menú Inicio.</li>
+        </ul>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04 (GNOME)</h4>
+        <ul>
+          <li><strong>Síntoma:</strong> El dock no aparece o se oculta constantemente.<br><strong>Solución:</strong> Ir a Configuración → Apariencia y ajustar la opción <strong>Ocultar el dock automáticamente</strong>. También se puede fijar el dock para que no se oculte.</li>
+          <li><strong>Síntoma:</strong> No se pueden crear accesos directos en el escritorio.<br><strong>Solución:</strong> Activar la extensión <code>desktop-icons</code> como se indicó. Si no está disponible, usar <strong>Archivos</strong> para arrastrar con <kbd>Ctrl</kbd> + <kbd>Shift</kbd> para crear enlace.</li>
+          <li><strong>Síntoma:</strong> El enlace a la carpeta compartida Samba no se monta y da error.<br><strong>Solución:</strong> Asegurarse de que el paquete <code>cifs-utils</code> esté instalado (<code>sudo apt install cifs-utils</code>) y que la ruta usa <code>smb://</code> en Nautilus.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Rúbrica de evaluación</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Criterio</th>
+          <th>Excelente</th>
+          <th>Bueno</th>
+          <th>Mejorable</th>
+          <th>Insuficiente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Identificación de elementos de interfaz</td>
+          <td>Nombra y localiza todos los elementos en ambos SO sin errores</td>
+          <td>Nombra la mayoría con alguna duda</td>
+          <td>Confunde elementos básicos (dock vs barra de tareas)</td>
+          <td>No identifica los elementos principales</td>
+        </tr>
+        <tr>
+          <td>Organización de ventanas</td>
+          <td>Usa atajos y ratón con soltura en Windows y Ubuntu</td>
+          <td>Usa atajos con ayuda puntual</td>
+          <td>Necesita guía constante para dividir pantalla</td>
+          <td>No logra organizar ventanas</td>
+        </tr>
+        <tr>
+          <td>Creación de accesos directos</td>
+          <td>Crea accesos correctamente en ambos sistemas y verifica su funcionamiento</td>
+          <td>Crea accesos con pequeñas correcciones</td>
+          <td>No completa algún acceso directo</td>
+          <td>No crea ninguno</td>
+        </tr>
+        <tr>
+          <td>Anclaje de aplicaciones</td>
+          <td>Ancla/fija aplicaciones correctamente en barra de tareas y dock</td>
+          <td>Ancla con ayuda en uno de los sistemas</td>
+          <td>Solo consigue anclar en un sistema</td>
+          <td>No ancla aplicaciones</td>
+        </tr>
+        <tr>
+          <td>Uso de escritorios virtuales</td>
+          <td>Crea, mueve y cierra escritorios virtuales sin errores</td>
+          <td>Realiza la mayoría de operaciones bien</td>
+          <td>Comete errores al mover ventanas entre escritorios</td>
+          <td>No utiliza escritorios virtuales</td>
+        </tr>
+        <tr>
+          <td>Diagnóstico y resolución de problemas</td>
+          <td>Detecta causas y aplica soluciones de forma autónoma</td>
+          <td>Diagnostica con ayuda y resuelve</td>
+          <td>Identifica el problema pero no sabe solucionarlo</td>
+          <td>No participa en la resolución</td>
+        </tr>
+        <tr>
+          <td>Documentación y reflexión</td>
+          <td>Respuestas completas, con justificación y vocabulario técnico</td>
+          <td>Respuestas correctas pero escuetas</td>
+          <td>Algunas respuestas incorrectas o incompletas</td>
+          <td>No entrega reflexiones</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Checklist de entrega</h3>
+    <div class="checklist">
+      <p><strong>Al finalizar la práctica, debes entregar o demostrar:</strong></p>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Captura de pantalla (o demo en vivo) de Windows 11 con las ventanas organizadas en pantalla dividida y acceso directo creado.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Captura de pantalla (o demo en vivo) de Ubuntu 24.04 con dock personalizado y enlace en escritorio.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Captura de pantalla de la Vista de tareas en Windows mostrando un escritorio virtual creado.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Captura de pantalla de Actividades en Ubuntu mostrando escritorios virtuales y ventanas movidas.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Respuestas a los ejercicios 1, 2, 3 y 4 y a las preguntas de reflexión.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Documento o archivo de texto con el diagnóstico del caso avanzado y los pasos de la variación.</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">Recomendación final</div>
+      <p>Antes de dar por terminada la práctica, revisa que <strong>todos los accesos directos funcionan</strong>, que las aplicaciones ancladas permanecen tras cerrar sesión y que los escritorios virtuales se comportan como esperas. Un buen auxiliar informático no solo configura, sino que <strong>verifica</strong> que el entorno queda listo para el usuario final.</p>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="practica-ceD" data-modalidad="aula">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">d</div>
+      <div class="bloque-info">
+        <h3>Práctica CE-d: Atributos y permisos en archivos y directorios</h3>
+        <p>CE-d · CRÍTICO · 4 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">4 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <h4>Escenario empresarial</h4>
+    <p>La empresa <strong>Tecnoparts S.L.</strong>, taller de reparación de patinetes eléctricos, dispone de dos equipos informáticos:</p>
+    <ul>
+      <li><strong>PC-TALLER-01</strong> con Windows 11. Ruta base de trabajo: <code>C:\Tecnoparts\</code></li>
+      <li><strong>SRV-TALLER</strong> con Debian 12, IP <code>192.168.1.50</code>. Usuario de prácticas: <code>alumno</code>, contraseña <code>Tecno2025</code>. Ruta base: <code>/srv/tecnoparts</code></li>
+    </ul>
+    <p>En el equipo Windows existen estos archivos:</p>
+    <ul>
+      <li><code>C:\Tecnoparts\documentos\manuales\manual-patinete.txt</code></li>
+      <li><code>C:\Tecnoparts\facturas\factura-2025-01.pdf</code></li>
+    </ul>
+    <p>En el servidor Linux existen estos archivos:</p>
+    <ul>
+      <li><code>/srv/tecnoparts/informes/ventas.txt</code></li>
+      <li><code>/srv/tecnoparts/backups/backup.sh</code></li>
+    </ul>
+
+    <h4>Objetivos de la práctica</h4>
+    <ul>
+      <li>Reconocer los atributos de solo lectura, oculto, sistema y archivo en Windows.</li>
+      <li>Gestionar atributos con la interfaz gráfica y con el comando <code>attrib</code>.</li>
+      <li>Identificar archivos y directorios ocultos en Linux.</li>
+      <li>Interpretar los permisos de archivos y directorios en Linux con <code>ls -l</code>.</li>
+      <li>Modificar permisos básicos en Linux con <code>chmod</code>.</li>
+      <li>Diagnosticar y solucionar problemas de atributos y permisos.</li>
+    </ul>
+
+    <h4>Práctica guiada — <span class="nivel-tag nivel-basico">Nivel básico</span></h4>
+    <p>Sigue los pasos en el orden indicado. Anota cada comando y su resultado.</p>
+
+    <h5>Parte 1. Atributos en Windows</h5>
+    <ol>
+      <li>
+        <p>Abre el <strong>Explorador de archivos</strong> y accede a <code>C:\Tecnoparts\documentos\manuales\</code>. Crea una copia del archivo <code>manual-patinete.txt</code> con el nombre <code>manual-patinete-copia.txt</code>.</p>
+        <p><strong>Verificación:</strong> el Explorador debe mostrar ambos archivos.</p>
+      </li>
+      <li>
+        <p>Haz clic derecho sobre <code>manual-patinete-copia.txt</code> y abre <strong>Propiedades</strong>. Observa la pestaña <strong>General</strong>.</p>
+        <p><strong>Verificación:</strong> verás dos casillas: <em>Solo lectura</em> y <em>Oculto</em>, normalmente sin marcar.</p>
+      </li>
+      <li>
+        <p>Marca la casilla <strong>Solo lectura</strong> y pulsa <strong>Aceptar</strong>. Abre el archivo con el Bloc de notas e intenta guardar un cambio.</p>
+        <p><strong>Verificación:</strong> Windows impedirá guardar con el mismo nombre y sugerirá <em>Guardar como</em>.</p>
+      </li>
+      <li>
+        <p>Abre el <strong>Símbolo del sistema</strong> (<code>cmd</code>) y navega hasta la carpeta:</p>
+        <pre><code>cd C:\Tecnoparts\documentos\manuales</code></pre>
+      </li>
+      <li>
+        <p>Consulta los atributos actuales del archivo:</p>
+        <pre><code>attrib manual-patinete-copia.txt</code></pre>
+        <p><strong>Verificación:</strong> debe aparecer una letra <code>R</code> delante del nombre, indicando solo lectura.</p>
+      </li>
+      <li>
+        <p>Añade el atributo oculto desde el comando:</p>
+        <pre><code>attrib +h manual-patinete-copia.txt</code></pre>
+        <p><code>+h</code> añade <em>hidden</em> (oculto).</p>
+      </li>
+      <li>
+        <p>Vuelve al Explorador y observa la carpeta. El archivo debería haber desaparecido.</p>
+        <p><strong>Verificación:</strong> para verlo, activa <em>Elementos ocultos</em> desde la pestaña <strong>Vista</strong> del Explorador.</p>
+      </li>
+      <li>
+        <p>Consulta de nuevo con <code>attrib</code>:</p>
+        <pre><code>attrib manual-patinete-copia.txt</code></pre>
+        <p><strong>Verificación:</strong> ahora deben aparecer dos letras: <code>R</code> y <code>H</code>.</p>
+      </li>
+    </ol>
+
+    <h5>Parte 2. Atributos y permisos en Linux</h5>
+    <ol>
+      <li>
+        <p>Accede al servidor Linux con el usuario <code>alumno</code> y abre una terminal. Ve al directorio de trabajo:</p>
+        <pre><code>cd /srv/tecnoparts</code></pre>
+      </li>
+      <li>
+        <p>Lista el contenido normalmente:</p>
+        <pre><code>ls</code></pre>
+        <p><strong>Verificación:</strong> se muestran las carpetas <code>informes</code> y <code>backups</code>, pero no archivos ocultos.</p>
+      </li>
+      <li>
+        <p>Crea un archivo oculto llamado <code>.notas_servicio</code>:</p>
+        <pre><code>touch .notas_servicio</code></pre>
+        <p>El punto inicial indica que es oculto.</p>
+      </li>
+      <li>
+        <p>Lista incluyendo ocultos:</p>
+        <pre><code>ls -a</code></pre>
+        <p><code>-a</code> significa <em>all</em> (todos).</p>
+        <p><strong>Verificación:</strong> ahora se muestra <code>.notas_servicio</code>.</p>
+      </li>
+      <li>
+        <p>Consulta los permisos del archivo <code>/srv/tecnoparts/informes/ventas.txt</code>:</p>
+        <pre><code>ls -l /srv/tecnoparts/informes/ventas.txt</code></pre>
+        <p><code>-l</code> muestra formato largo con permisos, propietario, grupo, tamaño y fecha.</p>
+      </li>
+      <li>
+        <p>Interpreta la primera parte de la salida:</p>
+        <pre><code>-rw-r--r--</code></pre>
+        <p>El primer carácter <code>-</code> indica archivo. Los 9 siguientes se agrupan de 3 en 3: <strong>propietario</strong> <code>rw-</code>, <strong>grupo</strong> <code>r--</code>, <strong>otros</strong> <code>r--</code>.</p>
+      </li>
+      <li>
+        <p>Cambia los permisos del archivo <code>backup.sh</code> para que el propietario tenga lectura, escritura y ejecución; el grupo solo lectura y ejecución; y otros ningún permiso:</p>
+        <pre><code>chmod 750 /srv/tecnoparts/backups/backup.sh</code></pre>
+        <p>En <code>750</code>: <code>7</code>=lectura+escritura+ejecución para propietario, <code>5</code>=lectura+ejecución para grupo, <code>0</code>=nada para otros.</p>
+      </li>
+      <li>
+        <p>Verifica el cambio:</p>
+        <pre><code>ls -l /srv/tecnoparts/backups/backup.sh</code></pre>
+        <p><strong>Verificación:</strong> la salida debe empezar por <code>-rwxr-x---</code>.</p>
+      </li>
+    </ol>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <p><strong>Windows — atributos</strong></p>
+        <pre><code>attrib +r +h archivo.txt</code></pre>
+        <p><code>+r</code> solo lectura, <code>+h</code> oculto.</p>
+      </div>
+      <div class="linux-col">
+        <p><strong>Linux — permisos</strong></p>
+        <pre><code>chmod 644 archivo.txt</code></pre>
+        <p><code>644</code> = propietario lee y escribe; grupo y otros solo leen.</p>
+      </div>
+    </div>
+
+    <div class="ejercicio">
+      <p class="enunciado">Escribe el comando exacto para quitar el atributo oculto de <code>manual-patinete-copia.txt</code> en Windows.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí el comando..."></div>
+    </div>
+    <div class="ejercicio">
+      <p class="enunciado">Escribe el comando para que en Linux el archivo <code>ventas.txt</code> quede con permisos <code>rw-r-----</code>.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí el comando..."></div>
+    </div>
+
+    <h4>Variación — <span class="nivel-tag nivel-medio">Nivel medio</span></h4>
+    <p>La empresa decide aplicar nuevas medidas de seguridad. Debes adaptar los pasos anteriores a este nuevo escenario:</p>
+    <ul>
+      <li>En Windows, el archivo <code>C:\Tecnoparts\facturas\factura-2025-01.pdf</code> debe quedar <strong>oculto</strong> y <strong>solo lectura</strong>.</li>
+      <li>En Linux, el archivo <code>/srv/tecnoparts/informes/ventas.txt</code> debe tener permiso de lectura y escritura para el propietario, solo lectura para el grupo y ningún permiso para otros.</li>
+      <li>Crea un archivo oculto llamado <code>.aviso</code> en <code>/srv/tecnoparts</code> y comprueba que no aparece con <code>ls</code> pero sí con <code>ls -a</code>.</li>
+    </ul>
+    <p>Documenta todos los comandos o acciones realizadas.</p>
+    <div class="ejercicio">
+      <p class="enunciado">Comandos utilizados en Windows para cumplir el requisito del archivo de facturas:</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí los comandos..."></div>
+    </div>
+    <div class="ejercicio">
+      <p class="enunciado">Comandos utilizados en Linux para cambiar permisos y crear el archivo oculto:</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí los comandos..."></div>
+    </div>
+
+    <h4>Resolución de problemas — <span class="nivel-tag nivel-avanzado">Nivel avanzado</span></h4>
+    <p>Un compañero te avisa de que no puede modificar el archivo <code>/srv/tecnoparts/informes/ventas.txt</code>. Ejecutas este comando:</p>
+    <pre><code>ls -l /srv/tecnoparts/informes/ventas.txt</code></pre>
+    <p>Y obtienes:</p>
+    <pre><code>-rw-r--r-- 1 root root 1024 Feb 10 10:00 /srv/tecnoparts/informes/ventas.txt</code></pre>
+    <p>El usuario actual es <code>alumno</code>, que no pertenece al grupo <code>root</code>.</p>
+    <div class="ejercicio">
+      <p class="enunciado">¿Qué problema de permisos existe? Explica qué significan los campos <code>rw-r--r--</code>, <code>root root</code>.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Diagnóstico..."></div>
+    </div>
+    <div class="ejercicio">
+      <p class="enunciado">¿Qué comando ejecutarías para solucionarlo si tuvieras permisos de administrador? ¿Y qué alternativa propondrías si no pudieras usar <code>sudo</code>?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Solución..."></div>
+    </div>
+
+    <h4>Preguntas de reflexión</h4>
+    <div class="ejercicio">
+      <p class="enunciado">1. ¿Por qué el atributo de solo lectura en Windows no impide borrar el archivo? ¿Qué mecanismo usarías para evitar borrados accidentales?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Respuesta..."></div>
+    </div>
+    <div class="ejercicio">
+      <p class="enunciado">2. Explica con tus palabras la diferencia entre <strong>atributo</strong> y <strong>permiso</strong>. Pon un ejemplo de cada uno.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Respuesta..."></div>
+    </div>
+    <div class="ejercicio">
+      <p class="enunciado">3. En Linux, ¿qué ocurre si un archivo empieza por un punto (<code>.</code>)? ¿Qué comando lo muestra?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Respuesta..."></div>
+    </div>
+    <div class="ejercicio">
+      <p class="enunciado">4. ¿Qué diferencia hay entre <code>chmod 644</code> y <code>chmod 750</code>? ¿Cuál es más seguro para un servidor? Justifica.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Respuesta..."></div>
+    </div>
+    <div class="ejercicio">
+      <p class="enunciado">5. Si un usuario no es propietario ni pertenece al grupo de un archivo, pero tiene permiso de lectura, ¿puede modificar el archivo? ¿Por qué?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Respuesta..."></div>
+    </div>
+
+    <h4>Errores frecuentes y diagnóstico</h4>
+    <ul>
+      <li><strong>Error:</strong> marcar <em>Solo lectura</em> y creer que el archivo no puede borrarse. <strong>Síntoma:</strong> el usuario borra el archivo sin querer. <strong>Solución:</strong> usar permisos de carpeta o realizar copias de seguridad; el atributo solo impide editar contenido.</li>
+      <li><strong>Error:</strong> en Linux usar <code>ls</code> sin <code>-a</code> para buscar archivos ocultos. <strong>Síntoma:</strong> se cree que el archivo no existe. <strong>Solución:</strong> ejecutar <code>ls -a</code>.</li>
+      <li><strong>Error:</strong> confundir <code>ls -l</code> con <code>ls -a</code>. <strong>Síntoma:</strong> no se ven los permisos. <strong>Solución:</strong> usar <code>ls -l</code> para permisos y <code>ls -a</code> para ocultos.</li>
+      <li><strong>Error:</strong> aplicar <code>chmod 777</code> por comodidad. <strong>Síntoma:</strong> cualquier usuario puede modificar o ejecutar el archivo. <strong>Solución:</strong> usar el mínimo permiso necesario (por ejemplo <code>750</code> o <code>640</code>).</li>
+      <li><strong>Error:</strong> ejecutar <code>attrib +h</code> sin estar en la carpeta correcta ni usar ruta absoluta. <strong>Síntoma:</strong> el archivo sigue visible. <strong>Solución:</strong> usar <code>cd</code> o escribir la ruta completa.</li>
+    </ul>
+
+    <h4>Rúbrica de evaluación</h4>
+    <ul>
+      <li><strong>Insuficiente:</strong> no reconoce atributos ni permisos; no ejecuta comandos básicos.</li>
+      <li><strong>Suficiente:</strong> reconoce atributos en Windows y permisos en Linux con ayuda; ejecuta comandos básicos pero no interpreta la salida.</li>
+      <li><strong>Bien:</strong> gestiona atributos y permisos sin ayuda; interpreta correctamente los campos de <code>ls -l</code> y la salida de <code>attrib</code>.</li>
+      <li><strong>Excelente:</strong> además resuelve el problema avanzado, explica el porqué de cada permiso y propone medidas de seguridad mejoradas.</li>
+    </ul>
+
+    <h4>Checklist de entrega</h4>
+    <ul class="checklist">
+      <li><label><input type="checkbox" class="check-item"> Captura de las Propiedades del archivo Windows mostrando solo lectura y oculto.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura del terminal Windows con <code>attrib</code> antes y después de aplicar atributos.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de terminal Linux con <code>ls -a</code> mostrando archivo oculto.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de terminal Linux con <code>ls -l</code> y <code>chmod</code> aplicado.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Respuestas a las preguntas de reflexión.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Documento con comandos de la variación y del problema avanzado.</label></li>
+    </ul>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ CRITERIO DE EVALUACIÓN CRÍTICO</div>
+      <p>El alumno debe demostrar obligatoriamente que sabe reconocer y modificar atributos en Windows (solo lectura, oculto) y permisos en Linux (lectura, escritura, ejecución) sobre archivos y directorios, interpretando correctamente las salidas de <code>attrib</code> y <code>ls -l</code>. Además, debe resolver un problema real de permisos justificando el comando utilizado y explicando el impacto de un permiso mal asignado.</p>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="practica-ceE" data-modalidad="aula">
+<div class="bloque-header">
+<div class="bloque-titulo">
+<div class="bloque-num critico">e</div>
+<div class="bloque-info">
+<h3>Práctica CE-e: Gestión de archivos, carpetas y periféricos en Talleres Robles S.L.</h3>
+<p>CE-e · CRÍTICO · 6 sesiones</p>
+</div>
+</div>
+<span class="bloque-sesiones">6 sesiones</span>
+</div>
+<div class="bloque-body">
+
+<h3>Escenario profesional</h3>
+<p>La empresa <strong>Talleres Robles S.L.</strong>, dedicada al mecanizado de precisión, dispone de una pequeña red local con dos equipos de trabajo:</p>
+<ul>
+<li><strong>PC-01</strong> con Windows 11, utilizado por administración y diseño.</li>
+<li><strong>PC-02</strong> con Ubuntu 24.04, utilizado por el taller para consultas y partes de trabajo.</li>
+</ul>
+<p>El proyecto activo se llama <strong>Eje Rápido 2025</strong> y toda su documentación debe almacenarse en la carpeta compartida del servidor NAS:</p>
+<ul>
+<li>Ruta Windows: <code>\\192.168.1.50\produccion\eje2025</code></li>
+<li>Ruta Ubuntu: <code>smb://192.168.1.50/produccion/eje2025</code></li>
+</ul>
+<p>Además, la empresa utiliza una memoria USB <strong>SanDisk Ultra 32 GB</strong> para intercambiar información con clientes. En Windows se monta como <code>E:</code> y en Ubuntu como <code>/media/alumno/EJE_USB</code>. Por último, hay una impresora USB <strong>HP LaserJet Pro M404dn</strong> conectada al PC-01.</p>
+<p>Trabajarás por parejas. Un alumno administrará Windows y el otro Ubuntu. Después de cada fase intercambiaréis los roles para manejar ambos sistemas.</p>
+
+<h3>Objetivos de la práctica</h3>
+<ul>
+<li>Crear, copiar, mover, renombrar y eliminar archivos y carpetas en Windows 11 y Ubuntu 24.04.</li>
+<li>Buscar información y comprimir o descomprimir archivos en formato ZIP.</li>
+<li>Identificar y usar memorias USB de forma segura, comprobando su montaje y espacio libre.</li>
+<li>Conectar, configurar y verificar una impresora USB básica.</li>
+<li>Ejecutar las mismas operaciones desde terminal en <code>cmd</code> y en <code>bash</code>, justificando cada opción.</li>
+<li>Restaurar elementos eliminados y comprobar la trazabilidad de las operaciones.</li>
+</ul>
+
+<h3>Distribución orientativa de sesiones</h3>
+<ul>
+<li><strong>Sesión 1 y 2:</strong> práctica guiada en Windows 11.</li>
+<li><strong>Sesión 3 y 4:</strong> práctica guiada en Ubuntu 24.04.</li>
+<li><strong>Sesión 5:</strong> variación de nivel medio y comprobación de periféricos.</li>
+<li><strong>Sesión 6:</strong> resolución de problemas avanzados, reflexión y autoevaluación.</li>
+</ul>
+
+<div class="nivel-tag nivel-basico">NIVEL BÁSICO</div>
+<h3>Práctica guiada · Fase Windows 11</h3>
+<p>En esta fase crearemos la estructura del proyecto, manejaremos archivos por interfaz gráfica y por terminal, y prepararemos una copia de seguridad en el USB.</p>
+
+<ol>
+<li>
+<strong>Crea la estructura de carpetas del proyecto.</strong>
+<p>En <code>cmd</code> escribe los siguientes comandos:</p>
+<pre><code>mkdir "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\planos"
+mkdir "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\presupuestos"
+mkdir "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\informes"</code></pre>
+<p><code>mkdir</code> crea un directorio. Al indicar la ruta completa, Windows crea también las carpetas intermedias si no existen.</p>
+<p><strong>Verificación:</strong> en el Explorador de archivos debe verse la ruta <code>C:\Users\alumno\Documentos\TalleresRobles\EJE2025</code> con las tres carpetas creadas.</p>
+</li>
+
+<li>
+<strong>Crea tres archivos de texto dentro del proyecto.</strong>
+<p>Desde el Explorador abre el Bloc de notas y guarda los siguientes archivos en su carpeta correspondiente:</p>
+<ul>
+<li><code>planos\plano_eje_001.txt</code></li>
+<li><code>presupuestos\presupuesto_mayo.txt</code></li>
+<li><code>informes\informe_avance.txt</code></li>
+</ul>
+<p><strong>Verificación:</strong> con <code>dir "C:\Users\alumno\Documentos\TalleresRobles\EJE2025" /s</code> deben aparecer los tres archivos. La opción <code>/s</code> hace que <code>dir</code> busque también dentro de las subcarpetas.</p>
+</li>
+
+<li>
+<strong>Copia el presupuesto a una carpeta de respaldo.</strong>
+<p>Primero crea la carpeta <code>BACKUP</code> y después copia el archivo cambiando su nombre:</p>
+<pre><code>mkdir "C:\Users\alumno\Documentos\TalleresRobles\BACKUP"
+copy "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\presupuestos\presupuesto_mayo.txt" "C:\Users\alumno\Documentos\TalleresRobles\BACKUP\presupuesto_mayo_copia.txt"</code></pre>
+<p><code>copy</code> copia el archivo de origen al destino. Si el destino incluye un nombre nuevo, la copia queda renombrada.</p>
+<p><strong>Verificación:</strong> comprueba que en <code>C:\Users\alumno\Documentos\TalleresRobles\BACKUP</code> existe <code>presupuesto_mayo_copia.txt</code> y que el original sigue en su carpeta.</p>
+</li>
+
+<li>
+<strong>Mueve el plano a una carpeta de obsoletos.</strong>
+<p>Crea la carpeta de destino y mueve el archivo:</p>
+<pre><code>mkdir "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\planos_obsoletos"
+move "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\planos\plano_eje_001.txt" "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\planos_obsoletos\plano_eje_001.txt"</code></pre>
+<p><code>move</code> desplaza el archivo: desaparece del origen y aparece en el destino.</p>
+<p><strong>Verificación:</strong> la carpeta <code>planos</code> debe quedar vacía y el archivo debe estar dentro de <code>planos_obsoletos</code>.</p>
+</li>
+
+<li>
+<strong>Renombra el informe de avance.</strong>
+<p>Usa el comando <code>ren</code> indicando el nombre actual y el nuevo:</p>
+<pre><code>ren "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\informes\informe_avance.txt" "informe_avance_v2.txt"</code></pre>
+<p><code>ren</code> no mueve el archivo, solo cambia su nombre.</p>
+<p><strong>Verificación:</strong> dentro de <code>informes</code> debe verse <code>informe_avance_v2.txt</code> y no el nombre antiguo.</p>
+</li>
+
+<li>
+<strong>Elimina un archivo a la papelera y restáuralo.</strong>
+<p>En el Explorador, selecciona <code>presupuesto_mayo_copia.txt</code> de <code>BACKUP</code> y pulsa la tecla <kbd>Supr</kbd>. El archivo se envía a la <strong>Papelera de reciclaje</strong>.</p>
+<p>Para restaurarlo abre la papelera, haz clic derecho sobre el archivo y pulsa <strong>Restaurar</strong>.</p>
+<p><strong>Verificación:</strong> el archivo debe volver a aparecer en <code>BACKUP</code>.</p>
+</li>
+
+<li>
+<strong>Busca archivos por nombre o patrón.</strong>
+<p>Desde el Explorador escribe <code>informe*</code> en el cuadro de búsqueda de la carpeta <code>EJE2025</code>. Desde terminal puedes buscar con:</p>
+<pre><code>dir "C:\Users\alumno\Documentos\TalleresRobles\EJE2025\informe*" /s</code></pre>
+<p>El carácter <code>*</code> sustituye a varios caracteres, por lo que encuentra <code>informe_avance_v2.txt</code> aunque no sepas el nombre exacto.</p>
+<p><strong>Verificación:</strong> la búsqueda debe mostrar únicamente el archivo de informe.</p>
+</li>
+
+<li>
+<strong>Comprime la carpeta del proyecto en ZIP.</strong>
+<p>En el Explorador haz clic derecho sobre <code>EJE2025</code> y selecciona <strong>Comprimir en archivo ZIP</strong>. Asígnale el nombre <code>EJE2025_respaldo.zip</code>.</p>
+<p>Si deseas hacerlo desde PowerShell, puedes usar este comando:</p>
+<pre><code>Compress-Archive -Path "C:\Users\alumno\Documentos\TalleresRobles\EJE2025" -DestinationPath "C:\Users\alumno\Documentos\TalleresRobles\EJE2025_respaldo.zip" -CompressionLevel Optimal</code></pre>
+<p><code>-Path</code> indica el origen, <code>-DestinationPath</code> indica el archivo ZIP final y <code>-CompressionLevel Optimal</code> aplica una compresión de buena calidad.</p>
+<p><strong>Verificación:</strong> comprueba que el archivo <code>EJE2025_respaldo.zip</code> pesa y que al abrirlo contiene la carpeta completa.</p>
+</li>
+
+<li>
+<strong>Copia el ZIP a la memoria USB y expúlsala con seguridad.</strong>
+<p>Conecta la memoria USB SanDisk a un puerto USB del PC-01. Windows la montará como unidad <code>E:</code>. Después ejecuta:</p>
+<pre><code>copy "C:\Users\alumno\Documentos\TalleresRobles\EJE2025_respaldo.zip" "E:\EJE2025_respaldo.zip"</code></pre>
+<p>Cuando termine la copia, usa la bandeja del sistema y selecciona <strong>Quitar hardware con seguridad</strong> para expulsar la memoria.</p>
+<p><strong>Verificación:</strong> al hacer doble clic sobre <code>E:</code> debe verse el ZIP copiado y después de la expulsión segura la unidad debe desaparecer del Explorador.</p>
+</li>
+
+<li>
+<strong>Configura y comprueba la impresora USB.</strong>
+<p>Conecta la impresora HP LaserJet Pro M404dn al PC-01. Entra en <strong>Configuración &gt; Bluetooth y dispositivos &gt; Impresoras y escáneres</strong>. Selecciona <strong>Agregar dispositivo</strong> y espera a que Windows detecte la impresora USB.</p>
+<p>Haz clic derecho sobre la impresora y pulsa <strong>Imprimir página de prueba</strong>. Comprueba que la página sale correctamente.</p>
+<p><strong>Verificación:</strong> la página de prueba impresa contendrá el nombre de la impresora y una serie de líneas de diagnóstico.</p>
+</li>
+</ol>
+
+<div class="nivel-tag nivel-basico">NIVEL BÁSICO</div>
+<h3>Práctica guiada · Fase Ubuntu 24.04</h3>
+<p>En esta fase repetirás las operaciones básicas, pero ahora en Ubuntu y con comandos de <code>bash</code>.</p>
+
+<ol>
+<li>
+<strong>Crea la estructura de carpetas del proyecto.</strong>
+<p>Abre la terminal con <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> y ejecuta:</p>
+<pre><code>mkdir -p /home/alumno/Documentos/TalleresRobles/EJE2025/planos /home/alumno/Documentos/TalleresRobles/EJE2025/presupuestos /home/alumno/Documentos/TalleresRobles/EJE2025/informes</code></pre>
+<p>La opción <code>-p</code> crea toda la jerarquía de directorios necesaria sin dar error si ya existe alguna carpeta.</p>
+<p><strong>Verificación:</strong> con <code>ls -R /home/alumno/Documentos/TalleresRobles/EJE2025</code> deben listarse las tres carpetas. La opción <code>-R</code> muestra recursivamente el contenido.</p>
+</li>
+
+<li>
+<strong>Crea tres archivos vacíos con <code>touch</code>.</strong>
+<pre><code>touch /home/alumno/Documentos/TalleresRobles/EJE2025/planos/plano_eje_001.txt
+touch /home/alumno/Documentos/TalleresRobles/EJE2025/presupuestos/presupuesto_mayo.txt
+touch /home/alumno/Documentos/TalleresRobles/EJE2025/informes/informe_avance.txt</code></pre>
+<p><code>touch</code> crea un archivo vacío si no existe.</p>
+<p><strong>Verificación:</strong> con <code>ls -l /home/alumno/Documentos/TalleresRobles/EJE2025/informes</code> debe aparecer <code>informe_avance.txt</code>.</p>
+</li>
+
+<li>
+<strong>Copia el presupuesto a una carpeta de respaldo.</strong>
+<pre><code>mkdir -p /home/alumno/Documentos/TalleresRobles/BACKUP
+cp /home/alumno/Documentos/TalleresRobles/EJE2025/presupuestos/presupuesto_mayo.txt /home/alumno/Documentos/TalleresRobles/BACKUP/presupuesto_mayo_copia.txt</code></pre>
+<p><code>cp</code> copia el archivo de origen al destino. Al cambiarle el nombre en el destino, la copia queda renombrada.</p>
+<p><strong>Verificación:</strong> con <code>ls /home/alumno/Documentos/TalleresRobles/BACKUP</code> debe aparecer el archivo <code>presupuesto_mayo_copia.txt</code>.</p>
+</li>
+
+<li>
+<strong>Mueve el plano a una carpeta de obsoletos.</strong>
+<pre><code>mkdir -p /home/alumno/Documentos/TalleresRobles/EJE2025/planos_obsoletos
+mv /home/alumno/Documentos/TalleresRobles/EJE2025/planos/plano_eje_001.txt /home/alumno/Documentos/TalleresRobles/EJE2025/planos_obsoletos/</code></pre>
+<p><code>mv</code> desplaza el archivo. Desaparece del origen y queda en el destino.</p>
+<p><strong>Verificación:</strong> la carpeta <code>planos</code> debe quedar vacía y el archivo debe estar en <code>planos_obsoletos</code>.</p>
+</li>
+
+<li>
+<strong>Renombra el informe usando <code>mv</code>.</strong>
+<pre><code>mv /home/alumno/Documentos/TalleresRobles/EJE2025/informes/informe_avance.txt /home/alumno/Documentos/TalleresRobles/EJE2025/informes/informe_avance_v2.txt</code></pre>
+<p>En Linux, <code>mv</code> sirve tanto para mover como para renombrar: si el destino no es una ruta de carpeta sino un nombre de archivo, se interpreta como cambio de nombre.</p>
+<p><strong>Verificación:</strong> dentro de <code>informes</code> debe verse <code>informe_avance_v2.txt</code>.</p>
+</li>
+
+<li>
+<strong>Elimina un archivo a la papelera y restáuralo.</strong>
+<p>Desde el administrador de archivos, selecciona <code>presupuesto_mayo_copia.txt</code> de <code>BACKUP</code> y pulsa <kbd>Supr</kbd>. El archivo se moverá a la <strong>Papelera</strong>.</p>
+<p>Abre la Papelera, haz clic derecho sobre el archivo y pulsa <strong>Restaurar</strong>.</p>
+<p><strong>Verificación:</strong> el archivo debe volver a aparecer en <code>BACKUP</code>.</p>
+</li>
+
+<li>
+<strong>Busca archivos por patrón.</strong>
+<p>Puedes buscar desde la lupa de Ubuntu o desde terminal con:</p>
+<pre><code>find /home/alumno/Documentos/TalleresRobles/EJE2025 -name "informe*"</code></pre>
+<p><code>find</code> busca a partir de una ruta indicada y <code>-name</code> filtra por nombre; el <code>*</code> sustituye a varios caracteres.</p>
+<p><strong>Verificación:</strong> el resultado debe mostrar <code>informe_avance_v2.txt</code>.</p>
+</li>
+
+<li>
+<strong>Comprime la carpeta del proyecto en ZIP.</strong>
+<p>Ejecuta en terminal:</p>
+<pre><code>zip -r /home/alumno/Documentos/TalleresRobles/EJE2025_respaldo.zip /home/alumno/Documentos/TalleresRobles/EJE2025</code></pre>
+<p>La opción <code>-r</code> es recursiva, por lo que incluye la carpeta y todo su contenido. Si la orden <code>zip</code> no estuviera instalada, se instalaría con <code>sudo apt install zip</code>.</p>
+<p><strong>Verificación:</strong> con <code>ls -lh /home/alumno/Documentos/TalleresRobles/EJE2025_respaldo.zip</code> debe verse el archivo comprimido y su tamaño.</p>
+</li>
+
+<li>
+<strong>Copia el ZIP a la memoria USB y desmóntala con seguridad.</strong>
+<p>Conecta la memoria SanDisk. Ubuntu suele montarla automáticamente en <code>/media/alumno/EJE_USB</code>. Compruébalo con:</p>
+<pre><code>ls /media/alumno/EJE_USB</code></pre>
+<p>Después copia el ZIP:</p>
+<pre><code>cp /home/alumno/Documentos/TalleresRobles/EJE2025_respaldo.zip /media/alumno/EJE_USB/</code></pre>
+<p>Antes de retirar la memoria, desmóntala:</p>
+<pre><code>umount /media/alumno/EJE_USB</code></pre>
+<p><strong>Verificación:</strong> la orden <code>umount</code> no debe mostrar errores y, tras ejecutarla, la carpeta <code>/media/alumno/EJE_USB</code> debe quedar vacía o desaparecer.</p>
+</li>
+
+<li>
+<strong>Verifica el estado de la impresora USB.</strong>
+<p>Con la impresora HP conectada al PC-01 y compartida en red, abre en Ubuntu <strong>Configuración &gt; Impresoras</strong>. Pulsa <strong>Agregar impresora</strong> y selecciona la impresora de red o USB detectada.</p>
+<p>Haz clic en <strong>Imprimir página de prueba</strong>.</p>
+<p><strong>Verificación:</strong> la impresora debe imprimir una página con el nombre del equipo y de la impresora.</p>
+</li>
+</ol>
+
+<div class="nivel-tag nivel-medio">NIVEL MEDIO</div>
+<h3>Variación · Cambio de proyecto y limpieza de USB</h3>
+<p>La empresa decide crear un nuevo proyecto llamado <strong>Eje Rápido 2026</strong>. Tu tarea consiste en adaptar los pasos anteriores sin instrucciones exactas para cada comando.</p>
+<ol>
+<li>Crea en Windows y en Ubuntu la estructura <code>EjeRapido2026</code> con las subcarpetas <code>planos</code>, <code>presupuestos</code>, <code>calidad</code> y <code>informes</code>.</li>
+<li>Dentro de <code>calidad</code> crea un archivo <code>control_calidad_001.txt</code> y muévelo después a <code>informes</code>.</li>
+<li>Copia todos los archivos de <code>EJE2025\informes</code> a <code>EjeRapido2026\informes</code> sin arrastrarlos manualmente. Usa comandos.</li>
+<li>En la memoria USB se encuentra un ZIP llamado <code>documentacion_cliente.zip</code>. Descomprímelo en la carpeta <code>EjeRapido2026</code>. En Windows usa el asistente del Explorador; en Ubuntu usa el administrador de archivos o la terminal.</li>
+<li>Comprime la nueva carpeta completa <code>EjeRapido2026</code> en un ZIP llamada <code>EjeRapido2026_respaldo.zip</code>.</li>
+<li>Copia ese ZIP a la USB y expúlsala con seguridad.</li>
+<li>Elimina la carpeta <code>EJE2025\planos_obsoletos</code> en todos los equipos si ya no es necesaria. Realízalo primero a la papelera y comprueba que puedes restaurarla antes de la limpieza definitiva.</li>
+</ol>
+
+<div class="nivel-tag nivel-avanzado">NIVEL AVANZADO</div>
+<h3>Resolución de problemas · Fallos en producción</h3>
+<p>Durante una mañana de trabajo aparecen estos tres avisos en los equipos. Realiza un diagnóstico para cada uno y ejecuta la solución comprobando que desaparece el error.</p>
+
+<h4>Incidencia 1: No se puede copiar a la memoria USB en Windows</h4>
+<p>Al intentar copiar <code>EjeRapido2026_respaldo.zip</code> a <code>E:</code>, Windows muestra el mensaje <strong>El disco está protegido contra escritura</strong>. La copia no se completa.</p>
+<ul>
+<li>Comprueba si la memoria USB tiene una pestaña lateral de bloqueo.</li>
+<li>Ejecuta en <code>cmd</code> la utilidad de comprobación de disco:</li>
+</ul>
+<pre><code>chkdsk E: /f</code></pre>
+<p>La opción <code>/f</code> corrige errores del sistema de archivos que pueden dejar la USB en modo solo lectura.</p>
+<ul>
+<li>Si el error continúa, prueba a expulsar la memoria con seguridad, reinicia el equipo y vuelve a conectarla.</li>
+</ul>
+
+<h4>Incidencia 2: No se puede eliminar un archivo en Ubuntu</h4>
+<p>Al ejecutar <code>rm /media/alumno/EJE_USB/documentacion_cliente.zip</code> aparece <strong>rm: no se puede borrar '...': sistema de archivos de solo lectura</strong>.</p>
+<ul>
+<li>Comprueba cómo está montada la memoria USB:</li>
+</ul>
+<pre><code>mount | grep EJE_USB</code></pre>
+<p>Si aparece la opción <code>ro</code> significa que está montada como solo lectura.</p>
+<ul>
+<li>Desmóntala y vuelve a montarla si fuese necesario. Según los permisos de la práctica, puede usarse:</li>
+</ul>
+<pre><code>umount /media/alumno/EJE_USB
+sudo mount -o rw /dev/sdb1 /media/alumno/EJE_USB</code></pre>
+<p>La opción <code>-o rw</code> indica que el montaje sea de lectura y escritura.</p>
+
+<h4>Incidencia 3: La impresora HP no imprime desde Ubuntu</h4>
+<p>La impresora aparece en configuración, pero al mandar una página de prueba no sale ningún documento.</p>
+<ul>
+<li>Comprueba el servicio de impresión:</li>
+</ul>
+<pre><code>systemctl status cups</code></pre>
+<p>El servicio <code>cups</code> es el encargado de gestionar la impresión en Ubuntu. Si no está activo, reinícialo:</p>
+<pre><code>sudo systemctl restart cups</code></pre>
+<ul>
+<li>Abre la cola de impresión de la impresora y cancela todos los trabajos atascados.</li>
+<li>Verifica que la impresora está compartida en Windows y que la IP o el nombre del equipo es accesible desde Ubuntu.</li>
+</ul>
+
+<h3>Preguntas de reflexión</h3>
+<ol>
+<li>¿Por qué los comandos <code>del</code> y <code>rm</code> son más peligrosos que borrar desde la papelera? ¿En qué situaciones usarlas en una empresa?</li>
+<li>¿Qué diferencia funcional existe entre copiar un archivo y moverlo cuando se trata de hacer una copia de seguridad?</li>
+<li>¿Por qué es importante expulsar siempre la memoria USB con la opción de quitar hardware con seguridad?</li>
+<li>En Ubuntu, ¿por qué se usa la opción <code>-r</code> al comprimir una carpeta y qué pasaría si no se incluyese?</li>
+<li>¿Cómo localizarías un archivo del que recuerdas solo una parte del nombre, por ejemplo <code>control</code>, en un proyecto con cientos de documentos?</li>
+</ol>
+
+<h3>Errores frecuentes y diagnóstico</h3>
+<ul>
+<li><strong>Error de sintaxis en rutas con espacios.</strong><br>Si una ruta contiene espacios, los comandos <code>copy</code>, <code>move</code>, <code>mkdir</code>, <code>cp</code> o <code>mv</code> la interpretan mal. Se soluciona encerrando la ruta entre comillas dobles.</li>
+<li><strong>El comando <code>zip</code> no se encuentra en Ubuntu.</strong><br>Aparece <code>bash: zip: no se reconoce</code>. Se instala con <code>sudo apt install zip</code> y se vuelve a ejecutar la orden.</li>
+<li><strong>No se puede eliminar una carpeta con <code>rmdir</code>.</strong><br><code>rmdir</code> solo elimina carpetas vacías. Si contiene archivos o subcarpetas, debe usarse <code>rmdir /s carpeta</code> en Windows o <code>rm -r carpeta</code> en Linux.</li>
+<li><strong>El ZIP no se abre o parece dañado.</strong><br>Puede que la copia a la USB se interrumpiera o que la unidad se extrajera sin expulsión segura. Se verifica con <code>unzip -t EJE2025_respaldo.zip</code> en Ubuntu y con el asistente de extracción en Windows.</li>
+<li><strong>La impresora no aparece en Ubuntu.</strong><br>Normalmente se debe a que el firewall bloquea la red o a que la impresora no está compartida en Windows. Hay que comprobar la compartición y el estado de <code>cups</code>.</li>
+</ul>
+
+<h3>Rúbrica de evaluación</h3>
+<table border="1" cellpadding="6">
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Insuficiente</th>
+<th>Suficiente</th>
+<th>Notable</th>
+<th>Excelente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Creación de estructura de carpetas</td>
+<td>No crea la jerarquía pedida.</td>
+<td>Crea las carpetas con errores de ubicación o nomenclatura.</td>
+<td>Crea todas las carpetas correctamente.</td>
+<td>Crea todas las carpetas y justifica la organización.</td>
+</tr>
+<tr>
+<td>Operaciones de archivos en GUI</td>
+<td>No completa copias, movimientos o renombrados.</td>
+<td>Completa algunas operaciones con ayuda.</td>
+<td>Realiza las operaciones sin ayuda y verifica cada paso.</td>
+<td>Realiza las operaciones con rapidez y propone mejoras en la estructura.</td>
+</tr>
+<tr>
+<td>Uso de terminal Windows y Ubuntu</td>
+<td>No ejecuta comandos o lo hace con fallos graves.</td>
+<td>Ejecuta comandos con ayuda o con dudas en opciones.</td>
+<td>Ejecuta la mayoría de comandos correctamente.</td>
+<td>Ejecuta todos los comandos y explica cada opción.</td>
+</tr>
+<tr>
+<td>Gestión de USB y periféricos</td>
+<td>No usa la USB ni la impresora.</td>
+<td>Usa la USB o la impresora con supervisión.</td>
+<td>Monta, copia, desmonta y comprueba impresora sin ayuda.</td>
+<td>Resuelve incidencias de solo lectura y colas de impresión.</td>
+</tr>
+<tr>
+<td>Compresión y descompresión</td>
+<td>No genera ZIP o no extrae contenido.</td>
+<td>Genera ZIP sin comprobar el contenido.</td>
+<td>Genera y extrae ZIP correctamente en ambos sistemas.</td>
+<td>Además verifica la integridad del ZIP generado.</td>
+</tr>
+<tr>
+<td>Diagnóstico y resolución de problemas</td>
+<td>No identifica el fallo.</td>
+<td>Identifica el fallo pero no lo corrige.</td>
+<td>Identifica y corrige el fallo con ayuda.</td>
+<td>Diagnostica y corrige todos los fallos con autonomía.</td>
+</tr>
+<tr>
+<td>Documentación y actitud</td>
+<td>No entrega evidencias.</td>
+<td>Entrega evidencias incompletas.</td>
+<td>Entrega evidencias claras de todos los pasos.</td>
+<td>Entrega documentación impecable y colabora con su pareja.</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Checklist de entrega</h3>
+<ul class="checklist">
+<li><label><input type="checkbox" class="check-item"> Capturas de pantalla de la estructura final de carpetas en Windows 11.</label></li>
+<li><label><input type="checkbox" class="check-item"> Capturas de pantalla de la estructura final de carpetas en Ubuntu 24.04.</label></li>
+<li><label><input type="checkbox" class="check-item"> Comandos ejecutados en terminal con su salida de verificación en ambos sistemas.</label></li>
+<li><label><input type="checkbox" class="check-item"> Archivo ZIP del proyecto correctamente generado y descomprimido.</label></li>
+<li><label><input type="checkbox" class="check-item"> Evidencia de copia segura a la memoria USB y expulsión correcta.</label></li>
+<li><label><input type="checkbox" class="check-item"> Página de prueba impresa desde Windows y desde Ubuntu.</label></li>
+<li><label><input type="checkbox" class="check-item"> Documento con el diagnóstico y la solución aplicada en las incidencias de nivel avanzado.</label></li>
+<li><label><input type="checkbox" class="check-item"> Respuestas a las preguntas de reflexión razonadas con ejemplos.</label></li>
+</ul>
+
+<div class="box-critico">
+<div class="box-label">⚠ CRITERIO DE EVALUACIÓN CRÍTICO</div>
+<p>Para superar este CE-e el alumno debe demostrar obligatoriamente que sabe <strong>crear, copiar, mover, renombrar, eliminar, buscar, comprimir y descomprimir</strong> archivos y carpetas en Windows 11 y Ubuntu 24.04, tanto en entorno gráfico como desde terminal, y que es capaz de <strong>conectar y usar de forma segura una memoria USB y una impresora</strong>, comprobando su estado, montaje, expulsión y resolución de incidencias básicas sin provocar pérdida de datos.</p>
+</div>
+
+</div>
+</div>
+<div class="bloque" id="practica-ceF" data-modalidad="aula">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num">f</div>
+      <div class="bloque-info">
+        <h3>Práctica CE-f: Exploración de soportes de almacenamiento en un entorno mixto Windows y Ubuntu</h3>
+        <p>CE-f · importante · 3 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">3 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <div class="box-critico">
+      <div class="box-label">IMPORTANTE</div>
+      <p>Esta práctica se desarrolla en un aula con equipos que tienen arranque dual o máquinas virtuales con <strong>Windows 11</strong> y <strong>Ubuntu 24.04</strong>. No se manipularán discos duros reales, solo se explorarán soportes ya montados. Está prohibido formatear, eliminar o modificar particiones sin autorización expresa del profesor.</p>
+    </div>
+
+    <h4>Escenario empresarial</h4>
+    <p>La empresa <strong>Vega Informática S.L.</strong>, dedicada al mantenimiento de equipos en pequeñas oficinas, ha recibido el encargo de inventariar el almacenamiento de dos ordenadores de una gestoría: <strong>PC-GEST-01</strong>, con <strong>Windows 11 Pro</strong> (disco principal SSD de 256 GB y disco secundario HDD de 1 TB), y <strong>PC-GEST-02</strong>, con <strong>Ubuntu 24.04 LTS</strong> (disco SSD NVMe de 512 GB). Además, en la recepción hay un <strong>USB externo de 64 GB</strong> que se conecta puntualmente para copias de seguridad.</p>
+    <p>Como técnico auxiliar en prácticas, debes <strong>explorar los soportes de almacenamiento</strong> de ambos equipos utilizando las herramientas del sistema operativo, documentar <strong>discos, particiones, capacidad, espacio libre y sistemas de archivos</strong>, y elaborar un informe que permita a la empresa decidir si es necesario ampliar el almacenamiento.</p>
+    <p>Dispones de 3 sesiones: en la primera trabajarás con Windows 11, en la segunda con Ubuntu, y en la tercera realizarás la variación y el diagnóstico avanzado.</p>
+
+    <h4>Objetivos de la práctica</h4>
+    <ul>
+      <li>Identificar los <strong>discos físicos</strong> y sus <strong>particiones</strong> en Windows 11 y Ubuntu 24.04.</li>
+      <li>Utilizar las herramientas gráficas del sistema operativo (<strong>Explorador de archivos</strong>, <strong>Propiedades</strong>, <strong>Administración de discos</strong>, <strong>Discos</strong>) para extraer información de almacenamiento.</li>
+      <li>Ejecutar comandos de terminal (<code>lsblk</code>, <code>lsblk -f</code>, <code>df -h</code>) y comprender su salida.</li>
+      <li>Relacionar los conceptos de <strong>partición</strong>, <strong>punto de montaje</strong>, <strong>letra de unidad</strong> y <strong>sistema de archivos</strong> con lo observado en las herramientas.</li>
+      <li>Redactar un informe de almacenamiento con los datos obtenidos, siguiendo una plantilla dada.</li>
+    </ul>
+
+    <h4>Práctica guiada — Nivel básico</h4>
+    <p><span class="nivel-tag nivel-basico">NIVEL BÁSICO</span></p>
+    <p>Estos pasos están totalmente guiados. Sigue el orden indicado y anota los resultados en los ejercicios.</p>
+
+    <h5>Parte 1: Exploración en Windows 11 (PC-GEST-01)</h5>
+    <ol>
+      <li>
+        <p>Enciende el equipo <strong>PC-GEST-01</strong> e inicia sesión con el usuario <code>alumno</code> y contraseña <code>Vega2024!</code>. Espera a que cargue el escritorio.</p>
+        <p><strong>Verificación:</strong> verás el escritorio de Windows 11 con la barra de tareas inferior. Si aparece la pantalla de bienvenida, introduce las credenciales correctamente.</p>
+      </li>
+      <li>
+        <p>Abre el <strong>Explorador de archivos</strong> pulsando <kbd>Windows</kbd> + <kbd>E</kbd>. En el panel izquierdo, haz clic en <strong>«Este equipo»</strong>.</p>
+        <p><strong>Verificación:</strong> en la zona central aparecerán las unidades conectadas, cada una con su letra (por ejemplo, <code>C:</code>, <code>D:</code>, <code>E:</code>). Debajo de cada unidad verás una <strong>barra de espacio</strong> azul (usado) y gris (libre).</p>
+      </li>
+      <li>
+        <p>Anota en el <strong>Ejercicio 1</strong> todas las unidades que aparecen y su espacio libre aproximado. Para ello, observa la información bajo cada unidad.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 1.</strong> Unidades visibles en «Este equipo» de PC-GEST-01.</p>
+          <p>Indica la letra de unidad, el nombre de la unidad, la capacidad total y el espacio libre que se muestra debajo de cada una.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí las unidades, capacidades y espacio libre..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Haz clic derecho sobre la unidad <code>C:</code> y selecciona <strong>Propiedades</strong>. Se abrirá una ventana con un gráfico circular. Anota en el <strong>Ejercicio 2</strong> los siguientes datos: <strong>capacidad total</strong>, <strong>espacio usado</strong>, <strong>espacio libre</strong> y <strong>sistema de archivos</strong>.</p>
+        <p><strong>Verificación:</strong> el sistema de archivos debería ser <strong>NTFS</strong>, el más habitual en discos internos de Windows. Si el gráfico circular muestra el espacio en color azul y el libre en blanco, has abierto la ventana correcta.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 2.</strong> Propiedades de la unidad C: de PC-GEST-01.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Capacidad total: ...  Espacio usado: ...  Espacio libre: ...  Sistema de archivos: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Repite el paso anterior para el resto de unidades que aparecen en «Este equipo» (por ejemplo, <code>D:</code> o <code>E:</code>). Rellena el <strong>Ejercicio 3</strong>.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 3.</strong> Propiedades de todas las unidades de PC-GEST-01.</p>
+          <p>Crea una tabla (en tu cuaderno o aquí) con las columnas: Letra, Nombre, Capacidad total, Espacio usado, Espacio libre, Sistema de archivos.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí la tabla con los datos de cada unidad..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Abre la herramienta <strong>Administración de discos</strong>: haz clic derecho sobre el botón <strong>Inicio</strong> (icono de ventana en la barra de tareas) y selecciona <strong>Administración de discos</strong>. Espera a que cargue; puede tardar unos segundos.</p>
+        <p><strong>Verificación:</strong> se mostrará una ventana con dos paneles: arriba la lista de <strong>volúmenes</strong> (unidades con letra) y abajo una representación gráfica de los <strong>discos físicos</strong> (Disco 0, Disco 1, etc.) con sus <strong>particiones</strong>.</p>
+      </li>
+      <li>
+        <p>En el panel inferior, identifica los <strong>discos físicos</strong>. Deberías ver al menos el <strong>Disco 0</strong> (SSD de 256 GB) y el <strong>Disco 1</strong> (HDD de 1 TB). Anota en el <strong>Ejercicio 4</strong>: número de disco, tamaño total, número de particiones y, para cada partición, su tamaño, letra asignada (si tiene) y sistema de archivos.</p>
+        <p><strong>Verificación:</strong> la partición con letra <code>C:</code> debe corresponder a la partición principal del Disco 0. Es posible que existan particiones sin letra, como <strong>Recuperación</strong> o <strong>Sistema</strong>; no les asignes letra, solo anótalas.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 4.</strong> Inventario de discos y particiones en Administración de discos de PC-GEST-01.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Disco 0: ...  Particiones: ...  Disco 1: ...  Particiones: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Compara los datos de <strong>Administración de discos</strong> con los de <strong>«Este equipo»</strong>. ¿Aparecen en «Este equipo» todas las particiones que ves en Administración de discos? Razona la respuesta en el <strong>Ejercicio 5</strong>.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 5.</strong> Comparación entre «Este equipo» y Administración de discos.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Explica si todas las particiones de Administración de discos son visibles en Este equipo y por qué..."></div>
+        </div>
+      </li>
+    </ol>
+
+    <h5>Parte 2: Exploración en Ubuntu 24.04 (PC-GEST-02)</h5>
+    <p>Ahora cambia al equipo <strong>PC-GEST-02</strong> con Ubuntu 24.04 LTS. Inicia sesión con el usuario <code>alumno</code> y contraseña <code>Vega2024!</code>.</p>
+    <ol start="9">
+      <li>
+        <p>Abre la aplicación <strong>Discos</strong>: pulsa la tecla <kbd>Super</kbd> (tecla Windows) y escribe <code>Discos</code>. Haz clic en el icono de la aplicación.</p>
+        <p><strong>Verificación:</strong> se abrirá la aplicación con un panel izquierdo que lista los discos físicos (por ejemplo, <code>512 GB Disk</code>). Al seleccionar un disco, en el panel derecho verás sus <strong>particiones</strong> con tamaño, sistema de archivos y punto de montaje.</p>
+      </li>
+      <li>
+        <p>Selecciona el disco SSD NVMe de 512 GB. Anota en el <strong>Ejercicio 6</strong>: modelo del disco, tamaño total, número de particiones y, para cada partición, tamaño, sistema de archivos y <strong>punto de montaje</strong> (por ejemplo, <code>/</code> para la raíz, <code>/boot</code> para arranque, <code>swap</code> para memoria virtual).</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 6.</strong> Información del disco principal de PC-GEST-02 desde la aplicación Discos.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Disco: ...  Particiones: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Conecta el <strong>USB externo de 64 GB</strong> al equipo <strong>PC-GEST-02</strong>. Espera unos segundos. En la aplicación <strong>Discos</strong>, observa si aparece un nuevo disco en el panel izquierdo. Anota su modelo, tamaño y particiones en el <strong>Ejercicio 7</strong>.</p>
+        <p><strong>Verificación:</strong> el USB debería aparecer como un disco de aproximadamente 64 GB, probablemente con una única partición <code>FAT32</code> o <code>exFAT</code>. Si no aparece, pulsa el botón de actualizar (icono circular) en la esquina superior izquierda de la aplicación.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 7.</strong> Información del USB externo desde la aplicación Discos.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Disco USB: ...  Particiones: ...  Sistema de archivos: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Abre un <strong>terminal</strong> pulsando <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>. Ejecuta el comando:</p>
+        <pre><code>lsblk</code></pre>
+        <p>Este comando lista los <strong>discos</strong> y <strong>particiones</strong> en forma de árbol. Explica cada parte de la salida:</p>
+        <ul>
+          <li><code>NAME</code>: nombre del dispositivo (<code>sda</code>, <code>sdb</code>, <code>nvme0n1</code>, etc.).</li>
+          <li><code>SIZE</code>: tamaño total.</li>
+          <li><code>TYPE</code>: <code>disk</code> para disco físico, <code>part</code> para partición.</li>
+          <li><code>MOUNTPOINT</code>: punto de montaje (la carpeta donde se accede a su contenido).</li>
+        </ul>
+        <p><strong>Verificación:</strong> en la salida deben aparecer el disco NVMe (<code>nvme0n1</code> o similar) y el USB (<code>sda</code> o <code>sdb</code>), con sus particiones. Si el USB no aparece, desconéctalo, vuelve a conectarlo y repite el comando.</p>
+      </li>
+      <li>
+        <p>Ejecuta el comando:</p>
+        <pre><code>lsblk -f</code></pre>
+        <p>El flag <code>-f</code> (<em>filesystem</em>) añade columnas de <strong>sistema de archivos</strong> y <strong>etiqueta</strong>. Anota en el <strong>Ejercicio 8</strong> la salida completa.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 8.</strong> Salida del comando <code>lsblk -f</code> en PC-GEST-02.</p>
+          <p>Pega o transcribe la salida. Identifica qué sistema de archivos usa cada partición (por ejemplo, <code>ext4</code> para la raíz, <code>vfat</code> para EFI, <code>exfat</code> para el USB).</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Salida de lsblk -f ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Ejecuta el comando:</p>
+        <pre><code>df -h</code></pre>
+        <p>El flag <code>-h</code> (<em>human-readable</em>) muestra los tamaños en unidades legibles (MB, GB). La salida muestra los <strong>sistemas de archivos montados</strong> con su tamaño total, espacio usado, espacio libre y punto de montaje. Localiza la línea correspondiente a la <strong>partición raíz</strong> (<code>/</code>) y anótala en el <strong>Ejercicio 9</strong>.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 9.</strong> Salida del comando <code>df -h</code> en PC-GEST-02.</p>
+          <p>Indica el espacio total, usado y libre de la partición raíz <code>/</code> y del USB si aparece montado.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Raíz /: ...  USB: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Compara la información de <code>lsblk -f</code> con la de <code>df -h</code>. ¿Aparecen en <code>df -h</code> todas las particiones listadas en <code>lsblk -f</code>? ¿Por qué? Responde en el <strong>Ejercicio 10</strong>.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 10.</strong> Comparación entre <code>lsblk -f</code> y <code>df -h</code>.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Explica las diferencias y su causa..."></div>
+        </div>
+      </li>
+    </ol>
+
+    <h4>Variación — Nivel medio</h4>
+    <p><span class="nivel-tag nivel-medio">NIVEL MEDIO</span></p>
+    <p>El escenario cambia ligeramente: la gestoría ha conectado al <strong>PC-GEST-01</strong> (Windows) un <strong>disco duro externo USB de 500 GB</strong> previamente formateado en <strong>exFAT</strong>, y al <strong>PC-GEST-02</strong> (Ubuntu) una <strong>tarjeta SD de 32 GB</strong> con una única partición <strong>FAT32</strong>. Además, el disco secundario HDD de 1 TB de PC-GEST-01 ha sido dividido en dos particiones: <code>D:</code> de 400 GB (NTFS) y <code>E:</code> de 600 GB (NTFS).</p>
+    <p>Realiza las siguientes tareas de forma autónoma, adaptando los pasos aprendidos en la práctica guiada:</p>
+    <ol>
+      <li>
+        <p>En <strong>PC-GEST-01</strong>, utiliza <strong>«Este equipo»</strong> y <strong>Administración de discos</strong> para identificar las nuevas unidades <code>D:</code>, <code>E:</code> y el disco externo USB. Anota en una tabla: letra, capacidad, espacio libre, sistema de archivos y tipo de soporte (interno o externo).</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 11.</strong> Inventario ampliado de PC-GEST-01.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Tabla con unidades D:, E:, USB externo..."></div>
+        </div>
+      </li>
+      <li>
+        <p>En <strong>PC-GEST-02</strong>, conecta la tarjeta SD y utiliza <strong>Discos</strong>, <code>lsblk -f</code> y <code>df -h</code> para identificar la tarjeta. Anota: nombre del dispositivo, particiones, sistema de archivos, punto de montaje y espacio libre.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 12.</strong> Identificación de la tarjeta SD en PC-GEST-02.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Dispositivo: ...  Partición: ...  Sistema de archivos: ...  Punto de montaje: ...  Espacio libre: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>En <strong>PC-GEST-02</strong>, ejecuta <code>df -h</code> y localiza la línea de la tarjeta SD. ¿Aparece montada automáticamente? Si no aparece, explica qué harías para montarla (no lo hagas sin permiso; solo descríbelo).</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 13.</strong> Montaje de la tarjeta SD.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="¿Aparece en df -h?  ¿Qué harías para montarla?..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Compara los sistemas de archivos <strong>exFAT</strong> y <strong>FAT32</strong> observados en el USB y la tarjeta SD. Indica qué ventaja tiene cada uno para estos soportes extraíbles, según lo estudiado en los apuntes.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 14.</strong> Comparativa exFAT vs FAT32.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Ventajas de exFAT: ...  Ventajas de FAT32: ..."></div>
+        </div>
+      </li>
+    </ol>
+
+    <h4>Resolución de problemas — Nivel avanzado</h4>
+    <p><span class="nivel-tag nivel-avanzado">NIVEL AVANZADO</span></p>
+    <p><strong>Situación:</strong> Un empleado de la gestoría ha conectado un <strong>USB de 128 GB</strong> al <strong>PC-GEST-01</strong> (Windows 11) y dice que no aparece en «Este equipo». Tú debes diagnosticar el problema y proponer una solución. Sigue estos pasos:</p>
+    <ol>
+      <li>
+        <p>Abre <strong>Administración de discos</strong>. Observa si el USB aparece en el panel inferior. Si aparece pero la partición está marcada como <strong>«Sin asignar»</strong> o el disco como <strong>«No inicializado»</strong>, anota exactamente qué estado muestra.</p>
+        <p><strong>Diagnóstico posible 1:</strong> Si el disco está <strong>No inicializado</strong>, Windows no puede leerlo porque no tiene tabla de particiones. La solución sería inicializar el disco como MBR o GPT y luego crear una partición y formatearla.</p>
+        <p><strong>Diagnóstico posible 2:</strong> Si el disco tiene una partición <strong>«Sin asignar»</strong>, es que el espacio no está particionado. La solución sería crear una partición y formatearla.</p>
+        <p><strong>Diagnóstico posible 3:</strong> Si el disco aparece como <strong>Desconocido</strong> o <strong>No inicializado</strong>, podría estar dañado o con un sistema de archivos incompatible.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 15.</strong> Diagnóstico del USB no visible en PC-GEST-01.</p>
+          <p>Describe lo que observas en Administración de discos y cuál es el diagnóstico más probable.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Estado del USB en Administración de discos: ...  Diagnóstico: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>Ahora supón que el USB está <strong>No inicializado</strong>. Explica <strong>con tus propias palabras</strong> los pasos que seguirías en Administración de discos para dejarlo utilizable: inicializar disco (¿MBR o GPT?), crear una partición primaria, asignar letra y formatear con <strong>exFAT</strong>. No realices estas operaciones, solo descríbelas.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 16.</strong> Procedimiento para inicializar y formatear el USB.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Paso 1: ...  Paso 2: ...  Paso 3: ..."></div>
+        </div>
+      </li>
+      <li>
+        <p>En <strong>PC-GEST-02</strong> (Ubuntu), un compañero ha conectado un <strong>disco duro externo de 250 GB</strong> y ejecuta <code>lsblk</code>. El disco aparece como <code>sdc</code> con una partición <code>sdc1</code>, pero al ejecutar <code>df -h</code> la partición no aparece montada. Explica qué está ocurriendo y qué comando o acción gráfica realizarías para montar la partición en la carpeta <code>/media/alumno/externo</code>.</p>
+        <div class="ejercicio">
+          <p><strong>Ejercicio 17.</strong> Disco detectado pero no montado en PC-GEST-02.</p>
+          <p>Explica por qué <code>lsblk</code> lo muestra pero <code>df -h</code> no, y describe el procedimiento de montaje.</p>
+          <div class="respuesta" contenteditable="true" data-placeholder="Causa: ...  Comando de montaje: ..."></div>
+        </div>
+      </li>
+    </ol>
+
+    <h4>Preguntas de reflexión</h4>
+    <div class="ejercicio">
+      <p><strong>Pregunta 1.</strong> ¿Por qué en Windows se usan <strong>letras de unidad</strong> (C:, D:) y en Linux se usan <strong>puntos de montaje</strong> (como <code>/media/alumno/USB</code>)? ¿Qué ventaja crees que tiene cada sistema?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Responde aquí..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 2.</strong> En la salida de <code>lsblk</code>, ¿qué diferencia hay entre un <code>disk</code> y una <code>part</code>? ¿Podría existir una partición sin punto de montaje? Justifica tu respuesta.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Responde aquí..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 3.</strong> Si un disco USB tiene una partición <strong>NTFS</strong> y lo conectamos a Ubuntu, ¿crees que Ubuntu podrá leerlo y escribir en él? ¿Y si está en <strong>exFAT</strong>? Razona tu respuesta basándote en lo estudiado sobre sistemas de archivos.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Responde aquí..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 4.</strong> ¿Qué información nos da <code>df -h</code> que no nos da <code>lsblk</code> directamente? Explica la diferencia de enfoque entre ambos comandos.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Responde aquí..."></div>
+    </div>
+    <div class="ejercicio">
+      <p><strong>Pregunta 5.</strong> ¿Crees que es útil saber explorar soportes de almacenamiento para un técnico auxiliar de mantenimiento? Menciona al menos dos situaciones reales de una empresa donde esta habilidad sería necesaria.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Responde aquí..."></div>
+    </div>
+
+    <h4>Errores frecuentes y diagnóstico</h4>
+    <p>Durante la práctica, es habitual cometer los siguientes errores. Si te ocurren, aplica la solución indicada.</p>
+    <ul>
+      <li>
+        <strong>Error 1: No aparece el USB en «Este equipo» de Windows aunque está conectado.</strong><br>
+        <em>Síntoma:</em> En el Explorador de archivos no se ve ninguna unidad nueva.<br>
+        <em>Solución:</em> Abre Administración de discos y comprueba si el disco aparece sin letra o sin inicializar. Si tiene partición pero sin letra, asígnale una letra con clic derecho → Cambiar letra y rutas de acceso. Si no está inicializado, habría que inicializarlo (solo con permiso del profesor).
+      </li>
+      <li>
+        <strong>Error 2: En Ubuntu, el USB no aparece en <code>lsblk</code>.</strong><br>
+        <em>Síntoma:</em> La salida de <code>lsblk</code> no muestra ningún dispositivo nuevo.<br>
+        <em>Solución:</em> Desconecta y reconecta el USB. Espera unos segundos y vuelve a ejecutar <code>lsblk</code>. Si sigue sin aparecer, prueba en otro puerto USB o comprueba si el USB funciona en otro equipo (podría estar dañado).
+      </li>
+      <li>
+        <strong>Error 3: En <code>df -h</code> no aparece una partición que sí se ve en <code>lsblk</code>.</strong><br>
+        <em>Síntoma:</em> En <code>lsblk</code> existe la partición, pero en <code>df -h</code> no hay ninguna línea con ese punto de montaje.<br>
+        <em>Solución:</em> La partición no está montada. Se puede montar desde la aplicación <strong>Discos</strong> o con el comando <code>sudo mount /dev/sdc1 /media/alumno/externo</code> (siendo <code>/dev/sdc1</code> la partición y <code>/media/alumno/externo</code> una carpeta existente). Nunca montar en una carpeta que no exista; créala antes con <code>mkdir</code>.
+      </li>
+      <li>
+        <strong>Error 4: Confundir disco físico con partición.</strong><br>
+        <em>Síntoma:</em> El alumno dice que hay tres discos cuando en realidad hay un solo disco con tres particiones.<br>
+        <em>Solución:</em> En Administración de discos, los discos físicos son los que aparecen como <strong>Disco 0</strong>, <strong>Disco 1</strong>, etc., en la fila izquierda del panel inferior. Las particiones son divisiones dentro de cada disco, representadas como rectángulos dentro de la fila del disco. En <code>lsblk</code>, los discos físicos tienen <code>TYPE="disk"</code> y las particiones <code>TYPE="part"</code>.
+      </li>
+      <li>
+        <strong>Error 5: Cerrar la ventana de Propiedades en Windows sin anotar el sistema de archivos.</strong><br>
+        <em>Síntoma:</em> El alumno no recuerda si era NTFS o FAT32.<br>
+        <em>Solución:</em> Vuelve a abrir Propiedades de la unidad y anota el dato en el ejercicio. Es un dato clave para el informe.
+      </li>
+    </ul>
+
+    <h4>Rúbrica de evaluación</h4>
+    <p>La puntuación de la práctica se basará en los siguientes criterios y niveles de logro.</p>
+    <ul>
+      <li><strong>Identificación de discos y particiones (25 %):</strong> Excelente: identifica correctamente todos los discos físicos y particiones en ambos sistemas, sin omisiones. Bien: identifica la mayoría. Regular: omite alguna partición o disco secundario. Insuficiente: no distingue discos de particiones o no completa el inventario.</li>
+      <li><strong>Uso de herramientas gráficas (20 %):</strong> Excelente: maneja con soltura «Este equipo», Propiedades, Administración de discos y Discos, extrayendo todos los datos. Bien: maneja las herramientas con ayuda puntual. Regular: necesita ayuda frecuente. Insuficiente: no sabe abrir o interpretar las herramientas.</li>
+      <li><strong>Uso de comandos de terminal (20 %):</strong> Excelente: ejecuta <code>lsblk</code>, <code>lsblk -f</code> y <code>df -h</code> correctamente e interpreta toda la salida. Bien: los ejecuta e interpreta la mayor parte. Regular: los ejecuta pero no interpreta bien los campos. Insuficiente: no ejecuta los comandos o no sabe qué muestran.</li>
+      <li><strong>Documentación e informe (15 %):</strong> Excelente: todos los ejercicios están completos, ordenados y con los datos correctos. Bien: la mayoría de ejercicios completos. Regular: faltan datos o hay errores de transcripción. Insuficiente: informe incompleto o desordenado.</li>
+      <li><strong>Resolución de problemas y reflexión (20 %):</strong> Excelente: diagnostica correctamente los fallos, propone soluciones coherentes y responde con razonamiento a las preguntas abiertas. Bien: diagnostica con ayuda y responde correctamente. Regular: responde sin justificar. Insuficiente: no diagnostica ni responde.</li>
+    </ul>
+
+    <h4>Checklist de entrega</h4>
+    <p>Antes de finalizar la práctica, asegúrate de marcar todos los puntos. Entrega el documento con los ejercicios resueltos al profesor.</p>
+    <ul class="checklist">
+      <li><label><input type="checkbox" class="check-item"> Ejercicios 1 a 10 completados (práctica guiada).</label></li>
+      <li><label><input type="checkbox" class="check-item"> Ejercicios 11 a 14 completados (variación nivel medio).</label></li>
+      <li><label><input type="checkbox" class="check-item"> Ejercicios 15 a 17 completados (resolución avanzada).</label></li>
+      <li><label><input type="checkbox" class="check-item"> Preguntas de reflexión 1 a 5 respondidas con razonamiento.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Informe final con las tablas de inventario de ambos equipos, el USB y la tarjeta SD.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Verificación de que no se ha modificado ninguna partición sin permiso.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Nombre, apellidos y grupo en la primera página del documento entregado.</label></li>
+    </ul>
+  </div>
+</div>
+<div class="bloque" id="practica-ceG" data-modalidad="aula">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">g</div>
+      <div class="bloque-info">
+        <h3>Práctica CE-g: Protección antivirus y copias de seguridad en Windows 11 y Ubuntu 24.04</h3>
+        <p>CE-g · CRÍTICO · 4 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">4 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <h4>Escenario empresarial</h4>
+    <p>La empresa de servicios informáticos <strong>El Puente Digital S.L.</strong> gestiona el aula de informática del IES Ciudad del Mar. Trabajas como auxiliar informático y tienes asignados dos equipos:</p>
+    <ul>
+      <li><strong>PC-Windows 11</strong> con IP <strong>192.168.10.101</strong> y carpeta de datos <code>C:\Taller\Datos</code>.</li>
+      <li><strong>PC-Ubuntu 24.04</strong> con IP <strong>192.168.10.102</strong> y carpeta de datos <code>/home/alumno/Taller/Datos</code>.</li>
+    </ul>
+    <p>Un alumno ha conectado un USB sospechoso y tememos que pueda contener malware. Además, la jefa de estudios ha pedido que los datos de facturación de prácticas no se pierdan bajo ningún concepto. Tienes que:</p>
+    <ul>
+      <li>Configurar y utilizar antivirus en ambos sistemas.</li>
+      <li>Analizar las carpetas de datos.</li>
+      <li>Realizar una copia de seguridad en un disco USB externo.</li>
+    </ul>
+    <p>El disco USB se verá como <strong>E:</strong> en Windows y se montará en el punto de montaje <strong>/mnt/backup</strong> en Ubuntu.</p>
+
+    <h4>Objetivos de la práctica</h4>
+    <ul>
+      <li>Comprobar la protección en tiempo real y actualizar las definiciones de Microsoft Defender en Windows 11.</li>
+      <li>Lanzar análisis rápidos y personalizados sobre carpetas concretas.</li>
+      <li>Instalar ClamAV y ClamTk en Ubuntu 24.04 y actualizar la base de firmas.</li>
+      <li>Analizar carpetas locales con <code>clamscan</code>.</li>
+      <li>Montar y desmontar correctamente un punto de montaje en Linux para copias de seguridad.</li>
+      <li>Realizar y verificar copias de seguridad con <code>robocopy</code> en Windows y <code>tar</code> en Linux.</li>
+      <li>Documentar los resultados y diagnosticar errores típicos.</li>
+    </ul>
+
+    <h4>Práctica guiada · <span class="nivel-tag nivel-basico">Nivel básico</span></h4>
+
+    <h5>Parte A. Antivirus en Windows 11: Microsoft Defender</h5>
+
+    <p><strong>Paso 1. Abrir PowerShell como administrador.</strong><br>
+    Haz clic derecho en el botón Inicio y selecciona <em>Terminal (Administrador)</em> o <em>Windows PowerShell (Administrador)</em>.</p>
+    <p><strong>Verificación:</strong> Aparecerá una ventana con la ruta <code>PS C:\Windows\system32&gt;</code> o similar, indicando que tienes permisos elevados.</p>
+
+    <p><strong>Paso 2. Comprobar el estado de Microsoft Defender.</strong><br>
+    Escribe el siguiente comando:</p>
+<pre><code>Get-MpComputerStatus | Select-Object AntivirusEnabled, RealTimeProtectionEnabled, AntivirusSignatureLastUpdated</code></pre>
+    <ul>
+      <li><code>Get-MpComputerStatus</code>: muestra el estado completo de Microsoft Defender.</li>
+      <li><code>|</code>: tubería, envía el resultado al siguiente comando.</li>
+      <li><code>Select-Object</code>: selecciona solo las propiedades indicadas.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Debes obtener <code>AntivirusEnabled = True</code> y <code>RealTimeProtectionEnabled = True</code>. Si alguno aparece <code>False</code>, hay un problema de configuración que debes corregir antes de continuar.</p>
+
+    <p><strong>Paso 3. Actualizar las definiciones de virus.</strong><br>
+    Ejecuta:</p>
+<pre><code>Update-MpSignature</code></pre>
+    <p>Este comando descarga las últimas firmas de malware.</p>
+    <p><strong>Verificación:</strong> No debe mostrar errores. Vuelve a ejecutar el comando del paso 2 y comprueba que la fecha <code>AntivirusSignatureLastUpdated</code> ha cambiado.</p>
+
+    <p><strong>Paso 4. Lanzar un análisis rápido.</strong><br>
+    Ejecuta:</p>
+<pre><code>Start-MpScan -ScanType QuickScan</code></pre>
+    <ul>
+      <li><code>-ScanType QuickScan</code>: indica que queremos un análisis rápido de las zonas más vulnerables.</li>
+    </ul>
+    <p><strong>Verificación:</strong> El comando muestra el progreso y termina sin amenazas detectadas.</p>
+
+    <p><strong>Paso 5. Análisis personalizado de la carpeta de datos.</strong><br>
+    Ejecuta:</p>
+<pre><code>Start-MpScan -ScanType CustomScan -ScanPath C:\Taller\Datos</code></pre>
+    <ul>
+      <li><code>-ScanType CustomScan</code>: análisis personalizado.</li>
+      <li><code>-ScanPath</code>: ruta concreta que queremos analizar.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Debe finalizar indicando <em>amenazas detectadas: 0</em> o similar, o bien mostrar un resumen sin archivos infectados.</p>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 1.</strong> Anota los valores devueltos por <code>Get-MpComputerStatus</code> y el resultado del análisis personalizado. ¿Cuántas amenazas detectó?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí los resultados de Microsoft Defender"></div>
+    </div>
+
+    <h5>Parte B. Antivirus en Ubuntu 24.04: ClamAV</h5>
+
+    <p><strong>Paso 1. Abrir la terminal.</strong><br>
+    Pulsa <code>Ctrl+Alt+T</code>.</p>
+
+    <p><strong>Paso 2. Instalar ClamAV y ClamTk.</strong><br>
+    Ejecuta:</p>
+<pre><code>sudo apt update && sudo apt install clamav clamtk -y</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta el comando con privilegios de administrador.</li>
+      <li><code>apt update</code>: actualiza la lista de paquetes disponibles.</li>
+      <li><code>&&</code>: encadena comandos; el segundo solo se ejecuta si el primero termina sin errores.</li>
+      <li><code>apt install clamav clamtk</code>: instala el motor antivirus y su interfaz gráfica.</li>
+      <li><code>-y</code>: responde automáticamente sí a las preguntas.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Al finalizar, comprueba la versión con:</p>
+<pre><code>clamscan --version</code></pre>
+    <p>Debe mostrar un número de versión sin errores.</p>
+
+    <p><strong>Paso 3. Actualizar la base de firmas de ClamAV.</strong><br>
+    Para evitar conflictos con el servicio automático, ejecuta:</p>
+<pre><code>sudo systemctl stop clamav-freshclam
+sudo freshclam</code></pre>
+    <ul>
+      <li><code>systemctl stop clamav-freshclam</code>: detiene el servicio que actualiza automáticamente las firmas.</li>
+      <li><code>freshclam</code>: descarga manualmente la base de datos de firmas.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Debe aparecer un mensaje indicando que la base de datos se ha actualizado, por ejemplo <code>Database updated...</code>.</p>
+
+    <p><strong>Paso 4. Analizar la carpeta de datos.</strong><br>
+    Ejecuta:</p>
+<pre><code>clamscan -r -i /home/alumno/Taller/Datos</code></pre>
+    <ul>
+      <li><code>-r</code>: analiza de forma recursiva las subcarpetas.</li>
+      <li><code>-i</code>: muestra solo los archivos infectados, no todos los analizados.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Al final debe aparecer <code>Infected files: 0</code>. Si aparece un número mayor que 0, anótalo y avisa al profesor.</p>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 2.</strong> Pega la última línea de salida de <code>clamscan</code> y explica qué significa cada campo.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí el resumen del análisis de ClamAV"></div>
+    </div>
+
+    <h5>Parte C. Copias de seguridad</h5>
+
+    <h5>C.1. Copia de seguridad en Windows con robocopy</h5>
+
+    <p><strong>Paso 1. Conectar y comprobar el USB.</strong><br>
+    Conecta el disco USB y ejecuta en PowerShell:</p>
+<pre><code>Get-Volume</code></pre>
+    <p><strong>Verificación:</strong> Debe aparecer una unidad <code>E:</code> con sistema de archivos FAT32, exFAT o NTFS y tamaño adecuado.</p>
+
+    <p><strong>Paso 2. Realizar la copia espejo.</strong><br>
+    Ejecuta:</p>
+<pre><code>robocopy C:\Taller\Datos E:\Backup\Datos /MIR /R:2 /W:5 /LOG:C:\Taller\backup.log /TEE</code></pre>
+    <ul>
+      <li><code>robocopy</code>: herramienta de copia de archivos robusta de Windows.</li>
+      <li><code>C:\Taller\Datos</code>: carpeta de origen.</li>
+      <li><code>E:\Backup\Datos</code>: carpeta de destino en el USB.</li>
+      <li><code>/MIR</code>: copia espejo, replica el origen en el destino y elimina del destino lo que ya no esté en origen.</li>
+      <li><code>/R:2</code>: reintenta 2 veces los archivos con error.</li>
+      <li><code>/W:5</code>: espera 5 segundos entre reintentos.</li>
+      <li><code>/LOG:C:\Taller\backup.log</code>: guarda el resultado en un archivo de registro.</li>
+      <li><code>/TEE</code>: muestra el resultado también en pantalla.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Al final del registro aparecerá un resumen con número de archivos copiados, omitidos y errores. Debe haber 0 errores.</p>
+
+    <p><strong>Paso 3. Verificar la copia.</strong><br>
+    Ejecuta:</p>
+<pre><code>Get-ChildItem E:\Backup\Datos</code></pre>
+    <p><strong>Verificación:</strong> Deben aparecer los mismos archivos que en <code>C:\Taller\Datos</code>.</p>
+
+    <h5>C.2. Copia de seguridad en Ubuntu con tar y punto de montaje</h5>
+
+    <p><strong>Paso 1. Identificar el USB.</strong><br>
+    Conecta el USB y ejecuta:</p>
+<pre><code>lsblk</code></pre>
+    <p><strong>Verificación:</strong> Debe aparecer un dispositivo como <code>/dev/sdb1</code> con el tamaño aproximado del USB.</p>
+
+    <p><strong>Paso 2. Crear el punto de montaje y montar el USB.</strong><br>
+    Ejecuta:</p>
+<pre><code>sudo mkdir -p /mnt/backup
+sudo mount /dev/sdb1 /mnt/backup</code></pre>
+    <ul>
+      <li><code>mkdir -p</code>: crea el directorio si no existe; <code>-p</code> crea también los directorios intermedios.</li>
+      <li><code>/mnt/backup</code>: punto de montaje para el USB.</li>
+      <li><code>mount</code>: monta el dispositivo indicado en el punto de montaje.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Ejecuta:</p>
+<pre><code>mount | grep /mnt/backup</code></pre>
+    <p>Debe aparecer una línea con <code>/dev/sdb1 on /mnt/backup</code>.</p>
+
+    <p><strong>Paso 3. Crear la copia comprimida.</strong><br>
+    Ejecuta:</p>
+<pre><code>tar -czvf /mnt/backup/datos-alumno-$(date +%F).tar.gz /home/alumno/Taller/Datos</code></pre>
+    <ul>
+      <li><code>tar</code>: crea archivos comprimidos.</li>
+      <li><code>-c</code>: crear archivo nuevo.</li>
+      <li><code>-z</code>: comprimir con gzip.</li>
+      <li><code>-v</code>: mostrar archivos procesados.</li>
+      <li><code>-f</code>: indicar el nombre del archivo de destino.</li>
+      <li><code>$(date +%F)</code>: añade la fecha actual al nombre, por ejemplo <code>datos-alumno-2025-04-08.tar.gz</code>.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Comprueba que el archivo se ha creado:</p>
+<pre><code>ls -lh /mnt/backup</code></pre>
+    <p>Debe aparecer el archivo <code>datos-alumno-*.tar.gz</code> con un tamaño razonable.</p>
+
+    <p><strong>Paso 4. Verificar el contenido de la copia.</strong><br>
+    Ejecuta:</p>
+<pre><code>tar -tzf /mnt/backup/datos-alumno-$(date +%F).tar.gz | head</code></pre>
+    <ul>
+      <li><code>-t</code>: lista el contenido del archivo comprimido.</li>
+      <li><code>| head</code>: muestra solo las primeras líneas.</li>
+    </ul>
+    <p><strong>Verificación:</strong> Deben aparecer algunos nombres de archivos de la carpeta original.</p>
+
+    <p><strong>Paso 5. Desmontar el USB.</strong><br>
+    Ejecuta:</p>
+<pre><code>sudo umount /mnt/backup</code></pre>
+    <p><strong>Verificación:</strong> Vuelve a ejecutar:</p>
+<pre><code>mount | grep /mnt/backup</code></pre>
+    <p>No debe mostrar nada.</p>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 3.</strong> Indica qué comando utilizarías para comprobar que el USB está desmontado y por qué es importante desmontarlo antes de extraerlo.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí la comprobación y la explicación"></div>
+    </div>
+
+    <h4>Variación del escenario · <span class="nivel-tag nivel-medio">Nivel medio</span></h4>
+    <p>La empresa ha reorganizado las carpetas. Ahora debes proteger:</p>
+    <ul>
+      <li>Windows: <code>C:\Empresa\Documentos</code> y su subcarpeta <code>C:\Empresa\Documentos\Temp</code> debe excluirse del análisis y de la copia.</li>
+      <li>Ubuntu: <code>/home/empresa/Documentos</code> y su subcarpeta <code>/home/empresa/Documentos/Temp</code> debe excluirse del análisis y de la copia.</li>
+    </ul>
+    <p>Adapta los pasos de la práctica guiada teniendo en cuenta estas indicaciones:</p>
+    <ul>
+      <li>En Windows, para el análisis personalizado puedes usar <code>-ScanPath C:\Empresa\Documentos</code> y para excluir la subcarpeta Temp en la copia, añade <code>/XD C:\Empresa\Documentos\Temp</code> al comando <code>robocopy</code>.</li>
+      <li>En Ubuntu, para el análisis puedes usar <code>clamscan -r -i --exclude-dir=Temp /home/empresa/Documentos</code>.</li>
+      <li>En Ubuntu, para la copia con <code>tar</code> excluye la carpeta Temp añadiendo <code>--exclude=/home/empresa/Documentos/Temp</code>.</li>
+    </ul>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 4.</strong> Escribe los comandos completos adaptados a la nueva ruta, incluyendo la exclusión de la carpeta Temp en Windows y en Ubuntu.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí los comandos adaptados"></div>
+    </div>
+
+    <h4>Resolución de problemas · <span class="nivel-tag nivel-avanzado">Nivel avanzado</span></h4>
+    <p>Un compañero ha intentado realizar la práctica en otro equipo y se ha encontrado estos fallos. Diagnostica la causa y propón una solución para cada caso:</p>
+    <ol>
+      <li>En Ubuntu, al ejecutar <code>sudo freshclam</code> aparece: <code>ERROR: /var/log/clamav/freshclam.log is locked by another process</code>.</li>
+      <li>En Ubuntu, al montar un USB exFAT aparece: <code>mount: /mnt/backup: unknown filesystem type exfat</code>.</li>
+      <li>En Windows, al ejecutar <code>robocopy</code> aparece el error 32: <code>El proceso no puede tener acceso al archivo porque está siendo utilizado por otro proceso</code>.</li>
+    </ol>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 5.</strong> Para cada avería, escribe el diagnóstico probable y los comandos o acciones correctoras que ejecutarías.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí el diagnóstico y la solución de cada avería"></div>
+    </div>
+
+    <h4>Preguntas de reflexión</h4>
+
+    <div class="ejercicio">
+      <p><strong>Ejercicio 6.</strong> Responde brevemente:</p>
+      <ol>
+        <li>¿Por qué es necesario actualizar las definiciones de virus antes de un análisis?</li>
+        <li>¿Qué diferencias ves entre Microsoft Defender y ClamAV en cuanto a instalación y uso?</li>
+        <li>¿Por qué en Linux usamos un punto de montaje para el USB y no aparece automáticamente una letra de unidad como en Windows?</li>
+        <li>¿Qué ventaja tiene usar <code>tar -czvf</code> frente a copiar los archivos directamente con <code>cp</code>?</li>
+        <li>¿Por qué es imprescindible verificar una copia de seguridad después de crearla?</li>
+      </ol>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe aquí tus respuestas"></div>
+    </div>
+
+    <h4>Errores frecuentes y diagnóstico</h4>
+    <ul>
+      <li><strong>Síntoma:</strong> <code>Get-MpComputerStatus</code> muestra <code>RealTimeProtectionEnabled = False</code>.<br>
+      <strong>Diagnóstico:</strong> Hay otro antivirus instalado o una política de grupo desactiva Defender.<br>
+      <strong>Solución:</strong> Desinstalar el antivirus de terceros o activar Defender desde Seguridad de Windows.</li>
+      <li><strong>Síntoma:</strong> <code>Update-MpSignature</code> da error de permisos.<br>
+      <strong>Diagnóstico:</strong> PowerShell no está abierto como administrador.<br>
+      <strong>Solución:</strong> Cerrar y abrir Terminal como administrador.</li>
+      <li><strong>Síntoma:</strong> <code>sudo freshclam</code> muestra <code>ERROR: /var/log/clamav/freshclam.log is locked</code>.<br>
+      <strong>Diagnóstico:</strong> El servicio <code>clamav-freshclam</code> está en ejecución y bloquea el archivo de registro.<br>
+      <strong>Solución:</strong> Ejecutar <code>sudo systemctl stop clamav-freshclam</code> y repetir <code>sudo freshclam</code>.</li>
+      <li><strong>Síntoma:</strong> <code>robocopy</code> finaliza con error 32.<br>
+      <strong>Diagnóstico:</strong> Algún archivo del origen está abierto por una aplicación.<br>
+      <strong>Solución:</strong> Cerrar las aplicaciones que usan los archivos y volver a ejecutar <code>robocopy</code> con <code>/R:2 /W:5</code>.</li>
+      <li><strong>Síntoma:</strong> <code>mount /dev/sdb1 /mnt/backup</code> indica <code>unknown filesystem type exfat</code>.<br>
+      <strong>Diagnóstico:</strong> Ubuntu no tiene instalado el soporte para exFAT.<br>
+      <strong>Solución:</strong> Instalar los paquetes necesarios con <code>sudo apt install exfat-fuse exfatprogs -y</code> y volver a montar.</li>
+    </ul>
+
+    <h4>Rúbrica de evaluación</h4>
+    <div>
+      <p><strong>Criterio 1: Configuración y actualización del antivirus.</strong></p>
+      <ul>
+        <li>Excelente: Comprueba, actualiza y documenta correctamente las definiciones en ambos sistemas.</li>
+        <li>Bien: Realiza la actualización en ambos sistemas con ayuda puntual.</li>
+        <li>Suficiente: Actualiza solo en un sistema o comete errores leves.</li>
+        <li>Insuficiente: No actualiza ni comprueba el antivirus.</li>
+      </ul>
+      <p><strong>Criterio 2: Realización de análisis de malware.</strong></p>
+      <ul>
+        <li>Excelente: Lanza análisis rápidos y personalizados en Windows y Linux, interpretando los resultados.</li>
+        <li>Bien: Lanza los análisis pero no interpreta del todo los resultados.</li>
+        <li>Suficiente: Solo realiza un tipo de análisis o en un solo sistema.</li>
+        <li>Insuficiente: No realiza análisis de malware.</li>
+      </ul>
+      <p><strong>Criterio 3: Copias de seguridad y verificación.</strong></p>
+      <ul>
+        <li>Excelente: Crea, verifica y documenta las copias de seguridad en ambos sistemas, gestionando el punto de montaje.</li>
+        <li>Bien: Crea las copias correctamente pero olvida alguna verificación.</li>
+        <li>Suficiente: Realiza la copia solo en un sistema o sin verificar.</li>
+        <li>Insuficiente: No realiza copias de seguridad.</li>
+      </ul>
+      <p><strong>Criterio 4: Diagnóstico y resolución de problemas.</strong></p>
+      <ul>
+        <li>Excelente: Identifica la causa y soluciona los fallos planteados de forma autónoma.</li>
+        <li>Bien: Identifica la causa pero necesita ayuda para aplicar la solución.</li>
+        <li>Suficiente: Reconoce el error pero no propone solución completa.</li>
+        <li>Insuficiente: No diagnostica ni resuelve los problemas.</li>
+      </ul>
+    </div>
+
+    <h4>Checklist de entrega</h4>
+    <ul class="checklist">
+      <li><label><input type="checkbox" class="check-item"> Captura de PowerShell con <code>AntivirusEnabled</code> y <code>RealTimeProtectionEnabled</code> en True.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura del análisis personalizado de Microsoft Defender sin amenazas.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de <code>clamscan --version</code> y del resultado de <code>freshclam</code> actualizado.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura de <code>clamscan</code> mostrando <code>Infected files: 0</code>.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura o registro de <code>robocopy</code> con 0 errores.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Captura del punto de montaje <code>/mnt/backup</code> montado y desmontado correctamente.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Archivo <code>tar.gz</code> creado y verificado con <code>tar -tzf</code>.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Respuestas a los ejercicios 1 a 6 completadas.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Comandos adaptados de la variación media y soluciones de la resolución de problemas.</label></li>
+    </ul>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ CRITERIO DE EVALUACIÓN CRÍTICO</div>
+      <p>Para superar este CE-g, el alumno debe demostrar obligatoriamente que sabe instalar o configurar un antivirus, actualizar sus definiciones, analizar una carpeta de datos y realizar al menos una copia de seguridad verificable, tanto en Windows como en Ubuntu, gestionando correctamente el punto de montaje en Linux y documentando los resultados. Si no entrega evidencias de la copia de seguridad o del análisis antivirus, el CE se considerará no superado.</p>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<footer>OACE · Grado Básico · RA1: Prácticas de laboratorio</footer>
+
+<button class="btn-top" id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="progreso-badge" id="progresoBadge">Progreso: 0%</div>
+
+<script>
+
+  window.addEventListener('scroll', function() {
+    document.getElementById('btnTop').classList.toggle('visible', window.scrollY > 300);
+  });
+  function updateProgress() {
+    var all = document.querySelectorAll('.check-item');
+    var checked = document.querySelectorAll('.check-item:checked');
+    var pct = all.length > 0 ? Math.round((checked.length / all.length) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progresoBadge').textContent = 'Progreso: ' + pct + '%';
+    try { localStorage.setItem('progreso_practica_ra1_oace', pct); } catch(e) {}
+  }
+  document.querySelectorAll('.check-item').forEach(function(cb, i) {
+    try { if (localStorage.getItem('cb_practica_ra1_oace_' + i) === 'true') cb.checked = true; } catch(e) {}
+    cb.addEventListener('change', function() {
+      try { localStorage.setItem('cb_practica_ra1_oace_' + i, cb.checked); } catch(e) {}
+      updateProgress();
+    });
+  });
+  document.querySelectorAll('.respuesta[contenteditable="true"]').forEach(function(div, i) {
+    try { var s = localStorage.getItem('resp_practica_ra1_oace_' + i); if (s) div.innerHTML = s; } catch(e) {}
+    div.addEventListener('input', function() {
+      try { localStorage.setItem('resp_practica_ra1_oace_' + i, div.innerHTML); } catch(e) {}
+    });
+  });
+  updateProgress();
+
+</script>
+</body>
+</html>

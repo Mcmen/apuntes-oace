@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RA4 Prácticas — OACE</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #eef1f5; color: #1a1a2e; line-height: 1.7; font-size: 15px; }
+    :root {
+      --azul: #1e3a5f; --azul-medio: #2d6a9f; --azul-claro: #dceeff;
+      --win: #2d6a9f; --win-light: #e6f0f9;
+      --linux: #b8542a; --linux-light: #fbeee6;
+      --critico: #b03a2e; --critico-light: #fdf0ee;
+      --importante: #8a6400; --importante-light: #fff9e6;
+      --complementario: #2d6a9f; --complementario-light: #e8f2fb;
+      --exito: #1a6b3a; --exito-light: #e2f0e6;
+      --gris: #667085; --borde: #dde3ec;
+      --sombra: 0 2px 8px rgba(30,58,95,0.07);
+    }
+
+    /* ── Cabecera ───────────────────────────────────────────── */
+    .nav-sor { position: sticky; top: 0; z-index: 100; background: var(--azul); padding: 0 24px; height: 52px; display: flex; align-items: center; }
+    .nav-brand { color: white; font-weight: 600; font-size: 15px; letter-spacing: 0.3px; max-width: 1080px; width: 100%; margin: 0 auto; }
+    .nav-brand span { color: #8fc7a0; font-weight: 700; }
+    .hero { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%); color: white; padding: 40px 24px 34px; text-align: left; }
+    .hero > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+    .hero h1 { font-size: 25px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; }
+    .hero-sub { font-size: 14px; opacity: 0.8; font-style: italic; margin-bottom: 20px; }
+    .hero-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+    .hero-meta span { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); padding: 4px 13px; border-radius: 20px; font-weight: 600; }
+
+    /* ── Columna medida ─────────────────────────────────────── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ── Ficha del RA ───────────────────────────────────────── */
+    .ra-info { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 24px; box-shadow: var(--sombra); }
+    .ra-info h2 { font-size: 18px; color: var(--azul); border-left: 4px solid var(--azul-medio); padding-left: 14px; margin-bottom: 18px; line-height: 1.4; }
+    .peso-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+    .peso-card { flex: 1; min-width: 120px; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; text-align: center; }
+    .peso-card .numero { font-size: 24px; font-weight: 700; color: var(--azul-medio); line-height: 1.2; }
+    .peso-card .label { font-size: 11px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.6px; }
+    .ce-criticos { background: var(--critico-light); border-left: 4px solid var(--critico); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 13px; }
+    .ce-criticos strong { color: var(--critico); }
+    .progress-bar { background: var(--borde); height: 8px; border-radius: 8px; overflow: hidden; margin: 14px 0 2px; }
+    .progress-fill { background: var(--exito); width: 0%; height: 100%; transition: width 0.3s; }
+
+    /* ── Índice ─────────────────────────────────────────────── */
+    .ce-index { background: white; border-radius: 10px; padding: 18px 26px; margin-bottom: 32px; box-shadow: var(--sombra); }
+    .ce-index-titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gris); margin-bottom: 12px; }
+    .ce-index-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ce-idx-item { display: flex; align-items: baseline; gap: 8px; padding: 5px 11px; border-radius: 6px; text-decoration: none; font-size: 12.5px; color: #2c3444; border: 1px solid var(--borde); background: #f7f9fc; transition: 0.15s; }
+    .ce-idx-item:hover { background: var(--azul-claro); border-color: var(--azul-medio); }
+    .ce-idx-critico { border-left: 3px solid var(--critico); }
+    .ce-idx-importante { border-left: 3px solid #d4a017; }
+    .ce-idx-complementario { border-left: 3px solid var(--azul-medio); }
+    .ce-idx-letra { font-weight: 800; font-size: 13px; color: var(--azul); }
+    .ce-idx-desc { color: #4a5568; }
+
+    /* ── Bloques: cabecera y cuerpo como dos tarjetas ───────── */
+    .bloque { background: transparent; border: none; box-shadow: none; margin-bottom: 40px; }
+    .bloque-header { background: white; border-left: 5px solid var(--azul-medio); border-radius: 0 8px 8px 0; padding: 15px 20px; margin-bottom: 16px; box-shadow: var(--sombra); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .bloque-titulo { display: flex; align-items: center; gap: 13px; }
+    .bloque-num { background: var(--azul-medio); color: white; font-weight: 700; border-radius: 6px; padding: 4px 11px; font-size: 14px; flex-shrink: 0; align-self: flex-start; margin-top: 3px; }
+    .bloque-num.critico { background: var(--critico); }
+    .bloque-info h3 { font-size: 18px; color: var(--azul); margin-bottom: 3px; line-height: 1.35; }
+    .bloque-info p { font-size: 12px; color: var(--gris); }
+    .bloque-sesiones { background: #f0f3f8; color: var(--gris); border: 1px solid var(--borde); padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+    .bloque-body { background: white; border-radius: 10px; padding: 24px 28px; box-shadow: var(--sombra); }
+
+    /* ── Escala tipográfica dentro del cuerpo ───────────────── */
+    .bloque-body h3 { font-size: 16px; color: var(--azul); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--borde); }
+    .bloque-body h4 { font-size: 15px; color: var(--azul); margin: 22px 0 10px; }
+    .bloque-body > h3:first-child, .bloque-body > h4:first-child { margin-top: 0; }
+    .bloque-body p { margin-bottom: 11px; }
+    .bloque-body p:last-child { margin-bottom: 0; }
+    .win-col h4, .linux-col h4, .ejercicio h5, .ejemplo-resuelto h5 { margin-top: 0; }
+
+    /* ── Listas ─────────────────────────────────────────────── */
+    .bloque-body ul, .bloque-body ol, .box-critico ul, .box-critico ol, .box-importante ul, .box-importante ol, .box-complementario ul, .box-complementario ol, .win-col ul, .win-col ol, .linux-col ul, .linux-col ol { padding-left: 20px; margin: 10px 0; }
+    .bloque-body li { margin-bottom: 6px; }
+    .bloque-body li::marker { color: var(--azul-medio); }
+
+    /* ── Dos columnas Windows / Linux ───────────────────────── */
+    .dual-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .win-col { background: var(--win-light); border: 1px solid #cfe0ee; border-top: 3px solid var(--win); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .win-col h4 { color: var(--win); font-size: 14px; margin-bottom: 10px; }
+    .linux-col { background: var(--linux-light); border: 1px solid #f0dcd0; border-top: 3px solid var(--linux); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .linux-col h4 { color: var(--linux); font-size: 14px; margin-bottom: 10px; }
+
+    /* ── Cajas semánticas ───────────────────────────────────── */
+    .box-critico, .box-importante, .box-complementario { border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 18px 0; }
+    .box-critico { background: var(--critico-light); border-left: 4px solid var(--critico); }
+    .box-importante { background: var(--importante-light); border-left: 4px solid #d4a017; }
+    .box-complementario { background: var(--complementario-light); border-left: 4px solid var(--complementario); }
+    .box-label { font-weight: 700; font-size: 12px; text-transform: none; letter-spacing: 0.3px; margin-bottom: 5px; display: block; }
+    .box-critico .box-label { color: var(--critico); }
+    .box-importante .box-label { color: var(--importante); }
+    .box-complementario .box-label { color: var(--complementario); }
+
+    /* ── Código y tablas ────────────────────────────────────── */
+    pre { background: #1e293b; color: #e2e8f0; padding: 13px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; font-family: 'Consolas', 'Courier New', monospace; margin: 14px 0; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    code { background: #eef2f7; padding: 1px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 13px; color: #1e3a5f; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0; border-radius: 8px; border: 1px solid var(--borde); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead tr { background: var(--azul); color: white; }
+    th { padding: 10px 14px; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f7f9fc; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Ejercicios ─────────────────────────────────────────── */
+    .ejercicio { background: #fdfaf2; border: 1px solid #eadfc2; border-left: 4px solid #d4a017; border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejercicio h5 { color: #7a5c00; margin-bottom: 4px; font-size: 14px; }
+    .nivel-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .nivel-basico { background: var(--exito-light); color: var(--exito); }
+    .nivel-medio { background: #fdf3d6; color: #7a5c00; }
+    .nivel-avanzado { background: var(--critico-light); color: var(--critico); }
+    .respuesta { background: white; border: 1px solid var(--borde); border-radius: 6px; padding: 12px; min-height: 76px; margin-top: 12px; outline: none; }
+    .respuesta:focus { border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(45,106,159,0.1); }
+    .respuesta:empty::before { content: attr(data-placeholder); color: #a0aec0; pointer-events: none; display: block; }
+    .solucion { margin-top: 12px; background: var(--exito-light); border-radius: 6px; padding: 2px 14px; }
+    .solucion summary { cursor: pointer; font-weight: 600; color: var(--exito); padding: 9px 0; list-style: revert; font-size: 13.5px; }
+    .solucion[open] summary { margin-bottom: 6px; }
+
+    /* ── Ejemplo resuelto, diagrama, checklist ──────────────── */
+    .ejemplo-resuelto { background: var(--exito-light); border-left: 4px solid var(--exito); border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejemplo-resuelto h5 { color: var(--exito); margin-bottom: 8px; font-size: 14px; }
+    .diagrama { margin: 22px 0; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 20px 14px; text-align: center; overflow-x: auto; }
+    .diagrama svg { max-width: 100%; height: auto; display: block; margin: 0 auto; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .diagrama figcaption { font-size: 12.5px; color: var(--gris); margin-top: 14px; font-style: italic; }
+    .checklist { background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 18px 20px; margin-top: 22px; }
+    .checklist strong { color: var(--azul); font-size: 14px; }
+    .checklist ul { list-style: none; padding: 0; margin-top: 10px; }
+    .checklist li { padding: 5px 0; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; border-bottom: 1px solid #eef1f5; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; margin-top: 5px; accent-color: var(--exito); }
+    .checklist li label { cursor: pointer; flex: 1; font-size: 14px; }
+
+    /* ── Varios ─────────────────────────────────────────────── */
+    hr.sep { border: none; border-top: 2px dashed var(--borde); margin: 24px 0; }
+    footer { text-align: center; padding: 28px 24px; color: var(--gris); font-size: 12px; border-top: 1px solid var(--borde); margin-top: 44px; background: white; }
+    .btn-top { position: fixed; bottom: 20px; right: 20px; background: var(--azul); color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 19px; opacity: 0; transition: 0.3s; z-index: 90; }
+    .btn-top.visible { opacity: 1; }
+    .progreso-badge { position: fixed; bottom: 20px; left: 20px; background: var(--azul); color: white; padding: 7px 15px; border-radius: 20px; font-size: 12.5px; font-weight: 600; z-index: 90; }
+
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .container { padding: 18px 14px 44px; }
+      .dual-columns { grid-template-columns: 1fr; gap: 12px; }
+      .hero { padding: 26px 18px 22px; }
+      .hero h1 { font-size: 19px; }
+      .bloque-body { padding: 16px 17px; }
+      .bloque-header { padding: 13px 15px; }
+      pre { font-size: 11.5px; }
+      th, td { padding: 7px 9px; font-size: 12px; }
+    }
+
+    /* ── Fotos reales ───────────────────────────────────────── */
+    .foto { margin: 22px 0; }
+    .foto-sm img { max-width: 620px; margin-left: auto; margin-right: auto; }
+    .foto img { width: 100%; border-radius: 10px; border: 1px solid var(--borde); display: block; }
+    .foto figcaption { font-size: 12.5px; color: var(--gris); margin-top: 10px; font-style: italic; text-align: center; }
+    .foto-pendiente { border: 2px dashed #c3cede; border-radius: 10px; background: #f7f9fc; padding: 26px 20px; text-align: center; color: var(--gris); }
+    .foto-pendiente .icono { font-size: 30px; display: block; margin-bottom: 8px; opacity: 0.6; }
+    .foto-pendiente .archivo { display: inline-block; font-family: 'Consolas', monospace; font-size: 12.5px; background: white; border: 1px solid var(--borde); border-radius: 4px; padding: 2px 8px; color: var(--azul); margin-top: 8px; }
+    .foto-pendiente .que { font-size: 13.5px; color: #4a5568; }
+
+    /* ── Rejilla de tarjetas de contenido ───────────────────── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { background: #f7f9fc; border: 1px solid var(--borde); border-top: 3px solid var(--azul-medio); border-radius: 8px; padding: 15px 17px; }
+    .card h4 { font-size: 14px; color: var(--azul); margin: 0 0 9px; display: flex; align-items: center; gap: 8px; }
+    .card h4 .ico { font-size: 18px; }
+    .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+    .card li { margin-bottom: 5px; }
+
+    /* ── Etiquetas de peligrosidad ──────────────────────────── */
+    .pel { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 8px; border-radius: 4px; letter-spacing: 0.4px; white-space: nowrap; }
+    .pel-baja    { background: #e2f0e6; color: #1a6b3a; }
+    .pel-media   { background: #fdf3d6; color: #7a5c00; }
+    .pel-alta    { background: #fbe6dd; color: #a0522d; }
+    .pel-critica { background: #f7dcd8; color: #8c2f22; }
+
+    /* ── Frase destacada, para romper el bloque de texto ────── */
+    .clave { font-size: 16px; line-height: 1.6; color: var(--azul); border-left: 4px solid #d4a017; padding: 4px 0 4px 16px; margin: 22px 0; font-weight: 600; }
+
+    /* ── Vídeo de apoyo: enlace, no incrustado ──────────────── */
+    .videos { display: flex; flex-direction: column; gap: 8px; margin: 18px 0; }
+    .video { display: flex; align-items: flex-start; gap: 12px; background: #fff; border: 1px solid var(--borde); border-left: 4px solid #a0302a; border-radius: 8px; padding: 12px 14px; text-decoration: none; color: inherit; box-shadow: var(--sombra); }
+    .video:hover { border-color: #a0302a; }
+    .video .play { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #a0302a; color: #fff; font-size: 11px; line-height: 26px; text-align: center; }
+    .video .txt { min-width: 0; }
+    .video .titulo { display: block; font-weight: 600; font-size: 14.5px; color: var(--azul); }
+    .video .desc { display: block; font-size: 13px; color: var(--gris); margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav-sor">
+  <div class="nav-brand">OACE &nbsp;<span>RA4 Prácticas</span></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Grado Básico Informática y Comunicaciones</div>
+  <h1>RA4 — Prácticas: Emplea utilidades proporcionadas por Internet, configurándolas e identificando su funcionalidad y prestaciones.</h1>
+  <p class="hero-sub">Actividades de laboratorio — OACE</p>
+  <div class="hero-meta">
+    <span>1 prácticas</span>
+    <span>1 sesiones × 55 min</span>
+    <span>0 en taller</span>
+  </div>
+</div>
+<div class="container">
+<div class="ra-info">
+  <div class="peso-grid">
+    <div class="peso-card"><div class="numero">1</div><div class="label">Prácticas</div></div>
+    <div class="peso-card"><div class="numero">1</div><div class="label">Sesiones</div></div>
+    <div class="peso-card"><div class="numero">0</div><div class="label">En taller</div></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+<div class="bloque" id="practica-ceD" data-modalidad="aula">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">d</div>
+      <div class="bloque-info">
+        <h3>Práctica CE-d: ¿Es de fiar esta web? Detección de fraudes en el acceso web</h3>
+        <p>CE-d · CRÍTICO · 1 sesión de práctica (110 minutos)</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">1 sesión</span>
+  </div>
+
+  <div class="bloque-body">
+
+    <h4>1. Escenario empresarial</h4>
+
+    <p>Eres el técnico de soporte en prácticas de <strong>Distribuciones Almenara S.L.</strong>, empresa de venta de material de oficina con sede en Zaragoza. Tienes que atender la incidencia que ha abierto un compañero del almacén y, además, dejar por escrito el procedimiento de seguridad que usará la plantilla cuando navegue por internet.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Dato del entorno</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Empresa</td><td>Distribuciones Almenara S.L. — CIF B-99214587</td></tr>
+          <tr><td>Sede</td><td>Calle Bari 24, Polígono Plaza, 50197 Zaragoza</td></tr>
+          <tr><td>Dominio corporativo</td><td>almenara.es</td></tr>
+          <tr><td>Red del aula-taller</td><td>192.168.20.0/24</td></tr>
+          <tr><td>Puerta de enlace y DNS interno</td><td>192.168.20.1</td></tr>
+          <tr><td>Servidor del aula (réplicas de práctica)</td><td>192.168.20.10 — web.aula.local</td></tr>
+          <tr><td>Tu equipo</td><td>ALM-PC-07 — Windows 11 Pro — 192.168.20.107</td></tr>
+          <tr><td>Máquina auxiliar</td><td>Ubuntu 24.04 en máquina virtual (opcional para la parte Linux)</td></tr>
+          <tr><td>Correo del puesto</td><td>soporte@almenara.es</td></tr>
+          <tr><td>Buzón para reportar fraudes</td><td>seguridad@almenara.es</td></tr>
+          <tr><td>Navegador</td><td>Firefox con perfil de prácticas</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Los hechos.</strong> El martes a las 9:12, Marcos Ruiz (almacén, <code>mruiz@almenara.es</code>) reenvía a soporte dos correos que ha recibido esa mañana y pregunta si son de fiar. <em>No ha abierto ningún enlace todavía y no ha instalado nada.</em> Estos son los dos mensajes:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Correo A</th><th>Correo B</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              <p><strong>De:</strong> Correos España — notificaciones@correos-espana.info</p>
+              <p><strong>Asunto:</strong> URGENTE: su paquete 4832910XZ está retenido. Pague 1,99 € en 24 h</p>
+              <p><strong>Texto:</strong> Estimado cliente, su paquete no ha podido ser entregado por falta de pago de tasas aduaneras. Realice el pago en las próximas 24 horas o será devuelto.</p>
+              <p><strong>Enlace visible:</strong> https://www.correos.es/seguimiento/4832910XZ</p>
+              <p><strong>Enlace real (al pasar el ratón por encima):</strong> http://correos-espana.info/pago/4832910XZ</p>
+              <p><strong>Adjunto:</strong> Etiqueta_4832910XZ.html</p>
+            </td>
+            <td>
+              <p><strong>De:</strong> soporte@correos.es.verificacion-segura.xyz</p>
+              <p><strong>Asunto:</strong> Actualice sus datos de entrega antes del 30/06</p>
+              <p><strong>Texto:</strong> Para evitar incidencias en sus envíos, confirme su dirección, teléfono y datos de tarjeta en el área privada.</p>
+              <p><strong>Enlace visible y real:</strong> https://www.correos.es.verificacion-segura.xyz/login</p>
+              <p><strong>Adjunto:</strong> ninguno</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Nota de seguridad del aula:</strong> los dominios fraudulentos de esta práctica <em>no se abren nunca en el navegador</em>. El profesorado ha publicado réplicas inofensivas en el servidor 192.168.20.10 y el DNS del aula resuelve esos nombres hacia esa máquina. Todo el análisis se hace sobre el texto del correo, con el ratón encima del enlace y con la terminal.</p>
+
+    <h4>2. Objetivos</h4>
+    <ul>
+      <li>Identificar el <strong>host</strong> y el <strong>dominio real</strong> de una URL, distinguiendo subdominios legítimos de dominios falsos camuflados.</li>
+      <li>Comprobar los <strong>medios de seguridad</strong> de una web: HTTPS, certificado digital válido, cookies y cierre de sesión.</li>
+      <li>Reconocer las <strong>señales de fraude</strong> en un correo o SMS de phishing (remitente, urgencia, enlace real, adjuntos peligrosos, petición de datos).</li>
+      <li>Verificar el cifrado y el certificado también desde la <strong>terminal</strong>, sin abrir la web sospechosa.</li>
+      <li>Aplicar medidas de contención y <strong>reporte</strong> ante un intento de fraude.</li>
+      <li>Documentar el análisis en un informe técnico claro, apto para un compañero no técnico.</li>
+    </ul>
+
+    <h4>3. Práctica guiada — BÁSICO <span class="nivel-tag nivel-basico">Guiado</span></h4>
+
+    <p>Trabaja con el navegador abierto y con una terminal (Windows: <em>Símbolo del sistema</em>; Linux: <em>Terminal</em>). Anota todo lo que observes.</p>
+
+    <p><strong>Paso 1. Analiza las URLs a mano, sin abrir ninguna.</strong></p>
+    <p>Lee cada dirección y sepárala en partes. Recuerda la regla: el <strong>host</strong> es lo que va entre las barras dobles y la primera barra simple; el <strong>dominio real</strong> son las dos últimas etiquetas del host (tres si el sufijo es compuesto, como <code>.gob.es</code> o <code>.com.es</code>).</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>N.º</th><th>URL</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>https://www.correos.es/seguimiento/4832910XZ</td></tr>
+          <tr><td>2</td><td>http://correos-espana.info/pago/4832910XZ</td></tr>
+          <tr><td>3</td><td>https://www.correos.es.verificacion-segura.xyz/login</td></tr>
+          <tr><td>4</td><td>https://sede.agenciatributaria.gob.es/Sede/cita_previa.html</td></tr>
+          <tr><td>5</td><td>https://login.bbva.es.websegura.top/accessos</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ejercicio">
+      <p>Rellena para cada URL: host, dominio real, protocolo (HTTP o HTTPS) y veredicto (legítima, sospechosa o fraudulenta). Justifica las dos últimas en una frase cada una.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="URL 1 — host: ... dominio real: ... protocolo: ... veredicto: ..."></div>
+    </div>
+
+    <p><em>Verificación del paso 1:</em> debes haber escrito que la URL 3 pertenece al dominio <code>verificacion-segura.xyz</code> y no a <code>correos.es</code>, aunque el texto <code>correos.es</code> aparezca dentro. Si has puesto «Correos», el paso está mal.</p>
+
+    <p><strong>Paso 2. Busca las señales de fraude en los dos correos.</strong></p>
+    <p>Sin abrir nada, revisa uno por uno y anota la evidencia. Fíjate sobre todo en:</p>
+    <ul>
+      <li><strong>Remitente:</strong> compara el dominio que va después de la arroba con el dominio oficial. Correo A: <code>correos-espana.info</code>. Correo B: <code>correos.es.verificacion-segura.xyz</code>. Ninguno de los dos es <code>correos.es</code>.</li>
+      <li><strong>Enlace real frente a enlace visible:</strong> en el correo A el texto dice una dirección y el destino real es otra. En Firefox puedes verlo pasando el ratón por encima sin hacer clic, o con clic derecho y «Copiar dirección del enlace» y pegarlo en un bloc de notas.</li>
+      <li><strong>Urgencia y miedo:</strong> «24 horas», «será devuelto», «antes del 30/06». Es la presión típica del phishing.</li>
+      <li><strong>Petición de datos sensibles:</strong> dirección, teléfono y, sobre todo, <strong>datos de tarjeta</strong>. Una empresa legítima no pide la tarjeta por correo.</li>
+      <li><strong>Adjunto peligroso:</strong> <code>Etiqueta_4832910XZ.html</code>. Un HTML adjunto puede contener un formulario falso o código que descarga malware.</li>
+      <li><strong>Falta de cifrado:</strong> el enlace real del correo A empieza por <code>http://</code>, sin la «s».</li>
+    </ul>
+
+    <div class="ejercicio">
+      <p>Clasifica: ¿cuál de los dos correos es un fraude evidente y cuál está diseñado para engañar a alguien con más experiencia? Escribe al menos cuatro señales de alarma, indicando en qué correo aparecen.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Correo A: ... Correo B: ... Señales: 1) ... 2) ... 3) ... 4) ..."></div>
+    </div>
+
+    <p><em>Verificación del paso 2:</em> has detectado que el correo B es más peligroso porque su enlace <em>sí</em> usa HTTPS, y aun así el dominio real no es <code>correos.es</code>. El candado no garantiza la identidad de la web.</p>
+
+    <p><strong>Paso 3. Comprueba el cifrado y el certificado de la web legítima desde el navegador.</strong></p>
+    <ol>
+      <li>Abre <code>https://www.correos.es</code> (esta sí es la web oficial).</li>
+      <li>Pulsa el <strong>candado</strong> que aparece a la izquierda de la barra de direcciones.</li>
+      <li>Entra en «Conexión segura» y después en «Más información» y «Ver certificado».</li>
+      <li>Apunta: <strong>emisor</strong> (la autoridad de certificación), <strong>asunto o nombre común</strong>, <strong>fecha de alta</strong> y <strong>fecha de caducidad</strong>, y los <strong>nombres alternativos (SAN)</strong> que cubre.</li>
+    </ol>
+
+    <div class="ejercicio">
+      <p>Registra los datos del certificado y responde: ¿el nombre del certificado coincide exactamente con el dominio que estás visitando? ¿La fecha de caducidad está en el futuro? ¿Quién lo emite?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Emisor: ... Titular / CN: ... Válido desde: ... Válido hasta: ... SAN: ..."></div>
+    </div>
+
+    <p><em>Verificación del paso 3:</em> el certificado debe estar emitido por una autoridad de confianza, estar vigente y contener <code>correos.es</code> en el titular o en los nombres alternativos. Si el nombre no coincide, el navegador muestra un aviso de «conexión no segura» aunque la web se vea igual.</p>
+
+    <p><strong>Paso 4. Comprueba lo mismo desde la terminal, sin abrir la web sospechosa.</strong></p>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <p><strong>Windows (Símbolo del sistema)</strong></p>
+        <p><code>curl -I https://www.correos.es</code></p>
+        <ul>
+          <li><code>curl</code>: cliente de transferencia que pide una dirección y muestra la respuesta.</li>
+          <li><code>-I</code> (letra i mayúscula): pide <em>solo las cabeceras</em>, no descarga el contenido de la página. Es la forma segura de «mirar» una web sin abrirla.</li>
+        </ul>
+      </div>
+      <div class="linux-col">
+        <p><strong>Linux (Terminal)</strong></p>
+        <p><code>curl -I https://www.correos.es</code></p>
+        <p><code>echo | openssl s_client -connect www.correos.es:443 -servername www.correos.es</code></p>
+        <ul>
+          <li><code>openssl s_client</code>: abre una conexión TLS y nos muestra el certificado del servidor.</li>
+          <li><code>-connect</code>: indica host y puerto; el 443 es el puerto estándar de HTTPS.</li>
+          <li><code>-servername</code>: dice al servidor qué dominio pedimos (SNI); imprescindible cuando un servidor aloja varias webs.</li>
+          <li>Para salir, pulsa <code>Ctrl</code> + <code>C</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Después, comprueba a qué IP resuelve el dominio oficial y qué documentación pública existe sobre el dominio falso:</p>
+    <p><code>nslookup www.correos.es</code> — consulta el DNS y devuelve una o varias direcciones IP.</p>
+    <p><code>nslookup correos-espana.info</code> — en el aula resolverá a 192.168.20.10 porque es una réplica; en internet real, un dominio de este tipo suele estar registrado hace pocos días.</p>
+
+    <div class="ejercicio">
+      <p>Copia la primera línea de respuesta de <code>curl -I</code> (por ejemplo, el código de estado) y la línea del certificado donde aparece el titular. Explica con tus palabras qué significa el código 200 y qué significaría un error de certificado.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Respuesta de curl: ... Titular del certificado: ... Significado del código 200: ..."></div>
+    </div>
+
+    <p><em>Verificación del paso 4:</em> en la respuesta debe aparecer <code>HTTP/2 200</code> o <code>HTTP/1.1 200 OK</code> y ningún mensaje del tipo «SSL certificate problem». Si aparece ese error, el certificado no es válido para ese dominio y la web no es de fiar.</p>
+
+    <p><strong>Paso 5. Revisa las cookies y la sesión.</strong></p>
+    <ol>
+      <li>Con la web oficial abierta, pulsa el candado y entra en «Cookies y datos del sitio».</li>
+      <li>Identifica al menos dos cookies y para qué sirven (sesión, idioma, preferencias).</li>
+      <li>Comprueba que las cookies de sesión del banco o de la sede electrónica son <strong>HttpOnly</strong> y <strong>Secure</strong>.</li>
+      <li>Cierra la sesión con el botón «Salir» de la web y comprueba que al volver atrás ya no estás dentro.</li>
+    </ol>
+
+    <div class="ejercicio">
+      <p>¿Por qué es peligroso aceptar todas las cookies de un sitio desconocido? ¿Qué diferencia hay entre cerrar la pestaña y cerrar la sesión?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Riesgo de aceptar todo: ... Diferencia entre cerrar pestaña y cerrar sesión: ..."></div>
+    </div>
+
+    <p><em>Verificación del paso 5:</em> tras pulsar «Salir», al recargar la página debe aparecer el formulario de acceso otra vez. Si sigues dentro, la sesión no se ha cerrado correctamente.</p>
+
+    <p><strong>Paso 6. Refuerza la cuenta: contraseña robusta y doble factor (2FA).</strong></p>
+    <ul>
+      <li>Una contraseña robusta tiene <strong>12 caracteres o más</strong>, mayúsculas, minúsculas, números y símbolos, y <strong>no</strong> contiene datos personales ni palabras del diccionario.</li>
+      <li>Mejor aún: una <strong>frase de paso</strong> de cuatro palabras sin relación entre sí (por ejemplo, una combinación inventada por ti y distinta para cada servicio).</li>
+      <li>El <strong>2FA</strong> añade un segundo comprobante: un código de 6 dígitos en el móvil, una aplicación autenticadora o una llave física. Aunque te roben la contraseña, no pueden entrar.</li>
+    </ul>
+
+    <div class="ejercicio">
+      <p>Crea y escribe una política de contraseñas en cinco normas para la plantilla de Almenara. Incluye una norma sobre el gestor de contraseñas y otra sobre el 2FA.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="1) ... 2) ... 3) ... 4) ... 5) ..."></div>
+    </div>
+
+    <p><em>Verificación del paso 6:</em> tus normas deben prohibir reutilizar contraseñas entre servicios, prohibir apuntarlas en un papel pegado al monitor y exigir 2FA en el correo corporativo y en la banca.</p>
+
+    <p><strong>Paso 7. Aplica el protocolo de actuación y reporta el fraude.</strong></p>
+    <ol>
+      <li><strong>No abrir</strong> ningún enlace ni adjunto del correo.</li>
+      <li><strong>No reenviar</strong> el mensaje a compañeros: multiplica el riesgo.</li>
+      <li>Marcar el correo como <strong>phishing</strong> o spam desde el cliente de correo.</li>
+      <li>Enviar el mensaje completo, <strong>como adjunto</strong> (no reenviado), a <code>seguridad@almenara.es</code>.</li>
+      <li>Si alguien ya ha introducido la contraseña: cambiarla <strong>desde otro equipo limpio</strong>, activar 2FA y avisar a informática de inmediato.</li>
+      <li>Si se ha descargado o ejecutado un archivo: <strong>desconectar el equipo de la red</strong> (cable fuera o wifi apagada), no borrar nada y avisar a soporte.</li>
+    </ol>
+
+    <div class="ejercicio">
+      <p>Redacta el informe que enviarías a tu responsable: qué se ha recibido, qué se ha comprobado, qué se ha decidido y qué medidas se proponen para toda la plantilla. Extensión mínima: 10 líneas.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Asunto: ... Hechos: ... Comprobaciones: ... Decisión: ... Medidas propuestas: ..."></div>
+    </div>
+
+    <p><em>Verificación del paso 7:</em> el informe debe poder leerlo una persona no técnica y debe dejar claro que <strong>no se ha abierto ningún enlace</strong> y que el correo se ha reportado como adjunto.</p>
+
+    <h4>4. Variación — MEDIO <span class="nivel-tag nivel-medio">Adaptación</span></h4>
+
+    <p>Dos días después llegan dos casos nuevos al buzón de soporte. Ahora <strong>no</strong> te damos la lista de pasos: debes reutilizar el procedimiento anterior y adaptarlo. Además, uno de los casos <em>no es un fraude</em>.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Caso</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Caso 1 — Smishing</strong></td>
+            <td>SMS al móvil de empresa desde el número 615 22 33 44: «Almenara: su factura 2024/1187 no se ha podido cobrar. Actualice el método de pago en https://almenara.es.facturacion-online.click/pagar antes del 48 h».</td>
+          </tr>
+          <tr>
+            <td><strong>Caso 2 — Quishing</strong></td>
+            <td>Cartel pegado en la puerta del almacén: «Descargue la nueva app de fichajes escaneando este código QR». El QR lleva a <code>http://almenara-app.apk/instalar</code>. Al escanearlo, el móvil avisa de que la web no es segura.</td>
+          </tr>
+          <tr>
+            <td><strong>Caso 3 — Falso positivo</strong></td>
+            <td>El navegador avisa «Conexión no segura» en <code>https://intranet.almenara.local</code>, el servidor web interno del aula (192.168.20.10). Los compañeros entran sin problema desde otros equipos. El certificado está emitido por una autoridad pública, pero su titular es <code>web.aula.local</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ejercicio">
+      <p>Para cada caso: (a) escribe el host y el dominio real del enlace; (b) indica qué medio de seguridad falla o qué señal de fraude aparece; (c) decide la actuación inmediata; (d) redacta el aviso de una línea que darías a la plantilla.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Caso 1 — host: ... dominio real: ... fallo o señal: ... actuación: ... aviso: ..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <p>El caso 3 es un falso positivo. Explica por qué el navegador se queja aunque el certificado sea auténtico y qué habría que hacer para que deje de avisar (sin desactivar la comprobación de certificados en todos los equipos).</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Motivo del aviso: ... Solución técnica correcta: ..."></div>
+    </div>
+
+    <p><em>Pistas para la variación:</em> en el caso 1 el dominio real es <code>facturacion-online.click</code>; en el caso 2 hay doble señal (HTTP sin cifrado y un dominio terminado en <code>.apk</code>, la extensión de las aplicaciones de Android); en el caso 3 el certificado es válido para <code>web.aula.local</code> pero no para <code>intranet.almenara.local</code>, y la solución es instalar una autoridad de certificación interna (CA propia) o emitir un certificado con el nombre correcto.</p>
+
+    <h4>5. Resolución de problemas — AVANZADO <span class="nivel-tag nivel-avanzado">Diagnóstico</span></h4>
+
+    <p><strong>Incidencia abierta #4412.</strong> Miércoles, 11:40. Marcos ya no pregunta por los correos: ahora su equipo <strong>ALM-PC-07 (192.168.20.107)</strong> redirige cualquier web a <code>search-protect-now.com</code>, le aparecen ventanas emergentes, la página de inicio ha cambiado y no puede entrar en la banca electrónica. Los demás equipos de la sala navegan con normalidad.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Evidencia recogida</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td><code>ipconfig /all</code></td><td>Servidores DNS: 192.168.20.1 y 45.133.1.87</td></tr>
+          <tr><td><code>netsh winhttp show proxy</code></td><td>Proxy: 45.133.1.87:8080</td></tr>
+          <tr><td><code>type C:\Windows\System32\drivers\etc\hosts</code></td><td>Dos líneas al final: <code>0.0.0.0 www.bbva.es</code> y <code>45.133.1.87 www.google.es</code></td></tr>
+          <tr><td>Extensiones del navegador</td><td>«Search Protect Now» y «DownloadPro HD», instaladas ayer a las 10:15</td></tr>
+          <tr><td>Historial de descargas</td><td>«PDF_Converter_gratis.exe» descargado a las 10:12 desde un anuncio</td></tr>
+          <tr><td>Equipo ALM-PC-08 (192.168.20.108)</td><td>Navega con normalidad; su DNS es solo 192.168.20.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ejercicio">
+      <p>1) Formula tres hipótesis sobre la causa y descarta las que no encajen con las evidencias. 2) Escribe el diagnóstico final en una frase. 3) Ordena las acciones de corrección desde la más urgente a la menos urgente y justifica por qué la primera es desconectar de la red.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Hipótesis: ... Diagnóstico: ... Plan de corrección ordenado: ..."></div>
+    </div>
+
+    <p>Ejecuta la corrección en el equipo de prácticas (el profesorado ha reproducido la incidencia en una máquina virtual). Comandos que vas a necesitar, con cada opción explicada:</p>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <p><strong>Windows</strong></p>
+        <p><code>ipconfig /all</code> — muestra la configuración completa de red, incluidos los DNS, que aquí aparecen manipulados.</p>
+        <p><code>netsh winhttp reset proxy</code> — devuelve la configuración de proxy del sistema a «sin proxy»; elimina el desvío del tráfico.</p>
+        <p><code>type C:\Windows\System32\drivers\etc\hosts</code> — muestra el archivo de resolución local; cualquier línea que no empiece por almohadilla es sospechosa.</p>
+        <p><code>notepad C:\Windows\System32\drivers\etc\hosts</code> — edítalo <strong>como administrador</strong> y borra las líneas falsas.</p>
+        <p><code>ipconfig /flushdns</code> — vacía la caché DNS del equipo (<code>/flushdns</code>) para que no siga usando respuestas envenenadas.</p>
+        <p><code>netsh interface ip set dns "Ethernet" static 192.168.20.1</code> — fija el DNS correcto de la red del aula.</p>
+      </div>
+      <div class="linux-col">
+        <p><strong>Linux</strong></p>
+        <p><code>cat /etc/hosts</code> — equivalente al <code>type</code> de Windows.</p>
+        <p><code>sudo nano /etc/hosts</code> — edición del archivo con permisos de administrador (<code>sudo</code>).</p>
+        <p><code>resolvectl status</code> — muestra los servidores DNS en uso; delata DNS añadidos a mano.</p>
+        <p><code>sudo resolvectl flush-caches</code> — vacía la caché de resolución de nombres.</p>
+        <p><code>sudo rm -rf ~/.mozilla/firefox/*.default*/extensions</code> — elimina las extensiones del perfil de Firefox (en un caso real, mejor desinstalarlas desde <code>about:addons</code>).</p>
+      </div>
+    </div>
+
+    <div class="ejercicio">
+      <p>Después de corregir, demuestra que el equipo está limpio. Anota el resultado de estas tres comprobaciones y explica qué esperas ver en cada una:</p>
+      <p>a) <code>type C:\Windows\System32\drivers\etc\hosts</code> (o <code>cat /etc/hosts</code>) — b) <code>nslookup www.google.es</code> — c) <code>curl -I https://www.bbva.es</code>.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="a) Resultado: ... b) Resultado: ... c) Resultado: ... Qué esperaba ver: ..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <p>Cierre de la incidencia: escribe las cuatro últimas acciones que harías antes de devolver el equipo a Marcos (contraseñas, 2FA, formación y copia de seguridad) e indica en qué orden se hacen y por qué.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="1) ... 2) ... 3) ... 4) ... Justificación del orden: ..."></div>
+    </div>
+
+    <h4>6. Preguntas de reflexión</h4>
+    <ol>
+      <li>El correo B usa HTTPS y el navegador no muestra ningún aviso. ¿Por qué entonces es un fraude? ¿Qué garantiza realmente el candado y qué no?</li>
+      <li>Si el dominio real son las dos últimas etiquetas, ¿por qué <code>agenciatributaria.gob.es</code> se considera dominio real completo y no <code>gob.es</code>?</li>
+      <li>¿Por qué es más seguro comprobar una web sospechosa con <code>curl -I</code> que abrirla en el navegador?</li>
+      <li>Marcos no llegó a introducir la contraseña, pero sí descargó el archivo. ¿Qué medidas aplicarías y por qué cambiar la contraseña desde el equipo infectado sería un error?</li>
+      <li>¿Qué ventaja aporta el 2FA frente a una contraseña muy larga? Pon un ejemplo con el fraude de esta práctica.</li>
+    </ol>
+
+    <div class="ejercicio">
+      <p>Responde a las cinco preguntas. Cada respuesta, entre tres y cinco líneas.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="1) ... 2) ... 3) ... 4) ... 5) ..."></div>
+    </div>
+
+    <h4>7. Errores frecuentes y diagnóstico</h4>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Error frecuente</th><th>Síntoma que se observa</th><th>Cómo se soluciona</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Confundir «tiene candado» con «es de fiar»</td>
+            <td>El alumno da por buena <code>https://www.correos.es.verificacion-segura.xyz</code> porque el navegador no avisa</td>
+            <td>El certificado solo garantiza el cifrado y que el dominio es quien dice ser; hay que leer el <strong>dominio real</strong> y el titular del certificado, no solo el candado</td>
+          </tr>
+          <tr>
+            <td>Leer el dominio de izquierda a derecha y quedarse con la primera parte</td>
+            <td>Se identifica <code>www.correos.es.verificacion-segura.xyz</code> como «Correos»</td>
+            <td>El dominio real son las dos últimas etiquetas del host (tres con sufijos compuestos como <code>.gob.es</code>); todo lo que va delante son subdominios</td>
+          </tr>
+          <tr>
+            <td>Abrir el enlace «solo para comprobar si es falso»</td>
+            <td>El equipo acaba con redirecciones o ventanas emergentes, o la cuenta queda comprometida</td>
+            <td>Nunca se abre. Se pasa el ratón por encima, se copia la dirección con clic derecho y se analiza en la terminal con <code>curl -I</code></td>
+          </tr>
+          <tr>
+            <td>Cambiar la contraseña desde el equipo afectado</td>
+            <td>La contraseña nueva se filtra a los pocos minutos y el atacante vuelve a entrar</td>
+            <td>Cambiar siempre desde un equipo limpio y conocido, activar 2FA y cerrar todas las sesiones abiertas</td>
+          </tr>
+          <tr>
+            <td>Creer que borrar el historial y las cookies elimina el problema</td>
+            <td>El navegador sigue redirigiendo a <code>search-protect-now.com</code> después de limpiar los datos</td>
+            <td>Hay que desinstalar las extensiones, limpiar el archivo <code>hosts</code>, resetear el proxy, vaciar la caché DNS y pasar un análisis antivirus completo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>8. Rúbrica de evaluación</h4>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Criterio</th><th>Insuficiente (0-4)</th><th>Suficiente (5-6)</th><th>Notable (7-8)</th><th>Excelente (9-10)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Identificación del host y del dominio real</td>
+            <td>Confunde subdominio con dominio en la mayoría de las URLs</td>
+            <td>Acierta en las URLs sencillas y falla en los sufijos compuestos</td>
+            <td>Acierta en todas las URLs y explica el criterio</td>
+            <td>Acierta, explica el criterio y añade ejemplos propios de dominios camuflados</td>
+          </tr>
+          <tr>
+            <td>Comprobación de los medios de seguridad (HTTPS, certificado, cookies)</td>
+            <td>No localiza el certificado ni interpreta el aviso del navegador</td>
+            <td>Localiza el candado y el certificado con ayuda de la guía</td>
+            <td>Comprueba emisor, vigencia y titular, y valora las cookies de sesión</td>
+            <td>Además lo verifica desde la terminal e interpreta el código de estado y los errores TLS</td>
+          </tr>
+          <tr>
+            <td>Detección de fraudes (phishing, smishing, quishing)</td>
+            <td>No distingue el correo legítimo del fraudulento</td>
+            <td>Detecta las señales más evidentes (urgencia, remitente raro)</td>
+            <td>Detecta también el enlace real frente al visible y el adjunto peligroso</td>
+            <td>Detecta todas las señales, clasifica el riesgo y distingue el falso positivo</td>
+          </tr>
+          <tr>
+            <td>Actuación y protocolo de contención</td>
+            <td>Propone abrir el enlace o reenviar el correo a los compañeros</td>
+            <td>No abre el enlace y avisa, pero sin seguir un protocolo</td>
+            <td>Aplica el protocolo completo y reporta el correo como adjunto</td>
+            <td>Aplica el protocolo, prioriza acciones y justifica cada decisión técnica</td>
+          </tr>
+          <tr>
+            <td>Informe y comunicación</td>
+            <td>No entrega informe o es incomprensible</td>
+            <td>Informe escueto pero correcto</td>
+            <td>Informe claro, ordenado y con las evidencias</td>
+            <td>Informe apto para personal no técnico, con medidas preventivas propuestas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Condición de superación:</strong> hay que obtener al menos 5 puntos en los criterios «Identificación del host y del dominio real» y «Detección de fraudes». Un cero en cualquiera de los dos implica repetir la práctica.</p>
+
+    <h4>9. Checklist de entrega</h4>
+
+    <ul class="checklist">
+      <li><label><input type="checkbox" class="check-item"> Tabla del paso 1 completa: host, dominio real, protocolo y veredicto de las cinco URLs.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Análisis de los dos correos con al menos cuatro señales de fraude identificadas y clasificadas.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Datos del certificado de la web oficial (emisor, titular, vigencia y SAN) registrados.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Salida de <code>curl -I</code> pegada y comentada, con la explicación del código de estado.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Política de contraseñas y 2FA en cinco normas para la plantilla.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Informe del paso 7 (mínimo 10 líneas) dirigido al responsable.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Los tres casos de la variación resueltos, incluido el falso positivo del certificado interno.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Diagnóstico y corrección de la incidencia #4412, con las tres comprobaciones finales demostradas.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Respuestas a las cinco preguntas de reflexión.</label></li>
+      <li><label><input type="checkbox" class="check-item"> Demostración oral al profesorado: localizar el dominio real de una URL nueva y comprobar su certificado en menos de dos minutos.</label></li>
+    </ul>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ CRITERIO DE EVALUACIÓN CRÍTICO</div>
+      <p>Para superar el CE-d el alumno debe demostrar <strong>obligatoriamente y sin ayuda</strong> que:</p>
+      <p>1. Identifica correctamente el <strong>dominio real</strong> de una URL, incluso cuando el nombre legítimo aparece como subdominio o dentro del texto del enlace (por ejemplo, <code>www.correos.es.verificacion-segura.xyz</code> pertenece a <code>verificacion-segura.xyz</code>).</p>
+      <p>2. Comprueba los <strong>medios de seguridad</strong> de un acceso web: presencia de HTTPS, validez, vigencia y titular del certificado digital, y comportamiento de las cookies de sesión.</p>
+      <p>3. Reconoce un <strong>fraude</strong> de tipo phishing, smishing o quishing enumerando al menos cuatro señales de alarma, y entiende que HTTPS no equivale a sitio legítimo.</p>
+      <p>4. Aplica el <strong>protocolo de actuación</strong> sin abrir enlaces ni adjuntos sospechosos, con contención inmediata del equipo afectado y reporte del correo al buzón de seguridad.</p>
+      <p>5. Justifica con lenguaje técnico y comprensible las decisiones tomadas, distinguiendo un fraude real de un falso positivo por certificado.</p>
+      <p>Una respuesta incorrecta en el punto 1 o en el punto 3, o abrir voluntariamente un enlace fraudulento durante la práctica, supone la <strong>no superación</strong> del criterio.</p>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<footer>OACE · Grado Básico · RA4: Prácticas de laboratorio</footer>
+
+<button class="btn-top" id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="progreso-badge" id="progresoBadge">Progreso: 0%</div>
+
+<script>
+
+  window.addEventListener('scroll', function() {
+    document.getElementById('btnTop').classList.toggle('visible', window.scrollY > 300);
+  });
+  function updateProgress() {
+    var all = document.querySelectorAll('.check-item');
+    var checked = document.querySelectorAll('.check-item:checked');
+    var pct = all.length > 0 ? Math.round((checked.length / all.length) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progresoBadge').textContent = 'Progreso: ' + pct + '%';
+    try { localStorage.setItem('progreso_practica_ra4_oace', pct); } catch(e) {}
+  }
+  document.querySelectorAll('.check-item').forEach(function(cb, i) {
+    try { if (localStorage.getItem('cb_practica_ra4_oace_' + i) === 'true') cb.checked = true; } catch(e) {}
+    cb.addEventListener('change', function() {
+      try { localStorage.setItem('cb_practica_ra4_oace_' + i, cb.checked); } catch(e) {}
+      updateProgress();
+    });
+  });
+  document.querySelectorAll('.respuesta[contenteditable="true"]').forEach(function(div, i) {
+    try { var s = localStorage.getItem('resp_practica_ra4_oace_' + i); if (s) div.innerHTML = s; } catch(e) {}
+    div.addEventListener('input', function() {
+      try { localStorage.setItem('resp_practica_ra4_oace_' + i, div.innerHTML); } catch(e) {}
+    });
+  });
+  updateProgress();
+
+</script>
+</body>
+</html>

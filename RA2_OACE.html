@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RA2 — OACE: Configura equipos informáticos para su funcionamiento en un entorno de red, identificando los permisos del usuario.</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #eef1f5; color: #1a1a2e; line-height: 1.7; font-size: 15px; }
+    :root {
+      --azul: #1e3a5f; --azul-medio: #2d6a9f; --azul-claro: #dceeff;
+      --win: #2d6a9f; --win-light: #e6f0f9;
+      --linux: #b8542a; --linux-light: #fbeee6;
+      --critico: #b03a2e; --critico-light: #fdf0ee;
+      --importante: #8a6400; --importante-light: #fff9e6;
+      --complementario: #2d6a9f; --complementario-light: #e8f2fb;
+      --exito: #1a6b3a; --exito-light: #e2f0e6;
+      --gris: #667085; --borde: #dde3ec;
+      --sombra: 0 2px 8px rgba(30,58,95,0.07);
+    }
+
+    /* ── Cabecera ───────────────────────────────────────────── */
+    .nav-sor { position: sticky; top: 0; z-index: 100; background: var(--azul); padding: 0 24px; height: 52px; display: flex; align-items: center; }
+    .nav-brand { color: white; font-weight: 600; font-size: 15px; letter-spacing: 0.3px; max-width: 1080px; width: 100%; margin: 0 auto; }
+    .nav-brand span { color: #8fc7a0; font-weight: 700; }
+    .hero { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%); color: white; padding: 40px 24px 34px; text-align: left; }
+    .hero > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+    .hero h1 { font-size: 25px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; }
+    .hero-sub { font-size: 14px; opacity: 0.8; font-style: italic; margin-bottom: 20px; }
+    .hero-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+    .hero-meta span { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); padding: 4px 13px; border-radius: 20px; font-weight: 600; }
+
+    /* ── Columna medida ─────────────────────────────────────── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ── Ficha del RA ───────────────────────────────────────── */
+    .ra-info { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 24px; box-shadow: var(--sombra); }
+    .ra-info h2 { font-size: 18px; color: var(--azul); border-left: 4px solid var(--azul-medio); padding-left: 14px; margin-bottom: 18px; line-height: 1.4; }
+    .peso-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+    .peso-card { flex: 1; min-width: 120px; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; text-align: center; }
+    .peso-card .numero { font-size: 24px; font-weight: 700; color: var(--azul-medio); line-height: 1.2; }
+    .peso-card .label { font-size: 11px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.6px; }
+    .ce-criticos { background: var(--critico-light); border-left: 4px solid var(--critico); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 13px; }
+    .ce-criticos strong { color: var(--critico); }
+    .progress-bar { background: var(--borde); height: 8px; border-radius: 8px; overflow: hidden; margin: 14px 0 2px; }
+    .progress-fill { background: var(--exito); width: 0%; height: 100%; transition: width 0.3s; }
+
+    /* ── Índice ─────────────────────────────────────────────── */
+    .ce-index { background: white; border-radius: 10px; padding: 18px 26px; margin-bottom: 32px; box-shadow: var(--sombra); }
+    .ce-index-titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gris); margin-bottom: 12px; }
+    .ce-index-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ce-idx-item { display: flex; align-items: baseline; gap: 8px; padding: 5px 11px; border-radius: 6px; text-decoration: none; font-size: 12.5px; color: #2c3444; border: 1px solid var(--borde); background: #f7f9fc; transition: 0.15s; }
+    .ce-idx-item:hover { background: var(--azul-claro); border-color: var(--azul-medio); }
+    .ce-idx-critico { border-left: 3px solid var(--critico); }
+    .ce-idx-importante { border-left: 3px solid #d4a017; }
+    .ce-idx-complementario { border-left: 3px solid var(--azul-medio); }
+    .ce-idx-letra { font-weight: 800; font-size: 13px; color: var(--azul); }
+    .ce-idx-desc { color: #4a5568; }
+
+    /* ── Bloques: cabecera y cuerpo como dos tarjetas ───────── */
+    .bloque { background: transparent; border: none; box-shadow: none; margin-bottom: 40px; }
+    .bloque-header { background: white; border-left: 5px solid var(--azul-medio); border-radius: 0 8px 8px 0; padding: 15px 20px; margin-bottom: 16px; box-shadow: var(--sombra); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .bloque-titulo { display: flex; align-items: center; gap: 13px; }
+    .bloque-num { background: var(--azul-medio); color: white; font-weight: 700; border-radius: 6px; padding: 4px 11px; font-size: 14px; flex-shrink: 0; align-self: flex-start; margin-top: 3px; }
+    .bloque-num.critico { background: var(--critico); }
+    .bloque-info h3 { font-size: 18px; color: var(--azul); margin-bottom: 3px; line-height: 1.35; }
+    .bloque-info p { font-size: 12px; color: var(--gris); }
+    .bloque-sesiones { background: #f0f3f8; color: var(--gris); border: 1px solid var(--borde); padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+    .bloque-body { background: white; border-radius: 10px; padding: 24px 28px; box-shadow: var(--sombra); }
+
+    /* ── Escala tipográfica dentro del cuerpo ───────────────── */
+    .bloque-body h3 { font-size: 16px; color: var(--azul); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--borde); }
+    .bloque-body h4 { font-size: 15px; color: var(--azul); margin: 22px 0 10px; }
+    .bloque-body > h3:first-child, .bloque-body > h4:first-child { margin-top: 0; }
+    .bloque-body p { margin-bottom: 11px; }
+    .bloque-body p:last-child { margin-bottom: 0; }
+    .win-col h4, .linux-col h4, .ejercicio h5, .ejemplo-resuelto h5 { margin-top: 0; }
+
+    /* ── Listas ─────────────────────────────────────────────── */
+    .bloque-body ul, .bloque-body ol, .box-critico ul, .box-critico ol, .box-importante ul, .box-importante ol, .box-complementario ul, .box-complementario ol, .win-col ul, .win-col ol, .linux-col ul, .linux-col ol { padding-left: 20px; margin: 10px 0; }
+    .bloque-body li { margin-bottom: 6px; }
+    .bloque-body li::marker { color: var(--azul-medio); }
+
+    /* ── Dos columnas Windows / Linux ───────────────────────── */
+    .dual-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .win-col { background: var(--win-light); border: 1px solid #cfe0ee; border-top: 3px solid var(--win); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .win-col h4 { color: var(--win); font-size: 14px; margin-bottom: 10px; }
+    .linux-col { background: var(--linux-light); border: 1px solid #f0dcd0; border-top: 3px solid var(--linux); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .linux-col h4 { color: var(--linux); font-size: 14px; margin-bottom: 10px; }
+
+    /* ── Cajas semánticas ───────────────────────────────────── */
+    .box-critico, .box-importante, .box-complementario { border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 18px 0; }
+    .box-critico { background: var(--critico-light); border-left: 4px solid var(--critico); }
+    .box-importante { background: var(--importante-light); border-left: 4px solid #d4a017; }
+    .box-complementario { background: var(--complementario-light); border-left: 4px solid var(--complementario); }
+    .box-label { font-weight: 700; font-size: 12px; text-transform: none; letter-spacing: 0.3px; margin-bottom: 5px; display: block; }
+    .box-critico .box-label { color: var(--critico); }
+    .box-importante .box-label { color: var(--importante); }
+    .box-complementario .box-label { color: var(--complementario); }
+
+    /* ── Código y tablas ────────────────────────────────────── */
+    pre { background: #1e293b; color: #e2e8f0; padding: 13px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; font-family: 'Consolas', 'Courier New', monospace; margin: 14px 0; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    code { background: #eef2f7; padding: 1px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 13px; color: #1e3a5f; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0; border-radius: 8px; border: 1px solid var(--borde); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead tr { background: var(--azul); color: white; }
+    th { padding: 10px 14px; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f7f9fc; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Ejercicios ─────────────────────────────────────────── */
+    .ejercicio { background: #fdfaf2; border: 1px solid #eadfc2; border-left: 4px solid #d4a017; border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejercicio h5 { color: #7a5c00; margin-bottom: 4px; font-size: 14px; }
+    .nivel-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .nivel-basico { background: var(--exito-light); color: var(--exito); }
+    .nivel-medio { background: #fdf3d6; color: #7a5c00; }
+    .nivel-avanzado { background: var(--critico-light); color: var(--critico); }
+    .respuesta { background: white; border: 1px solid var(--borde); border-radius: 6px; padding: 12px; min-height: 76px; margin-top: 12px; outline: none; }
+    .respuesta:focus { border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(45,106,159,0.1); }
+    .respuesta:empty::before { content: attr(data-placeholder); color: #a0aec0; pointer-events: none; display: block; }
+    .solucion { margin-top: 12px; background: var(--exito-light); border-radius: 6px; padding: 2px 14px; }
+    .solucion summary { cursor: pointer; font-weight: 600; color: var(--exito); padding: 9px 0; list-style: revert; font-size: 13.5px; }
+    .solucion[open] summary { margin-bottom: 6px; }
+
+    /* ── Ejemplo resuelto, diagrama, checklist ──────────────── */
+    .ejemplo-resuelto { background: var(--exito-light); border-left: 4px solid var(--exito); border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejemplo-resuelto h5 { color: var(--exito); margin-bottom: 8px; font-size: 14px; }
+    .diagrama { margin: 22px 0; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 20px 14px; text-align: center; overflow-x: auto; }
+    .diagrama svg { max-width: 100%; height: auto; display: block; margin: 0 auto; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .diagrama figcaption { font-size: 12.5px; color: var(--gris); margin-top: 14px; font-style: italic; }
+    .checklist { background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 18px 20px; margin-top: 22px; }
+    .checklist strong { color: var(--azul); font-size: 14px; }
+    .checklist ul { list-style: none; padding: 0; margin-top: 10px; }
+    .checklist li { padding: 5px 0; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; border-bottom: 1px solid #eef1f5; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; margin-top: 5px; accent-color: var(--exito); }
+    .checklist li label { cursor: pointer; flex: 1; font-size: 14px; }
+
+    /* ── Varios ─────────────────────────────────────────────── */
+    hr.sep { border: none; border-top: 2px dashed var(--borde); margin: 24px 0; }
+    footer { text-align: center; padding: 28px 24px; color: var(--gris); font-size: 12px; border-top: 1px solid var(--borde); margin-top: 44px; background: white; }
+    .btn-top { position: fixed; bottom: 20px; right: 20px; background: var(--azul); color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 19px; opacity: 0; transition: 0.3s; z-index: 90; }
+    .btn-top.visible { opacity: 1; }
+    .progreso-badge { position: fixed; bottom: 20px; left: 20px; background: var(--azul); color: white; padding: 7px 15px; border-radius: 20px; font-size: 12.5px; font-weight: 600; z-index: 90; }
+
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .container { padding: 18px 14px 44px; }
+      .dual-columns { grid-template-columns: 1fr; gap: 12px; }
+      .hero { padding: 26px 18px 22px; }
+      .hero h1 { font-size: 19px; }
+      .bloque-body { padding: 16px 17px; }
+      .bloque-header { padding: 13px 15px; }
+      pre { font-size: 11.5px; }
+      th, td { padding: 7px 9px; font-size: 12px; }
+    }
+
+    /* ── Fotos reales ───────────────────────────────────────── */
+    .foto { margin: 22px 0; }
+    .foto-sm img { max-width: 620px; margin-left: auto; margin-right: auto; }
+    .foto img { width: 100%; border-radius: 10px; border: 1px solid var(--borde); display: block; }
+    .foto figcaption { font-size: 12.5px; color: var(--gris); margin-top: 10px; font-style: italic; text-align: center; }
+    .foto-pendiente { border: 2px dashed #c3cede; border-radius: 10px; background: #f7f9fc; padding: 26px 20px; text-align: center; color: var(--gris); }
+    .foto-pendiente .icono { font-size: 30px; display: block; margin-bottom: 8px; opacity: 0.6; }
+    .foto-pendiente .archivo { display: inline-block; font-family: 'Consolas', monospace; font-size: 12.5px; background: white; border: 1px solid var(--borde); border-radius: 4px; padding: 2px 8px; color: var(--azul); margin-top: 8px; }
+    .foto-pendiente .que { font-size: 13.5px; color: #4a5568; }
+
+    /* ── Rejilla de tarjetas de contenido ───────────────────── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { background: #f7f9fc; border: 1px solid var(--borde); border-top: 3px solid var(--azul-medio); border-radius: 8px; padding: 15px 17px; }
+    .card h4 { font-size: 14px; color: var(--azul); margin: 0 0 9px; display: flex; align-items: center; gap: 8px; }
+    .card h4 .ico { font-size: 18px; }
+    .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+    .card li { margin-bottom: 5px; }
+
+    /* ── Etiquetas de peligrosidad ──────────────────────────── */
+    .pel { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 8px; border-radius: 4px; letter-spacing: 0.4px; white-space: nowrap; }
+    .pel-baja    { background: #e2f0e6; color: #1a6b3a; }
+    .pel-media   { background: #fdf3d6; color: #7a5c00; }
+    .pel-alta    { background: #fbe6dd; color: #a0522d; }
+    .pel-critica { background: #f7dcd8; color: #8c2f22; }
+
+    /* ── Frase destacada, para romper el bloque de texto ────── */
+    .clave { font-size: 16px; line-height: 1.6; color: var(--azul); border-left: 4px solid #d4a017; padding: 4px 0 4px 16px; margin: 22px 0; font-weight: 600; }
+
+    /* ── Vídeo de apoyo: enlace, no incrustado ──────────────── */
+    .videos { display: flex; flex-direction: column; gap: 8px; margin: 18px 0; }
+    .video { display: flex; align-items: flex-start; gap: 12px; background: #fff; border: 1px solid var(--borde); border-left: 4px solid #a0302a; border-radius: 8px; padding: 12px 14px; text-decoration: none; color: inherit; box-shadow: var(--sombra); }
+    .video:hover { border-color: #a0302a; }
+    .video .play { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #a0302a; color: #fff; font-size: 11px; line-height: 26px; text-align: center; }
+    .video .txt { min-width: 0; }
+    .video .titulo { display: block; font-weight: 600; font-size: 14.5px; color: var(--azul); }
+    .video .desc { display: block; font-size: 13px; color: var(--gris); margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav-sor">
+  <div class="nav-brand">OACE &nbsp;<span>RA2</span></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Grado Básico Informática y Comunicaciones</div>
+  <h1>RA2: Configura equipos informáticos para su funcionamiento en un entorno de red, identificando los permisos del usuario.</h1>
+  <p class="hero-sub">Contenido técnico de nivel Grado Básico</p>
+  <div class="hero-meta">
+    <span>Peso: 30%</span>
+    <span>12 sesiones × 55 min</span>
+    <span>7 criterios de evaluación</span>
+    <span>5 CEs críticos</span>
+  </div>
+</div>
+<div class="container">
+<div class="ra-info">
+  <h2>RA2: Configura equipos informáticos para su funcionamiento en un entorno de red, identificando los permisos del usuario.</h2>
+  <div class="peso-grid">
+    <div class="peso-card"><div class="numero">30%</div><div class="label">Peso evaluación</div></div>
+    <div class="peso-card"><div class="numero">12</div><div class="label">Sesiones</div></div>
+    <div class="peso-card"><div class="numero">7</div><div class="label">Criterios</div></div>
+    <div class="peso-card"><div class="numero">5</div><div class="label">Críticos</div></div>
+  </div>
+  <div class="ce-criticos"><strong>CEs críticos:</strong> CE-b, CE-c, CE-d, CE-e, CE-g</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+<div class="ce-index">
+  <div class="ce-index-titulo">Índice RA2 — 7 criterios</div>
+  <div class="ce-index-links">
+    <a href="#ceA" class="ce-idx-item ce-idx-importante"><span class="ce-idx-letra">a</span><span class="ce-idx-desc">Se han aplicado preferencias en la configuración del entorno personal.</span></a>
+    <a href="#ceB" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">b</span><span class="ce-idx-desc">Se han configurado y gestionado cuentas de usuario.</span></a>
+    <a href="#ceC" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">c</span><span class="ce-idx-desc">Se ha comprobado la conectividad del servidor con los equipos del cliente.</span></a>
+    <a href="#ceD" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">d</span><span class="ce-idx-desc">Se han utilizado los servicios para compartir recurso.</span></a>
+    <a href="#ceE" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">e</span><span class="ce-idx-desc">Se han asignado permisos a los recursos del sistema que se van a compartir.</span></a>
+    <a href="#ceF" class="ce-idx-item ce-idx-importante"><span class="ce-idx-letra">f</span><span class="ce-idx-desc">Se ha accedido a los recursos compartidos.</span></a>
+    <a href="#ceG" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">g</span><span class="ce-idx-desc">Se han aplicado normas básicas de seguridad sobre recursos compartidos.</span></a>
+  </div>
+</div>
+<div class="bloque" id="ceA">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num">a</div>
+      <div class="bloque-info">
+        <h3>Preferencias del entorno personal en red: equipo, unidades e impresoras compartidas</h3>
+        <p>CE-a · importante · 1 sesión</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">1 sesión</span>
+  </div>
+  <div class="bloque-body">
+
+    <p>En el RA1 configuramos un equipo que trabajaba por su cuenta: idioma, cuenta local, IP, actualizaciones. Ese equipo era una isla. En un aula, una oficina o una empresa los equipos no van solos: van conectados por la red y comparten cosas. Un <strong>sistema operativo en red</strong> es el que permite que varios equipos trabajen juntos ofreciendo y usando recursos compartidos (carpetas, cuentas de usuario, impresoras).</p>
+
+    <div class="clave">En red, tu cuenta y tus archivos no viven en tu PC: viven en el servidor. Tu PC solo los usa.</div>
+
+    <div class="cards">
+      <div class="card">
+        <h4><span class="ico">🖥️</span> Servidor</h4>
+        <ul>
+          <li>Equipo que <strong>ofrece</strong> los recursos.</li>
+          <li>Guarda las cuentas de usuario y las carpetas compartidas.</li>
+          <li>Está siempre encendido y con IP fija.</li>
+          <li>En el taller: Ubuntu 24.04 LTS con <strong>Samba</strong> (programa que comparte carpetas con clientes Windows y Linux).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ico">💻</span> Cliente</h4>
+        <ul>
+          <li>Equipo que <strong>usa</strong> los recursos del servidor.</li>
+          <li>No guarda las cuentas: se las pide al servidor.</li>
+          <li>Puede ser Windows 11 o Ubuntu 24.04.</li>
+          <li>En el taller: el PC de cada alumno.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>Al iniciar sesión en un cliente, la contraseña la comprueba el servidor. Por eso puedes sentarte en cualquier PC del aula y encontrar tu carpeta personal igual que en el tuyo.</p>
+    </div>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 460 230" role="img" aria-label="Dos clientes conectados a un servidor Ubuntu con Samba que ofrece carpetas e impresora">
+        <defs>
+          <marker id="flecha-a-cea" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <rect x="15" y="20" width="140" height="56" rx="10" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="85" y="42" text-anchor="middle" font-size="13" fill="#1a1a2e">Cliente Windows</text>
+        <text x="85" y="62" text-anchor="middle" font-size="13" fill="#667085">192.168.1.20</text>
+        <rect x="15" y="120" width="140" height="56" rx="10" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="85" y="142" text-anchor="middle" font-size="13" fill="#1a1a2e">Cliente Ubuntu</text>
+        <text x="85" y="162" text-anchor="middle" font-size="13" fill="#667085">192.168.1.21</text>
+        <line x1="157" y1="48" x2="276" y2="95" stroke="#667085" stroke-width="2" marker-end="url(#flecha-a-cea)"/>
+        <line x1="157" y1="148" x2="276" y2="135" stroke="#667085" stroke-width="2" marker-end="url(#flecha-a-cea)"/>
+        <rect x="280" y="55" width="165" height="120" rx="10" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="362" y="82" text-anchor="middle" font-size="14" fill="#1a1a2e">Servidor Ubuntu</text>
+        <text x="362" y="104" text-anchor="middle" font-size="13" fill="#1a6b3a">Samba</text>
+        <text x="362" y="126" text-anchor="middle" font-size="13" fill="#667085">192.168.1.10</text>
+        <text x="362" y="152" text-anchor="middle" font-size="13" fill="#667085">cuentas y recursos</text>
+        <text x="230" y="212" text-anchor="middle" font-size="13" fill="#1a1a2e">Carpeta personal · compartida · impresora</text>
+      </svg>
+      <figcaption>Los dos clientes piden los recursos al servidor. Fíjate en que las cuentas también están en el servidor, no en los clientes.</figcaption>
+    </figure>
+
+    <h4>Grupo de trabajo frente a dominio</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Grupo de trabajo</th><th>Dominio</th></tr></thead>
+        <tbody>
+          <tr><td>¿Dónde están las cuentas?</td><td>En cada equipo, cada uno las suyas</td><td>Todas en un servidor especial</td></tr>
+          <tr><td>Inicio de sesión</td><td>Solo válido en tu equipo</td><td>Válido en cualquier PC del dominio</td></tr>
+          <tr><td>Complejidad</td><td>Sencillo, para redes pequeñas</td><td>Necesita Windows Server 2025 y administración</td></tr>
+          <tr><td>En el taller</td><td>Es lo que usamos (Samba)</td><td>No disponible; solo se menciona</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Preferencias del entorno personal que dependen de la red</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Preferencia</th><th>Qué significa</th><th>Dónde se cambia</th></tr></thead>
+        <tbody>
+          <tr><td>Nombre del equipo y grupo de trabajo</td><td>Identifican tu PC y el conjunto de equipos al que pertenece</td><td>Windows: Configuración > Sistema > Información > Cambiar nombre de este equipo (avanzado), que abre Propiedades del sistema; ahí se cambian nombre y grupo de trabajo. Ubuntu: <code>sudo hostnamectl set-hostname nombre_equipo</code> para el nombre; el grupo de trabajo, si se usa Samba, se define en su configuración.</td></tr>
+          <tr><td>Unidad de red</td><td>Una carpeta del servidor mostrada como un disco más, por ejemplo <code>Z:</code></td><td>Windows: <code>net use</code>. Ubuntu: <code>mount -t cifs</code></td></tr>
+          <tr><td>Impresora de red predeterminada</td><td>Impresora conectada al servidor y compartida; la marcada como predeterminada es la que sale al imprimir sin elegir</td><td>Windows: Configuración > Bluetooth y dispositivos > Impresoras y escáneres. Ubuntu: Configuración > Impresoras</td></tr>
+          <tr><td>Carpeta personal en el servidor</td><td>Tu carpeta privada, guardada en el servidor, disponible desde cualquier PC</td><td>La crea el administrador; aparece al iniciar sesión</td></tr>
+          <tr><td>Accesos directos a recursos compartidos</td><td>Iconos en el escritorio que llevan directo a la carpeta de grupo del servidor</td><td>Clic derecho en el escritorio > Nuevo > Acceso directo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>En Ubuntu, el nombre del equipo se cambia con <code>sudo hostnamectl set-hostname nombre_equipo</code>. <code>hostnamectl</code> es la herramienta que gestiona la identidad del sistema; <code>set-hostname</code> indica que vas a fijar el nombre y <code>nombre_equipo</code> es el nombre nuevo. Se usa <code>sudo</code> porque es una operación reservada al administrador.</p>
+
+    <p>Conectar una unidad de red desde Windows:</p>
+    <pre><code>net use Z: \\192.168.1.10\alumnos /user:alumno01 /persistent:yes</code></pre>
+    <ul>
+      <li><code>net use</code>: orden de Windows para conectar o desconectar unidades de red.</li>
+      <li><code>Z:</code>: la letra que tendrá la unidad en tu PC (vale cualquier letra libre).</li>
+      <li><code>\\192.168.1.10\alumnos</code>: ruta del recurso compartido (doble barra + IP del servidor + barra + nombre de la carpeta).</li>
+      <li><code>/user:alumno01</code>: con qué cuenta del servidor te identificas.</li>
+      <li><code>/persistent:yes</code>: la unidad se reconecta sola al reiniciar el PC.</li>
+    </ul>
+
+    <p>Lo mismo desde Ubuntu:</p>
+    <pre><code>sudo mount -t cifs //192.168.1.10/alumnos /mnt/alumnos -o username=alumno01</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta el comando como root, el superusuario o administrador; montar unidades exige permisos.</li>
+      <li><code>mount</code>: conecta (monta) un sistema de archivos en una carpeta de tu equipo.</li>
+      <li><code>-t cifs</code>: indica el tipo de sistema de archivos; cifs es el protocolo que usa Samba para compartir carpetas.</li>
+      <li><code>//192.168.1.10/alumnos</code>: el recurso compartido del servidor.</li>
+      <li><code>/mnt/alumnos</code>: carpeta local donde aparecerá el contenido (debe existir antes).</li>
+      <li><code>-o username=alumno01</code>: opción con la cuenta del servidor con la que te autenticas.</li>
+    </ul>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En el aula 2 de Tecnoparts SL el servidor Samba es 192.168.1.10. Adrián se sienta en el PC 07 (Windows 11, 192.168.1.27) y quiere: llamar al equipo <code>PC07-AULA2</code>, entrar en el grupo de trabajo <code>AULA2</code>, conectar la unidad <code>Z:</code> a <code>\\192.168.1.10\alumnos</code> con su cuenta <code>adrian</code> y crear un acceso directo a la carpeta de grupo.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>Nombre y grupo: Inicio > Configuración > Sistema > Información > Cambiar nombre de este equipo (avanzado). Se abrirán las Propiedades del sistema; en la pestaña «Nombre de equipo» pulsa «Cambiar...», escribe <code>PC07-AULA2</code> y grupo de trabajo <code>AULA2</code>. Acepta y reinicia: los cambios de nombre solo se aplican al reiniciar. La página moderna de Configuración solo permite renombrar el equipo, no cambiar el grupo de trabajo.</li>
+        <li>Comprobar que el servidor responde: <code>ping 192.168.1.10</code>. El comando <code>ping</code> envía paquetes a esa IP y espera respuesta; si responde, hay conexión.</li>
+        <li>Conectar la unidad: abre el símbolo del sistema (cmd) y ejecuta <code>net use Z: \\192.168.1.10\alumnos /user:adrian /persistent:yes</code>. Al pedir contraseña, escribe la del servidor, no la de tu PC.</li>
+        <li>Crear el acceso directo: clic derecho en el escritorio > Nuevo > Acceso directo, escribe la ruta <code>\\192.168.1.10\grupo2</code> y ponle de nombre «Carpeta de grupo».</li>
+        <li>Comprobar: en el Explorador de archivos, «Este equipo» debe mostrar la unidad <code>Z:</code> con los archivos de <code>alumnos</code>.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-a · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En el aula 3, el servidor Samba es <code>192.168.1.10</code> y comparte la carpeta <code>alumnos</code>. Lucía trabaja en un Ubuntu 24.04 con IP 192.168.1.31 y cuenta en el servidor <code>lucia</code>. Indica los pasos para conectarse al recurso compartido usando la vía gráfica del gestor de archivos (Archivos/Nautilus): a) qué opción abrirías para conectarte a un servidor; b) qué dirección escribirías; c) con qué usuario te autenticarías y dónde aparecerá el recurso dentro del gestor de archivos.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>a)</strong> Abre <em>Archivos</em> (Nautilus), entra en <em>Otras ubicaciones</em> y elige <em>Conectar al servidor</em>. También puede aparecer como <em>Acceso a red</em> en la barra lateral.</p>
+        <p><strong>b)</strong> En la dirección escribe <code>smb://192.168.1.10/alumnos</code> y pulsa <em>Conectar</em>. Esa dirección indica el protocolo SMB/CIFS, la IP del servidor Samba y la carpeta compartida.</p>
+        <p><strong>c)</strong> En el diálogo de autenticación, escribe usuario <code>lucia</code>, la contraseña de esa cuenta del servidor y, si aparece el campo Dominio/Grupo de trabajo, déjalo como esté o escribe el grupo del aula si el servidor lo exige. El recurso aparecerá en <em>Otras ubicaciones</em> o en la barra lateral como <code>alumnos en 192.168.1.10</code>; al abrirlo verás los archivos compartidos. Desde la vía gráfica no hace falta crear ni indicar <code>/mnt/alumnos</code>.</p>
+      </details>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-a</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Distingo el papel del servidor y del cliente en una red</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé que las cuentas y los recursos se gestionan en el servidor, no en cada PC</label></li>
+        <li><label><input type="checkbox" class="check-item"> Explico la diferencia básica entre grupo de trabajo y dominio</label></li>
+        <li><label><input type="checkbox" class="check-item"> Configuro el nombre del equipo y el grupo de trabajo</label></li>
+        <li><label><input type="checkbox" class="check-item"> Conecto una unidad de red con net use (Windows) y con mount -t cifs (Ubuntu)</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé qué es la impresora de red predeterminada y dónde se marca</label></li>
+        <li><label><input type="checkbox" class="check-item"> Creo accesos directos a recursos compartidos del servidor</label></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="ceB">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">b</div>
+      <div class="bloque-info">
+        <h3>Cuentas de usuario y grupos en el servidor</h3>
+        <p>CE-b · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <h4>1. Qué es una cuenta de usuario</h4>
+    <p>Una <strong>cuenta de usuario</strong> es la identidad con la que una persona entra en un sistema. El sistema guarda, como mínimo: el <strong>nombre de usuario</strong> (login), la <strong>contraseña</strong> cifrada (un secreto que solo conoce el dueño de la cuenta y que el sistema nunca guarda en texto legible), el <strong>grupo</strong> al que pertenece y su <strong>carpeta personal</strong>.</p>
+    <p>Llamamos <strong>autenticación</strong> a comprobar que eres quien dices ser (usuario + contraseña). Llamamos <strong>sesión</strong> al tiempo que va desde que entras hasta que cierras sesión. Y un <strong>grupo</strong> es un conjunto de cuentas que comparten los mismos permisos: así se dan permisos una sola vez, al grupo, en lugar de uno por uno a cada persona.</p>
+
+    <h4>2. Cuenta local frente a cuenta del servidor</h4>
+    <p>Una <strong>cuenta local</strong> vive solo dentro de un equipo: sirve para ese ordenador y nada más. Una <strong>cuenta del servidor</strong> vive en el servidor de la red y sirve para entrar en los <strong>recursos compartidos</strong> desde cualquier cliente. Como vimos en CE-a, en el taller el servidor es Ubuntu 24.04 LTS con Samba, y los clientes Windows 11 entran a las carpetas compartidas por SMB/CIFS.</p>
+    <div class="clave">En una red, las cuentas se crean donde están los recursos (el servidor), no donde se sienta el usuario (el cliente).</div>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 460 220" role="img" aria-label="Flujo de autenticación de un cliente contra el servidor Samba">
+        <defs>
+          <marker id="flecha-b-ceb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <rect x="20" y="25" width="170" height="65" rx="12" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="105" y="52" text-anchor="middle" font-size="15" fill="#1a1a2e">Cliente</text>
+        <text x="105" y="72" text-anchor="middle" font-size="13" fill="#667085">Windows 11</text>
+
+        <rect x="270" y="25" width="170" height="65" rx="12" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="355" y="52" text-anchor="middle" font-size="15" fill="#1a1a2e">Servidor Ubuntu</text>
+        <text x="355" y="72" text-anchor="middle" font-size="13" fill="#667085">Samba</text>
+
+        <line x1="192" y1="57" x2="266" y2="57" stroke="#667085" stroke-width="2" marker-end="url(#flecha-b-ceb)"/>
+
+        <polyline points="355,90 355,112 105,112 105,138" fill="none" stroke="#667085" stroke-width="2" marker-end="url(#flecha-b-ceb)"/>
+        <line x1="355" y1="112" x2="355" y2="138" stroke="#667085" stroke-width="2" marker-end="url(#flecha-b-ceb)"/>
+
+        <rect x="20" y="140" width="170" height="60" rx="12" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="105" y="165" text-anchor="middle" font-size="14" fill="#1a1a2e">Cuenta Linux</text>
+        <text x="105" y="185" text-anchor="middle" font-size="13" fill="#667085">adduser</text>
+
+        <rect x="270" y="140" width="170" height="60" rx="12" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="355" y="165" text-anchor="middle" font-size="14" fill="#1a1a2e">Contraseña Samba</text>
+        <text x="355" y="185" text-anchor="middle" font-size="13" fill="#667085">smbpasswd -a</text>
+      </svg>
+      <figcaption>Al pedir una carpeta compartida, Samba comprueba DOS cosas: que la cuenta Linux existe y que tiene contraseña de Samba. Si falta cualquiera de las dos, el cliente no entra.</figcaption>
+    </figure>
+
+    <h4>3. Crear usuarios en el servidor Ubuntu</h4>
+    <p>En el servidor, la cuenta Linux se crea con <code>adduser</code>. Recuerda de RA1 que <code>sudo</code> ejecuta un comando con privilegios de administrador (root), y sin él no podremos crear usuarios.</p>
+    <pre><code>sudo adduser ana.gomez</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta la orden como superusuario; crear cuentas es una tarea de administración.</li>
+      <li><code>adduser</code>: programa que crea la cuenta de forma guiada: crea la carpeta personal <code>/home/ana.gomez</code>, un grupo propio con el mismo nombre y pide la contraseña dos veces.</li>
+      <li><code>ana.gomez</code>: nombre de la cuenta. Se escribe en minúsculas, sin tildes ni espacios; el punto es válido y habitual.</li>
+    </ul>
+
+    <div class="box-importante"><div class="box-label">IMPORTANTE</div><p>Tener la cuenta Linux <strong>no basta</strong> para entrar por red. Samba guarda sus propias contraseñas en una base de datos aparte, así que hay que dar de alta al usuario también en Samba.</p></div>
+
+    <pre><code>sudo smbpasswd -a ana.gomez</code></pre>
+    <ul>
+      <li><code>sudo</code>: privilegios de administrador.</li>
+      <li><code>smbpasswd</code>: herramienta que gestiona la base de contraseñas de Samba.</li>
+      <li><code>-a</code>: <em>add</em>, añade el usuario a esa base (hay que escribir la contraseña dos veces).</li>
+      <li><code>ana.gomez</code>: la cuenta Linux que ya existe y que ahora también podrá autenticarse por Samba.</li>
+    </ul>
+
+    <h4>4. Grupos</h4>
+    <p>Los grupos ahorran trabajo: si cinco personas deben entrar en la misma carpeta, se crea un grupo, se meten dentro y se da permiso al grupo.</p>
+    <pre><code>sudo addgroup ofimatica
+sudo usermod -aG ofimatica ana.gomez
+id ana.gomez</code></pre>
+    <ul>
+      <li><code>addgroup ofimatica</code>: crea un grupo nuevo llamado <code>ofimatica</code>.</li>
+      <li><code>usermod</code>: modifica una cuenta que ya existe.</li>
+      <li><code>-a</code>: <em>append</em>, añade sin borrar los grupos que el usuario ya tenía. Si se omite, el usuario sale de todos los demás grupos.</li>
+      <li><code>-G</code>: indica que lo que viene detrás son grupos secundarios (los que no son el grupo principal de la cuenta).</li>
+      <li><code>ofimatica ana.gomez</code>: grupo de destino y usuario al que se añade.</li>
+      <li><code>id</code>: muestra la identidad del usuario en el sistema: su número de usuario y la lista de grupos a los que pertenece. Sirve para comprobar que el paso anterior funcionó.</li>
+    </ul>
+
+    <h4>5. Desactivar y borrar cuentas</h4>
+    <p>Cuando alguien causa baja (vacaciones largas, cambio de puesto, despido) lo correcto es <strong>desactivar</strong> primero, no borrar: así no se pierden sus archivos y queda registro de lo que hizo.</p>
+    <p>Los comandos que aparecen a continuación son <code>passwd</code>, que gestiona contraseñas de cuentas Linux, y <code>deluser</code>, que elimina cuentas Linux. Samba usa además <code>smbpasswd</code> para su propia base de contraseñas. En el desglose posterior se explica cada opción.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Acción</th><th>Comando en el servidor Ubuntu</th><th>Qué ocurre</th></tr></thead>
+        <tbody>
+          <tr><td>Bloquear la cuenta Linux</td><td><code>sudo passwd -l ana.gomez</code></td><td>La contraseña queda anulada; no puede iniciar sesión.</td></tr>
+          <tr><td>Reactivarla</td><td><code>sudo passwd -u ana.gomez</code></td><td>Vuelve a estar operativa.</td></tr>
+          <tr><td>Quitar acceso por Samba</td><td><code>sudo smbpasswd -d ana.gomez</code></td><td>Deshabilita la cuenta en Samba; el usuario no entra por red.</td></tr>
+          <tr><td>Devolverle el acceso</td><td><code>sudo smbpasswd -e ana.gomez</code></td><td>Habilita de nuevo la cuenta en Samba.</td></tr>
+          <tr><td>Borrar la cuenta</td><td><code>sudo deluser ana.gomez</code></td><td>Elimina la cuenta (conserva su carpeta personal).</td></tr>
+          <tr><td>Borrar cuenta y datos</td><td><code>sudo deluser --remove-home ana.gomez</code></td><td>Elimina la cuenta y su carpeta personal. Irreversible.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Desglose de los comandos de la tabla:</strong></p>
+    <ul>
+      <li><code>passwd</code>: comando de Linux para cambiar o gestionar la contraseña de una cuenta. <code>-l</code> (<em>lock</em>) bloquea la cuenta anteponiendo un carácter de bloqueo al hash de la contraseña; <code>-u</code> (<em>unlock</em>) la desbloquea. No elimina la cuenta ni la carpeta personal.</li>
+      <li><code>smbpasswd</code>: herramienta de Samba que gestiona su propia base de contraseñas. <code>-d</code> (<em>disable</em>) deshabilita la cuenta para Samba, de modo que no se autentica por red; <code>-e</code> (<em>enable</em>) la vuelve a habilitar.</li>
+      <li><code>deluser</code>: comando de Linux para eliminar una cuenta de usuario. Sin opciones borra la cuenta pero conserva <code>/home/usuario</code>; <code>--remove-home</code> elimina también la carpeta personal y todo su contenido. Es irreversible.</li>
+    </ul>
+
+    <h4>6. Las cuentas locales del equipo (solo para comparar)</h4>
+    <p>Son las cuentas que se crean en un PC concreto. Se gestionan sin terminal: en Windows 11 desde <em>Configuración > Cuentas</em>, y en Ubuntu desde <em>Configuración > Usuarios</em>. Sirven para usar ese equipo, pero <strong>no</strong> dan acceso por sí solas a las carpetas del servidor.</p>
+    <div class="dual-columns">
+      <div class="win-col"><h4>🪟 Windows Server 2025</h4>
+        <p>Antes de crear cuentas hay que distinguir el papel del servidor:</p>
+        <ul>
+          <li><strong>Servidor independiente o miembro:</strong> las cuentas locales del propio equipo se gestionan con <em>Usuarios y grupos locales</em>, la herramienta <code>lusrmgr.msc</code>. Es una consola MMC de Windows: se abre pulsando <code>Win + R</code>, escribiendo <code>lusrmgr.msc</code> y pulsando Enter; también se llega desde <em>Administrador del servidor > Herramientas > Administración de equipos > Usuarios y grupos locales</em>.</li>
+          <li><strong>Controlador de dominio (DC):</strong> no dispone de cuentas locales propias como un equipo independiente; las cuentas del dominio se crean en <em>Usuarios y equipos de Active Directory</em> (ADUC, <code>dsa.msc</code>). Se abre desde <em>Administrador del servidor > Herramientas > Usuarios y equipos de Active Directory</em> o ejecutando <code>dsa.msc</code> con <code>Win + R</code>. En un DC no se usa <code>lusrmgr.msc</code> para las cuentas del dominio.</li>
+        </ul>
+        <p><em>Administrador del servidor</em> (<code>servermanager.exe</code>) es la consola de administración de Windows Server: se abre desde Inicio o con <code>Win + R</code>, escribiendo <code>servermanager</code>. Sirve para instalar roles, ver el estado del servidor y lanzar herramientas como ADUC o Administración de equipos, pero no es la ventana donde se crean directamente las cuentas del dominio. En ambos entornos se pueden crear grupos, asignar contraseñas y desactivar o eliminar cuentas.</p>
+      </div>
+      <div class="linux-col"><h4>🐧 Ubuntu 24.04 LTS (Samba)</h4><p><code>adduser</code> + <code>addgroup</code> + <code>usermod -aG</code> para las cuentas Linux, y <code>smbpasswd -a</code> para habilitarlas en Samba. Sin el segundo paso, el cliente no entra.</p></div>
+    </div>
+
+    <h4>7. Acceso remoto al servidor por SSH</h4>
+    <p><strong>SSH</strong> (<em>Secure Shell</em>) es un protocolo que permite abrir una sesión de terminal cifrada en un equipo remoto. En lugar de sentarse físicamente delante del servidor, se ejecuta un cliente SSH desde el equipo de administración y se obtiene un prompt como si estuviéramos en la consola del servidor. Es el método habitual para administrar servidores Ubuntu sin pantalla ni teclado.</p>
+    <p>En Ubuntu y macOS se usa el cliente <code>ssh</code> desde la terminal. En Windows 11 también está disponible en PowerShell o Terminal (OpenSSH), y si no, con herramientas como PuTTY. La forma básica es:</p>
+    <pre><code>ssh usuario@servidor</code></pre>
+    <ul>
+      <li><code>ssh</code>: inicia el cliente SSH.</li>
+      <li><code>usuario</code>: cuenta con la que nos autenticamos en el servidor remoto (por ejemplo, la cuenta administradora del servidor, no la de Samba de un usuario final).</li>
+      <li><code>servidor</code>: IP o nombre DNS del servidor, por ejemplo <code>192.168.1.40</code>.</li>
+    </ul>
+    <p>Ejemplo con la IP del ejercicio avanzado: <code>ssh administrador@192.168.1.40</code>. La primera vez, SSH pedirá confirmar la huella del servidor y después la contraseña de esa cuenta. Si la autenticación por clave está configurada, pedirá la clave privada. Cuando aparezca el prompt del servidor, ya se pueden ejecutar comandos como <code>id l.mora</code> o <code>sudo smbpasswd -a l.mora</code>. Para salir de la sesión remota se escribe <code>exit</code>.</p>
+    <div class="box-importante"><div class="box-label">IMPORTANTE</div><p>Para que SSH funcione, el servicio <code>openssh-server</code> debe estar instalado y en marcha en el servidor, y el cortafuegos debe permitir el puerto 22/TCP. Si no, la conexión se rechaza antes de pedir usuario y contraseña.</p></div>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En <strong>Tecnoparts SL</strong> el servidor de ficheros es una máquina virtual Ubuntu 24.04 LTS con IP fija <code>192.168.1.10</code>, y comparte la carpeta <code>/srv/ofimatica</code> con el nombre de recurso <code>ofimatica</code> para el grupo <code>ofimatica</code>. Se incorporan dos personas: <strong>ana.gomez</strong> y <strong>luis.perez</strong>. Deben entrar desde sus clientes Windows 11 con <code>net use Z: \\192.168.1.10\ofimatica /user:ana.gomez /persistent:yes</code>.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>Crear las cuentas Linux: <code>sudo adduser ana.gomez</code> y <code>sudo adduser luis.perez</code>. Cada comando pide y confirma la contraseña.</li>
+        <li>Crear el grupo de la carpeta: <code>sudo addgroup ofimatica</code>.</li>
+        <li>Meter a las dos personas en el grupo: <code>sudo usermod -aG ofimatica ana.gomez</code> y <code>sudo usermod -aG ofimatica luis.perez</code>.</li>
+        <li>Habilitarlas en Samba: <code>sudo smbpasswd -a ana.gomez</code> y <code>sudo smbpasswd -a luis.perez</code>. Se puede usar la misma contraseña que en Linux o distinta; lo importante es recordarla.</li>
+        <li>Comprobar: <code>id ana.gomez</code> debe mostrar el grupo <code>ofimatica</code>. Si no aparece, el paso 3 se hizo sin la opción <code>-a</code> o con otro nombre de grupo.</li>
+        <li>Probar desde el cliente Windows 11 con el <code>net use</code> anterior: la unidad <code>Z:</code> debe abrirse sin pedir credenciales otra vez.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-b · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En <strong>Papelería AulaVerde SL</strong> (servidor Ubuntu Samba en <code>192.168.1.20</code>) entra hoy una administrativa nueva, <strong>marta.ruiz</strong>. Debe poder acceder a la carpeta compartida <code>\\192.168.1.20\ofimatica</code>, que da permiso al grupo <code>ofimatica</code>. Escribe los comandos necesarios, en orden, y cómo comprobarías que todo ha quedado bien.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p>Paso a paso, en el servidor:</p>
+        <ol>
+          <li><code>sudo adduser marta.ruiz</code> — crea la cuenta Linux, su carpeta personal <code>/home/marta.ruiz</code> y pide la contraseña.</li>
+          <li><code>sudo usermod -aG ofimatica marta.ruiz</code> — mete a marta.ruiz en el grupo que tiene permiso sobre la carpeta compartida. La <code>-a</code> es imprescindible para no sacarla de otros grupos; la <code>-G</code> indica grupo secundario.</li>
+          <li><code>sudo smbpasswd -a marta.ruiz</code> — la añade a la base de contraseñas de Samba. Sin este paso, la cuenta Linux existe pero no puede autenticarse por red.</li>
+          <li>Comprobación: <code>id marta.ruiz</code> debe listar el grupo <code>ofimatica</code>. Después, desde un cliente Windows 11: <code>net use Z: \\192.168.1.20\ofimatica /user:marta.ruiz /persistent:yes</code> y comprobar que la unidad se abre.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-b · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En <strong>Logística Norte SL</strong> (servidor Ubuntu Samba <code>192.168.1.30</code>) el operario <strong>j.ramos</strong> se marcha durante seis meses a otra delegación y hay que quitarle el acceso, pero <em>sin</em> perder sus archivos ni los registros de su trabajo. Además, se han creado por error las cuentas <code>p.sanz</code> y <code>P.Sanz</code>. Indica qué comandos usarías para cada caso y en qué orden, indicando qué ocurre con la carpeta personal de j.ramos.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-b · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>En <strong>Clínica Dental Sonrisa</strong> el servidor es Ubuntu Samba en <code>192.168.1.40</code>. La doctora <strong>l.mora</strong> no puede acceder a la carpeta <code>\\192.168.1.40\historias</code>: Windows 11 le responde «El nombre de usuario o la contraseña no son correctos». Tú entras por SSH al servidor y compruebas que <code>id l.mora</code> muestra correctamente su cuenta y el grupo <code>historias</code>. Explica <strong>como mínimo tres causas posibles</strong> del fallo, cómo comprobarías cada una y cómo la arreglarías, ordenando las comprobaciones de la más rápida a la más costosa.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-b</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Explico con mis palabras qué es una cuenta de usuario, un grupo y la autenticación.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Distingo una cuenta local de una cuenta del servidor y sé dónde se crea cada una.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Creo una cuenta en Ubuntu con <code>adduser</code> y la habilito en Samba con <code>smbpasswd -a</code>.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Añado un usuario a un grupo con <code>usermod -aG</code> y lo verifico con <code>id</code>.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé desactivar (passwd -l, smbpasswd -d) y borrar (deluser) una cuenta, y cuándo usar cada opción.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Entro desde un cliente Windows con <code>net use ... /user:nombre</code> usando una cuenta del servidor.</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>El error más repetido es creer que <code>adduser</code> ya deja al usuario entrar por red. Samba comprueba <strong>dos registros distintos</strong>: la cuenta Linux y su contraseña de Samba. Si solo se hace <code>adduser</code>, el cliente recibirá «usuario o contraseña incorrectos» aunque la cuenta exista. Señal de alarma: <code>id usuario</code> funciona, pero no entra desde Windows. Solución: <code>sudo smbpasswd -a usuario</code>.</p>
+      <p>La segunda trampa es confundir borrar con desactivar. En un examen, si el enunciado dice «quitar el acceso pero conservar los archivos», la respuesta es <code>passwd -l</code> y/o <code>smbpasswd -d</code>, <strong>nunca</strong> <code>deluser --remove-home</code>, que destruye la carpeta personal.</p>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="ceC">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">c</div>
+      <div class="bloque-info">
+        <h3>Comprobar la conectividad entre el servidor y los equipos del cliente</h3>
+        <p>CE-c · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <p>Comprobar la <strong>conectividad</strong> es verificar que dos equipos pueden intercambiar datos entre sí. En el taller lo haremos siempre con dos papeles: el <strong>servidor</strong>, que es el equipo que ofrece un servicio o un recurso (una carpeta compartida, un acceso remoto…), y el <strong>cliente</strong>, que es el equipo que pide ese servicio.</p>
+
+    <p>Antes de empezar, recordemos los datos básicos de la configuración de red. La <strong>dirección IP</strong> es el número único que identifica cada interfaz dentro de una red (por ejemplo, 192.168.1.75). La <strong>máscara de red</strong> indica qué parte de la IP identifica la red y qué parte identifica al equipo; por ejemplo, 255.255.255.0 equivale a /24. La <strong>puerta de enlace</strong> es la IP del router que permite salir hacia otras redes cuando el destino no está en la misma red local. El <strong>DNS</strong> (<em>Domain Name System</em>) es el servidor que traduce nombres como servidor.tecnoparts.local a direcciones IP. La <strong>dirección MAC</strong> (<em>Media Access Control</em>) es el identificador físico único de cada tarjeta de red, asignado por el fabricante. El <strong>DHCP</strong> (<em>Dynamic Host Configuration Protocol</em>) es el servicio que asigna automáticamente IP, máscara, puerta de enlace y DNS a los equipos que lo solicitan.</p>
+
+    <p>Cuando alguien dice "no hay conexión", el fallo puede estar en niveles muy distintos. Por eso no se empieza probando la carpeta compartida, sino <strong>de abajo arriba</strong>: primero el enlace, después la IP, luego el nombre y por último el servicio concreto.</p>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 460 330" role="img" aria-label="Escalera de comprobación de conectividad en cuatro niveles">
+        <defs>
+          <marker id="flecha-c-cec" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <rect x="90" y="270" width="280" height="50" rx="10" fill="#f7f9fc" stroke="#667085" stroke-width="2"/>
+        <text x="230" y="292" text-anchor="middle" font-size="15" fill="#1a1a2e">1. Enlace</text>
+        <text x="230" y="310" text-anchor="middle" font-size="13" fill="#667085">cable, Wi-Fi, adaptador puente</text>
+        <line x1="230" y1="270" x2="230" y2="243" stroke="#667085" stroke-width="2" marker-end="url(#flecha-c-cec)"/>
+        <rect x="90" y="190" width="280" height="50" rx="10" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="230" y="212" text-anchor="middle" font-size="15" fill="#1a1a2e">2. Dirección IP</text>
+        <text x="230" y="230" text-anchor="middle" font-size="13" fill="#667085">ip a · ipconfig /all · ping</text>
+        <line x1="230" y1="190" x2="230" y2="163" stroke="#667085" stroke-width="2" marker-end="url(#flecha-c-cec)"/>
+        <rect x="90" y="110" width="280" height="50" rx="10" fill="#f7f9fc" stroke="#d4a017" stroke-width="2"/>
+        <text x="230" y="132" text-anchor="middle" font-size="15" fill="#1a1a2e">3. Nombre</text>
+        <text x="230" y="150" text-anchor="middle" font-size="13" fill="#667085">nslookup servidor</text>
+        <line x1="230" y1="110" x2="230" y2="83" stroke="#667085" stroke-width="2" marker-end="url(#flecha-c-cec)"/>
+        <rect x="90" y="30" width="280" height="50" rx="10" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="230" y="52" text-anchor="middle" font-size="15" fill="#1a1a2e">4. Puerto o servicio</text>
+        <text x="230" y="70" text-anchor="middle" font-size="13" fill="#667085">Test-NetConnection · ss -tln</text>
+      </svg>
+      <figcaption>Orden de comprobación de la conectividad. El alumno debe subir la escalera de abajo arriba: si el nivel 2 falla, no tiene sentido probar el nivel 4.</figcaption>
+    </figure>
+
+    <h4>Paso 1 y 2: mi IP y el ping</h4>
+    <p>Antes de llamar a nadie, miramos cómo está configurada nuestra propia tarjeta de red. Estas dos herramientas hacen lo mismo en cada sistema:</p>
+    <div class="dual-columns">
+      <div class="win-col"><h4>🪟 Windows</h4><pre><code>ipconfig /all</code></pre></div>
+      <div class="linux-col"><h4>🐧 Linux</h4><pre><code>ip a</code></pre></div>
+    </div>
+    <ul>
+      <li><code>ipconfig</code>: muestra la configuración de las tarjetas de red del equipo.</li>
+      <li><code>/all</code>: modificador que añade todo el detalle: <strong>dirección MAC</strong> (identificador físico de la tarjeta), si la IP se ha obtenido por <strong>DHCP</strong> (asignación automática), servidores DNS, puerta de enlace, etc. En Windows los modificadores empiezan por barra (<code>/</code>).</li>
+      <li><code>ip</code>: herramienta de Linux para consultar y cambiar la red. Sustituye a la antigua <code>ifconfig</code>.</li>
+      <li><code>a</code>: abreviatura de <em>address</em>; muestra las direcciones IP de cada interfaz.</li>
+    </ul>
+
+    <p>El <strong>ping</strong> es la prueba más básica: envía paquetes <strong>ICMP</strong> (el protocolo de mensajes de control, que sirve para diagnóstico, no para datos del usuario) y espera respuesta. Es como llamar a una puerta y preguntar "¿hay alguien?".</p>
+    <pre><code>ping -c 4 192.168.1.50</code></pre>
+    <ul>
+      <li><code>ping</code>: programa que envía paquetes de prueba a un destino y mide si contesta.</li>
+      <li><code>-c 4</code>: <em>count</em>, envía 4 paquetes y se detiene. En Linux, sin este flag el comando no para hasta pulsar Ctrl+C.</li>
+      <li><code>192.168.1.50</code>: la IP del equipo de destino (en nuestro taller, el servidor).</li>
+    </ul>
+    <p>En Windows el comando es <code>ping 192.168.1.50</code> y se detiene solo tras 4 paquetes. Cómo leer la respuesta:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Lo que vemos</th><th>Qué significa</th></tr></thead>
+        <tbody>
+          <tr><td>4 enviados, 4 recibidos, 0 % perdidos</td><td>Hay conectividad a nivel de IP. El tiempo en ms es la latencia (cuánto tarda la ida y vuelta).</td></tr>
+          <tr><td>Tiempo de espera agotado / 100 % perdidos</td><td>Nadie contesta: IP mal, equipo apagado, red distinta o cortafuegos.</td></tr>
+          <tr><td>Host de destino inaccesible</td><td>Nuestro equipo no sabe por dónde salir: revisar máscara y puerta de enlace.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Si el ping a <code>127.0.0.1</code> (la dirección de bucle local, "yo mismo") falla, el problema está en nuestra propia tarjeta o en la pila de red, no en el servidor.</p>
+
+    <div class="clave">Un ping que no responde no siempre significa que no hay red: puede ser el cortafuegos.</div>
+
+    <h4>Pasos 3 y 4: nombre y puerto</h4>
+    <p>Que la IP conteste no garantiza que el servicio funcione. Para eso comprobamos el nombre (DNS) y el puerto. Un <strong>puerto</strong> es un número que identifica cada servicio dentro de una misma IP: por ejemplo, el 22 es el acceso remoto por terminal y el 445 es la compartición de archivos de Windows. Los servicios viajan sobre protocolos de transporte; el más habitual aquí es <strong>TCP</strong> (<em>Transmission Control Protocol</em>, Protocolo de Control de Transmisión), orientado a conexión y fiable. En el puerto 445 se usa <strong>SMB</strong> (<em>Server Message Block</em>), el protocolo de compartición de archivos e impresoras de Windows.</p>
+    <pre><code>nslookup servidor.tecnoparts.local</code></pre>
+    <ul>
+      <li><code>nslookup</code>: consulta al servidor DNS y traduce un nombre a su IP.</li>
+      <li><code>servidor.tecnoparts.local</code>: nombre del equipo que queremos resolver.</li>
+    </ul>
+    <pre><code>Test-NetConnection 192.168.1.50 -Port 445</code></pre>
+    <ul>
+      <li><code>Test-NetConnection</code>: comando de PowerShell que prueba la conexión a un destino.</li>
+      <li><code>192.168.1.50</code>: IP a la que se intenta conectar.</li>
+      <li><code>-Port 445</code>: puerto TCP que se prueba; el 445 es el de la compartición de archivos (SMB).</li>
+    </ul>
+    <p>Si la respuesta es <code>TcpTestSucceeded : True</code>, el puerto está abierto. En el servidor Ubuntu, <code>ss -tln</code> lista los puertos a la escucha: <code>ss</code> muestra estadísticas de sockets (conexiones de red), <code>-t</code> solo TCP, <code>-l</code> los que están a la escucha y <code>-n</code> sin traducir números a nombres. Para ver el camino hasta el destino, Windows usa <code>tracert</code> y Linux <code>traceroute</code>, que muestran cada router (salto) por el que pasa el tráfico.</p>
+
+    <h4>El cortafuegos: el falso "no hay conexión"</h4>
+    <p>Un <strong>cortafuegos</strong> (firewall) es el programa que decide qué tráfico entra y sale del equipo. Windows Defender Firewall bloquea por defecto el ping entrante, así que un servidor Windows puede estar perfecto y no contestar al ping. En Ubuntu se usa <code>ufw</code> (<em>Uncomplicated Firewall</em>, cortafuegos sencillo):</p>
+    <pre><code>sudo ufw allow 445/tcp</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta con permisos de superusuario, como vimos en RA1; sin él no se pueden cambiar reglas del sistema.</li>
+      <li><code>ufw</code>: la herramienta de cortafuegos.</li>
+      <li><code>allow</code>: crea una regla que PERMITE ese tráfico (lo contrario de <code>deny</code>).</li>
+      <li><code>445/tcp</code>: el puerto 445 y el protocolo TCP.</li>
+    </ul>
+    <p>Con <code>sudo ufw status verbose</code> se consulta el estado y las reglas activas (<code>status</code> = estado, <code>verbose</code> = detallado).</p>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En Tecnoparts SL, el alumno A levanta en su máquina virtual un Ubuntu Server 24.04 con adaptador en modo puente (la VM aparece en la red del aula como un equipo más). El alumno B, desde su PC con Windows 11, debe comprobar que hay conexión.</p>
+      <p>Datos: servidor 192.168.1.50, cliente Windows 192.168.1.75, red 192.168.1.0 con máscara 255.255.255.0.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>En el servidor ejecutamos <code>ip a</code>. Vemos que la tarjeta tiene 192.168.1.50 y máscara /24 (255.255.255.0): está en la misma red que el cliente, así que el nivel 2 puede funcionar.</li>
+        <li>En el cliente ejecutamos <code>ipconfig /all</code> y comprobamos que su IP es 192.168.1.75 con la misma máscara y puerta de enlace. Si fuera 192.168.2.75, no habría comunicación porque no estaría en la misma subred /24 y necesitaría una puerta de enlace correcta para salir.</li>
+        <li>Lanzamos <code>ping 192.168.1.50</code>: 4 enviados, 4 recibidos, 0 % perdidos. Conectividad IP confirmada.</li>
+        <li>Probamos el servicio: <code>Test-NetConnection 192.168.1.50 -Port 22</code> (el puerto 22 es el del servicio SSH, que permite trabajar en el servidor desde el terminal del cliente). Devuelve <code>True</code>.</li>
+        <li>Probamos el nombre: <code>nslookup servidor.tecnoparts.local</code>. El DNS del aula no lo resuelve, así que se seguirá trabajando con la IP, anotándolo en el parte de incidencias.</li>
+      </ol>
+      <p><strong>Conclusión:</strong> conectividad correcta; el servicio de terminal remoto está disponible. El único punto pendiente es el DNS, que no bloquea el trabajo.</p>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-c · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En Tecnoparts SL, el cliente Windows 11 (192.168.1.75) lanza <code>ping 192.168.1.50</code> contra el servidor Ubuntu y obtiene "Tiempo de espera agotado" en los 4 paquetes. Indica qué tres comprobaciones harías, en qué orden, con qué comando exacto y qué conclusión sacarías de cada una.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <ol>
+          <li><strong>¿Estoy bien configurado?</strong> En el cliente: <code>ipconfig /all</code>. Si su IP es 192.168.1.75 con máscara 255.255.255.0, está en la misma red que el servidor. Si estuviera en otra red, el problema es de configuración, no del servidor.</li>
+          <li><strong>¿Funciona mi propia tarjeta?</strong> <code>ping 127.0.0.1</code>. Si responde, la pila de red del cliente funciona; si falla, el problema está en el propio equipo.</li>
+          <li><strong>¿Llego al servidor?</strong> Desde el cliente, <code>ping 192.168.1.50</code>. Como cliente (192.168.1.75) y servidor (192.168.1.50) están en la misma red /24, el tráfico no pasa por la puerta de enlace, así que no sirve comprobar <code>ping 192.168.1.1</code> para este fallo. Para localizar el problema, en el propio servidor ejecutamos <code>ip a</code> y confirmamos que su IP es 192.168.1.50 y que la tarjeta está levantada. Después, desde el servidor, <code>ping -c 4 192.168.1.75</code>: si el servidor SÍ llega al cliente pero el cliente no llega al servidor, casi seguro que hay un cortafuegos filtrando el ping entrante, no un problema de red.</li>
+        </ol>
+        <p><strong>Conclusión:</strong> hay que distinguir entre "no hay red" y "el cortafuegos bloquea el ping". Si la configuración es correcta y el ping inverso funciona, la conectividad existe.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-c · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>El servidor de Tecnoparts SL es ahora un Windows Server 2025 en máquina virtual con IP 192.168.1.60 que comparte la carpeta <code>datos</code>. El cliente Windows 11 (192.168.1.75) hace ping al servidor y recibe respuesta correcta, pero al intentar abrir la carpeta compartida con la ruta UNC <code>\\192.168.1.60\datos</code> el Explorador de archivos da error. Una ruta UNC tiene la forma <code>\\equipo-o-IP\recurso compartido</code> y se escribe en la barra de direcciones del Explorador de archivos (o en Inicio > Ejecutar) para acceder a una carpeta compartida por red. Desde el cliente se ejecuta <code>Test-NetConnection 192.168.1.60 -Port 445</code> y devuelve <code>False</code>. Explica qué significa ese resultado y enumera las comprobaciones que harías en el servidor para resolverlo.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-c · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>En el aula de Tecnoparts SL hay tres clientes: 192.168.1.71, 192.168.1.72 y 192.168.1.73. Los dos primeros acceden sin problema al servidor 192.168.1.50, pero el tercero no consigue ni hacer ping. Desde el equipo 192.168.1.73 el ping a la puerta de enlace (192.168.1.1) funciona correctamente. Diseña un diagnóstico ordenado con al menos tres comprobaciones, indicando el comando de cada una y qué conclusión extraerías en cada caso, hasta localizar el origen del fallo o descartar las causas más habituales.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-c</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Distingo los papeles de servidor y cliente en una comprobación de conectividad</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé obtener mi IP y mi máscara con ipconfig /all en Windows y con ip a en Ubuntu</label></li>
+        <li><label><input type="checkbox" class="check-item"> Interpreto un ping correcto y sus mensajes de error habituales</label></li>
+        <li><label><input type="checkbox" class="check-item"> Compruebo un puerto concreto con Test-NetConnection -Port y con ss -tln en el servidor</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé que el cortafuegos puede bloquear el ping y el puerto sin que la red esté caída</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sigo el orden enlace → IP → nombre → puerto antes de dar una avería por resuelta</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>El error más frecuente es dar por hecho que "no contesta al ping = no hay conectividad". Un servidor Windows con el cortafuegos activo no responde a ICMP aunque la red funcione perfectamente. Lo correcto es comprobar primero la configuración IP de ambos equipos y probar el ping en los dos sentidos. El segundo error es usar <code>ping</code> para comprobar un servicio: el ping solo dice que la IP responde, no que el puerto 445 o el 22 estén abiertos. Para eso se usan <code>Test-NetConnection -Port</code> o <code>ss -tln</code>.</p>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="ceD">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">d</div>
+      <div class="bloque-info">
+        <h3>Servicios para compartir recursos: carpetas de red e impresoras</h3>
+        <p>CE-d · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <p><strong>Compartir un recurso</strong> es poner algo del equipo (una carpeta, una impresora, el portapapeles) a disposición de otros equipos. El que lo ofrece es el <strong>servidor</strong>; el que lo usa, el <strong>cliente</strong>. En CE-c comprobamos que la red funciona y que hay puertos abiertos; ahora aprovechamos esa red para pasar archivos y trabajar sobre datos que están en otro PC.</p>
+
+    <div class="clave">Compartir no es copiar: el archivo se queda en el equipo servidor y el cliente lo abre por la red.</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Recurso compartido</th><th>Protocolo o herramienta</th><th>Entre qué equipos</th></tr></thead>
+        <tbody>
+          <tr><td>Carpeta de red (lo principal)</td><td>SMB, puerto 445 (ya visto en CE-c)</td><td>PC con PC dentro de la red del aula</td></tr>
+          <tr><td>Carpeta compartida de VirtualBox</td><td>vboxsf (sistema de archivos de VirtualBox para carpetas compartidas), con las Guest Additions</td><td>PC real y máquina virtual</td></tr>
+          <tr><td>Impresora compartida</td><td>IPP (Internet Printing Protocol, protocolo de impresión en red), puerto 631; SMB para impresoras compartidas en Windows</td><td>Se imprime desde cualquier PC de la red</td></tr>
+          <tr><td>Portapapeles y arrastrar y soltar</td><td>VirtualBox</td><td>PC real y máquina virtual</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>El estándar para compartir carpetas es <strong>SMB</strong> (Server Message Block), el protocolo de Windows. Linux habla SMB gracias a <strong>Samba</strong>, un programa que se instala en Ubuntu y se comporta como un servidor de archivos igual que un Windows Server. En el taller el servidor será la máquina virtual Ubuntu (dentro de ella sí tenemos <code>sudo</code>) y el cliente, el PC real con Windows 11 o el PC de un compañero.</p>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 460 200" role="img" aria-label="Esquema de una carpeta compartida desde Ubuntu hacia Windows por la red del aula">
+        <defs>
+          <marker id="flecha-d-ced" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <text x="230" y="25" text-anchor="middle" font-size="15" fill="#1a1a2e">Compartir una carpeta con SMB</text>
+        <rect x="10" y="50" width="150" height="110" rx="12" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="85" y="75" text-anchor="middle" font-size="15" fill="#1a1a2e">Ubuntu 24.04</text>
+        <text x="85" y="97" text-anchor="middle" font-size="13" fill="#667085">Servidor Samba</text>
+        <text x="85" y="117" text-anchor="middle" font-size="13" fill="#667085">carpeta compartida</text>
+        <text x="85" y="137" text-anchor="middle" font-size="13" fill="#1a6b3a">/srv/proyectos</text>
+        <line x1="162" y1="105" x2="308" y2="105" stroke="#667085" stroke-width="2" marker-end="url(#flecha-d-ced)"/>
+        <text x="235" y="95" text-anchor="middle" font-size="13" fill="#667085">SMB · puerto 445</text>
+        <rect x="310" y="50" width="140" height="110" rx="12" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="380" y="75" text-anchor="middle" font-size="15" fill="#1a1a2e">Windows 11</text>
+        <text x="380" y="97" text-anchor="middle" font-size="13" fill="#667085">Explorador de</text>
+        <text x="380" y="115" text-anchor="middle" font-size="13" fill="#667085">archivos (cliente)</text>
+        <text x="380" y="137" text-anchor="middle" font-size="13" fill="#2d6a9f">\\192.168.10.25</text>
+      </svg>
+      <figcaption>La carpeta nunca se mueve del servidor Ubuntu: el cliente Windows la abre por la red usando la dirección IP del servidor y el nombre del recurso. Fíjate en que el puerto es el 445, el mismo que ya usamos en CE-c.</figcaption>
+    </figure>
+
+    <h4>1. Montar el servidor Samba en Ubuntu</h4>
+    <pre><code>sudo apt update && sudo apt install samba</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta la orden como administrador (root), como vimos en RA1.</li>
+      <li><code>apt</code>: gestor de paquetes de Ubuntu; descarga programas de internet.</li>
+      <li><code>update</code>: refresca la lista de paquetes disponibles. No instala nada.</li>
+      <li><code>&&</code>: ejecuta la segunda orden solo si la primera termina bien.</li>
+      <li><code>install samba</code>: instala el paquete <em>samba</em>, el programa que habla SMB en Linux.</li>
+    </ul>
+
+    <pre><code>sudo mkdir -p /srv/proyectos && sudo chown alumno:alumno /srv/proyectos</code></pre>
+    <ul>
+      <li><code>mkdir -p</code>: crea la carpeta <code>/srv/proyectos</code>. La opción <code>-p</code> crea también las carpetas intermedias y no protesta si ya existe. <code>/srv</code> es la carpeta estándar de Linux para datos que ofrecen servicios.</li>
+      <li><code>chown alumno:alumno</code>: da la propiedad de la carpeta al usuario <code>alumno</code> y a su grupo (visto en CE-b).</li>
+    </ul>
+
+    <pre><code>sudo nano /etc/samba/smb.conf</code></pre>
+    <ul>
+      <li><code>nano</code>: editor de texto dentro del terminal. Se guarda con <code>Ctrl+O</code> y se sale con <code>Ctrl+X</code>.</li>
+      <li><code>/etc/samba/smb.conf</code>: fichero de configuración de Samba. Al final se añade el bloque del recurso:</li>
+    </ul>
+
+    <pre><code>[proyectos]
+   path = /srv/proyectos
+   browseable = yes
+   read only = no
+   valid users = alumno</code></pre>
+    <ul>
+      <li><code>[proyectos]</code>: nombre del recurso compartido; es lo que verá el cliente.</li>
+      <li><code>path</code>: ruta real de la carpeta en el servidor.</li>
+      <li><code>browseable = yes</code>: el recurso aparece al explorar la red.</li>
+      <li><code>read only = no</code>: permite leer <em>y escribir</em>.</li>
+      <li><code>valid users</code>: solo ese usuario puede entrar.</li>
+    </ul>
+
+    <pre><code>sudo smbpasswd -a alumno
+sudo systemctl restart smbd
+sudo ufw allow samba</code></pre>
+    <ul>
+      <li><code>smbpasswd -a alumno</code>: crea la contraseña SMB del usuario. Samba guarda sus claves en un fichero aparte, no usa la contraseña de Linux.</li>
+      <li><code>systemctl restart smbd</code>: reinicia el servicio <code>smbd</code> (el programa que escucha en el 445). Sin reiniciar, los cambios de <code>smb.conf</code> no se aplican.</li>
+      <li><code>ufw allow samba</code>: abre el cortafuegos para SMB, como vimos en CE-c.</li>
+    </ul>
+
+    <p>Antes de reiniciar, valida la sintaxis de <code>smb.conf</code> con:</p>
+    <pre><code>testparm</code></pre>
+    <ul>
+      <li><code>testparm</code>: se ejecuta sin <code>sudo</code>; lee <code>/etc/samba/smb.conf</code> y comprueba que no hay errores de sintaxis ni directivas desconocidas. También muestra la configuración efectiva que Samba interpreta. Si pregunta si quieres volcar las definiciones de servicios, pulsa Enter.</li>
+    </ul>
+
+    <h4>2. Usar el recurso desde el cliente</h4>
+    <div class="dual-columns">
+      <div class="win-col"><h4>🪟 Windows 11</h4><p>Explorador de archivos → barra de direcciones → <code>\\192.168.10.25</code> → Enter. Pide usuario y contraseña SMB. El recurso se ve como una carpeta más.</p></div>
+      <div class="linux-col"><h4>🐧 Ubuntu 24.04</h4><p><strong>Archivos</strong> es el gestor de archivos de GNOME, llamado <strong>Nautilus</strong>. Para escribir una ruta de red, pulsa <code>Ctrl+L</code>: se abre la barra de direcciones y puedes teclear <code>smb://192.168.10.25/proyectos</code>.</p>
+        <p>Desde el terminal, <code>smbclient</code> es el cliente SMB de línea de comandos incluido con Samba. Para listar los recursos compartidos del servidor:</p>
+        <pre><code>smbclient -L //192.168.10.25 -U alumno</code></pre>
+        <ul>
+          <li><code>-L</code>: listar (<em>list</em>) los recursos compartidos del servidor indicado.</li>
+          <li><code>-U alumno</code>: usuario (<em>user</em>) con el que autenticarse en SMB; te pedirá la contraseña SMB de <code>alumno</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="box-complementario"><div class="box-label">NOTA</div><p>VirtualBox también comparte recursos: <em>Dispositivos → Carpetas compartidas</em> permite ver una carpeta del PC real desde la máquina virtual (necesita las Guest Additions, los complementos que se instalan dentro de la VM). La carpeta se monta en Linux con el tipo de sistema de archivos <code>vboxsf</code>, que es el que usa VirtualBox para las carpetas compartidas. Con VirtualBox 7.1 y el Extension Pack instalado, también se puede conectar una memoria USB a la VM mediante USB passthrough; aun así, <code>vboxsf</code> sigue siendo la vía directa para compartir carpetas. Las impresoras se comparten con IPP (Internet Printing Protocol), el protocolo estándar de impresión en red que usa el puerto 631, o con SMB; en el taller no hay impresora, así que basta con conocer el concepto.</p></div>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En Tecnoparts SL, el PC-03 (Ubuntu 24.04 en VirtualBox, IP 192.168.10.25) debe compartir la carpeta <code>/srv/proyectos</code> con el usuario <code>alumno</code>, y el PC-12 (Windows 11) debe acceder con la letra <code>Z:</code>.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>En la VM Ubuntu: instalar Samba con <code>sudo apt update &amp;&amp; sudo apt install samba</code>.</li>
+        <li>Crear la carpeta y darle propietario: <code>sudo mkdir -p /srv/proyectos</code> y <code>sudo chown alumno:alumno /srv/proyectos</code>.</li>
+        <li>Añadir el bloque <code>[proyectos]</code> al final de <code>/etc/samba/smb.conf</code>.</li>
+        <li>Crear la clave SMB y reiniciar: <code>sudo smbpasswd -a alumno</code> y <code>sudo systemctl restart smbd</code>.</li>
+        <li>Abrir el cortafuegos: <code>sudo ufw allow samba</code>.</li>
+        <li>En el PC-12, asignar la unidad de red desde PowerShell o CMD:
+          <pre><code>net use Z: \\192.168.10.25\proyectos /user:alumno *</code></pre>
+          <ul>
+            <li><code>net use</code>: crea una conexión a un recurso compartido y le asigna una letra de unidad.</li>
+            <li><code>Z:</code>: letra libre que usaremos para esa carpeta de red (aparece en "Este equipo").</li>
+            <li><code>\\192.168.10.25\proyectos</code>: equipo servidor y nombre del recurso. La barra invertida doble indica red.</li>
+            <li><code>/user:alumno</code>: usuario con el que nos autenticamos en el servidor.</li>
+            <li><code>*</code>: pide la contraseña por teclado en lugar de escribirla en el comando (así no queda a la vista).</li>
+          </ul>
+        </li>
+        <li>Comprobación: copiar un archivo en <code>Z:</code> y verlo con <code>ls -l /srv/proyectos</code> en la VM.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En la empresa TecnoParts SL, el PC de aula 192.168.10.32 con Ubuntu 24.04 debe compartir la carpeta <code>/srv/material</code> con el usuario <code>daw1</code>, de forma que se pueda leer pero no escribir desde la red.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p>1) <code>sudo apt update &amp;&amp; sudo apt install samba</code>: instalamos el servicio.</p>
+        <p>2) <code>sudo mkdir -p /srv/material</code>: creamos la carpeta a compartir.</p>
+        <p>3) Editamos <code>/etc/samba/smb.conf</code> con <code>sudo nano</code> y añadimos:</p>
+        <pre><code>[material]
+   path = /srv/material
+   browseable = yes
+   read only = yes
+   valid users = daw1</code></pre>
+        <p>La clave está en <code>read only = yes</code>: en el bloque anterior era <code>no</code>. Si en el enunciado pidieran escritura, pondríamos <code>no</code> y además el propietario del sistema de archivos tendría que permitirla.</p>
+        <p>4) <code>sudo smbpasswd -a daw1</code> y <code>sudo systemctl restart smbd</code>. Sin el reinicio el recurso no existe para los clientes.</p>
+        <p>5) <code>sudo ufw allow samba</code> y comprobación desde otro PC abriendo <code>\\192.168.10.32\material</code>.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>Talleres Ríos quiere compartir <code>/srv/clientes</code> desde su servidor Ubuntu (192.168.10.40). Solo el usuario <code>oficina</code> puede escribir; el resto de la red debe poder <em>leer</em> sin introducir contraseña. Escribe el bloque de <code>smb.conf</code> que lo consigue, explica cada directiva y los comandos que ejecutarías después para crear el usuario SMB, aplicar los cambios y comprobar la sintaxis de la configuración.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>Diagnóstico: el PC-12 abre <code>\\192.168.10.25\proyectos</code>, ve los archivos y puede copiarlos, pero al intentar guardar uno nuevo da "Acceso denegado". En la VM, <code>ls -l /srv/proyectos</code> muestra <code>drwxr-xr-x 2 root root</code>. Indica las dos causas probables, el orden en que comprobarías cada una y el comando exacto que lo arregla.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-d</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Explico qué es un recurso compartido, un servidor y un cliente</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé que SMB usa el puerto 445 y que Samba lo implementa en Linux</label></li>
+        <li><label><input type="checkbox" class="check-item"> Instalo Samba con apt y creo la carpeta a compartir</label></li>
+        <li><label><input type="checkbox" class="check-item"> Escribo un bloque en smb.conf explicando cada línea</label></li>
+        <li><label><input type="checkbox" class="check-item"> Creo la clave SMB con smbpasswd y reinicio smbd</label></li>
+        <li><label><input type="checkbox" class="check-item"> Abro el cortafuegos con ufw allow samba</label></li>
+        <li><label><input type="checkbox" class="check-item"> Accedo al recurso desde Windows (\\IP) y desde Ubuntu (smb://IP)</label></li>
+        <li><label><input type="checkbox" class="check-item"> Distingo permisos de SMB y permisos del sistema de archivos</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>Confundir los permisos del recurso compartido (<code>smb.conf</code>) con los permisos del sistema de archivos (propietario con <code>chown</code> y bits rwx que interpretamos con <code>ls -l</code> en CE-b; <code>chmod</code> sirve para cambiar esos bits). Hacen falta <strong>los dos</strong>: si <code>read only = no</code> pero la carpeta pertenece a root y el usuario no tiene escritura, el cliente verá "Acceso denegado". El segundo error clásico es olvidar <code>sudo systemctl restart smbd</code> o <code>sudo ufw allow samba</code>, y entonces el cliente ni siquiera ve el recurso: no es un fallo de configuración, es que el servicio no ha recogido los cambios o el cortafuegos corta el 445.</p>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="ceE">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">e</div>
+      <div class="bloque-info">
+        <h3>Asignación de permisos a los recursos compartidos</h3>
+        <p>CE-e · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <p>En CE-d aprendiste a <strong>compartir</strong> un recurso: publicar una carpeta en la red con Samba o con el uso compartido de Windows. Pero compartir no es lo mismo que <strong>dar permiso</strong>. Compartir abre la puerta; asignar permisos decide <em>quién entra y qué puede hacer dentro</em>: solo mirar, crear y borrar archivos, o nada en absoluto.</p>
+
+    <p>En un recurso compartido los permisos se aplican en <strong>dos capas</strong>, y las dos tienen que dejarte pasar. Es como un edificio con portero y una caja fuerte con llave: si el portero no te deja entrar, no llegas a la caja; si te deja entrar pero no tienes la llave, tampoco la abres.</p>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 480 230" role="img" aria-label="Doble filtro de permisos: recurso compartido y sistema de archivos">
+        <defs>
+          <marker id="flecha-e-cee" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <rect x="15" y="35" width="135" height="90" rx="12" fill="#f7f9fc" stroke="#667085" stroke-width="2"/>
+        <text x="82" y="65" text-anchor="middle" font-size="14" fill="#1a1a2e">Cliente</text>
+        <text x="82" y="83" text-anchor="middle" font-size="14" fill="#1a1a2e">pide un</text>
+        <text x="82" y="101" text-anchor="middle" font-size="14" fill="#1a1a2e">archivo</text>
+        <line x1="152" y1="80" x2="170" y2="80" stroke="#667085" stroke-width="2" marker-end="url(#flecha-e-cee)"/>
+        <rect x="172" y="35" width="135" height="90" rx="12" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="239" y="62" text-anchor="middle" font-size="14" fill="#1a1a2e">1º Permiso</text>
+        <text x="239" y="80" text-anchor="middle" font-size="14" fill="#1a1a2e">de recurso</text>
+        <text x="239" y="98" text-anchor="middle" font-size="14" fill="#1a1a2e">compartido</text>
+        <text x="239" y="116" text-anchor="middle" font-size="13" fill="#667085">(Samba)</text>
+        <line x1="309" y1="80" x2="327" y2="80" stroke="#667085" stroke-width="2" marker-end="url(#flecha-e-cee)"/>
+        <rect x="330" y="35" width="135" height="90" rx="12" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="397" y="62" text-anchor="middle" font-size="14" fill="#1a1a2e">2º Permiso</text>
+        <text x="397" y="80" text-anchor="middle" font-size="14" fill="#1a1a2e">del sistema</text>
+        <text x="397" y="98" text-anchor="middle" font-size="14" fill="#1a1a2e">de archivos</text>
+        <text x="397" y="116" text-anchor="middle" font-size="13" fill="#667085">(ext4/NTFS)</text>
+        <line x1="239" y1="125" x2="239" y2="163" stroke="#667085" stroke-width="2" marker-end="url(#flecha-e-cee)"/>
+        <rect x="140" y="165" width="200" height="52" rx="12" fill="#f7f9fc" stroke="#b03a2e" stroke-width="2"/>
+        <text x="240" y="187" text-anchor="middle" font-size="14" fill="#1a1a2e">Acceso concedido</text>
+        <text x="240" y="205" text-anchor="middle" font-size="13" fill="#667085">solo si pasan los dos filtros</text>
+      </svg>
+      <figcaption>Los dos filtros que atraviesa cualquier petición de un cliente. El alumno debe fijarse en que basta con que uno de los dos deniegue para que el acceso se rechace.</figcaption>
+    </figure>
+
+    <p><strong>Capa 1 — permiso de recurso compartido (red).</strong> Lo define el programa que publica la carpeta (Samba en Linux, la pestaña <em>Compartir</em> en Windows). Solo afecta a quien entra por la red.</p>
+    <p><strong>Capa 2 — permiso del sistema de archivos (local).</strong> Es el permiso real del archivo en el disco: en Linux los <code>r w x</code> que ya trabajaste en CE-b, y en Windows los permisos NTFS de la pestaña <em>Seguridad</em>.</p>
+
+    <div class="clave">Si las dos capas no dicen lo mismo, gana siempre la más restrictiva.</div>
+
+    <h4>Los permisos en Linux: del símbolo al número</h4>
+    <p>En Linux cada permiso vale un número, y se suman. Con esos números se asigna todo de una vez con <code>chmod</code> (visto en CE-d) y con <code>chown</code>, que cambia el propietario y el grupo:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Valor</th><th>Símbolo</th><th>Qué permite</th></tr></thead>
+        <tbody>
+          <tr><td>4</td><td><code>r</code> (read)</td><td>Leer el archivo o listar la carpeta</td></tr>
+          <tr><td>2</td><td><code>w</code> (write)</td><td>Modificar el archivo o crear y borrar dentro de la carpeta</td></tr>
+          <tr><td>1</td><td><code>x</code> (execute)</td><td>Ejecutar el archivo o entrar en la carpeta</td></tr>
+          <tr><td>0</td><td>—</td><td>Ningún permiso</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Se escriben tres cifras seguidas: la primera para el <strong>propietario</strong>, la segunda para el <strong>grupo</strong> y la tercera para <strong>los demás</strong>. Así, <code>770</code> significa propietario y grupo con todo (4+2+1) y los demás nada; <code>750</code> deja al grupo solo leer y entrar; y <code>640</code> da lectura y escritura al propietario y solo lectura al grupo.</p>
+
+    <h4>Dónde se toca cada capa</h4>
+    <div class="dual-columns">
+      <div class="win-col"><h4>🪟 Windows</h4><p>Clic derecho en la carpeta → <em>Propiedades</em> → pestaña <em>Compartir</em> → <em>Uso compartido avanzado</em> → <em>Permisos</em>: aquí eliges usuarios o grupos y marcas <em>Control total</em> (todo), <em>Cambiar</em> (leer y escribir) o <em>Leer</em>. En la pestaña <em>Seguridad</em> se ajustan los permisos NTFS, que son la capa del sistema de archivos. Por defecto los heredan las subcarpetas (<em>Herencia</em>).</p></div>
+      <div class="linux-col"><h4>🐧 Linux</h4><p>Con <code>chown</code> se cambia el propietario y el grupo, y con <code>chmod</code> los permisos. La capa de red se configura en <code>/etc/samba/smb.conf</code> con directivas como <code>valid users</code>, <code>read only</code>, <code>create mask</code> y <code>directory mask</code> (vistas en CE-d).</p></div>
+    </div>
+
+    <pre><code>sudo mkdir -p /srv/compartido/proyectos
+sudo chown root:proyectos /srv/compartido/proyectos
+sudo chmod 2770 /srv/compartido/proyectos</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta el comando como administrador, necesario para crear carpetas fuera de tu carpeta personal y para cambiar propietarios.</li>
+      <li><code>mkdir</code>: crea una carpeta (make directory).</li>
+      <li><code>-p</code>: crea también las carpetas intermedias que falten; si <code>/srv/compartido</code> no existe, la crea. Sin <code>-p</code> daría error.</li>
+      <li><code>/srv/compartido/proyectos</code>: ruta absoluta (empieza por <code>/</code>, la raíz del sistema) donde se crea la carpeta compartida.</li>
+      <li><code>chown</code>: cambia el propietario (change owner) del recurso.</li>
+      <li><code>root:proyectos</code>: el propietario pasa a ser <code>root</code> y el grupo propietario <code>proyectos</code>. Se separan con dos puntos.</li>
+      <li><code>chmod</code>: cambia los permisos (change mode).</li>
+      <li><code>2770</code>: el <code>2</code> inicial activa el bit <strong>setgid</strong>. Gracias a él, los archivos que se creen dentro heredan el grupo <code>proyectos</code> en lugar del grupo personal de quien los crea. <code>770</code> es el permiso: dueño y grupo con todo, los demás sin nada.</li>
+    </ul>
+
+    <p>Y estas serían las líneas de Samba para publicar esa carpeta:</p>
+    <pre><code>[proyectos]
+   path = /srv/compartido/proyectos
+   browseable = yes
+   read only = no
+   valid users = @proyectos
+   create mask = 0660
+   directory mask = 2770</code></pre>
+    <ul>
+      <li><code>[proyectos]</code>: nombre del recurso compartido, el que se escribirá en la ruta de red.</li>
+      <li><code>path</code>: carpeta real del disco que se publica.</li>
+      <li><code>browseable = yes</code>: el recurso aparece al listar el servidor; con <code>no</code> habría que escribir la ruta a mano.</li>
+      <li><code>read only = no</code>: permite escribir; con <code>yes</code> sería solo lectura.</li>
+      <li><code>valid users = @proyectos</code>: solo entran los miembros del grupo. La arroba <code>@</code> delante del nombre indica que es un grupo, no un usuario.</li>
+      <li><code>create mask = 0660</code>: permisos que tendrán los archivos nuevos; lectura y escritura para dueño y grupo, nada para los demás.</li>
+      <li><code>directory mask = 2770</code>: permisos de las carpetas nuevas, con el mismo setgid para que hereden el grupo correcto.</li>
+    </ul>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>Tecnoparts SL (polígono de Barreiros, servidor Ubuntu 24.04 con IP 192.168.10.5) quiere compartir <code>/srv/compartido/proyectos</code>. Debe poder leer y escribir <strong>ana</strong> y <strong>luis</strong>, del departamento técnico. <strong>pedro</strong>, del departamento comercial, no debe ver nada.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>Crear el grupo y meter dentro a los dos técnicos:
+          <pre><code>sudo groupadd proyectos
+sudo usermod -aG proyectos ana
+sudo usermod -aG proyectos luis</code></pre>
+          <ul>
+            <li><code>groupadd proyectos</code>: crea el grupo <code>proyectos</code>.</li>
+            <li><code>usermod</code>: modifica una cuenta de usuario existente.</li>
+            <li><code>-aG proyectos</code>: <code>-G</code> añade el usuario a un grupo suplementario y <code>-a</code> (append) hace que se sume a los que ya tenía sin borrarlos. Si te olvidas de <code>-a</code>, el usuario pierde sus otros grupos.</li>
+          </ul>
+        </li>
+        <li>Crear la carpeta y asignarle dueño y grupo: <code>sudo mkdir -p /srv/compartido/proyectos</code> y <code>sudo chown root:proyectos /srv/compartido/proyectos</code>.</li>
+        <li>Poner los permisos con setgid: <code>sudo chmod 2770 /srv/compartido/proyectos</code>. El grupo <code>proyectos</code> entra y escribe; el resto, nada. Pedro no está en el grupo, así que queda fuera.</li>
+        <li>Añadir el bloque <code>[proyectos]</code> en <code>smb.conf</code> con <code>valid users = @proyectos</code>, <code>read only = no</code>, <code>create mask = 0660</code> y <code>directory mask = 2770</code>.</li>
+        <li>Validar y reiniciar el servicio: <code>testparm</code> revisa que el fichero no tenga errores de sintaxis y <code>sudo systemctl restart smbd</code> aplica los cambios (ambos vistos en CE-d).</li>
+        <li>Comprobar desde el cliente Windows: <code>net use Z: \\192.168.10.5\proyectos /user:ana *</code>. El asterisco <code>*</code> pide la contraseña sin escribirla en pantalla. Si pedro intenta lo mismo, el servidor le deniega el acceso.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-e · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>Logisparts SL tiene un servidor Ubuntu 24.04 en 192.168.10.8. Hay que compartir la carpeta <code>/srv/compartido/contabilidad</code> para el grupo <code>contabilidad</code>, del que forman parte <strong>marta</strong> y <strong>jorge</strong>. Solo ellos deben poder leer y escribir; nadie más debe ver nada. Escribe los comandos para crear el grupo, meter a los usuarios, crear la carpeta, asignar dueño y grupo, poner los permisos y publicarla en Samba.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>Paso 1 — Grupo y usuarios:</strong></p>
+        <pre><code>sudo groupadd contabilidad
+sudo usermod -aG contabilidad marta
+sudo usermod -aG contabilidad jorge</code></pre>
+        <p><code>groupadd</code> crea el grupo y <code>usermod -aG</code> añade a cada usuaria al grupo sin quitarle los suyos.</p>
+        <p><strong>Paso 2 — Carpeta, dueño y permisos:</strong></p>
+        <pre><code>sudo mkdir -p /srv/compartido/contabilidad
+sudo chown root:contabilidad /srv/compartido/contabilidad
+sudo chmod 2770 /srv/compartido/contabilidad</code></pre>
+        <p>Con <code>2770</code>: propietario (<code>root</code>) y grupo (<code>contabilidad</code>) tienen lectura, escritura y entrada; los demás no tienen nada. El <code>2</code> inicial activa setgid, de modo que los archivos creados por marta o jorge pertenecerán al grupo <code>contabilidad</code> y el otro podrá editarlos.</p>
+        <p><strong>Paso 3 — Publicar en Samba</strong> (añadir al final de <code>/etc/samba/smb.conf</code>):</p>
+        <pre><code>[contabilidad]
+   path = /srv/compartido/contabilidad
+   browseable = yes
+   read only = no
+   valid users = @contabilidad
+   create mask = 0660
+   directory mask = 2770</code></pre>
+        <p><strong>Paso 4 — Aplicar:</strong> <code>sudo testparm</code> para comprobar la sintaxis y <code>sudo systemctl restart smbd</code> para que Samba lea la nueva configuración. Como nadie fuera del grupo está en <code>valid users</code>, cualquier otro usuario es rechazado ya en la primera capa.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-e · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En Tecnoparts SL el departamento técnico ha ido creciendo y ahora hay dos carpetas: <code>/srv/compartido/proyectos</code> (grupo <code>proyectos</code>, con ana y luis, lectura y escritura) y <code>/srv/compartido/archivo</code> (grupo <code>proyectos</code> también, pero solo los dos jefes, <strong>ana</strong> y <strong>luis</strong> no, sino <strong>rosa</strong> y <strong>diego</strong>, deben poder escribir; el resto del grupo solo leer). Indica qué permisos numéricos pondrías a cada carpeta, qué grupos crearías, cómo quedaría cada bloque de <code>smb.conf</code> y por qué en este caso <strong>no</strong> usarías <code>777</code> en ninguna de las dos.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-e · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>Un compañero configuró <code>/srv/compartido/pedidos</code> con <code>chmod 777</code> «para que no fallara nada» y después, al ver el aviso del profesor, lo cambió a <code>775</code> con dueño <code>root</code> y grupo <code>pedidos</code>. Ahora los usuarios del grupo entran y crean archivos, pero cuando <strong>ana</strong> crea un archivo, <strong>luis</strong> puede abrirlo pero no guardar cambios. Además, el jefe de almacén ha comprobado desde el explorador de Windows que ve la carpeta <code>pedidos</code> pero al abrirla recibe un error de acceso denegado. Explica qué dos problemas hay, por qué se producen exactamente y qué comandos y líneas de <code>smb.conf</code> hay que corregir. Incluye cómo comprobarías con <code>ls -l</code> que la corrección ha funcionado.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-e</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Distingo las dos capas de permisos de un recurso compartido: red y sistema de archivos</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé cuándo se aplica la capa más restrictiva y por qué</label></li>
+        <li><label><input type="checkbox" class="check-item"> Traduzco sin dudar los valores 4, 2 y 1 a r, w y x, y sé qué significa cada cifra de un chmod de tres dígitos</label></li>
+        <li><label><input type="checkbox" class="check-item"> Uso chown usuario:grupo y chmod 2770 para preparar una carpeta de grupo</label></li>
+        <li><label><input type="checkbox" class="check-item"> Explico para qué sirve el bit setgid (el 2 inicial) en una carpeta compartida</label></li>
+        <li><label><input type="checkbox" class="check-item"> Configuro valid users, read only, create mask y directory mask en smb.conf y aplico los cambios con testparm y systemctl restart smbd</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>El error más repetido es arreglar un problema de acceso con <code>chmod 777</code> «para que todo el mundo pueda». <code>777</code> da lectura, escritura y ejecución al propietario, al grupo <strong>y a los demás</strong>: cualquier usuario del sistema, aunque no sea del grupo, puede borrar el contenido. Un recurso compartido nunca se deja en <code>777</code>; se ajusta el grupo y se pone <code>2770</code> (solo el grupo entra y escribe) o <code>750</code> (el grupo lee, no escribe). Y recuerda: si cambias los permisos del sistema de archivos pero no tocas los permisos del recurso compartido, el problema sigue ahí, porque las dos capas tienen que dejar pasar.</p>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="ceF">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num">f</div>
+      <div class="bloque-info">
+        <h3>Acceso a los recursos compartidos</h3>
+        <p>CE-f · importante · 1 sesión</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">1 sesión</span>
+  </div>
+  <div class="bloque-body">
+
+    <p>En CE-e dejamos las carpetas y los permisos preparados en el servidor. Ahora falta lo último: que el cliente <strong>entre de verdad</strong> en esa carpeta y pueda leer y escribir. Acceder a un recurso compartido significa dos cosas: <em>localizarlo</em> por su ruta y <em>autenticarse</em> con un usuario y una contraseña que el servidor reconozca.</p>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 710 150" role="img" aria-label="Flujo de acceso a un recurso compartido">
+        <defs>
+          <marker id="flecha-f-cef" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <rect x="15" y="40" width="120" height="70" rx="10" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="75" y="70" text-anchor="middle" font-size="13" fill="#1a1a2e">Cliente pide</text>
+        <text x="75" y="88" text-anchor="middle" font-size="13" fill="#1a1a2e">el recurso</text>
+
+        <line x1="137" y1="75" x2="158" y2="75" stroke="#667085" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+        <rect x="160" y="40" width="120" height="70" rx="10" fill="#f7f9fc" stroke="#667085" stroke-width="2"/>
+        <text x="220" y="62" text-anchor="middle" font-size="13" fill="#1a1a2e">Comprueba</text>
+        <text x="220" y="80" text-anchor="middle" font-size="13" fill="#1a1a2e">usuario y</text>
+        <text x="220" y="98" text-anchor="middle" font-size="13" fill="#1a1a2e">contraseña</text>
+
+        <line x1="282" y1="75" x2="303" y2="75" stroke="#667085" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+        <rect x="305" y="40" width="120" height="70" rx="10" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="365" y="70" text-anchor="middle" font-size="13" fill="#1a1a2e">Permisos</text>
+        <text x="365" y="88" text-anchor="middle" font-size="13" fill="#1a1a2e">recurso</text>
+
+        <line x1="427" y1="75" x2="448" y2="75" stroke="#667085" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+        <rect x="450" y="40" width="120" height="70" rx="10" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="510" y="70" text-anchor="middle" font-size="13" fill="#1a1a2e">Permisos</text>
+        <text x="510" y="88" text-anchor="middle" font-size="13" fill="#1a1a2e">archivos</text>
+
+        <line x1="572" y1="75" x2="593" y2="75" stroke="#667085" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+        <rect x="595" y="40" width="100" height="70" rx="10" fill="#fdf4dc" stroke="#d4a017" stroke-width="2"/>
+        <text x="645" y="70" text-anchor="middle" font-size="13" fill="#1a1a2e">Acceso</text>
+        <text x="645" y="88" text-anchor="middle" font-size="13" fill="#1a1a2e">concedido</text>
+      </svg>
+      <figcaption>Todo el recorrido de una petición de acceso. Fíjate en que las dos casillas verdes son los dos filtros que ya vimos en CE-e: si cualquiera de los dos dice que no, el resultado es "Acceso denegado" aunque la contraseña sea correcta.</figcaption>
+    </figure>
+
+    <div class="clave">Una contraseña correcta no basta: el usuario tiene que existir como usuario Samba <em>y</em> tener permiso en las dos capas.</div>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <p>Escribe la ruta UNC en el Explorador (barra de direcciones): <code>\\192.168.1.50\proyectos</code>. Aparecerá un cuadro pidiendo usuario y contraseña. Para dejarlo fijo y trabajar cómodo, se asigna una letra de unidad (como vimos en CE-d).</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <p>Abre Nautilus, pulsa <code>Ctrl+L</code> (atajo que abre la barra para escribir una ruta manual) y teclea <code>smb://192.168.1.50/proyectos</code>. Las credenciales se guardan en el llavero de claves de GNOME (el «llavero del sistema»), el almacén cifrado donde Ubuntu guarda contraseñas de aplicaciones. Nautilus utiliza ese llavero para recordar las credenciales SMB que introduces al conectar, de modo que no haya que escribirlas cada vez.</p>
+      </div>
+    </div>
+
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>El usuario Samba (creado con <code>smbpasswd -a</code>, visto en CE-d) es una base de datos <strong>aparte</strong> de los usuarios del sistema Ubuntu. Puede tener la misma contraseña o no. Si en Windows escribes tu usuario de Windows, el servidor dirá que no te conoce.</p>
+    </div>
+
+    <h4>Qué error me encuentro y qué significa</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Mensaje en pantalla</th><th>Causa habitual</th><th>Qué revisar</th></tr></thead>
+        <tbody>
+          <tr><td>Acceso denegado</td><td>Credenciales correctas pero falta permiso</td><td>Revisa las dos capas de CE-e</td></tr>
+          <tr><td>No se puede acceder a la carpeta de red</td><td>Ruta mal escrita o servicio parado</td><td><code>ping</code> al servidor (CE-c) y estado de <code>smbd</code></td></tr>
+          <tr><td>Nombre de usuario o contraseña incorrectos</td><td>Usuario Samba inexistente o mal tecleado</td><td>Comprueba con <code>sudo pdbedit -L</code> en el servidor</td></tr>
+          <tr><td>La letra de unidad ya está en uso</td><td>Otro recurso ocupa esa letra</td><td>Usa otra letra o borra la conexión antigua</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>pdbedit</strong> es la utilidad de Samba para gestionar la base de datos de usuarios Samba; su opción <code>-L</code> lista los usuarios Samba existentes. Como consulta la base de datos del servidor, requiere permisos de administrador: se ejecuta con <code>sudo</code>.</p>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En Tecnoparts SL, el servidor Ubuntu es <strong>192.168.1.50</strong> y comparte <strong>[proyectos]</strong>. En él existe el usuario Samba <strong>ana_smb</strong>, miembro del grupo <strong>proyectos</strong>. Ana trabaja desde un Windows 11 y quiere la carpeta como unidad <strong>Z:</strong>, disponible siempre que encienda el equipo.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>Comprueba que el servidor responde (como vimos en CE-c): <code>ping 192.168.1.50</code>.</li>
+        <li>Prueba el acceso manual en el Explorador con <code>\\192.168.1.50\proyectos</code>. Si aquí ya falla, no tiene sentido mapear la unidad: el problema es de red, de credenciales o de permisos.</li>
+        <li>Mapea la unidad de forma permanente:
+          <pre><code>net use Z: \\192.168.1.50\proyectos /user:ana_smb * /persistent:yes</code></pre>
+          <ul>
+            <li><code>net use</code>: programa de Windows que gestiona las conexiones a recursos de red (visto en CE-d).</li>
+            <li><code>Z:</code>: letra de unidad que se reserva en el cliente para ese recurso.</li>
+            <li><code>\\192.168.1.50\proyectos</code>: ruta UNC; dos barras invertidas, la IP del servidor, otra barra y el nombre del recurso.</li>
+            <li><code>/user:ana_smb</code>: con qué usuario Samba autenticarse. Sin este dato, Windows enviaría el usuario con el que has iniciado sesión en el PC.</li>
+            <li><code>*</code>: pide la contraseña por teclado en ese momento; así no queda escrita en el historial ni en pantalla.</li>
+            <li><code>/persistent:yes</code>: guarda la conexión para que Windows la restablezca sola en el próximo inicio de sesión. Si pones <code>no</code>, la unidad desaparece al reiniciar.</li>
+          </ul>
+        </li>
+        <li>Verifica con <code>net use</code> (sin argumentos): lista todas las conexiones activas y su estado.</li>
+        <li>Abre <code>Z:</code> en el Explorador, crea un archivo de prueba y comprueba que aparece en el servidor. Eso confirma que la escritura está permitida.</li>
+      </ol>
+    </div>
+
+    <h4>Desconectar una unidad</h4>
+    <pre><code>net use Z: /delete</code></pre>
+    <ul>
+      <li><code>net use</code>: el mismo programa de antes.</li>
+      <li><code>Z:</code>: la unidad concreta que se quiere liberar.</li>
+      <li><code>/delete</code>: elimina la conexión. La carpeta del servidor no se borra: solo desaparece la unidad en este PC. Si hay conexiones abiertas y dan error, se cierran todas con <code>net use * /delete</code>.</li>
+    </ul>
+
+    <div class="box-complementario">
+      <div class="box-label">NOTA</div>
+      <p>Si el acceso funciona a la primera pero al reiniciar falla, mira en Windows el <strong>Administrador de credenciales</strong> (Panel de control → Cuentas de usuario → Administrador de credenciales → Credenciales de Windows) y borra la entrada antigua del servidor, con la contraseña caducada.</p>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-f</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En el taller trabajáis por parejas. Tu compañero tiene el servidor Ubuntu con IP <strong>192.168.1.60</strong> y la carpeta compartida se llama <strong>[material]</strong>. Tu usuario Samba es <strong>alumno2</strong> con contraseña <strong>Taller2026</strong>. Desde tu Windows 11: accede al recurso, móntalo como unidad <strong>W:</strong> sin que se reconecte al reiniciar, comprueba que ves los archivos y finalmente desconéctalo.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>1. Comprobar conectividad</strong> (como vimos en CE-c). Si esto falla, no sigas:</p>
+        <pre><code>ping 192.168.1.60</code></pre>
+        <ul>
+          <li><code>ping</code>: envía paquetes ICMP para ver si el otro equipo contesta.</li>
+          <li><code>192.168.1.60</code>: la IP del servidor de tu compañero.</li>
+        </ul>
+        <p><strong>2. Acceso directo</strong>: escribe en la barra del Explorador <code>\\192.168.1.60\material</code> y teclea <code>alumno2</code> / <code>Taller2026</code>. Si sale "Acceso denegado" aquí, el problema es de permisos y hay que repasar CE-e antes de continuar.</p>
+        <p><strong>3. Montar la unidad</strong> (con <code>/persistent:no</code> porque el enunciado pide que NO se reconecte):</p>
+        <pre><code>net use W: \\192.168.1.60\material /user:alumno2 * /persistent:no</code></pre>
+        <ul>
+          <li><code>W:</code>: letra elegida para esta unidad (Z: estaba libre también, pero el enunciado pide W:).</li>
+          <li><code>/persistent:no</code>: la conexión se pierde al cerrar sesión; es lo contrario de lo que vimos en el ejemplo resuelto.</li>
+          <li>El resto de parámetros ya están explicados en el ejemplo anterior.</li>
+        </ul>
+        <p><strong>4. Verificar</strong>: ejecuta <code>net use</code> y comprueba que aparece la línea de <code>W:</code> con estado "Correcto". Abre la unidad y confirma que ves los archivos.</p>
+        <p><strong>5. Desconectar</strong>:</p>
+        <pre><code>net use W: /delete</code></pre>
+        <ul>
+          <li><code>/delete</code>: libera la letra W: en tu equipo. El recurso compartido del servidor sigue intacto.</li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-f</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé diferenciar entre localizar el recurso (ruta UNC o smb://) y autenticarse con el usuario Samba</label></li>
+        <li><label><input type="checkbox" class="check-item"> Accedo a un recurso compartido desde Windows 11 con \\IP\recurso</label></li>
+        <li><label><input type="checkbox" class="check-item"> Accedo a un recurso compartido desde Ubuntu con smb:// en Nautilus</label></li>
+        <li><label><input type="checkbox" class="check-item"> Monto y desconecto una unidad de red con net use y /delete</label></li>
+        <li><label><input type="checkbox" class="check-item"> Distingo /persistent:yes de /persistent:no y sé cuándo usar cada uno</label></li>
+        <li><label><input type="checkbox" class="check-item"> Identifico los errores de acceso más frecuentes y qué revisar en cada caso</label></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="ceG">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">g</div>
+      <div class="bloque-info">
+        <h3>Normas básicas de seguridad en recursos compartidos</h3>
+        <p>CE-g · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+
+    <p>Un <strong>recurso compartido</strong> es una carpeta o impresora que hemos puesto a disposición de otros equipos por la red, como vimos en CE-d y CE-e. Compartir es cómodo, pero abre una puerta: si esa puerta no está bien cerrada, cualquier equipo del aula (o de fuera) puede entrar. En este bloque aplicamos las <strong>normas básicas de seguridad</strong>: quién entra, qué puede hacer y qué rastro deja.</p>
+
+    <div class="clave">Un recurso compartido es una puerta: decide quién tiene llave, qué puede hacer al entrar y deja registrado quién entra.</div>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 460 270" role="img" aria-label="Cinco capas de defensa de un recurso compartido">
+        <defs>
+          <marker id="flecha-g-ceg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+          </marker>
+        </defs>
+        <rect x="50" y="14" width="360" height="38" rx="10" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="230" y="38" text-anchor="middle" font-size="15" fill="#1a1a2e">1. Cuentas y contraseñas</text>
+        <line x1="230" y1="52" x2="230" y2="64" stroke="#667085" stroke-width="2" marker-end="url(#flecha-g-ceg)"/>
+        <rect x="50" y="64" width="360" height="38" rx="10" fill="#e8f2fb" stroke="#2d6a9f" stroke-width="2"/>
+        <text x="230" y="88" text-anchor="middle" font-size="15" fill="#1a1a2e">2. Permiso del recurso (SMB)</text>
+        <line x1="230" y1="102" x2="230" y2="114" stroke="#667085" stroke-width="2" marker-end="url(#flecha-g-ceg)"/>
+        <rect x="50" y="114" width="360" height="38" rx="10" fill="#e2f0e6" stroke="#1a6b3a" stroke-width="2"/>
+        <text x="230" y="138" text-anchor="middle" font-size="15" fill="#1a1a2e">3. Permiso del sistema archivos</text>
+        <line x1="230" y1="152" x2="230" y2="164" stroke="#667085" stroke-width="2" marker-end="url(#flecha-g-ceg)"/>
+        <rect x="50" y="164" width="360" height="38" rx="10" fill="#fdf6e3" stroke="#d4a017" stroke-width="2"/>
+        <text x="230" y="188" text-anchor="middle" font-size="15" fill="#1a1a2e">4. Cortafuegos y SMB2/3</text>
+        <line x1="230" y1="202" x2="230" y2="214" stroke="#667085" stroke-width="2" marker-end="url(#flecha-g-ceg)"/>
+        <rect x="50" y="214" width="360" height="38" rx="10" fill="#f7f9fc" stroke="#667085" stroke-width="2"/>
+        <text x="230" y="238" text-anchor="middle" font-size="15" fill="#1a1a2e">5. Auditoría y copias</text>
+      </svg>
+      <figcaption>Capas de defensa de un recurso compartido. Si una falla, las demás siguen protegiendo: por eso no basta con poner una contraseña.</figcaption>
+    </figure>
+
+    <h4>Las normas que hay que aplicar siempre</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Norma</th><th>Qué problema evita</th><th>Cómo se aplica</th></tr></thead>
+        <tbody>
+          <tr><td>Cuentas individuales, nunca compartidas</td><td>Que nadie pueda saber quién hizo qué</td><td>Una cuenta por persona (CE-b); prohibido el usuario <em>todos</em> o <em>aula</em></td></tr>
+          <tr><td>Contraseñas robustas y cambiadas de vez en cuando</td><td>Entradas por fuerza bruta o por adivinación</td><td>Mínimo 8-10 caracteres, con mayúsculas, números y símbolos</td></tr>
+          <tr><td>Nada de acceso anónimo ni invitado</td><td>Que entre cualquiera sin identificarse</td><td>Windows: cuenta Invitado desactivada. Samba: <code>guest ok = no</code> en cada recurso y <code>map to guest = never</code> en la sección <code>[global]</code></td></tr>
+          <tr><td>Permisos mínimos (mínimo privilegio)</td><td>Que un alumno borre datos que solo debe leer</td><td>Solo lectura por defecto; escritura al grupo que la necesita (CE-e)</td></tr>
+          <tr><td>Revisar qué se comparte y borrar lo que sobra</td><td>Recursos antiguos olvidados y abiertos</td><td>Listar recursos cada trimestre y eliminar los que ya no se usan</td></tr>
+          <tr><td>Protocolo moderno y red limitada</td><td>Escuchas de tráfico y ataques desde fuera del aula</td><td>SMB1 desactivado, SMB2/3 con firma; puerto 445 abierto solo a la subred del aula y puerto 139 cerrado salvo necesidad de NetBIOS, en cuyo caso también solo a la subred</td></tr>
+          <tr><td>Auditoría y copias</td><td>No enterarse de un acceso raro o perder datos</td><td>Windows: activar auditoría con <code>auditpol</code> y revisar el Visor de eventos. Samba: <code>log level</code> y <code>vfs_full_audit</code>. Copia con <code>rsync</code> o <code>robocopy</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Qué son SMB1, SMB2/SMB3, la firma y los puertos 139/445</h4>
+    <p><strong>SMB1</strong> es la versión antigua del protocolo SMB. Es insegura porque no obliga a firmar los mensajes, no tiene las protecciones modernas de SMB3 y ha sido usada por gusanos como WannaCry. <strong>SMB2 y SMB3</strong> son versiones modernas: mejoran el rendimiento y añaden controles de seguridad; SMB3 incorpora cifrado y firma. Por eso, en un aula se configura SMB1 desactivado y se permite SMB2/3.</p>
+    <p><strong>La firma SMB (<em>SMB signing</em>)</strong> es una firma digital que viaja con los paquetes SMB. Sirve para que el servidor y el cliente comprueben que el mensaje no ha sido modificado por un atacante. Sin firma, un equipo malicioso de la red podría intentar manipulaciones o ataques de retransmisión. Se puede exigir en el servidor y en el cliente.</p>
+    <p><strong>El puerto 445</strong> es el que usa SMB directamente sobre TCP. Es el puerto habitual de los recursos compartidos modernos. <strong>El puerto 139</strong> pertenece a NetBIOS Session Service, un servicio antiguo que usaba SMB sobre NetBIOS, muy ligado a SMB1. En una red actual lo recomendable es no abrir 139 y permitir solo 445 a la subred del aula.</p>
+    <p>En Windows Server 2025 se comprueba y se cambia así:</p>
+    <pre><code>Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol, EnableSMB2Protocol, RequireSecuritySignature
+Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+Set-SmbServerConfiguration -EnableSMB2Protocol $true -Force
+Set-SmbServerConfiguration -RequireSecuritySignature $true -Force
+Set-SmbClientConfiguration -RequireSecuritySignature $true -Force</code></pre>
+    <p>En <code>Set-SmbServerConfiguration</code>, <code>-EnableSMB1Protocol $false</code> apaga SMB1; <code>-EnableSMB2Protocol $true</code> deja disponibles SMB2/SMB3; <code>-RequireSecuritySignature $true</code> obliga a firmar; <code>-Force</code> aplica el cambio sin pedir confirmación. Para el cortafuegos, se limita el puerto 445 a la subred del aula:</p>
+    <pre><code>New-NetFirewallRule -DisplayName "SMB aula" -Direction Inbound -Protocol TCP -LocalPort 445 -RemoteAddress 192.168.10.0/24 -Action Allow</code></pre>
+    <p>Si algún equipo antiguo necesitase NetBIOS, se repetiría la regla con <code>-LocalPort 139</code>, pero solo para la subred del aula. Si no se necesita, no se abre.</p>
+    <p>En Ubuntu 24.04 con Samba, la configuración básica se deja en la sección <code>[global]</code> de <code>/etc/samba/smb.conf</code>:</p>
+    <pre><code>server min protocol = SMB2_10
+server max protocol = SMB3
+server signing = mandatory
+smb ports = 445
+disable netbios = yes</code></pre>
+    <p><code>server min protocol = SMB2_10</code> impide conexiones con SMB1; <code>server max protocol = SMB3</code> permite las versiones modernas; <code>server signing = mandatory</code> exige firma; <code>smb ports = 445</code> deja a Samba escuchando solo en 445 y no en 139; <code>disable netbios = yes</code> desactiva NetBIOS si no se usa. Después se valida con <code>sudo testparm</code> y se reinicia con <code>sudo systemctl restart smbd</code>. Para comprobar los valores efectivos:</p>
+    <pre><code>testparm -sv | grep -Ei 'server min protocol|server max protocol|server signing|smb ports|disable netbios'</code></pre>
+
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>El <strong>mínimo privilegio</strong> significa dar a cada persona solo el permiso que necesita para su trabajo, ni uno más. Recuerda de CE-e que un permiso se aplica en <strong>dos capas</strong> (recurso compartido y sistema de archivos) y que siempre manda la más restrictiva.</p>
+    </div>
+
+    <h4>Comprobar y corregir: Windows y Linux</h4>
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows Server 2025</h4>
+        <pre><code>net share Proyectos /delete</code></pre>
+        <ul>
+          <li><code>net</code>: programa de Windows que gestiona red (recursos compartidos, usuarios, conexiones) desde la línea de comandos.</li>
+          <li><code>share</code>: subcomando de <code>net</code> que administra los recursos compartidos SMB del equipo.</li>
+          <li><code>Proyectos</code>: nombre del recurso compartido que queremos eliminar. Es el nombre que aparece en la ruta UNC <code>\\SRV-AULA\Proyectos</code>.</li>
+          <li><code>/delete</code>: modificador que ordena borrar ese recurso compartido. Sin él, <code>net share</code> solo mostraría información o crearía el recurso.</li>
+        </ul>
+        <p>Para revisar: <code>Get-SmbShare</code> (sin parámetros, lista todos los recursos compartidos), <code>Get-SmbShareAccess -Name Proyectos</code> (el parámetro <code>-Name Proyectos</code> indica el recurso concreto del que queremos ver quién tiene permiso) y <code>Get-SmbSession</code> (sin parámetros, muestra todas las sesiones SMB activas; admite <code>-ClientComputerName</code> o <code>-ClientUserName</code> para filtrar por equipo o usuario). Las dos primeras son órdenes de PowerShell, el intérprete de comandos moderno de Windows.</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04 (Samba)</h4>
+        <pre><code>sudo smbstatus --shares</code></pre>
+        <ul>
+          <li><code>sudo</code>: ejecuta el comando con privilegios de superusuario (el administrador del sistema), como vimos en RA1. Es necesario porque <code>smbstatus</code> lee ficheros internos de Samba que solo root puede abrir.</li>
+          <li><code>smbstatus</code>: herramienta de Samba que informa de quién está conectado, a qué recurso y con qué versión de SMB.</li>
+          <li><code>--shares</code>: opción que limita la salida a la lista de recursos compartidos y las conexiones activas sobre cada uno.</li>
+          <li><code>--users</code>: opción que muestra las sesiones agrupadas por usuario conectado y desde qué equipo o IP se ha conectado.</li>
+        </ul>
+        <p>Si aparece un recurso que ya no se usa, se borra su bloque en <code>/etc/samba/smb.conf</code> (fichero de configuración que vimos en CE-d), se comprueba la sintaxis con <code>testparm</code> y se reinicia el servicio con <code>sudo systemctl restart smbd</code>.</p>
+      </div>
+    </div>
+
+    <p>Para limitar la red, en Ubuntu se abre el puerto 445 (el que usa SMB para compartir archivos, visto en CE-c) solo a la subred del aula: <code>sudo ufw allow from 192.168.10.0/24 to any port 445 proto tcp</code>. Los argumentos clave son <code>from 192.168.10.0/24</code> (origen permitido, toda la subred del aula), <code>to any</code> (destino cualquiera, es decir, cualquier dirección IP local del propio servidor, no una IP remota concreta), <code>port 445</code> (puerto de destino) y <code>proto tcp</code> (protocolo de transporte). El puerto 139 (NetBIOS) solo debe abrirse si algún equipo antiguo lo necesita; en ese caso se limita igual con <code>sudo ufw allow from 192.168.10.0/24 to any port 139 proto tcp</code>, y si no se usa se cierra con <code>sudo ufw deny 139/tcp</code>. En Windows el equivalente es una regla de entrada en el Firewall de Windows Defender.</p>
+
+    <h4>Auditoría: cómo dejar rastro de los accesos</h4>
+    <p>Auditar significa registrar quién entra, cuándo, desde qué equipo y qué hace. No es lo mismo que tener copias: la copia recupera datos, la auditoría permite investigar qué pasó.</p>
+    <p>En <strong>Windows Server 2025</strong>:</p>
+    <ul>
+      <li><code>auditpol /get /category:*</code> muestra la política de auditoría actual del equipo.</li>
+      <li><code>auditpol /set /subcategory:"File Share" /success:enable /failure:enable</code> activa el registro de accesos correctos y fallidos a recursos compartidos.</li>
+      <li><code>auditpol /set /subcategory:"Detailed File Share" /success:enable /failure:enable</code> añade detalle de operaciones sobre archivos dentro del recurso.</li>
+      <li>En la carpeta compartida hay que activar además la auditoría en <em>Propiedades &gt; Seguridad &gt; Opciones avanzadas &gt; Auditoría</em>, añadiendo los usuarios o grupos que se quieran vigilar y marcando Éxito y Error según el caso.</li>
+      <li>Los eventos se consultan en <code>eventvwr.msc</code>, dentro de <em>Registros de Windows &gt; Seguridad</em>. Son útiles los identificadores 4624 y 4634 (inicio y cierre de sesión), 5140 (acceso a recurso compartido) y 5145 (acceso detallado a archivo). También se pueden filtrar con PowerShell: <code>Get-WinEvent -FilterHashtable @{LogName='Security'; Id=5140,5145} | Format-Table TimeCreated,Id,Message -AutoSize</code>.</li>
+    </ul>
+    <p>En <strong>Ubuntu 24.04 con Samba</strong>:</p>
+    <ul>
+      <li>En la sección <code>[global]</code> se puede subir el detalle con <code>log level = 1 auth:5</code> y separar los ficheros por equipo con <code>log file = /var/log/samba/log.%m</code>. Así quedan registrados los inicios de sesión y los errores de autenticación.</li>
+      <li>Para auditar operaciones sobre archivos se usa el módulo <code>vfs_full_audit</code> en el recurso compartido. Por ejemplo, dentro de <code>[proyectos]</code>:</li>
+    </ul>
+    <pre><code>vfs objects = full_audit
+full_audit:prefix = %u|%I|%m|%S
+full_audit:success = connect open close read write unlink rename
+full_audit:failure = connect open
+full_audit:facility = local5
+full_audit:priority = NOTICE</code></pre>
+    <ul>
+      <li><code>full_audit:prefix</code> añade datos al registro: <code>%u</code> usuario, <code>%I</code> IP, <code>%m</code> máquina y <code>%S</code> recurso compartido. <code>full_audit:success</code> y <code>full_audit:failure</code> indican qué operaciones se registran. <code>facility</code> y <code>priority</code> envían los mensajes a syslog.</li>
+      <li>Después se valida con <code>sudo testparm</code>, se reinicia con <code>sudo systemctl restart smbd</code> y se revisan los registros en <code>/var/log/samba/</code> o en el sistema de logs configurado.</li>
+    </ul>
+    <p>Para las copias, un ejemplo sencillo en Linux sería <code>rsync -a /srv/proyectos/ /backup/proyectos/</code>, donde <code>-a</code> preserva permisos, fechas y enlaces, y actúa de forma recursiva. En Windows puede usarse <code>robocopy C:\Material D:\Backup\Material /MIR /COPYALL</code>, aunque lo importante es programar la copia y probar que se puede restaurar.</p>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En <strong>Talleres Robles SL</strong> montamos un servidor Ubuntu 24.04 con IP <code>192.168.10.20</code> y el recurso Samba <code>[proyectos]</code>. En una revisión comprobamos que la becaria <em>lucia</em> (que solo debe leer) puede borrar archivos, y que desde el equipo <code>192.168.10.45</code> se entra sin escribir contraseña.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li><strong>Ver quién entra:</strong> <code>sudo smbstatus --shares</code> y <code>sudo smbstatus --users</code> muestran las sesiones. La opción <code>--shares</code> limita la salida a los recursos y conexiones activas; <code>--users</code> muestra las sesiones agrupadas por usuario y su equipo o IP de origen, y permite localizar al usuario conectado sin credenciales.</li>
+        <li><strong>Cortar el acceso anónimo:</strong> en <code>/etc/samba/smb.conf</code>, dentro del bloque <code>[proyectos]</code>, se cambia <code>guest ok = yes</code> por <code>guest ok = no</code>. Además, en la sección <code>[global]</code> se añade <code>map to guest = never</code>, porque <code>map to guest</code> es un parámetro global de Samba: si se coloca dentro de <code>[proyectos]</code>, Samba lo ignora y <code>testparm</code> avisa con <em>Global parameter map to guest found in service section</em>. Así Samba nunca trata a un usuario desconocido como invitado. Se guarda con Ctrl+O y se sale con Ctrl+X.</li>
+        <li><strong>Revisar permisos:</strong> se quita <code>read only = no</code> y se pone <code>read only = yes</code>, y se limita el acceso con <code>valid users = @proyectos</code> (solo el grupo <em>proyectos</em> del sistema, creado en CE-e).</li>
+        <li><strong>Permiso del sistema de archivos:</strong> <code>sudo chmod -R 2750 /srv/proyectos</code>. La opción <code>-R</code> significa recursivo: hace que <code>chmod</code> recorra también todos los archivos y subcarpetas dentro de <code>/srv/proyectos</code>; sin <code>-R</code> solo cambiaría el directorio raíz. El <code>2</code> inicial activa el bit setgid (los archivos nuevos heredan el grupo <code>proyectos</code>), <code>7</code> da al propietario leer, escribir y ejecutar, <code>5</code> deja al grupo leer y ejecutar, y <code>0</code> no da nada a los demás usuarios.</li>
+        <li><strong>Comprobar y aplicar:</strong> <code>sudo testparm</code> valida el fichero; <code>sudo systemctl restart smbd</code> reinicia el servicio para que los cambios entren en vigor.</li>
+        <li><strong>Limitar la red:</strong> se abre el puerto 445 solo a <code>192.168.10.0/24</code> con <code>sudo ufw allow from 192.168.10.0/24 to any port 445 proto tcp</code>. Si no se necesita NetBIOS, se cierra el 139 con <code>sudo ufw deny 139/tcp</code>.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-g · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En <strong>Muebles Álvarez SL</strong> el servidor Windows Server 2025 <code>SRV-AULA</code> (<code>192.168.10.20</code>) comparte la carpeta <code>Material</code> con el permiso <em>Todos: Control total</em> y la cuenta Invitado está activada. Indica <strong>tres acciones</strong> para dejarlo seguro y el comando o herramienta de cada una.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>Acción 1 — Desactivar la cuenta Invitado.</strong> Es la cuenta que permite entrar sin usuario ni contraseña; mientras esté activa, cualquiera de la red accede al recurso.</p>
+        <p><strong>Acción 2 — Quitar el permiso "Todos: Control total" y dar permisos mínimos.</strong> "Todos" incluye a cualquier usuario del equipo y de la red, incluso sin identificarse. Lo correcto es dar <em>Lectura</em> al grupo de trabajo que lo necesite y <em>Cambiar</em> solo a quien deba modificar archivos. Se revisa con <code>Get-SmbShareAccess -Name Material</code> (el parámetro <code>-Name Material</code> indica el recurso concreto).</p>
+        <p><strong>Acción 3 — Comprobar quién está conectado y revisar los recursos que sobran.</strong> Con <code>net share</code> se ven todos los recursos publicados y con <code>Get-SmbSession</code> las sesiones abiertas. Si <code>Material</code> ya no se usa, se elimina con <code>net share Material /delete</code> (donde <code>net</code> es la herramienta de red, <code>share</code> el subcomando de recursos compartidos, <code>Material</code> el nombre del recurso y <code>/delete</code> la orden de borrarlo).</p>
+        <p><strong>Extra recomendable:</strong> comprobar que SMB1 está desactivado y que el Firewall de Windows Defender solo permite el puerto 445 desde <code>192.168.10.0/24</code>.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-g · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>Analiza este fragmento de <code>/etc/samba/smb.conf</code> del servidor <code>192.168.10.20</code> de la empresa <strong>Suministros Vega SL</strong> y detecta <strong>tres problemas de seguridad</strong>. Propón la línea corregida de cada uno y explica qué riesgo elimina.</p>
+      <pre><code>[material]
+path = /srv/material
+browseable = yes
+guest ok = yes
+read only = no
+</code></pre>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-g · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>En el aula, el servidor <code>192.168.10.20</code> del grupo 3 comparte <code>[proyectos]</code> con permisos ya revisados y sin acceso invitado. Aun así, el profesor observa que el lunes por la mañana hay archivos borrados y que el recurso sigue accesible desde un portátil conectado por wifi al router de la sala de profesores (<code>192.168.20.0/24</code>).</p>
+      <p>Haz un <strong>diagnóstico completo</strong>: qué está fallando en cada capa de la seguridad, qué comandos usarías para confirmarlo y qué plan de corrección aplicarías. Incluye cómo dejar rastro de los accesos a partir de ahora.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-g</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé explicar qué es el principio de mínimo privilegio y por qué se aplica a un recurso compartido</label></li>
+        <li><label><input type="checkbox" class="check-item"> Identifico el acceso anónimo o de invitado y sé cómo desactivarlo en Windows y en Samba</label></li>
+        <li><label><input type="checkbox" class="check-item"> Compruebo los permisos del recurso con <code>Get-SmbShareAccess</code> o revisando <code>smb.conf</code></label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé listar los recursos compartidos y eliminar los que ya no se usan</label></li>
+        <li><label><input type="checkbox" class="check-item"> Limito el puerto 445 a la subred del aula con el cortafuegos</label></li>
+        <li><label><input type="checkbox" class="check-item"> Compruebo las sesiones activas con <code>smbstatus</code> o <code>Get-SmbSession</code></label></li>
+        <li><label><input type="checkbox" class="check-item"> Justifico por escrito cada medida de seguridad que aplico en una práctica</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>El error más frecuente es creer que <strong>ocultar</strong> es <strong>proteger</strong>: poner <code>browseable = no</code> o usar el símbolo <code>$</code> en el nombre del recurso (por ejemplo <code>Datos$</code>) solo hace que la carpeta no aparezca en la lista al explorar la red, pero <strong>quien conozca el nombre exacto sigue entrando</strong>. Ocultar no sustituye nunca a los permisos. El segundo error típico es dar permiso "Todos: Control total" pensando que así "no habrá problemas de acceso": eso es exactamente lo contrario de la seguridad. Si en un examen ves un recurso compartido con <code>guest ok = yes</code>, "Todos" con control total y SMB1 activo, son tres fallos distintos y hay que citarlos por separado.</p>
+    </div>
+
+  </div>
+</div>
+<div class="bloque" id="resumen">
+  <div class="bloque-header" style="border-left-color:#1a6b3a;">
+    <div class="bloque-titulo">
+      <div class="bloque-num" style="background:#1a6b3a;">★</div>
+      <div class="bloque-info">
+        <h3>Puntos clave — RA2</h3>
+        <p>Repasa esto antes del examen</p>
+      </div>
+    </div>
+  </div>
+  <div class="bloque-body">
+    <ol>
+      <li style="margin-bottom:8px;"><strong>CE-a.</strong> Distingue los elementos de una red: <em>servidor</em>, <em>cliente</em>, <em>recursos compartidos</em>, <em>grupo de trabajo</em> y <em>dominio</em>, y cambia el <em>nombre del equipo</em> en Windows 11 desde <em>Propiedades del sistema → Cambiar nombre de este equipo</em> y en Ubuntu 24.04 LTS con <em>hostnamectl set-hostname</em> usando <em>sudo</em>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-a.</strong> Configura preferencias del entorno personal: <em>IP fija</em>, <em>impresora de red predeterminada</em> (Bluetooth y dispositivos → Impresoras y escáneres), <em>carpeta personal en el servidor</em> y <em>accesos directos</em> a recursos compartidos en el <em>Explorador de archivos</em> (Este equipo, Carpeta de grupo, Acceso a red).</li>
+      <li style="margin-bottom:8px;"><strong>CE-b.</strong> Crea y gestiona <em>cuentas de usuario</em> locales en Windows 11 con <em>lusrmgr.msc</em> (Usuarios y grupos locales), y en Ubuntu 24.04 LTS con <em>adduser</em>, <em>addgroup</em>, <em>usermod -aG</em> e <em>id</em> para ver el <em>grupo principal</em> y los <em>grupos secundarios</em>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-b.</strong> Administra la <em>contraseña</em> y el ciclo de vida de la cuenta: <em>passwd</em>, <em>deluser</em> (con -l, -u, -d, -e, --remove-home), <em>hash</em>, <em>lock</em>, <em>unlock</em>, <em>disable</em>, <em>enable</em>, y en el servidor crea la <em>contraseña Samba</em> con <em>smbpasswd -a</em> tras <em>adduser</em> (/home/ana.gomez).</li>
+      <li style="margin-bottom:8px;"><strong>CE-b.</strong> Crea <em>cuentas de usuario</em> del <em>controlador de dominio</em> (DC) en Windows Server 2025 con <em>dsa.msc</em> (Usuarios y equipos de Active Directory) o desde <em>servermanager.exe</em>, y accede por <em>SSH</em> con <em>ssh usuario@servidor</em> o <em>PuTTY</em> indicando IP o nombre DNS, aceptando la <em>huella</em> y usando la <em>clave privada</em>; para salir, <em>exit</em>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-c.</strong> Comprueba la conectividad entre el servidor y los equipos cliente con <em>ping</em> desde <em>cmd</em>, y verifica que el servicio <em>SSH</em> está activo (<em>openssh-server</em>, puerto 22/TCP) permitiéndolo en el <em>cortafuegos</em> para poder conectar desde el cliente.</li>
+      <li style="margin-bottom:8px;"><strong>CE-c.</strong> Comprueba el acceso a la carpeta compartida en Ubuntu 24.04 LTS con la ruta <em>smb://</em> desde <em>Nautilus</em> (Archivos → Otras ubicaciones → Conectar al servidor) y en Windows 11 montando la <em>unidad de red Z:</em> con <em>net use Z: \\servidor\recurso /user:usuario /persistent:yes</em>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Utiliza los servicios para compartir recursos mediante <em>Samba</em> en Ubuntu 24.04 LTS y SMB/CIFS en Windows 11 y Windows Server 2025, accediendo a la carpeta compartida por la <em>unidad de red</em> o por <em>smb://</em>, y montándola también con <em>mount -t cifs</em> en <em>/mnt/alumnos</em> con <em>-o username</em>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-e.</strong> Asigna permisos a los recursos compartidos creando y gestionando <em>cuentas de usuario</em> y <em>grupos</em> (<em>addgroup</em>, <em>usermod -aG</em>) para dar acceso a la <em>carpeta compartida</em> a los usuarios que lo necesiten.</li>
+      <li style="margin-bottom:8px;"><strong>CE-f.</strong> Accede a los recursos compartidos desde el equipo cliente como <em>cuenta del servidor</em> (autenticación con <em>login</em> y <em>contraseña</em>), abriendo la <em>sesión</em> correspondiente en la <em>unidad de red Z:</em> o en <em>smb://</em>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-g.</strong> Aplica normas básicas de seguridad sobre recursos compartidos: cada usuario accede únicamente con su <em>cuenta de usuario</em> y <em>contraseña</em>, se crean <em>cuentas locales</em> o <em>del servidor</em> según corresponda y se usa <em>smbpasswd -a</em> para la <em>contraseña Samba</em>, evitando compartir credenciales entre usuarios.</li>
+      <li style="margin-bottom:8px;"><strong>CE-g.</strong> Refuerza la seguridad del acceso remoto al servidor por <em>SSH</em>: comprobar la <em>huella</em> del servidor, usar <em>clave privada</em>, limitar el acceso con <em>cortafuegos</em> al <em>puerto 22/TCP</em> y bloquear las cuentas que ya no deben usarse (<em>lock</em>, <em>disable</em>, <em>deluser -l</em>).</li>
+    </ol>
+  </div>
+</div>
+</div>
+
+<footer>OACE · Grado Básico · RA2: Configura equipos informáticos para su funcionamiento en un entorno de red, identificando los permisos del usuario.</footer>
+
+<button class="btn-top" id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="progreso-badge" id="progresoBadge">Progreso: 0%</div>
+
+<script>
+
+  window.addEventListener('scroll', function() {
+    document.getElementById('btnTop').classList.toggle('visible', window.scrollY > 300);
+  });
+  function updateProgress() {
+    var all = document.querySelectorAll('.check-item');
+    var checked = document.querySelectorAll('.check-item:checked');
+    var pct = all.length > 0 ? Math.round((checked.length / all.length) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progresoBadge').textContent = 'Progreso: ' + pct + '%';
+    try { localStorage.setItem('progreso_ra2_oace', pct); } catch(e) {}
+  }
+  document.querySelectorAll('.check-item').forEach(function(cb, i) {
+    try { if (localStorage.getItem('cb_ra2_oace_' + i) === 'true') cb.checked = true; } catch(e) {}
+    cb.addEventListener('change', function() {
+      try { localStorage.setItem('cb_ra2_oace_' + i, cb.checked); } catch(e) {}
+      updateProgress();
+    });
+  });
+  document.querySelectorAll('.respuesta[contenteditable="true"]').forEach(function(div, i) {
+    try { var s = localStorage.getItem('resp_ra2_oace_' + i); if (s) div.innerHTML = s; } catch(e) {}
+    div.addEventListener('input', function() {
+      try { localStorage.setItem('resp_ra2_oace_' + i, div.innerHTML); } catch(e) {}
+    });
+  });
+  updateProgress();
+
+</script>
+</body>
+</html>

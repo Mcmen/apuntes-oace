@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RA1 — OACE: Configura equipos informáticos para su funcionamiento en un entorno monousuario, identificando la funcionalidad de la instalación.</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #eef1f5; color: #1a1a2e; line-height: 1.7; font-size: 15px; }
+    :root {
+      --azul: #1e3a5f; --azul-medio: #2d6a9f; --azul-claro: #dceeff;
+      --win: #2d6a9f; --win-light: #e6f0f9;
+      --linux: #b8542a; --linux-light: #fbeee6;
+      --critico: #b03a2e; --critico-light: #fdf0ee;
+      --importante: #8a6400; --importante-light: #fff9e6;
+      --complementario: #2d6a9f; --complementario-light: #e8f2fb;
+      --exito: #1a6b3a; --exito-light: #e2f0e6;
+      --gris: #667085; --borde: #dde3ec;
+      --sombra: 0 2px 8px rgba(30,58,95,0.07);
+    }
+
+    /* ── Cabecera ───────────────────────────────────────────── */
+    .nav-sor { position: sticky; top: 0; z-index: 100; background: var(--azul); padding: 0 24px; height: 52px; display: flex; align-items: center; }
+    .nav-brand { color: white; font-weight: 600; font-size: 15px; letter-spacing: 0.3px; max-width: 1080px; width: 100%; margin: 0 auto; }
+    .nav-brand span { color: #8fc7a0; font-weight: 700; }
+    .hero { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%); color: white; padding: 40px 24px 34px; text-align: left; }
+    .hero > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+    .hero h1 { font-size: 25px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; }
+    .hero-sub { font-size: 14px; opacity: 0.8; font-style: italic; margin-bottom: 20px; }
+    .hero-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+    .hero-meta span { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); padding: 4px 13px; border-radius: 20px; font-weight: 600; }
+
+    /* ── Columna medida ─────────────────────────────────────── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ── Ficha del RA ───────────────────────────────────────── */
+    .ra-info { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 24px; box-shadow: var(--sombra); }
+    .ra-info h2 { font-size: 18px; color: var(--azul); border-left: 4px solid var(--azul-medio); padding-left: 14px; margin-bottom: 18px; line-height: 1.4; }
+    .peso-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+    .peso-card { flex: 1; min-width: 120px; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; text-align: center; }
+    .peso-card .numero { font-size: 24px; font-weight: 700; color: var(--azul-medio); line-height: 1.2; }
+    .peso-card .label { font-size: 11px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.6px; }
+    .ce-criticos { background: var(--critico-light); border-left: 4px solid var(--critico); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 13px; }
+    .ce-criticos strong { color: var(--critico); }
+    .progress-bar { background: var(--borde); height: 8px; border-radius: 8px; overflow: hidden; margin: 14px 0 2px; }
+    .progress-fill { background: var(--exito); width: 0%; height: 100%; transition: width 0.3s; }
+
+    /* ── Índice ─────────────────────────────────────────────── */
+    .ce-index { background: white; border-radius: 10px; padding: 18px 26px; margin-bottom: 32px; box-shadow: var(--sombra); }
+    .ce-index-titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gris); margin-bottom: 12px; }
+    .ce-index-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ce-idx-item { display: flex; align-items: baseline; gap: 8px; padding: 5px 11px; border-radius: 6px; text-decoration: none; font-size: 12.5px; color: #2c3444; border: 1px solid var(--borde); background: #f7f9fc; transition: 0.15s; }
+    .ce-idx-item:hover { background: var(--azul-claro); border-color: var(--azul-medio); }
+    .ce-idx-critico { border-left: 3px solid var(--critico); }
+    .ce-idx-importante { border-left: 3px solid #d4a017; }
+    .ce-idx-complementario { border-left: 3px solid var(--azul-medio); }
+    .ce-idx-letra { font-weight: 800; font-size: 13px; color: var(--azul); }
+    .ce-idx-desc { color: #4a5568; }
+
+    /* ── Bloques: cabecera y cuerpo como dos tarjetas ───────── */
+    .bloque { background: transparent; border: none; box-shadow: none; margin-bottom: 40px; }
+    .bloque-header { background: white; border-left: 5px solid var(--azul-medio); border-radius: 0 8px 8px 0; padding: 15px 20px; margin-bottom: 16px; box-shadow: var(--sombra); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .bloque-titulo { display: flex; align-items: center; gap: 13px; }
+    .bloque-num { background: var(--azul-medio); color: white; font-weight: 700; border-radius: 6px; padding: 4px 11px; font-size: 14px; flex-shrink: 0; align-self: flex-start; margin-top: 3px; }
+    .bloque-num.critico { background: var(--critico); }
+    .bloque-info h3 { font-size: 18px; color: var(--azul); margin-bottom: 3px; line-height: 1.35; }
+    .bloque-info p { font-size: 12px; color: var(--gris); }
+    .bloque-sesiones { background: #f0f3f8; color: var(--gris); border: 1px solid var(--borde); padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+    .bloque-body { background: white; border-radius: 10px; padding: 24px 28px; box-shadow: var(--sombra); }
+
+    /* ── Escala tipográfica dentro del cuerpo ───────────────── */
+    .bloque-body h3 { font-size: 16px; color: var(--azul); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--borde); }
+    .bloque-body h4 { font-size: 15px; color: var(--azul); margin: 22px 0 10px; }
+    .bloque-body > h3:first-child, .bloque-body > h4:first-child { margin-top: 0; }
+    .bloque-body p { margin-bottom: 11px; }
+    .bloque-body p:last-child { margin-bottom: 0; }
+    .win-col h4, .linux-col h4, .ejercicio h5, .ejemplo-resuelto h5 { margin-top: 0; }
+
+    /* ── Listas ─────────────────────────────────────────────── */
+    .bloque-body ul, .bloque-body ol, .box-critico ul, .box-critico ol, .box-importante ul, .box-importante ol, .box-complementario ul, .box-complementario ol, .win-col ul, .win-col ol, .linux-col ul, .linux-col ol { padding-left: 20px; margin: 10px 0; }
+    .bloque-body li { margin-bottom: 6px; }
+    .bloque-body li::marker { color: var(--azul-medio); }
+
+    /* ── Dos columnas Windows / Linux ───────────────────────── */
+    .dual-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .win-col { background: var(--win-light); border: 1px solid #cfe0ee; border-top: 3px solid var(--win); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .win-col h4 { color: var(--win); font-size: 14px; margin-bottom: 10px; }
+    .linux-col { background: var(--linux-light); border: 1px solid #f0dcd0; border-top: 3px solid var(--linux); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+    .linux-col h4 { color: var(--linux); font-size: 14px; margin-bottom: 10px; }
+
+    /* ── Cajas semánticas ───────────────────────────────────── */
+    .box-critico, .box-importante, .box-complementario { border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 18px 0; }
+    .box-critico { background: var(--critico-light); border-left: 4px solid var(--critico); }
+    .box-importante { background: var(--importante-light); border-left: 4px solid #d4a017; }
+    .box-complementario { background: var(--complementario-light); border-left: 4px solid var(--complementario); }
+    .box-label { font-weight: 700; font-size: 12px; text-transform: none; letter-spacing: 0.3px; margin-bottom: 5px; display: block; }
+    .box-critico .box-label { color: var(--critico); }
+    .box-importante .box-label { color: var(--importante); }
+    .box-complementario .box-label { color: var(--complementario); }
+
+    /* ── Código y tablas ────────────────────────────────────── */
+    pre { background: #1e293b; color: #e2e8f0; padding: 13px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; font-family: 'Consolas', 'Courier New', monospace; margin: 14px 0; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    code { background: #eef2f7; padding: 1px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 13px; color: #1e3a5f; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0; border-radius: 8px; border: 1px solid var(--borde); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead tr { background: var(--azul); color: white; }
+    th { padding: 10px 14px; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f7f9fc; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Ejercicios ─────────────────────────────────────────── */
+    .ejercicio { background: #fdfaf2; border: 1px solid #eadfc2; border-left: 4px solid #d4a017; border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejercicio h5 { color: #7a5c00; margin-bottom: 4px; font-size: 14px; }
+    .nivel-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .nivel-basico { background: var(--exito-light); color: var(--exito); }
+    .nivel-medio { background: #fdf3d6; color: #7a5c00; }
+    .nivel-avanzado { background: var(--critico-light); color: var(--critico); }
+    .respuesta { background: white; border: 1px solid var(--borde); border-radius: 6px; padding: 12px; min-height: 76px; margin-top: 12px; outline: none; }
+    .respuesta:focus { border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(45,106,159,0.1); }
+    .respuesta:empty::before { content: attr(data-placeholder); color: #a0aec0; pointer-events: none; display: block; }
+    .solucion { margin-top: 12px; background: var(--exito-light); border-radius: 6px; padding: 2px 14px; }
+    .solucion summary { cursor: pointer; font-weight: 600; color: var(--exito); padding: 9px 0; list-style: revert; font-size: 13.5px; }
+    .solucion[open] summary { margin-bottom: 6px; }
+
+    /* ── Ejemplo resuelto, diagrama, checklist ──────────────── */
+    .ejemplo-resuelto { background: var(--exito-light); border-left: 4px solid var(--exito); border-radius: 0 8px 8px 0; padding: 16px 18px; margin: 20px 0; }
+    .ejemplo-resuelto h5 { color: var(--exito); margin-bottom: 8px; font-size: 14px; }
+    .diagrama { margin: 22px 0; background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 20px 14px; text-align: center; overflow-x: auto; }
+    .diagrama svg { max-width: 100%; height: auto; display: block; margin: 0 auto; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .diagrama figcaption { font-size: 12.5px; color: var(--gris); margin-top: 14px; font-style: italic; }
+    .checklist { background: #f7f9fc; border: 1px solid var(--borde); border-radius: 10px; padding: 18px 20px; margin-top: 22px; }
+    .checklist strong { color: var(--azul); font-size: 14px; }
+    .checklist ul { list-style: none; padding: 0; margin-top: 10px; }
+    .checklist li { padding: 5px 0; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; border-bottom: 1px solid #eef1f5; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; margin-top: 5px; accent-color: var(--exito); }
+    .checklist li label { cursor: pointer; flex: 1; font-size: 14px; }
+
+    /* ── Varios ─────────────────────────────────────────────── */
+    hr.sep { border: none; border-top: 2px dashed var(--borde); margin: 24px 0; }
+    footer { text-align: center; padding: 28px 24px; color: var(--gris); font-size: 12px; border-top: 1px solid var(--borde); margin-top: 44px; background: white; }
+    .btn-top { position: fixed; bottom: 20px; right: 20px; background: var(--azul); color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 19px; opacity: 0; transition: 0.3s; z-index: 90; }
+    .btn-top.visible { opacity: 1; }
+    .progreso-badge { position: fixed; bottom: 20px; left: 20px; background: var(--azul); color: white; padding: 7px 15px; border-radius: 20px; font-size: 12.5px; font-weight: 600; z-index: 90; }
+
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .container { padding: 18px 14px 44px; }
+      .dual-columns { grid-template-columns: 1fr; gap: 12px; }
+      .hero { padding: 26px 18px 22px; }
+      .hero h1 { font-size: 19px; }
+      .bloque-body { padding: 16px 17px; }
+      .bloque-header { padding: 13px 15px; }
+      pre { font-size: 11.5px; }
+      th, td { padding: 7px 9px; font-size: 12px; }
+    }
+
+    /* ── Fotos reales ───────────────────────────────────────── */
+    .foto { margin: 22px 0; }
+    .foto-sm img { max-width: 620px; margin-left: auto; margin-right: auto; }
+    .foto img { width: 100%; border-radius: 10px; border: 1px solid var(--borde); display: block; }
+    .foto figcaption { font-size: 12.5px; color: var(--gris); margin-top: 10px; font-style: italic; text-align: center; }
+    .foto-pendiente { border: 2px dashed #c3cede; border-radius: 10px; background: #f7f9fc; padding: 26px 20px; text-align: center; color: var(--gris); }
+    .foto-pendiente .icono { font-size: 30px; display: block; margin-bottom: 8px; opacity: 0.6; }
+    .foto-pendiente .archivo { display: inline-block; font-family: 'Consolas', monospace; font-size: 12.5px; background: white; border: 1px solid var(--borde); border-radius: 4px; padding: 2px 8px; color: var(--azul); margin-top: 8px; }
+    .foto-pendiente .que { font-size: 13.5px; color: #4a5568; }
+
+    /* ── Rejilla de tarjetas de contenido ───────────────────── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { background: #f7f9fc; border: 1px solid var(--borde); border-top: 3px solid var(--azul-medio); border-radius: 8px; padding: 15px 17px; }
+    .card h4 { font-size: 14px; color: var(--azul); margin: 0 0 9px; display: flex; align-items: center; gap: 8px; }
+    .card h4 .ico { font-size: 18px; }
+    .card ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+    .card li { margin-bottom: 5px; }
+
+    /* ── Etiquetas de peligrosidad ──────────────────────────── */
+    .pel { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 8px; border-radius: 4px; letter-spacing: 0.4px; white-space: nowrap; }
+    .pel-baja    { background: #e2f0e6; color: #1a6b3a; }
+    .pel-media   { background: #fdf3d6; color: #7a5c00; }
+    .pel-alta    { background: #fbe6dd; color: #a0522d; }
+    .pel-critica { background: #f7dcd8; color: #8c2f22; }
+
+    /* ── Frase destacada, para romper el bloque de texto ────── */
+    .clave { font-size: 16px; line-height: 1.6; color: var(--azul); border-left: 4px solid #d4a017; padding: 4px 0 4px 16px; margin: 22px 0; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<nav class="nav-sor">
+  <div class="nav-brand">OACE &nbsp;<span>RA1</span></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Grado Básico Informática y Comunicaciones</div>
+  <h1>RA1: Configura equipos informáticos para su funcionamiento en un entorno monousuario, identificando la funcionalidad de la instalación.</h1>
+  <p class="hero-sub">Contenido técnico de nivel Grado Básico</p>
+  <div class="hero-meta">
+    <span>Peso: 25%</span>
+    <span>12 sesiones × 55 min</span>
+    <span>7 criterios de evaluación</span>
+    <span>4 CEs críticos</span>
+  </div>
+</div>
+<div class="container">
+<div class="ra-info">
+  <h2>RA1: Configura equipos informáticos para su funcionamiento en un entorno monousuario, identificando la funcionalidad de la instalación.</h2>
+  <div class="peso-grid">
+    <div class="peso-card"><div class="numero">25%</div><div class="label">Peso evaluación</div></div>
+    <div class="peso-card"><div class="numero">12</div><div class="label">Sesiones</div></div>
+    <div class="peso-card"><div class="numero">7</div><div class="label">Criterios</div></div>
+    <div class="peso-card"><div class="numero">4</div><div class="label">Críticos</div></div>
+  </div>
+  <div class="ce-criticos"><strong>CEs críticos:</strong> CE-a, CE-d, CE-e, CE-g</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+<div class="ce-index">
+  <div class="ce-index-titulo">Índice RA1 — 7 criterios</div>
+  <div class="ce-index-links">
+    <a href="#ceA" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">a</span><span class="ce-idx-desc">Se han configurado los parámetros básicos de la instalación.</span></a>
+    <a href="#ceB" class="ce-idx-item ce-idx-complementario"><span class="ce-idx-letra">b</span><span class="ce-idx-desc">Se han aplicado las preferencias en la configuración del entorno personal.</span></a>
+    <a href="#ceC" class="ce-idx-item ce-idx-importante"><span class="ce-idx-letra">c</span><span class="ce-idx-desc">Se han utilizado los elementos de la interfaz de usuario para preparar el entorn…</span></a>
+    <a href="#ceD" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">d</span><span class="ce-idx-desc">Se han reconocido los atributos y los permisos en el sistema de archivos y direc…</span></a>
+    <a href="#ceE" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">e</span><span class="ce-idx-desc">Se han identificado las funcionalidades para el manejo del sistema de archivos y…</span></a>
+    <a href="#ceF" class="ce-idx-item ce-idx-importante"><span class="ce-idx-letra">f</span><span class="ce-idx-desc">Se han utilizado las herramientas del sistema operativo para explorar los soport…</span></a>
+    <a href="#ceG" class="ce-idx-item ce-idx-critico"><span class="ce-idx-letra">g</span><span class="ce-idx-desc">Se han realizado operaciones básicas de protección (instalación de antivirus, re…</span></a>
+  </div>
+</div>
+<div class="bloque" id="ceA">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">a</div>
+      <div class="bloque-info">
+        <h3>Configuración de parámetros básicos de la instalación</h3>
+        <p>CE-a · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>Instalar un sistema operativo no es solo copiar los archivos al disco. Una vez terminada la instalación, hay que <strong>configurar los parámetros básicos</strong> para que el equipo sea utilizable: idioma, teclado, zona horaria, usuario, red y actualizaciones. Si estos ajustes no se hacen bien, el equipo puede mostrar mensajes en otro idioma, no escribir bien la letra ñ o los acentos, tener la hora incorrecta o no conectarse a Internet.</p>
+    </div>
+
+    <h4>1. ¿Qué son los parámetros básicos de una instalación?</h4>
+    <p>Un <strong>sistema operativo</strong> es el programa principal que gestiona el hardware del equipo y permite ejecutar el resto de programas. Tras la <strong>instalación</strong> (copiar el sistema al disco duro), el sistema arranca por primera vez con unos <strong>parámetros</strong> (ajustes) predeterminados que normalmente no coinciden con lo que necesita el usuario. Configurar estos parámetros significa adaptar el sistema a nuestro idioma, país, teclado y forma de trabajo.</p>
+    <p>Los parámetros básicos que siempre debemos revisar o ajustar son:</p>
+    <ul>
+      <li><strong>Idioma y región:</strong> el idioma de los menús y el formato de fechas, horas y números (ejemplo: en España se escribe 15/03/2026, no 03/15/2026).</li>
+      <li><strong>Distribución del teclado:</strong> el reparto de teclas del teclado físico. Si elegimos teclado en inglés, al pulsar la tecla donde está dibujada la Ñ escribiremos otro carácter.</li>
+      <li><strong>Zona horaria:</strong> la región horaria del lugar donde está el equipo. Si no es correcta, la hora mostrada será errónea.</li>
+      <li><strong>Cuenta de usuario y contraseña:</strong> quién puede entrar al sistema y cómo protege su sesión.</li>
+      <li><strong>Nombre del equipo:</strong> el identificador del ordenador dentro de una red.</li>
+      <li><strong>Red:</strong> la conexión a Internet o a la red local. Normalmente se configura mediante <strong>DHCP</strong> (protocolo que asigna automáticamente los datos de red). Estos datos son: la <strong>IP</strong> (dirección única del equipo en la red), la <strong>máscara de red</strong> (delimita la parte de red y la parte de equipo de la IP), la <strong>puerta de enlace</strong> (dispositivo de salida hacia otras redes, normalmente el router) y el <strong>DNS</strong> (servidor que traduce nombres de dominio como <code>www.ejemplo.com</code> a direcciones IP).</li>
+      <li><strong>Actualizaciones:</strong> descargar e instalar los parches de seguridad y mejoras del sistema.</li>
+    </ul>
+
+    <h4>2. Configuración en Windows 11</h4>
+    <p>En Windows 11, todos estos ajustes se realizan desde la ventana <strong>Configuración</strong>. Para abrirla, hacemos clic en el botón <strong>Inicio</strong> (logotipo de Windows, formado por cuatro paneles o trapecios, en la barra de tareas) y luego en el icono de <strong>engranaje</strong>. También podemos pulsar a la vez la tecla <strong>Windows</strong> (la que tiene el logotipo de Windows) y la tecla <strong>I</strong>.</p>
+    <p>Los apartados que usamos son:</p>
+    <ul>
+      <li><strong>Hora e idioma:</strong> aquí se cambian el idioma de los menús, la distribución del teclado y la zona horaria.</li>
+      <li><strong>Cuentas:</strong> para crear o modificar la cuenta de usuario local.</li>
+      <li><strong>Sistema &gt; Acerca de:</strong> muestra información del equipo y permite cambiar su nombre.</li>
+      <li><strong>Red e Internet:</strong> para comprobar la conexión y activar el DHCP.</li>
+      <li><strong>Windows Update:</strong> para buscar e instalar actualizaciones.</li>
+    </ul>
+
+    <div class="box-complementario">
+      <div class="box-label">NOTA</div>
+      <p>En Windows 11, cuando cambiamos el idioma o la distribución del teclado, el sistema puede pedir <strong>cerrar sesión</strong> o <strong>reiniciar</strong> para aplicar los cambios. No hay que confundir «cerrar sesión» con «apagar el equipo»: cerrar sesión solo termina la sesión del usuario actual, pero el ordenador sigue encendido.</p>
+    </div>
+
+    <h4>3. Configuración en Ubuntu 24.04</h4>
+    <p>En Ubuntu 24.04, los ajustes gráficos se encuentran en la aplicación <strong>Configuración</strong> (también llamada <strong>Ajustes</strong>). Se abre haciendo clic en la esquina superior derecha de la pantalla (donde están el icono de volumen y de red) y eligiendo el icono de <strong>engranaje</strong>.</p>
+    <p>Además, Ubuntu permite configurar muchos parámetros desde el <strong>terminal</strong>: un programa que nos deja escribir <strong>comandos</strong> (instrucciones de texto) para controlar el sistema. El terminal se abre con la combinación de teclas <strong>Ctrl + Alt + T</strong>. Para tareas de administración, los comandos deben ir precedidos de <strong>sudo</strong>, que ejecuta la orden con privilegios de administrador (el usuario root).</p>
+    <p>Los principales comandos que usaremos para la configuración básica son:</p>
+    <pre><code>sudo hostnamectl set-hostname TP-PC02</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta el comando con privilegios de administrador. Sin sudo, el sistema rechazaría cambiar el nombre del equipo.</li>
+      <li><code>hostnamectl</code>: herramienta que muestra y modifica el nombre del equipo.</li>
+      <li><code>set-hostname</code>: subcomando que establece un nuevo nombre.</li>
+      <li><code>TP-PC02</code>: el nombre elegido para el equipo. Debe ser único dentro de la red.</li>
+    </ul>
+    <pre><code>sudo timedatectl set-timezone Europe/Madrid</code></pre>
+    <ul>
+      <li><code>sudo</code>: ejecuta con privilegios de administrador.</li>
+      <li><code>timedatectl</code>: herramienta para ver y cambiar la fecha, hora y zona horaria.</li>
+      <li><code>set-timezone</code>: subcomando que fija la zona horaria.</li>
+      <li><code>Europe/Madrid</code>: identificador de la zona horaria de España peninsular. Cada región del mundo tiene un identificador propio (por ejemplo, <code>America/New_York</code> o <code>Asia/Tokyo</code>).</li>
+    </ul>
+    <pre><code>sudo apt update && sudo apt upgrade -y</code></pre>
+    <ul>
+      <li><code>sudo apt update</code>: actualiza la lista de paquetes (programas) disponibles en los repositorios oficiales. Un <strong>repositorio de paquetes</strong> es un servidor o catálogo desde el cual el sistema descarga programas y actualizaciones de confianza. No instala nada, solo refresca el catálogo.</li>
+      <li><code>&&</code>: operador que encadena dos comandos. El segundo solo se ejecuta si el primero termina correctamente.</li>
+      <li><code>sudo apt upgrade -y</code>: instala las actualizaciones de los paquetes ya instalados.</li>
+      <li><code>-y</code>: responde «sí» automáticamente a las preguntas de confirmación, sin que el usuario tenga que escribir nada.</li>
+    </ul>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <p><strong>Idioma:</strong> Configuración &gt; Hora e idioma &gt; Idioma y región &gt; Agregar idioma &gt; Español (España) &gt; Establecer como predeterminado.</p>
+        <p><strong>Teclado:</strong> Configuración &gt; Hora e idioma &gt; Teclado &gt; seleccionar «Español (España)» como distribución.</p>
+        <p><strong>Zona horaria:</strong> Configuración &gt; Hora e idioma &gt; Fecha y hora &gt; Zona horaria &gt; (UTC+01:00) Bruselas, Copenhague, Madrid, París. UTC (Tiempo Universal Coordinado) es la base horaria mundial; UTC+01:00 equivale a una hora más que esa base.</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <p><strong>Idioma:</strong> Configuración &gt; Región e idioma &gt; Idioma &gt; Español &gt; Reiniciar sesión.</p>
+        <p><strong>Teclado:</strong> Configuración &gt; Teclado &gt; Fuentes de entrada &gt; España (Español).</p>
+        <p><strong>Zona horaria:</strong> Configuración &gt; Fecha y hora &gt; Zona horaria &gt; Europa &gt; Madrid (o usar <code>sudo timedatectl set-timezone Europe/Madrid</code>).</p>
+      </div>
+    </div>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 700 280" role="img" aria-label="Diagrama de flujo con los pasos para configurar los parámetros básicos de un sistema operativo.">
+        <defs>
+          <marker id="flecha-a-cea" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+          </marker>
+        </defs>
+        <rect x="20" y="30" width="160" height="60" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="100" y="55" text-anchor="middle" font-size="15" fill="#1a2c3e">Idioma y</text>
+        <text x="100" y="75" text-anchor="middle" font-size="15" fill="#1a2c3e">región</text>
+        <line x1="180" y1="60" x2="215" y2="60" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-a-cea)"/>
+        <rect x="220" y="30" width="160" height="60" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="300" y="60" text-anchor="middle" font-size="15" fill="#1a2c3e">Teclado</text>
+        <line x1="380" y1="60" x2="415" y2="60" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-a-cea)"/>
+        <rect x="420" y="30" width="160" height="60" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="500" y="55" text-anchor="middle" font-size="15" fill="#1a2c3e">Zona</text>
+        <text x="500" y="75" text-anchor="middle" font-size="15" fill="#1a2c3e">horaria</text>
+        <line x1="500" y1="90" x2="100" y2="145" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-a-cea)"/>
+        <rect x="20" y="150" width="160" height="60" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="100" y="175" text-anchor="middle" font-size="15" fill="#1a2c3e">Usuario y</text>
+        <text x="100" y="195" text-anchor="middle" font-size="15" fill="#1a2c3e">contraseña</text>
+        <line x1="180" y1="180" x2="215" y2="180" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-a-cea)"/>
+        <rect x="220" y="150" width="160" height="60" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="300" y="180" text-anchor="middle" font-size="15" fill="#1a2c3e">Red</text>
+        <line x1="380" y1="180" x2="415" y2="180" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-a-cea)"/>
+        <rect x="420" y="150" width="160" height="60" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="500" y="180" text-anchor="middle" font-size="15" fill="#1a2c3e">Actualizaciones</text>
+      </svg>
+      <figcaption>Secuencia recomendada para configurar los parámetros básicos de cualquier instalación. Obsérvese que la zona horaria se configura antes de crear el usuario y de conectar la red.</figcaption>
+    </figure>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>La empresa <strong>Tecnoparts SL</strong> acaba de adquirir dos equipos: uno con <strong>Windows 11</strong> y otro con <strong>Ubuntu 24.04</strong>. Necesita dejarlos listos para trabajar con estos datos: idioma español, teclado español (España), zona horaria Europe/Madrid, nombre de equipo <strong>TP-PC01</strong> (Windows) y <strong>TP-PC02</strong> (Ubuntu), usuario local <strong>tecnico</strong> con contraseña <strong>Tp2026$</strong>, red por DHCP y actualizaciones al día.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li><strong>Windows 11 — idioma y teclado:</strong> abrir Configuración (tecla Windows + I) &gt; Hora e idioma &gt; Idioma y región. Agregar «Español (España)» y pulsar «Establecer como predeterminado». Para el teclado, ir a Hora e idioma &gt; Teclado y seleccionar «Español (España)» como distribución. Si también aparece «Inglés (Estados Unidos)», conviene quitarla para evitar confusiones, pero no hay una lista que ordenar: solo se elige la distribución activa.</li>
+        <li><strong>Windows 11 — zona horaria:</strong> Hora e idioma &gt; Fecha y hora. Desactivar «Establecer zona horaria automáticamente» y seleccionar «(UTC+01:00) Bruselas, Copenhague, Madrid, París» (UTC es la base horaria mundial; UTC+01:00 equivale a una hora más). Activar «Establecer hora automáticamente» para que la hora se sincronice con Internet.</li>
+        <li><strong>Windows 11 — nombre del equipo:</strong> Sistema &gt; Acerca de &gt; Cambiar nombre de este equipo. Escribir <code>TP-PC01</code> y reiniciar el equipo.</li>
+        <li><strong>Windows 11 — usuario:</strong> Configuración &gt; Cuentas &gt; Otros usuarios &gt; Agregar cuenta. En la ventana de Microsoft, elegir «No tengo los datos de inicio de sesión de esta persona» y después «Agregar un usuario sin cuenta Microsoft». Crear la cuenta local con nombre <code>tecnico</code> y contraseña <code>Tp2026$</code>. Cerrar sesión y entrar con la nueva cuenta para comprobar que funciona.</li>
+        <li><strong>Windows 11 — red y actualizaciones:</strong> Configuración &gt; Red e Internet &gt; Ethernet (conexión cableada) o Wi-Fi. Abrir las propiedades del adaptador y comprobar que «Asignación de dirección IP» aparece como «Automática (DHCP)». Verificar que el estado dice «Conectado». Después, Windows Update &gt; Buscar actualizaciones e instalar todas.</li>
+        <li><strong>Ubuntu 24.04 — idioma, teclado y zona horaria:</strong> abrir Configuración (clic en el engranaje de la esquina superior derecha). En «Región e idioma», elegir «Español». En «Teclado», añadir «España (Español)». En «Fecha y hora», seleccionar «Europe/Madrid» o usar el comando <code>sudo timedatectl set-timezone Europe/Madrid</code> en el terminal (abierto con Ctrl+Alt+T).</li>
+        <li><strong>Ubuntu 24.04 — nombre del equipo:</strong> en el terminal ejecutar <code>sudo hostnamectl set-hostname TP-PC02</code>. Después cerrar y volver a abrir el terminal para ver el nombre nuevo.</li>
+        <li><strong>Ubuntu 24.04 — usuario:</strong> Configuración &gt; Usuarios &gt; Desbloquear &gt; Añadir usuario. Nombre <code>tecnico</code>, contraseña <code>Tp2026$</code>, tipo «Administrador» si es necesario.</li>
+        <li><strong>Ubuntu 24.04 — red y actualizaciones:</strong> Configuración &gt; Red debe mostrar «Conectado» con DHCP activado. En el terminal ejecutar <code>sudo apt update && sudo apt upgrade -y</code> para actualizar el sistema.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-a · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>La empresa <strong>Ferretería Ruiz</strong> tiene un equipo con <strong>Windows 11</strong> recién instalado. Debes configurarlo con estos datos: idioma español, teclado español (España), zona horaria Europe/Madrid, nombre del equipo <strong>FR-PC01</strong>, usuario local <strong>ferreteria</strong> con contraseña <strong>Fr2026$</strong>, red por DHCP y actualizaciones automáticas activadas. Indica, paso a paso, qué ventanas de Configuración usarás y qué opciones seleccionarás.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>Solución paso a paso:</strong></p>
+        <ol>
+          <li>Abrir Configuración con Windows + I.</li>
+          <li><strong>Idioma:</strong> Hora e idioma &gt; Idioma y región &gt; Agregar idioma &gt; Español (España) &gt; Establecer como predeterminado.</li>
+          <li><strong>Teclado:</strong> Hora e idioma &gt; Teclado &gt; seleccionar «Español (España)» como distribución. Si aparece otra distribución como «Inglés (Estados Unidos)», eliminarla para dejar solo la española.</li>
+          <li><strong>Zona horaria:</strong> Hora e idioma &gt; Fecha y hora &gt; desactivar zona horaria automática y elegir «(UTC+01:00) Bruselas, Copenhague, Madrid, París» (UTC es la base horaria mundial; UTC+01:00 equivale a una hora más).</li>
+          <li><strong>Nombre del equipo:</strong> Sistema &gt; Acerca de &gt; Cambiar nombre de este equipo &gt; escribir FR-PC01 &gt; reiniciar.</li>
+          <li><strong>Usuario:</strong> Cuentas &gt; Otros usuarios &gt; Agregar cuenta &gt; «No tengo los datos de inicio de sesión de esta persona» &gt; «Agregar un usuario sin cuenta Microsoft» &gt; crear cuenta local <code>ferreteria</code> con contraseña <code>Fr2026$</code> &gt; cerrar sesión y entrar con ella.</li>
+          <li><strong>Red:</strong> Red e Internet &gt; Ethernet (conexión cableada) o Wi-Fi &gt; abrir Propiedades del adaptador &gt; comprobar que «Asignación de dirección IP» es «Automática (DHCP)» y que la conexión es correcta.</li>
+          <li><strong>Actualizaciones:</strong> Windows Update &gt; activar «Descargar actualizaciones automáticamente» &gt; Buscar actualizaciones &gt; instalar.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-a · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>La misma empresa <strong>Ferretería Ruiz</strong> tiene un segundo equipo con <strong>Ubuntu 24.04</strong>. Configúralo con estos datos: idioma español, teclado español (España), zona horaria Europe/Madrid, nombre del equipo <strong>FR-PC02</strong>, usuario local <strong>ferreteria</strong> con contraseña <strong>Fr2026$</strong>, red por DHCP y actualizaciones al día. Describe tanto los pasos gráficos como los comandos de terminal que utilizarías, desglosando cada comando.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-a · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>Un empleado de <strong>Tecnoparts SL</strong> se queja de que su equipo con <strong>Windows 11</strong> no funciona bien tras una reinstalación: al pulsar la tecla donde está dibujada la Ñ escribe un punto y coma, la hora del sistema muestra la de Nueva York, y no puede conectarse a Internet a pesar de que el cable de red está conectado. El nombre del equipo aparece como «DESKTOP-ABC1234». Indica, para cada problema, cuál es la causa probable, qué ventana de Configuración debes abrir y qué opción exacta cambiarías. Justifica por qué DHCP no asigna IP si el cable está puesto.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-a</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé explicar qué son los parámetros básicos de una instalación y por qué son necesarios.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé cambiar el idioma y la distribución del teclado en Windows 11 y en Ubuntu 24.04.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé configurar la zona horaria correcta en ambos sistemas (Europe/Madrid).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé crear una cuenta de usuario local con contraseña en Windows 11 y en Ubuntu 24.04.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé cambiar el nombre del equipo en Windows 11 (Configuración) y en Ubuntu (comando hostnamectl).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé comprobar que la red está en DHCP y conectada en ambos sistemas.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé ejecutar los comandos sudo timedatectl, sudo hostnamectl y sudo apt update/upgrade desglosando cada parte.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé diagnosticar errores típicos: teclado equivocado, zona horaria incorrecta o red sin IP.</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>El error más frecuente es <strong>confundir el idioma de los menús con la distribución del teclado</strong>. Cambiar el idioma a español no cambia el teclado: si el teclado sigue en inglés, al pulsar la tecla de la Ñ se escribe ; o :. Hay que comprobar <strong>los dos ajustes por separado</strong>. Otro fallo típico es <strong>olvidar reiniciar la sesión o el equipo</strong> tras cambiar el idioma o el nombre del equipo: el sistema no aplica el cambio hasta que no se reinicia. En Ubuntu, además, muchos comandos de configuración requieren <code>sudo</code>: sin él, el terminal devuelve un error de permisos y el cambio no se hace.</p>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="ceB">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num">b</div>
+      <div class="bloque-info">
+        <h3>Preferencias del entorno personal</h3>
+        <p>CE-b · complementario · 1 sesión</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">1 sesión</span>
+  </div>
+  <div class="bloque-body">
+    <p>En el <strong>CE-a</strong> vimos cómo configurar los parámetros básicos de la instalación: idioma, red, cuenta de usuario, etc. Esos ajustes afectan al funcionamiento del sistema. Ahora vamos a configurar las <strong>preferencias del entorno personal</strong>: todos aquellos ajustes que hacen que el ordenador resulte más cómodo y se adapte a los gustos o necesidades de cada usuario. Estas preferencias no cambian el funcionamiento técnico, pero mejoran la experiencia de uso y la productividad.</p>
+    <p>Las <strong>preferencias personales</strong> son los ajustes que cada usuario puede modificar para sentirse a gusto con su equipo: el fondo de pantalla, los colores de las ventanas, el tamaño de la letra, las aplicaciones que se abren por defecto, las opciones de accesibilidad, etc. En un mismo ordenador pueden existir varios usuarios, y cada uno puede tener sus propias preferencias sin afectar a los demás.</p>
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>No hay que confundir las <strong>preferencias personales</strong> (que son estéticas o de comodidad) con la <strong>configuración del sistema</strong> (red, usuarios, actualizaciones…). Las primeras se guardan por usuario; las segundas afectan a todo el equipo y normalmente requieren permisos de administrador.</p>
+    </div>
+    <p>Las áreas principales de personalización en un sistema operativo son:</p>
+    <ul>
+      <li><strong>Fondo de pantalla</strong> (o fondo de escritorio): imagen que se muestra detrás de los iconos y ventanas.</li>
+      <li><strong>Tema</strong>: conjunto de colores, estilos de ventanas y sonidos que dan un aspecto uniforme.</li>
+      <li><strong>Colores y barra de tareas</strong>: ajustes de color de acento y comportamiento de la barra.</li>
+      <li><strong>Aplicaciones predeterminadas</strong>: programas que se abren automáticamente al hacer doble clic en un tipo de archivo o al realizar una acción (navegar, enviar correo, etc.).</li>
+      <li><strong>Accesibilidad</strong>: opciones que facilitan el uso del ordenador a personas con dificultades visuales, auditivas o motoras.</li>
+    </ul>
+    <p>Antes de comparar, recuerda que Ubuntu 24.04 utiliza <strong>GNOME</strong> como entorno de escritorio: es el software que dibuja la interfaz gráfica, las ventanas y la barra superior.</p>
+    <figure class="diagrama">
+      <svg viewBox="0 0 800 340" role="img" aria-label="Comparativa de áreas de personalización entre Windows 11 y Ubuntu 24.04">
+        <rect x="20" y="60" width="360" height="250" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="200" y="90" text-anchor="middle" font-size="16" fill="#1a2c3e" font-weight="bold">Windows 11</text>
+        <text x="200" y="120" text-anchor="middle" font-size="14" fill="#1a2c3e">
+          <tspan x="200" dy="0">Fondo de pantalla</tspan>
+          <tspan x="200" dy="25">Tema (claro/oscuro)</tspan>
+          <tspan x="200" dy="25">Colores y barra de tareas</tspan>
+          <tspan x="200" dy="25">Aplicaciones predeterminadas</tspan>
+          <tspan x="200" dy="25">Accesibilidad</tspan>
+        </text>
+        <rect x="420" y="60" width="360" height="250" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="600" y="90" text-anchor="middle" font-size="16" fill="#1a2c3e" font-weight="bold">Ubuntu 24.04 (GNOME)</text>
+        <text x="600" y="120" text-anchor="middle" font-size="14" fill="#1a2c3e">
+          <tspan x="600" dy="0">Fondo de escritorio</tspan>
+          <tspan x="600" dy="25">Apariencia (tema)</tspan>
+          <tspan x="600" dy="25">Aplicaciones predeterminadas</tspan>
+          <tspan x="600" dy="25">Accesibilidad</tspan>
+          <tspan x="600" dy="25">Región e idioma</tspan>
+        </text>
+      </svg>
+      <figcaption>Áreas principales de personalización en Windows 11 y Ubuntu 24.04. Fíjate en que ambos sistemas ofrecen ajustes similares, aunque con nombres ligeramente distintos.</figcaption>
+    </figure>
+    <h4>Personalización en Windows 11</h4>
+    <p>Como vimos en CE-a, para abrir la Configuración usamos la combinación <kbd>tecla Windows</kbd> + <kbd>I</kbd>. Dentro de Configuración, la sección <strong>Personalización</strong> contiene la mayoría de las preferencias visuales.</p>
+    <p>Pasos para cambiar el fondo de pantalla en Windows 11:</p>
+    <ol>
+      <li>Abre <strong>Configuración</strong> (tecla Windows + I).</li>
+      <li>Haz clic en <strong>Personalización</strong> (icono con un pincel).</li>
+      <li>Selecciona <strong>Fondo</strong>.</li>
+      <li>En el desplegable <em>Personalizar el fondo</em>, elige <strong>Imagen</strong>.</li>
+      <li>Haz clic en <strong>Examinar fotos</strong> y selecciona la imagen que quieras de tu equipo.</li>
+      <li>La imagen se aplicará inmediatamente.</li>
+    </ol>
+    <p>Para activar el <strong>modo oscuro</strong> (tema oscuro), en Personalización elige <strong>Colores</strong> y en <em>Elegir el modo</em> selecciona <strong>Oscuro</strong>. El <strong>modo oscuro</strong> cambia los fondos de las ventanas y aplicaciones a colores oscuros para reducir el cansancio visual.</p>
+    <p>La <strong>barra de tareas</strong> (la franja inferior donde están los iconos de las aplicaciones abiertas y el menú Inicio) también se puede personalizar: en Personalización > <strong>Barra de tareas</strong> puedes elegir si los iconos se agrupan, si se muestra el reloj, etc.</p>
+    <h4>Personalización en Ubuntu 24.04</h4>
+    <p>En Ubuntu, la herramienta de configuración gráfica se llama <strong>Configuración</strong> (también conocida como <em>gnome-control-center</em>). Como vimos en CE-a, podemos abrirla desde el icono de engranaje en el menú de aplicaciones o ejecutando <code>gnome-control-center</code> en un terminal.</p>
+    <p>Los ajustes de personalización están repartidos en varios paneles de Configuración:</p>
+    <ul>
+      <li><strong>Fondo</strong>: panel independiente que permite elegir una imagen de fondo o un color sólido.</li>
+      <li><strong>Apariencia</strong>: cambia entre tema claro y tema oscuro y permite elegir el color de acento.</li>
+      <li><strong>Ubuntu Desktop</strong>: ajusta el comportamiento de la barra superior y del dock del escritorio GNOME.</li>
+    </ul>
+    <p>Para cambiar el fondo en Ubuntu 24.04:</p>
+    <ol>
+      <li>Abre <strong>Configuración</strong> (icono de engranaje o comando <code>gnome-control-center</code>).</li>
+      <li>Haz clic en <strong>Fondo</strong>.</li>
+      <li>Selecciona una de las imágenes predefinidas o haz clic en <strong>Añadir imagen…</strong> para usar una foto tuya.</li>
+    </ol>
+    <p>Para activar el <strong>tema oscuro</strong>, abre <strong>Apariencia</strong> y, bajo <em>Estilo</em>, elige <strong>Oscuro</strong>.</p>
+    <h4>Aplicaciones predeterminadas</h4>
+    <p>Una <strong>aplicación predeterminada</strong> es el programa que se abre automáticamente cuando haces doble clic sobre un tipo de archivo concreto (por ejemplo, un <code>.pdf</code>) o cuando realizas una acción como navegar por internet. Cambiar estas aplicaciones es una preferencia personal muy común.</p>
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <ol>
+          <li>Abre <strong>Configuración</strong>.</li>
+          <li>Ve a <strong>Aplicaciones</strong> y luego <strong>Aplicaciones predeterminadas</strong>.</li>
+          <li>Busca el tipo de archivo (por ejemplo, <code>.pdf</code>) o la acción (por ejemplo, <em>Navegador web</em>).</li>
+          <li>Haz clic en el programa actual y elige el nuevo de la lista.</li>
+        </ol>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <ol>
+          <li>Abre <strong>Configuración</strong>.</li>
+          <li>Ve a <strong>Aplicaciones predeterminadas</strong>.</li>
+          <li>Elige la categoría (Web, Correo, Música, Vídeo, etc.).</li>
+          <li>Selecciona la aplicación que prefieras del desplegable.</li>
+        </ol>
+      </div>
+    </div>
+    <h4>Accesibilidad</h4>
+    <p>Las opciones de <strong>accesibilidad</strong> están pensadas para que cualquier persona, incluidas aquellas con discapacidad visual, auditiva o motora, pueda usar el ordenador con comodidad. Algunos ajustes útiles:</p>
+    <ul>
+      <li><strong>Agrandar texto</strong>: aumenta el tamaño de la letra en todo el sistema sin cambiar la resolución.</li>
+      <li><strong>Alto contraste</strong>: muestra los elementos con colores muy diferenciados (blanco sobre negro, por ejemplo).</li>
+      <li><strong>Lector de pantalla</strong> (Narrador en Windows, Orca en Ubuntu): lee en voz alta lo que aparece en pantalla.</li>
+      <li><strong>Lupa</strong>: amplía una zona de la pantalla.</li>
+    </ul>
+    <p>En Windows 11, estas opciones están en <strong>Configuración > Accesibilidad</strong>. En Ubuntu, en <strong>Configuración > Accesibilidad</strong>.</p>
+    <div class="box-complementario">
+      <div class="box-label">NOTA</div>
+      <p>En Ubuntu también puedes cambiar algunas preferencias desde el terminal con la herramienta <code>gsettings</code>. Por ejemplo, para cambiar el fondo de escritorio desde la línea de comandos:</p>
+      <pre><code>gsettings set org.gnome.desktop.background picture-uri "file:///home/usuario/Imágenes/fondo.jpg"</code></pre>
+      <ul>
+        <li><code>gsettings</code>: herramienta de línea de comandos para leer y modificar ajustes del escritorio GNOME.</li>
+        <li><code>set</code>: indica que vamos a asignar un valor nuevo.</li>
+        <li><code>org.gnome.desktop.background</code>: ruta de la configuración del fondo de escritorio.</li>
+        <li><code>picture-uri</code>: clave que guarda la ruta (<abbr title="Uniform Resource Identifier">URI</abbr>, <em>Uniform Resource Identifier</em>, identificador uniforme de recurso) de la imagen de fondo.</li>
+        <li><code>"file:///home/usuario/Imágenes/fondo.jpg"</code>: valor que asignamos. La parte <code>file:///</code> indica que es un archivo local; el resto es la ruta de la imagen.</li>
+      </ul>
+      <p>No es necesario que memorices este comando para el examen, pero es bueno saber que existe.</p>
+    </div>
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p><strong>Empresa:</strong> Tecnoparts SL. La empleada Laura quiere personalizar su equipo de trabajo. Tiene un ordenador con Windows 11 y otro con Ubuntu 24.04. Quiere:</p>
+      <ol>
+        <li>Cambiar el fondo de pantalla a una imagen corporativa llamada <code>logo-tecnoparts.jpg</code> que está en su carpeta <code>Imágenes</code>.</li>
+        <li>Activar el tema oscuro en ambos sistemas.</li>
+      </ol>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li><strong>Windows 11 — cambiar fondo:</strong> Abre Configuración (tecla Windows + I) → Personalización → Fondo → en <em>Personalizar el fondo</em> elige <em>Imagen</em> → clic en <em>Examinar fotos</em> → navega a <code>Imágenes</code>, selecciona <code>logo-tecnoparts.jpg</code> → clic en <em>Elegir imagen</em>. La imagen se aplica al instante.</li>
+        <li><strong>Windows 11 — tema oscuro:</strong> En Personalización → Colores → en <em>Elegir el modo</em> selecciona <em>Oscuro</em>. Todas las ventanas del sistema cambian a tonos oscuros.</li>
+        <li><strong>Ubuntu 24.04 — cambiar fondo:</strong> Abre Configuración (icono de engranaje) → Fondo → haz clic en <em>Añadir imagen…</em> → busca <code>logo-tecnoparts.jpg</code> en <code>Imágenes</code> → selecciónala. Se aplica al momento.</li>
+        <li><strong>Ubuntu 24.04 — tema oscuro:</strong> Abre Configuración → Apariencia → bajo <em>Estilo</em> elige <em>Oscuro</em>. El escritorio y las aplicaciones adoptan colores oscuros.</li>
+      </ol>
+      <p>Laura ha configurado ambos equipos a su gusto sin afectar a la configuración de red ni a otros usuarios.</p>
+    </div>
+    <div class="ejercicio">
+      <h5>Ejercicio CE-b · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En la empresa <strong>Tecnoparts SL</strong>, el empleado Carlos quiere poner como fondo de pantalla la imagen <code>logo-empresa.png</code> que está en su carpeta <code>Documentos</code>. Además, quiere activar el <strong>modo oscuro</strong> en su equipo con Windows 11 y en otro con Ubuntu 24.04. Describe los pasos que debe seguir en cada sistema.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion">
+        <summary>Ver solución</summary>
+        <p><strong>Windows 11:</strong></p>
+        <ol>
+          <li>Abrir Configuración con <kbd>tecla Windows</kbd> + <kbd>I</kbd>.</li>
+          <li>Ir a <strong>Personalización</strong> y luego <strong>Fondo</strong>.</li>
+          <li>En <em>Personalizar el fondo</em>, elegir <strong>Imagen</strong>.</li>
+          <li>Hacer clic en <strong>Examinar fotos</strong>, navegar a <code>Documentos</code> y seleccionar <code>logo-empresa.png</code>.</li>
+          <li>Para el modo oscuro: en <strong>Personalización > Colores</strong>, en <em>Elegir el modo</em> seleccionar <strong>Oscuro</strong>.</li>
+        </ol>
+        <p><strong>Ubuntu 24.04:</strong></p>
+        <ol>
+          <li>Abrir <strong>Configuración</strong> desde el icono de engranaje o con <code>gnome-control-center</code>.</li>
+          <li>Ir a <strong>Fondo</strong>.</li>
+          <li>Hacer clic en <strong>Añadir imagen…</strong>, navegar a <code>Documentos</code> y elegir <code>logo-empresa.png</code>.</li>
+          <li>Ir a <strong>Apariencia</strong> y, en <em>Estilo</em>, seleccionar <strong>Oscuro</strong> para activar el tema oscuro.</li>
+        </ol>
+      </details>
+    </div>
+    <div class="ejercicio">
+      <h5>Ejercicio CE-b · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>La empresa <strong>Tecnoparts SL</strong> quiere estandarizar el entorno de trabajo de todos sus empleados. En todos los equipos ya están instalados <strong>Google Chrome</strong> (navegador web) y <strong>VLC media player</strong> (reproductor de vídeo). Necesitan que en cada equipo se configure lo siguiente:</p>
+      <ul>
+        <li>El navegador web predeterminado debe ser <strong>Google Chrome</strong> en Windows 11 y en Ubuntu 24.04.</li>
+        <li>El reproductor de vídeo predeterminado debe ser <strong>VLC media player</strong> en ambos sistemas.</li>
+      </ul>
+      <p>Explica, para cada sistema operativo, los pasos necesarios para cambiar estas aplicaciones predeterminadas.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+    <div class="ejercicio">
+      <h5>Ejercicio CE-b · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>Un usuario de <strong>Tecnoparts SL</strong> con dificultades visuales se queja de que no ve bien los textos y los iconos. En su equipo con Windows 11 necesita:</p>
+      <ul>
+        <li>Aumentar el tamaño del texto en todo el sistema sin cambiar la resolución.</li>
+        <li>Activar el <strong>alto contraste</strong> para ver mejor los elementos.</li>
+      </ul>
+      <p>En su equipo con Ubuntu 24.04 necesita:</p>
+      <ul>
+        <li>Activar el <strong>lector de pantalla Orca</strong> para que lea en voz alta el contenido de la pantalla.</li>
+        <li>Aumentar el tamaño del texto.</li>
+      </ul>
+      <p>Describe el procedimiento completo en ambos sistemas, indicando en qué secciones de Configuración se encuentran estas opciones y qué pasos concretos debe seguir.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+    <div class="checklist">
+      <strong>✓ Checklist CE-b</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé diferenciar entre preferencias personales y configuración del sistema.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Puedo cambiar el fondo de pantalla en Windows 11 y Ubuntu 24.04.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé activar y desactivar el tema oscuro en ambos sistemas operativos.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Entiendo qué son las aplicaciones predeterminadas y sé cambiarlas.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Conozco las principales opciones de accesibilidad (texto grande, alto contraste, lector de pantalla).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé acceder a las secciones de Personalización y Apariencia en cada sistema.</label></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="ceC">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num">c</div>
+      <div class="bloque-info">
+        <h3>Uso de la interfaz de usuario para preparar el entorno de trabajo</h3>
+        <p>CE-c · importante · 1 sesión</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">1 sesión</span>
+  </div>
+  <div class="bloque-body">
+    <p>En los <strong>CE-a</strong> y <strong>CE-b</strong> vimos cómo configurar los parámetros básicos del sistema y cómo personalizar el aspecto del escritorio (fondo de pantalla, tema, colores, etc.). Ahora vamos a dar un paso más y aprender a <strong>utilizar los elementos de la interfaz de usuario</strong> para preparar nuestro entorno de trabajo diario: organizar ventanas, crear accesos directos, anclar aplicaciones y usar escritorios virtuales.</p>
+    <p>La <strong>interfaz de usuario</strong> es todo aquello que vemos en la pantalla y con lo que interactuamos mediante el ratón, el teclado o la pantalla táctil: ventanas, iconos, barras, botones y menús. Preparar el entorno de trabajo significa dejar el sistema listo para trabajar con comodidad y rapidez.</p>
+
+    <h4>1. Elementos principales de la interfaz de usuario</h4>
+    <p>Antes de personalizar y organizar nuestro espacio de trabajo, es necesario conocer los elementos con los que trabajamos a diario. A continuación los describimos en los dos sistemas operativos que utilizamos en el aula.</p>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <ul>
+          <li><strong>Escritorio</strong>: área principal de la pantalla donde aparecen los <strong>iconos</strong> (pequeñas imágenes que representan programas, archivos o carpetas).</li>
+          <li><strong>Barra de tareas</strong>: barra horizontal situada normalmente en la parte inferior. Contiene el <strong>botón de Inicio</strong> (logotipo de Windows), los <strong>iconos anclados</strong> (aplicaciones fijadas para acceso rápido), los <strong>iconos de programas abiertos</strong> y la <strong>bandeja del sistema</strong> (zona derecha con el reloj, el icono de red, el de volumen y otros indicadores de estado).</li>
+          <li><strong>Menú Inicio</strong>: panel que se abre al hacer clic en el botón de Inicio. Muestra la lista de aplicaciones instaladas, un <strong>buscador</strong> y accesos directos a carpetas recientes.</li>
+          <li><strong>Centro de notificaciones</strong>: panel que se abre al hacer clic en la hora o con la tecla <kbd>Windows</kbd> + <kbd>N</kbd>. Muestra avisos de aplicaciones y accesos rápidos a ajustes como Wi-Fi o Bluetooth.</li>
+          <li><strong>Vista de tareas</strong>: pantalla que se abre con <kbd>Windows</kbd> + <kbd>Tab</kbd> y muestra todas las ventanas abiertas y los <strong>escritorios virtuales</strong> disponibles.</li>
+        </ul>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04 (GNOME)</h4>
+        <ul>
+          <li><strong>Escritorio</strong>: área principal de trabajo con iconos de archivos y carpetas.</li>
+          <li><strong>Dock</strong>: barra vertical de iconos situada a la izquierda de la pantalla. Contiene <strong>aplicaciones favoritas</strong> (ancladas) y <strong>aplicaciones abiertas</strong>. Es el equivalente a la barra de tareas de Windows, pero en vertical.</li>
+          <li><strong>Panel superior</strong>: barra horizontal en la parte superior con el reloj, el calendario, los indicadores de red, volumen y energía, y el botón de <strong>Actividades</strong> (esquina superior izquierda).</li>
+          <li><strong>Actividades</strong>: vista que se abre al pulsar la tecla <strong>Super</strong> (la tecla con el logotipo de Windows en la mayoría de teclados) o al hacer clic en «Actividades». Muestra todas las ventanas abiertas, el buscador de aplicaciones y el dock.</li>
+          <li><strong>Escritorios virtuales</strong>: se gestionan desde la vista de Actividades, en la parte superior de la pantalla.</li>
+        </ul>
+      </div>
+    </div>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 720 340" role="img" aria-label="Comparación de los elementos de la interfaz de usuario entre Windows 11 y Ubuntu 24.04">
+        <defs>
+          <marker id="flecha-c-cec" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+          </marker>
+        </defs>
+        <!-- Título general -->
+        <text x="360" y="25" text-anchor="middle" font-size="16" fill="#1a2c3e" font-weight="bold">Elementos de la interfaz de usuario</text>
+
+        <!-- Panel Windows 11 -->
+        <rect x="20" y="50" width="310" height="260" rx="8" fill="#ffffff" stroke="#0078d4" stroke-width="2"/>
+        <text x="175" y="70" text-anchor="middle" font-size="14" fill="#0078d4" font-weight="bold">Windows 11</text>
+
+        <!-- Escritorio Windows -->
+        <rect x="30" y="80" width="290" height="190" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="175" y="100" text-anchor="middle" font-size="12" fill="#64748b">Escritorio</text>
+        <!-- Iconos de escritorio -->
+        <rect x="45" y="110" width="40" height="40" rx="4" fill="#e5f3ff" stroke="#0078d4" stroke-width="1"/>
+        <text x="65" y="133" text-anchor="middle" font-size="10" fill="#1a2c3e">Carpeta</text>
+        <rect x="95" y="110" width="40" height="40" rx="4" fill="#e5f3ff" stroke="#0078d4" stroke-width="1"/>
+        <text x="115" y="133" text-anchor="middle" font-size="10" fill="#1a2c3e">Acceso</text>
+        <rect x="145" y="110" width="40" height="40" rx="4" fill="#e5f3ff" stroke="#0078d4" stroke-width="1"/>
+        <text x="165" y="133" text-anchor="middle" font-size="10" fill="#1a2c3e">Papelera</text>
+
+        <!-- Barra de tareas Windows -->
+        <rect x="20" y="280" width="310" height="30" fill="#e5f3ff" stroke="#0078d4" stroke-width="1"/>
+        <text x="175" y="299" text-anchor="middle" font-size="12" fill="#1a2c3e">Barra de tareas</text>
+        <!-- Botón inicio -->
+        <rect x="28" y="286" width="22" height="18" rx="2" fill="#0078d4"/>
+        <text x="39" y="298" text-anchor="middle" font-size="8" fill="#ffffff">Win</text>
+        <!-- Iconos anclados -->
+        <rect x="58" y="286" width="18" height="18" fill="#10b981"/>
+        <rect x="82" y="286" width="18" height="18" fill="#eab308"/>
+        <rect x="106" y="286" width="18" height="18" fill="#dc2626"/>
+        <!-- Bandeja -->
+        <rect x="292" y="286" width="28" height="18" rx="2" fill="#64748b"/>
+        <text x="306" y="298" text-anchor="middle" font-size="8" fill="#ffffff">17:30</text>
+
+        <!-- Panel Ubuntu 24.04 -->
+        <rect x="390" y="50" width="310" height="260" rx="8" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+        <text x="545" y="70" text-anchor="middle" font-size="14" fill="#10b981" font-weight="bold">Ubuntu 24.04</text>
+
+        <!-- Panel superior Ubuntu -->
+        <rect x="390" y="80" width="310" height="22" fill="#e5f3ff" stroke="#10b981" stroke-width="1"/>
+        <text x="545" y="95" text-anchor="middle" font-size="11" fill="#1a2c3e">Panel superior (reloj, red, volumen)</text>
+
+        <!-- Dock Ubuntu -->
+        <rect x="390" y="102" width="40" height="208" fill="#e5f3ff" stroke="#10b981" stroke-width="1"/>
+        <text x="410" y="130" text-anchor="middle" font-size="10" fill="#1a2c3e">Dock</text>
+        <rect x="397" y="140" width="26" height="26" rx="4" fill="#10b981"/>
+        <rect x="397" y="174" width="26" height="26" rx="4" fill="#0078d4"/>
+        <rect x="397" y="208" width="26" height="26" rx="4" fill="#eab308"/>
+        <rect x="397" y="242" width="26" height="26" rx="4" fill="#dc2626"/>
+
+        <!-- Escritorio Ubuntu -->
+        <rect x="440" y="102" width="250" height="198" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="565" y="122" text-anchor="middle" font-size="12" fill="#64748b">Escritorio</text>
+        <rect x="455" y="130" width="40" height="40" rx="4" fill="#e5f3ff" stroke="#10b981" stroke-width="1"/>
+        <text x="475" y="153" text-anchor="middle" font-size="10" fill="#1a2c3e">Carpeta</text>
+        <rect x="505" y="130" width="40" height="40" rx="4" fill="#e5f3ff" stroke="#10b981" stroke-width="1"/>
+        <text x="525" y="153" text-anchor="middle" font-size="10" fill="#1a2c3e">Acceso</text>
+
+        <!-- Flecha de comparación -->
+        <line x1="330" y1="180" x2="385" y2="180" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-c-cec)"/>
+      </svg>
+      <figcaption>Comparación de los elementos principales de la interfaz de usuario en Windows 11 y Ubuntu 24.04. Observa cómo se corresponden: la barra de tareas de Windows equivale al dock de Ubuntu, y el menú Inicio equivale a la vista de Actividades.</figcaption>
+    </figure>
+
+    <h4>2. Gestión de ventanas</h4>
+    <p>Una <strong>ventana</strong> es el área rectangular que muestra una aplicación o documento. Cada ventana tiene una <strong>barra de título</strong> en la parte superior con el nombre del programa y tres botones de control: <strong>minimizar</strong> (ocultar temporalmente la ventana sin cerrarla; queda un icono en la barra de tareas o dock), <strong>maximizar/restaurar</strong> (ampliar la ventana a toda la pantalla o devolverla a su tamaño anterior) y <strong>cerrar</strong> (finalizar el programa).</p>
+    <p>También podemos <strong>redimensionar</strong> una ventana: cambiar su tamaño arrastrando los bordes o las esquinas con el ratón. Para <strong>mover</strong> una ventana, arrastramos su barra de título.</p>
+    <p>Estas acciones permiten organizar varias ventanas a la vez, por ejemplo, colocar dos ventanas lado a lado para comparar documentos o copiar datos de una a otra.</p>
+
+    <h4>3. Accesos directos y anclaje de aplicaciones</h4>
+    <p>Un <strong>acceso directo</strong> es un icono que se coloca en el escritorio o en una carpeta y que permite abrir rápidamente un programa, un archivo o una carpeta sin tener que buscarlo en el menú de aplicaciones. En Windows, para archivos y carpetas se crea con el botón derecho sobre el elemento y eligiendo «Crear acceso directo»; para programas desde el menú Inicio hay que hacer clic derecho sobre el programa, seleccionar «Más» y luego «Abrir ubicación del archivo», y desde la carpeta del programa crear el acceso directo, o arrastrar el icono al escritorio manteniendo pulsada la tecla <kbd>Alt</kbd>. En Ubuntu, no se pueden crear accesos directos a aplicaciones arrastrando desde la lista de aplicaciones al escritorio, porque el escritorio de GNOME no admite iconos de aplicaciones de forma nativa; para carpetas o archivos se pueden crear enlaces usando el administrador de archivos.</p>
+    <p><strong>Anclar</strong> una aplicación significa fijar su icono a la barra de tareas (Windows) o al dock (Ubuntu) para que esté siempre visible y accesible con un solo clic, aunque la aplicación no esté abierta en ese momento. Para anclar en Windows 11, hacemos clic derecho sobre el icono de la aplicación y elegimos «Anclar a la barra de tareas». En Ubuntu, hacemos clic derecho sobre el icono de la aplicación y elegimos «Añadir a favoritos».</p>
+
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>Un <strong>acceso directo</strong> no es una copia del programa o archivo: es solo un «atajo» que apunta al elemento original. Si borras el acceso directo, el programa o archivo original no se borra.</p>
+    </div>
+
+    <h4>4. Atajos de teclado para preparar el entorno</h4>
+    <p>Un <strong>atajo de teclado</strong> es una combinación de teclas que ejecuta una acción sin necesidad de usar el ratón. Ahorra tiempo una vez que nos acostumbramos a ellos. Aquí tienes los más útiles para organizar el trabajo:</p>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <ul>
+          <li><kbd>Windows</kbd>: abre o cierra el menú Inicio.</li>
+          <li><kbd>Windows</kbd> + <kbd>D</kbd>: muestra el escritorio (minimiza todas las ventanas). Al pulsarlo de nuevo, restaura las ventanas.</li>
+          <li><kbd>Windows</kbd> + <kbd>E</kbd>: abre el Explorador de archivos (el programa para ver carpetas y archivos).</li>
+          <li><kbd>Windows</kbd> + <kbd>L</kbd>: bloquea el equipo (útil cuando nos ausentamos).</li>
+          <li><kbd>Windows</kbd> + <kbd>flecha izquierda/derecha</kbd>: acopla la ventana activa a la mitad izquierda o derecha de la pantalla. Muy útil para trabajar con dos ventanas a la vez.</li>
+          <li><kbd>Windows</kbd> + <kbd>flecha arriba</kbd>: maximiza la ventana activa. <kbd>Windows</kbd> + <kbd>flecha abajo</kbd>: minimiza o restaura la ventana.</li>
+          <li><kbd>Windows</kbd> + <kbd>Tab</kbd>: abre la vista de tareas, donde se ven todas las ventanas abiertas y los escritorios virtuales.</li>
+          <li><kbd>Alt</kbd> + <kbd>Tab</kbd>: cambia rápidamente entre las ventanas abiertas manteniendo pulsada la tecla <kbd>Alt</kbd> y tocando <kbd>Tab</kbd>.</li>
+        </ul>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <ul>
+          <li><kbd>Super</kbd>: abre o cierra la vista de Actividades. La tecla <kbd>Super</kbd> es la que tiene el logotipo de Windows en la mayoría de teclados.</li>
+          <li><kbd>Super</kbd> + <kbd>D</kbd>: muestra el escritorio (minimiza todas las ventanas).</li>
+          <li><kbd>Super</kbd> + <kbd>Tab</kbd>: cambia entre aplicaciones abiertas.</li>
+          <li><kbd>Super</kbd> + <kbd>flecha izquierda/derecha</kbd>: acopla la ventana activa a la mitad izquierda o derecha.</li>
+          <li><kbd>Super</kbd> + <kbd>flecha arriba</kbd>: maximiza la ventana. <kbd>Super</kbd> + <kbd>flecha abajo</kbd>: restaura o minimiza.</li>
+          <li><kbd>Super</kbd> + <kbd>L</kbd>: bloquea la sesión.</li>
+          <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>: abre una terminal (como vimos en CE-a).</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>5. Escritorios virtuales</h4>
+    <p>Un <strong>escritorio virtual</strong> es un espacio de trabajo adicional que permite organizar ventanas en grupos separados. Por ejemplo, puedes tener en el escritorio 1 las aplicaciones de facturación y en el escritorio 2 el navegador para videollamadas. Así evitas tener muchas ventanas apiladas en una sola pantalla.</p>
+    <p>En <strong>Windows 11</strong>, se abren desde la <strong>vista de tareas</strong> (<kbd>Windows</kbd> + <kbd>Tab</kbd>) con el botón «Nuevo escritorio». En <strong>Ubuntu 24.04</strong>, se gestionan desde la vista de <strong>Actividades</strong> (<kbd>Super</kbd>) en la parte superior de la pantalla: se puede añadir, eliminar o cambiar de escritorio virtual.</p>
+
+    <div class="box-complementario">
+      <div class="box-label">NOTA</div>
+      <p>Los atajos de teclado <kbd>Ctrl</kbd> + <kbd>C</kbd> (copiar), <kbd>Ctrl</kbd> + <kbd>V</kbd> (pegar) y <kbd>Ctrl</kbd> + <kbd>Z</kbd> (deshacer) también funcionan en casi todas las aplicaciones y son esenciales para preparar cualquier entorno de trabajo.</p>
+    </div>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p><strong>Caso:</strong> En la empresa <strong>Tecnoparts SL</strong>, la empleada Laura se incorpora al departamento de facturación. Su equipo tiene Windows 11 24H2. Necesita preparar su entorno de trabajo para usar cada día <strong>Microsoft Excel 2024</strong> (hoja de cálculo) y <strong>Google Chrome 130</strong> (navegador), y además quiere tener un escritorio virtual separado para las videollamadas con clientes usando <strong>Microsoft Teams</strong>.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li><strong>Anclar Excel y Chrome a la barra de tareas</strong>: Laura abre el menú Inicio con la tecla <kbd>Windows</kbd>, escribe «Excel» en el buscador y, con el botón derecho sobre el resultado, elige «Anclar a la barra de tareas». Repite lo mismo con «Chrome». Ahora ambos iconos aparecen siempre abajo, incluso sin abrir los programas.</li>
+        <li><strong>Crear un acceso directo a la carpeta compartida de facturas</strong>: En el Explorador de archivos (<kbd>Windows</kbd> + <kbd>E</kbd>), Laura escribe en la barra de direcciones la ruta <code>\\servidor\facturas</code>. Esta ruta se llama <strong>ruta UNC</strong> (Convención de nomenclatura universal) y sirve para identificar una carpeta compartida en red: <code>\\nombre_del_servidor\nombre_de_la_carpeta</code>. Otra forma es navegar a <strong>Red</strong> en el panel izquierdo y localizar el servidor y la carpeta compartida. Una vez abierta la carpeta, Laura hace clic derecho sobre ella y elige «Crear acceso directo». Windows colocará un icono en el escritorio. Laura lo renombra como «Facturas 2026» para identificarlo fácilmente.</li>
+        <li><strong>Organizar ventanas lado a lado</strong>: Laura abre Excel y Chrome. Pulsa <kbd>Windows</kbd> + <kbd>flecha izquierda</kbd> para acoplar Excel a la mitad izquierda y luego <kbd>Windows</kbd> + <kbd>flecha derecha</kbd> para acoplar Chrome a la mitad derecha. Así puede consultar datos en el navegador mientras escribe en la hoja de cálculo.</li>
+        <li><strong>Crear un escritorio virtual para videollamadas</strong>: Pulsa <kbd>Windows</kbd> + <kbd>Tab</kbd> para abrir la vista de tareas y hace clic en «Nuevo escritorio». En ese escritorio virtual abre Microsoft Teams. Para cambiar entre el escritorio de facturación y el de videollamadas, vuelve a usar <kbd>Windows</kbd> + <kbd>Tab</kbd> y selecciona el escritorio deseado.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-c · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En la empresa <strong>Repuestos Galicia SA</strong>, el usuario Pedro acaba de recibir un equipo con Windows 11 24H2. Su trabajo diario consiste en usar <strong>LibreOffice Writer 24.8</strong> (procesador de textos) y <strong>Mozilla Firefox 131</strong> (navegador). Necesita preparar su entorno de trabajo para abrir ambos programas rápidamente y trabajar con ellos en dos mitades de la pantalla. Además, quiere un acceso directo en el escritorio a la carpeta <code>D:\Clientes</code>. Explica paso a paso qué debe hacer:</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>Resolución:</strong></p>
+        <ol>
+          <li><strong>Anclar Writer y Firefox a la barra de tareas</strong>: Pedro abre el menú Inicio con la tecla <kbd>Windows</kbd>, escribe «Writer» en el buscador y, con el botón derecho sobre el resultado, elige «Anclar a la barra de tareas». Repite la misma operación con «Firefox». Ahora los iconos de ambos programas aparecen fijos en la barra inferior, listos para abrirse con un solo clic.</li>
+          <li><strong>Crear el acceso directo a la carpeta D:\Clientes</strong>: Abre el Explorador de archivos (<kbd>Windows</kbd> + <kbd>E</kbd>), navega hasta <code>D:\Clientes</code>, hace clic derecho sobre la carpeta y selecciona «Crear acceso directo». Windows lo colocará en el escritorio. Pedro puede renombrarlo como «Clientes».</li>
+          <li><strong>Acoplar ventanas a las mitades</strong>: Abre Writer y Firefox. Pulsa <kbd>Windows</kbd> + <kbd>flecha izquierda</kbd> para colocar Writer en la mitad izquierda de la pantalla. Luego pulsa <kbd>Windows</kbd> + <kbd>flecha derecha</kbd> para colocar Firefox en la mitad derecha. Ahora puede ver ambos programas a la vez.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-c · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En la empresa <strong>Distribuciones Cantábricas</strong>, la empleada Ana utiliza un equipo con <strong>Ubuntu 24.04 LTS</strong>. Su tarea diaria consiste en trabajar con <strong>LibreOffice Calc 24.8</strong> (hoja de cálculo) y <strong>Google Chrome 130</strong> (navegador). Quiere preparar su entorno de trabajo para:</p>
+      <ul>
+        <li>Anclar Calc y Chrome al dock de GNOME.</li>
+        <li>Crear un acceso directo en el escritorio a la carpeta <code>/home/ana/Informes</code>.</li>
+        <li>Acoplar las ventanas de Calc y Chrome a las mitades izquierda y derecha de la pantalla.</li>
+        <li>Crear un escritorio virtual para usar el cliente de correo <strong>Mozilla Thunderbird 128</strong> separado del resto.</li>
+      </ul>
+      <p>Describe detalladamente los pasos y los atajos de teclado que Ana debe utilizar.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-c · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>En la empresa <strong>Logística Vigo SL</strong>, el usuario Mario está trabajando con Windows 11 24H2 y tenía abiertas tres ventanas: <strong>Microsoft Word 2024</strong>, <strong>Microsoft Excel 2024</strong> y <strong>Mozilla Firefox 131</strong>. De repente, minimiza accidentalmente las tres ventanas al pulsar <kbd>Windows</kbd> + <kbd>D</kbd> y no recuerda cómo restaurarlas. Además, una de las ventanas (Excel) la había acoplado anteriormente a la mitad derecha de la pantalla. Otro compañero le menciona que usó un «escritorio virtual» para separar Firefox. Mario quiere recuperar todas las ventanas y volver a tener Word y Excel lado a lado, dejando Firefox en el escritorio virtual separado. Explica detalladamente qué debe hacer Mario para:</p>
+      <ol>
+        <li>Restaurar las ventanas minimizadas.</li>
+        <li>Identificar en qué escritorio virtual se encuentra cada ventana.</li>
+        <li>Volver a acoplar Word y Excel a las mitades izquierda y derecha de la pantalla.</li>
+        <li>Dejar Firefox en el escritorio virtual separado.</li>
+      </ol>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-c</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Reconozco los elementos principales de la interfaz de usuario en Windows 11 y Ubuntu 24.04 (escritorio, barra de tareas/dock, menú Inicio/Actividades, bandeja/panel superior).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé minimizar, maximizar, restaurar, cerrar, mover y redimensionar ventanas.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé anclar aplicaciones a la barra de tareas (Windows) y al dock (Ubuntu).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé crear accesos directos en el escritorio a programas, archivos y carpetas.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Utilizo los atajos de teclado básicos para cambiar de ventana, mostrar el escritorio y acoplar ventanas (Windows + flechas, Super + flechas, Alt + Tab, etc.).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé crear y cambiar entre escritorios virtuales en Windows 11 y Ubuntu 24.04.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Comprendo la diferencia entre un acceso directo y una copia real del elemento original.</label></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="ceD">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">d</div>
+      <div class="bloque-info">
+        <h3>Atributos y permisos en archivos y directorios</h3>
+        <p>CE-d · CRÍTICO · 3 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">3 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <p>En este CE vamos a estudiar dos características de los archivos y directorios: los <strong>atributos</strong> y los <strong>permisos</strong>. Como vimos en CE-c, un <strong>archivo</strong> (o fichero) es una unidad de información con nombre (un documento, una imagen, un programa) y un <strong>directorio</strong> (o carpeta) es un contenedor que organiza archivos. Ahora nos fijamos en qué información extra guarda el sistema sobre ellos y quién puede hacer qué con ellos.</p>
+    <p><strong>Atributo</strong>: propiedad o característica asociada a un archivo/carpeta que indica cómo se comporta el sistema con él (por ejemplo, si está oculto, si es de solo lectura).</p>
+    <p><strong>Permiso</strong>: regla que determina qué acciones (leer, escribir/modificar, ejecutar) puede realizar un usuario o grupo de usuarios sobre un archivo o directorio.</p>
+
+    <div class="box-complementario">
+      <div class="box-label">NOTA</div>
+      <p>Los conceptos de atributos y permisos existen tanto en Windows como en Linux, pero se gestionan de manera distinta. En Windows suelen cambiarse desde las Propiedades del archivo; en Linux principalmente desde la línea de comandos.</p>
+    </div>
+
+    <h4>1. Atributos en Windows</h4>
+    <p>En Windows, cada archivo o carpeta tiene un conjunto de atributos que podemos consultar abriendo el <strong>Explorador de archivos</strong>, clic derecho sobre el archivo y eligiendo <strong>Propiedades</strong>. En la pestaña <strong>General</strong> encontramos dos atributos básicos que se muestran como casillas:</p>
+    <ul>
+      <li><strong>Solo lectura</strong>: el archivo se puede abrir y leer, pero no modificar. No impide que se borre; el borrado depende de los permisos sobre el archivo o la carpeta. Es una protección contra edición involuntaria, no una seguridad real, ya que un usuario con permisos puede quitar el atributo.</li>
+      <li><strong>Oculto</strong>: el archivo no se muestra por defecto en el Explorador. Para verlo hay que activar la opción de mostrar elementos ocultos.</li>
+    </ul>
+
+    <p>También se pueden gestionar desde la terminal de comandos de Windows. La terminal es una aplicación que permite escribir órdenes de texto; en Windows se abre buscando <strong>Símbolo del sistema</strong> (<code>cmd</code>) o <strong>PowerShell</strong> en el menú Inicio. Por ejemplo, para poner el atributo de solo lectura a un archivo:</p>
+    <pre><code>attrib +r C:\Tecnoparts\informe.txt</code></pre>
+    <ul>
+      <li><code>attrib</code>: comando de Windows que muestra o cambia los atributos de archivos y carpetas.</li>
+      <li><code>+r</code>: añade el atributo de solo lectura (<em>Read-only</em>). El signo <code>+</code> indica añadir; con <code>-</code> se quita (por ejemplo, <code>-r</code> quita la solo lectura).</li>
+      <li><code>C:\Tecnoparts\informe.txt</code>: ruta del archivo al que cambiamos el atributo. La letra <code>C:</code> es la unidad de disco y <code>\</code> separa carpetas.</li>
+    </ul>
+
+    <p>Los atributos <strong>De sistema</strong> y <strong>De archivo</strong> no aparecen como casillas en la pestaña General de Windows 11 24H2. Se consultan con <code>attrib</code> o desde las opciones avanzadas de Propiedades:</p>
+    <ul>
+      <li><strong>De sistema</strong>: indica que el archivo es importante para el sistema operativo. No se debe modificar.</li>
+      <li><strong>De archivo</strong>: marca si el archivo ha cambiado desde la última copia de seguridad. Los programas de copias lo usan para saber qué archivos necesitan respaldar.</li>
+    </ul>
+
+    <p>Si solo escribimos <code>attrib</code> sin argumentos, muestra los atributos de los archivos del directorio actual. Cada letra que aparece tiene este significado: <strong>R</strong>=solo lectura, <strong>H</strong>=oculto, <strong>S</strong>=sistema, <strong>A</strong>=archivo.</p>
+
+    <h4>2. Atributos y permisos en Linux</h4>
+    <p>En Linux, los archivos y directorios <strong>ocultos</strong> empiezan por un punto (<code>.</code>). Por ejemplo, la carpeta <code>.config</code> está oculta. Para verlos usamos el comando <code>ls</code> con la opción <code>-a</code> (<em>all</em>):</p>
+    <pre><code>ls -a</code></pre>
+    <ul>
+      <li><code>ls</code>: comando de Linux que lista archivos y directorios del directorio actual.</li>
+      <li><code>-a</code>: <em>all</em>; muestra todos, incluidos los archivos ocultos que empiezan por punto (<code>.</code>).</li>
+    </ul>
+
+    <p>Los <strong>permisos</strong> en Linux se ven con la opción <code>-l</code> (formato largo):</p>
+    <pre><code>ls -l informes.txt</code></pre>
+    <ul>
+      <li><code>ls</code>: comando que lista archivos.</li>
+      <li><code>-l</code>: <em>long</em>; muestra permisos, propietario, grupo, tamaño, fecha y nombre en varias columnas.</li>
+      <li><code>informes.txt</code>: archivo concreto del que queremos ver la información. Si se omite, lista todos los del directorio actual.</li>
+    </ul>
+
+    <p>El resultado de <code>ls -l</code> tiene este aspecto:</p>
+    <pre><code>-rw-r--r-- 1 maria ventas 2048 oct 15 12:00 informes.txt</code></pre>
+    <p>La primera columna es la más importante para los permisos. Vamos a desglosarla letra a letra:</p>
+    <ul>
+      <li>Primer carácter: <code>-</code> significa <strong>archivo</strong>; <code>d</code> significaría <strong>directorio</strong>.</li>
+      <li>Siguientes 3 caracteres: permisos del <strong>propietario</strong> (dueño del archivo). En nuestro ejemplo: <code>rw-</code> (puede leer y escribir, pero no ejecutar).</li>
+      <li>Siguientes 3: permisos del <strong>grupo</strong> al que pertenece el archivo. Aquí: <code>r--</code> (solo leer).</li>
+      <li>Últimos 3: permisos de <strong>otros</strong> (cualquier usuario que no sea propietario ni esté en el grupo). Aquí: <code>r--</code> (solo leer).</li>
+    </ul>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 680 260" role="img" aria-label="Desglose de los permisos de Linux en propietario, grupo y otros">
+        <rect x="30" y="40" width="180" height="160" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="120" y="65" text-anchor="middle" font-size="15" fill="#1a2c3e">Propietario</text>
+        <rect x="50" y="80" width="40" height="40" rx="6" fill="#10b981" stroke="#10b981" stroke-width="1"/>
+        <text x="70" y="105" text-anchor="middle" font-size="16" fill="#ffffff">r</text>
+        <rect x="100" y="80" width="40" height="40" rx="6" fill="#10b981" stroke="#10b981" stroke-width="1"/>
+        <text x="120" y="105" text-anchor="middle" font-size="16" fill="#ffffff">w</text>
+        <rect x="150" y="80" width="40" height="40" rx="6" fill="#eab308" stroke="#eab308" stroke-width="1"/>
+        <text x="170" y="105" text-anchor="middle" font-size="16" fill="#1a2c3e">x</text>
+        <rect x="250" y="40" width="180" height="160" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="340" y="65" text-anchor="middle" font-size="15" fill="#1a2c3e">Grupo</text>
+        <rect x="270" y="80" width="40" height="40" rx="6" fill="#10b981" stroke="#10b981" stroke-width="1"/>
+        <text x="290" y="105" text-anchor="middle" font-size="16" fill="#ffffff">r</text>
+        <rect x="320" y="80" width="40" height="40" rx="6" fill="#10b981" stroke="#10b981" stroke-width="1"/>
+        <text x="340" y="105" text-anchor="middle" font-size="16" fill="#ffffff">w</text>
+        <rect x="370" y="80" width="40" height="40" rx="6" fill="#eab308" stroke="#eab308" stroke-width="1"/>
+        <text x="390" y="105" text-anchor="middle" font-size="16" fill="#1a2c3e">x</text>
+        <rect x="470" y="40" width="180" height="160" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+        <text x="560" y="65" text-anchor="middle" font-size="15" fill="#1a2c3e">Otros</text>
+        <rect x="490" y="80" width="40" height="40" rx="6" fill="#10b981" stroke="#10b981" stroke-width="1"/>
+        <text x="510" y="105" text-anchor="middle" font-size="16" fill="#ffffff">r</text>
+        <rect x="540" y="80" width="40" height="40" rx="6" fill="#10b981" stroke="#10b981" stroke-width="1"/>
+        <text x="560" y="105" text-anchor="middle" font-size="16" fill="#ffffff">w</text>
+        <rect x="590" y="80" width="40" height="40" rx="6" fill="#eab308" stroke="#eab308" stroke-width="1"/>
+        <text x="610" y="105" text-anchor="middle" font-size="16" fill="#1a2c3e">x</text>
+        <text x="340" y="230" text-anchor="middle" font-size="13" fill="#64748b">r = leer · w = escribir · x = ejecutar</text>
+      </svg>
+      <figcaption>Distribución de los permisos en Linux para propietario, grupo y otros. Cada usuario tiene sus propios permisos de lectura, escritura y ejecución.</figcaption>
+    </figure>
+
+    <p>El significado de las letras es:</p>
+    <ul>
+      <li><strong>r</strong> (<em>read</em>): permiso de lectura. En un archivo permite abrirlo y ver su contenido; en un directorio permite listar su contenido.</li>
+      <li><strong>w</strong> (<em>write</em>): permiso de escritura. En un archivo permite modificar su contenido; en un directorio permite crear o borrar archivos dentro de él.</li>
+      <li><strong>x</strong> (<em>execute</em>): permiso de ejecución. En un archivo permite ejecutarlo como programa; en un directorio permite entrar en él (usarlo como directorio de trabajo).</li>
+    </ul>
+
+    <p>Para cambiar permisos usamos el comando <code>chmod</code>. Por ejemplo, para dar al propietario permiso de ejecución sobre un <strong>script</strong>. Un <strong>script</strong> es un archivo de texto que contiene una secuencia de comandos; en Linux suele terminar en <code>.sh</code>. Para ejecutarlo, necesita permiso de ejecución:</p>
+    <pre><code>chmod u+x script.sh</code></pre>
+    <ul>
+      <li><code>chmod</code>: comando de Linux que cambia los permisos (<em>change mode</em>) de archivos o directorios.</li>
+      <li><code>u+x</code>: <code>u</code> se refiere al usuario propietario; <code>+</code> añade permiso; <code>x</code> permiso de ejecución. Estamos dando permiso de ejecución al propietario.</li>
+      <li><code>script.sh</code>: archivo al que aplicamos el cambio. La extensión <code>.sh</code> es típica de los scripts de Linux.</li>
+    </ul>
+
+    <p>También podemos asignar permisos exactos con el signo <code>=</code>. El siguiente ejemplo establece lectura y escritura para el propietario, solo lectura para el grupo y ningún permiso para otros:</p>
+    <pre><code>chmod u=rw,g=r,o= informe.txt</code></pre>
+    <ul>
+      <li><code>chmod</code>: comando de cambio de permisos.</li>
+      <li><code>u=rw</code>: para el usuario propietario, establece exactamente lectura y escritura (el signo <code>=</code> asigna solo esos permisos, quitando cualquier otro).</li>
+      <li><code>g=r</code>: para el grupo, solo lectura.</li>
+      <li><code>o=</code>: para otros, ningún permiso (nada después del igual).</li>
+      <li><code>informe.txt</code>: archivo destino.</li>
+    </ul>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows</h4>
+        <p>Los atributos más usados son <strong>Solo lectura</strong> y <strong>Oculto</strong>. Se gestionan desde Propiedades → pestaña General o con <code>attrib</code>. Los permisos (lectura, escritura, modificar, control total) están en la pestaña <strong>Seguridad</strong>.</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Linux</h4>
+        <p>Los archivos ocultos empiezan por punto (<code>.</code>). Los permisos se representan con <strong>r</strong>, <strong>w</strong>, <strong>x</strong> para propietario, grupo y otros. Se cambian con <code>chmod</code> y se consultan con <code>ls -l</code>.</p>
+      </div>
+    </div>
+
+    <h4>3. Permisos en Windows desde la pestaña Seguridad</h4>
+    <p>Además de los atributos, Windows tiene permisos de acceso. Para verlos, clic derecho sobre el archivo o carpeta → <strong>Propiedades</strong> → pestaña <strong>Seguridad</strong>. Allí aparece una lista de usuarios y grupos, y debajo los permisos que tiene cada uno:</p>
+    <ul>
+      <li><strong>Lectura</strong>: permite abrir y ver el contenido del archivo.</li>
+      <li><strong>Escritura</strong>: permite crear o modificar archivos dentro de una carpeta.</li>
+      <li><strong>Modificar</strong>: incluye lectura y escritura, y además permite borrar.</li>
+      <li><strong>Control total</strong>: incluye todo lo anterior y permite cambiar los propios permisos.</li>
+    </ul>
+    <p>Para cambiar los permisos de un usuario, se selecciona el usuario en la lista y se pulsan los botones <strong>Editar</strong> o <strong>Agregar</strong>/<strong>Quitar</strong>. Para hacerlo hay que tener permiso para cambiar permisos: puede ser el administrador, el propietario del archivo o un usuario al que se le haya permitido modificar los permisos. No siempre es necesario ser administrador.</p>
+
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>El atributo <strong>Solo lectura</strong> de Windows no impide que otro usuario con permisos lo quite, modifique o borre el archivo. Es solo una protección contra ediciones accidentales. Los <strong>permisos</strong> de la pestaña Seguridad son los que controlan de verdad quién puede hacer qué.</p>
+    </div>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>La empresa <strong>Tecnoparts SL</strong> tiene dos equipos: uno con Windows 11 y otro con Ubuntu 24.04. En el equipo Windows, el departamento de Recursos Humanos quiere que el archivo <code>nominas.xlsx</code> no se edite por accidente. En el equipo Linux, el usuario <code>maria</code> necesita que el archivo <code>informe.txt</code> (propietario: maria, grupo: ventas) tenga estos permisos: maria puede leer y escribir, el grupo ventas solo leer, y el resto de usuarios nada.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li><strong>Windows — atributo solo lectura:</strong> abrimos el Explorador de archivos, clic derecho sobre <code>nominas.xlsx</code> → Propiedades → pestaña General → activamos la casilla <strong>Solo lectura</strong> → Aceptar. Desde terminal: <code>attrib +r C:\RecursosHumanos\nominas.xlsx</code>.</li>
+        <li><strong>Linux — permisos con <code>chmod</code>:</strong> ejecutamos tres comandos:
+          <pre><code>chmod u=rw informe.txt</code></pre>
+          <p>Establece para el propietario (u) lectura y escritura. El signo <code>=</code> deja solo esos permisos.</p>
+          <pre><code>chmod g=r informe.txt</code></pre>
+          <p>Para el grupo (g) deja solo lectura.</p>
+          <pre><code>chmod o= informe.txt</code></pre>
+          <p>Para otros (o) quita todos los permisos.</p>
+        </li>
+        <li><strong>Comprobación:</strong> en Linux ejecutamos <code>ls -l informe.txt</code> y debe mostrar <code>-rw-r-----</code>. En Windows, al abrir las Propiedades vemos la casilla Solo lectura marcada.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En el equipo Ubuntu de la empresa <strong>Tecnoparts SL</strong>, el archivo <code>ventas.txt</code> tiene los siguientes permisos vistos con <code>ls -l</code>:</p>
+      <pre><code>-rw-r--r-- 1 carlos ventas 1024 nov 3 09:15 ventas.txt</code></pre>
+      <p>Explica qué permisos tienen el propietario (carlos), el grupo (ventas) y el resto de usuarios. ¿Qué comando usarías para que el propietario pueda ejecutar el archivo?</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>Permisos:</strong></p>
+        <ul>
+          <li>Propietario (<code>carlos</code>): <code>rw-</code> → puede leer y escribir, pero no ejecutar.</li>
+          <li>Grupo (<code>ventas</code>): <code>r--</code> → solo puede leer.</li>
+          <li>Otros: <code>r--</code> → solo pueden leer.</li>
+        </ul>
+        <p><strong>Comando para dar ejecución al propietario:</strong></p>
+        <pre><code>chmod u+x ventas.txt</code></pre>
+        <p><code>u</code> es propietario, <code>+</code> añade, <code>x</code> ejecución.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En <strong>Tecnoparts SL</strong> quieren que la carpeta Linux <code>Proyectos</code> tenga estos permisos: el propietario <code>jefe</code> control total (leer, escribir, ejecutar), el grupo <code>proyecto</code> pueda leer y ejecutar, y el resto de usuarios no pueda acceder. Escribe el comando <code>chmod</code> que asigne exactamente esos permisos usando la notación con <code>=</code>.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-d · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>El usuario <code>ana</code> de <strong>Tecnoparts SL</strong> intenta abrir el archivo <code>informe_final.docx</code> en Windows 11 y el sistema le dice que no tiene permiso. Ana solo quiere leerlo. Otro usuario de su mismo equipo sí puede abrirlo. Revisa las Propiedades del archivo y descubre que la casilla <strong>Solo lectura</strong> está activada, pero no es la causa. ¿Qué pestaña debe comprobar Ana? Explica paso a paso qué mirarías y cómo darías a Ana permiso de lectura sin darle control total.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-d</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Entiendo la diferencia entre atributo y permiso.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé activar y desactivar Solo lectura y Oculto en Windows (desde Propiedades y con <code>attrib</code>).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé identificar archivos ocultos en Linux (punto) y verlos con <code>ls -a</code>.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Interpreté las columnas de <code>ls -l</code>: propietario, grupo, otros.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Conozco el significado de r, w, x para archivos y directorios.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé cambiar permisos con <code>chmod</code> usando <code>+</code> y <code>=</code>.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé localizar la pestaña Seguridad en Windows y distinguir Lectura, Escritura, Modificar y Control total.</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>Error más frecuente: en Linux, confundir el primer carácter de la línea de permisos (<code>d</code> o <code>-</code>) con un permiso. La <code>d</code> indica que es un directorio, no es un permiso. Los permisos son los 9 caracteres siguientes, agrupados de 3 en 3: propietario, grupo, otros. Otro fallo típico: creer que el atributo <strong>Solo lectura</strong> de Windows protege los datos. No es seguridad: un usuario con permisos puede quitar el atributo, modificar el archivo o borrarlo. Para proteger de verdad hay que usar la pestaña <strong>Seguridad</strong>.</p>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="ceE">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">e</div>
+      <div class="bloque-info">
+        <h3>Manejo del sistema de archivos y periféricos</h3>
+        <p>CE-e · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <p>En este CE aprenderemos a <strong>manejar archivos, carpetas y periféricos</strong> de forma práctica. Ya sabes ver atributos y permisos (como vimos en CE-d); ahora darás un paso más: <strong>copiar, mover, renombrar, eliminar, buscar, comprimir y descomprimir</strong> información. También veremos cómo conectar y usar <strong>memorias USB, discos externos e impresoras</strong> de manera segura.</p>
+
+    <h3>1. Operaciones básicas con archivos y carpetas</h3>
+    <p>En la interfaz gráfica usamos el <strong>Explorador de archivos</strong> en Windows y el <strong>administrador de archivos</strong> (Archivos) en Ubuntu, como vimos en CE-c. Ahora nos centramos en las acciones que podemos hacer sobre ellos.</p>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <p><strong>Copiar:</strong> clic derecho → Copiar, luego en destino clic derecho → Pegar. Atajo: <kbd>Ctrl</kbd>+<kbd>C</kbd> y <kbd>Ctrl</kbd>+<kbd>V</kbd>.</p>
+        <p><strong>Mover:</strong> clic derecho → Cortar, luego Pegar. Atajo: <kbd>Ctrl</kbd>+<kbd>X</kbd> y <kbd>Ctrl</kbd>+<kbd>V</kbd>.</p>
+        <p><strong>Renombrar:</strong> clic derecho → Cambiar nombre o tecla <kbd>F2</kbd>.</p>
+        <p><strong>Eliminar:</strong> clic derecho → Eliminar o tecla <kbd>Supr</kbd>. El archivo va a la <strong>papelera de reciclaje</strong>.</p>
+        <p><strong>Restaurar:</strong> abrir la papelera, clic derecho sobre el archivo → Restaurar.</p>
+        <p><strong>Buscar:</strong> cuadro de búsqueda arriba a la derecha del Explorador.</p>
+        <p><strong>Comprimir:</strong> clic derecho → <strong>Comprimir en archivo ZIP</strong>.</p>
+        <p><strong>Descomprimir:</strong> clic derecho sobre el .zip → Extraer todo.</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <p><strong>Copiar:</strong> clic derecho → Copiar, luego Pegar. Atajo: <kbd>Ctrl</kbd>+<kbd>C</kbd> y <kbd>Ctrl</kbd>+<kbd>V</kbd> (como vimos en CE-c).</p>
+        <p><strong>Mover:</strong> clic derecho → Cortar, luego Pegar. Atajo: <kbd>Ctrl</kbd>+<kbd>X</kbd> y <kbd>Ctrl</kbd>+<kbd>V</kbd>.</p>
+        <p><strong>Renombrar:</strong> clic derecho → Cambiar nombre o tecla <kbd>F2</kbd>.</p>
+        <p><strong>Eliminar:</strong> clic derecho → Mover a la papelera o tecla <kbd>Supr</kbd>.</p>
+        <p><strong>Restaurar:</strong> abrir Papelera, clic derecho → Restaurar.</p>
+        <p><strong>Buscar:</strong> lupa en la barra superior o tecla <kbd>Super</kbd> y escribir el nombre.</p>
+        <p><strong>Comprimir:</strong> clic derecho → Comprimir...</p>
+        <p><strong>Descomprimir:</strong> clic derecho → Extraer aquí.</p>
+      </div>
+    </div>
+
+    <h3>2. Comandos de terminal para manejar archivos</h3>
+    <p>También podemos hacer todas estas operaciones desde la terminal. Recuerda que en CE-a vimos cómo abrir la terminal en Windows (<strong>cmd</strong> o <strong>PowerShell</strong>) y en Ubuntu (<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd>). A continuación tienes los comandos más comunes.</p>
+
+    <h4>🪟 Windows (cmd)</h4>
+    <pre><code>copy C:\Users\ana\documento.txt E:\copia.txt
+move C:\Users\ana\documento.txt E:\
+ren E:\copia.txt informe.txt
+del E:\informe.txt
+mkdir C:\Users\ana\proyectos
+rmdir C:\Users\ana\proyectos
+dir C:\Users\ana</code></pre>
+    <ul>
+      <li><code>copy</code>: copia un archivo de un lugar a otro. El primer argumento es el origen y el segundo el destino. Si se cambia el nombre en el destino, se copia y renombra.</li>
+      <li><code>move</code>: mueve un archivo o carpeta. Elimina el archivo del origen y lo coloca en el destino.</li>
+      <li><code>ren</code>: renombra un archivo o carpeta. El primer argumento es el nombre actual y el segundo el nuevo.</li>
+      <li><code>del</code>: elimina un archivo definitivamente (no pasa por la papelera).</li>
+      <li><code>mkdir</code>: crea una carpeta nueva.</li>
+      <li><code>rmdir</code>: elimina una carpeta vacía.</li>
+      <li><code>dir</code>: lista el contenido de una carpeta.</li>
+    </ul>
+    <p>Para eliminar una carpeta con todo su contenido en Windows, se usa <code>rmdir /s carpeta</code>. El parámetro <code>/s</code> indica que se borre también el interior. Pide confirmación antes de ejecutar.</p>
+
+    <h4>🐧 Ubuntu (bash)</h4>
+    <pre><code>cp ~/documento.txt /home/ana/copia.txt
+mv ~/documento.txt /home/ana/
+mv /home/ana/copia.txt /home/ana/informe.txt
+rm /home/ana/informe.txt
+mkdir /home/ana/proyectos
+rmdir /home/ana/proyectos
+ls /home/ana</code></pre>
+    <ul>
+      <li><code>cp</code>: copia archivos o carpetas. Con <code>-r</code> copia carpetas completas (recursivo).</li>
+      <li><code>mv</code>: mueve o renombra archivos y carpetas. Si el destino es una carpeta existente, mueve dentro; si el destino es un nombre distinto, renombra.</li>
+      <li><code>rm</code>: elimina archivos. Con <code>-r</code> elimina carpetas y su contenido. Con <code>-f</code> fuerza sin pedir confirmación. No pasa por la papelera.</li>
+      <li><code>mkdir</code>: crea una carpeta nueva.</li>
+      <li><code>rmdir</code>: elimina una carpeta vacía.</li>
+      <li><code>ls</code>: lista el contenido de una carpeta (como vimos en CE-d).</li>
+    </ul>
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>Ten mucho cuidado con <code>rm -r</code>. Si escribes mal la ruta (por ejemplo, un espacio en un nombre), puedes borrar datos importantes. Antes de ejecutar, comprueba la ruta con <code>ls</code>.</p>
+    </div>
+
+    <h3>3. Comprimir y descomprimir desde la terminal</h3>
+    <p><strong>Comprimir</strong> significa agrupar varios archivos y carpetas en un solo archivo, reduciendo su tamaño. <strong>Descomprimir</strong> es extraer el contenido original.</p>
+    <p>En Windows (cmd o PowerShell) se puede usar <code>tar</code> para crear un archivo ZIP:</p>
+    <pre><code>tar -a -c -f C:\Users\ana\proyectos.zip C:\Users\ana\proyectos</code></pre>
+    <ul>
+      <li><code>tar</code>: herramienta para empaquetar y comprimir archivos.</li>
+      <li><code>-a</code>: elige automáticamente el formato de compresión según la extensión (aquí .zip).</li>
+      <li><code>-c</code>: crea un nuevo archivo comprimido.</li>
+      <li><code>-f</code>: indica el nombre del archivo de salida (aquí proyectos.zip).</li>
+      <li><code>C:\Users\ana\proyectos</code>: carpeta que queremos comprimir.</li>
+    </ul>
+    <p>Para descomprimir en Windows:</p>
+    <pre><code>tar -x -f C:\Users\ana\proyectos.zip -C C:\Users\ana\destino</code></pre>
+    <ul>
+      <li><code>-x</code>: extrae el contenido.</li>
+      <li><code>-C</code>: indica la carpeta de destino donde se extraerá.</li>
+    </ul>
+    <p>En Ubuntu (bash) se usa <code>tar</code> con formato .tar.gz:</p>
+    <pre><code>tar -czvf /home/ana/proyectos.tar.gz /home/ana/proyectos</code></pre>
+    <ul>
+      <li><code>-c</code>: crea un nuevo archivo.</li>
+      <li><code>-z</code>: comprime con gzip.</li>
+      <li><code>-v</code>: verbose, muestra los archivos procesados.</li>
+      <li><code>-f</code>: nombre del archivo de salida.</li>
+      <li>El último argumento es la carpeta a comprimir.</li>
+    </ul>
+    <p>Para descomprimir en Ubuntu:</p>
+    <pre><code>tar -xzvf /home/ana/proyectos.tar.gz -C /home/ana/destino</code></pre>
+    <ul>
+      <li><code>-x</code>: extrae.</li>
+      <li><code>-z</code>: descomprime gzip.</li>
+      <li><code>-v</code>: verbose.</li>
+      <li><code>-f</code>: archivo de entrada.</li>
+      <li><code>-C</code>: carpeta de destino.</li>
+    </ul>
+
+    <h3>4. Periféricos de almacenamiento: memorias USB y discos externos</h3>
+    <p>Un <strong>periférico</strong> es cualquier dispositivo que se conecta al equipo para ampliar sus funciones. Los <strong>periféricos de almacenamiento</strong> guardan datos: memorias USB, discos duros externos, tarjetas SD, etc. Al conectarlos, el sistema operativo debe <strong>montarlos</strong> para poder acceder a su contenido.</p>
+    <p><strong>Montar</strong> significa asignar al dispositivo una ubicación dentro del sistema de archivos para que podamos leer y escribir en él.</p>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 600 320" role="img" aria-label="Dónde aparece una memoria USB en Windows y Ubuntu">
+        <defs>
+          <marker id="flecha-e-cee" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+          </marker>
+        </defs>
+        <rect x="20" y="20" width="250" height="100" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="145" y="50" text-anchor="middle" font-size="15" fill="#1a2c3e">Windows 11</text>
+        <text x="145" y="75" text-anchor="middle" font-size="13" fill="#64748b">Este equipo</text>
+        <text x="145" y="95" text-anchor="middle" font-size="13" fill="#64748b">USB (E:)</text>
+
+        <rect x="330" y="20" width="250" height="100" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="455" y="50" text-anchor="middle" font-size="15" fill="#1a2c3e">Ubuntu 24.04</text>
+        <text x="455" y="75" text-anchor="middle" font-size="13" fill="#64748b">/media/alumno/</text>
+        <text x="455" y="95" text-anchor="middle" font-size="13" fill="#64748b">USB</text>
+
+        <rect x="220" y="190" width="160" height="60" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="300" y="215" text-anchor="middle" font-size="15" fill="#1a2c3e">Memoria USB</text>
+        <text x="300" y="235" text-anchor="middle" font-size="13" fill="#64748b">física</text>
+
+        <line x1="300" y1="190" x2="145" y2="120" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-e-cee)"/>
+        <line x1="300" y1="190" x2="455" y2="120" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-e-cee)"/>
+      </svg>
+      <figcaption>La misma memoria USB física se muestra en rutas distintas según el sistema operativo: como letra de unidad en Windows y como carpeta montada en /media en Ubuntu.</figcaption>
+    </figure>
+
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <p>Al conectar la USB, Windows le asigna una <strong>letra de unidad</strong> (E:, F:...). La letra es un nombre corto que identifica cada unidad de almacenamiento (disco, USB, tarjeta de memoria). Puedes verla en <em>Este equipo</em> dentro del Explorador de archivos.</p>
+        <p>Para expulsar de forma segura: clic derecho sobre la unidad → <strong>Expulsar</strong>, o usar el icono de <em>Quitar hardware de forma segura</em> en la bandeja del sistema (junto al reloj). Espera a que desaparezca la letra.</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <p>Al conectar la USB, Ubuntu la <strong>monta automáticamente</strong> en una carpeta dentro de <code>/media/usuario/</code> (por ejemplo, <code>/media/alumno/USB32</code>). Puedes verla en el administrador de archivos, en la barra lateral izquierda.</p>
+        <p>Para expulsar: clic derecho sobre la unidad → <strong>Expulsar</strong> o <strong>Expulsar de forma segura</strong>. También puedes usar el botón de expulsión junto al nombre en la barra lateral.</p>
+      </div>
+    </div>
+
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>Nunca desconectes un USB sin expulsarlo. Si se está copiando un archivo y lo quitas, puedes corromper los datos y dejar la memoria inservible.</p>
+    </div>
+
+    <h3>5. La ruta de montaje automático en Ubuntu</h3>
+    <p>Cuando conectas una memoria USB o un disco externo, Ubuntu 24.04 lo <strong>monta automáticamente</strong> y le asigna una carpeta dentro de <code>/media/usuario/</code>. Esa carpeta se denomina <strong>punto de montaje</strong>: es la ubicación desde la que se ven y se abren los archivos del dispositivo. En este nivel no necesitas crear la carpeta ni usar comandos de administrador; solo debes localizar la unidad en la barra lateral del administrador de archivos.</p>
+    <p>Si la memoria no aparece, espera unos segundos, prueba otro puerto USB o desconéctala y vuelve a conectarla. Si sigue sin aparecer, avisa al docente.</p>
+
+    <h3>6. Otros periféricos comunes</h3>
+    <p>Además de discos extraíbles, en la empresa o en casa te encontrarás con:</p>
+    <ul>
+      <li><strong>Impresoras</strong>: se instalan desde <em>Configuración → Bluetooth y dispositivos → Impresoras y escáneres</em> en Windows, o <em>Configuración → Impresoras → Agregar impresora</em> en Ubuntu.</li>
+      <li><strong>Escáneres</strong>: en Windows se usan con la aplicación <em>Escaneado</em> o desde <em>Dispositivos e impresoras</em>. En Ubuntu se detectan automáticamente y se utilizan desde la aplicación <em>Escáner de documentos</em> o con <em>Escáner simple</em>.</li>
+      <li><strong>Cámaras y teléfonos</strong>: al conectarlos por USB, suelen comportarse como una unidad de almacenamiento extraíble (aparece una letra en Windows, o una carpeta en <code>/media</code> en Ubuntu).</li>
+    </ul>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En la empresa <strong>Tecnoparts SL</strong>, la empleada Ana tiene en su equipo Windows 11 una carpeta llamada <code>Informes_2026</code> en el escritorio, con 15 archivos PDF. Debe hacer una copia de seguridad en una memoria USB (que aparece como <code>E:</code>) y luego comprimir la carpeta original para enviarla por correo, eliminando la carpeta suelta para no ocupar espacio. Realiza los pasos.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>Conectar la memoria USB. Windows la detecta y asigna la letra <code>E:</code>.</li>
+        <li>Abrir el Explorador de archivos (tecla <kbd>Windows</kbd>+<kbd>E</kbd>).</li>
+        <li>Ir al escritorio y localizar la carpeta <code>Informes_2026</code>.</li>
+        <li>Seleccionar la carpeta, clic derecho → <strong>Copiar</strong> (o <kbd>Ctrl</kbd>+<kbd>C</kbd>).</li>
+        <li>Navegar a <code>E:</code> y hacer clic derecho → <strong>Pegar</strong> (o <kbd>Ctrl</kbd>+<kbd>V</kbd>). Esperar a que termine la copia.</li>
+        <li>Verificar que en <code>E:</code> aparece <code>Informes_2026</code> y que contiene los 15 archivos.</li>
+        <li>Expulsar la USB de forma segura: clic derecho sobre <code>E:</code> → <strong>Expulsar</strong>.</li>
+        <li>Volver al escritorio, clic derecho sobre <code>Informes_2026</code> → <strong>Comprimir en archivo ZIP</strong>. Se crea <code>Informes_2026.zip</code>.</li>
+        <li>Verificar que el zip se abre y contiene los archivos.</li>
+        <li>Eliminar la carpeta original <code>Informes_2026</code> (clic derecho → <strong>Eliminar</strong>). Ahora solo queda el zip y la copia en el USB.</li>
+      </ol>
+      <p>Si quisiera hacer lo mismo en Ubuntu por terminal, usaría: <code>cp -r ~/Escritorio/Informes_2026 /media/alumno/USB/</code> para copiar, <code>tar -czvf ~/Escritorio/Informes_2026.tar.gz ~/Escritorio/Informes_2026</code> para comprimir y <code>rm -r ~/Escritorio/Informes_2026</code> para eliminar. Recuerda que <code>-r</code> es para carpetas.</p>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-e · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En el aula de informática, la alumna Marta tiene una USB con letra <code>F:</code>. Debe mover la carpeta <code>Fotos_viaje</code> que está en su escritorio a la USB, y después comprimirla en la USB para ahorrar espacio. Indica los pasos necesarios en Windows 11, incluyendo cómo expulsar la USB al final.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p>Pasos en Windows 11:</p>
+        <ol>
+          <li>Conectar la USB y comprobar que aparece como <code>F:</code> en <em>Este equipo</em>.</li>
+          <li>Abrir el Explorador de archivos (tecla <kbd>Windows</kbd>+<kbd>E</kbd>).</li>
+          <li>Navegar al escritorio y localizar la carpeta <code>Fotos_viaje</code>.</li>
+          <li>Seleccionarla, clic derecho → <strong>Cortar</strong> (o <kbd>Ctrl</kbd>+<kbd>X</kbd>). El archivo se queda "en el portapapeles" esperando.</li>
+          <li>Navegar a <code>F:</code>, clic derecho → <strong>Pegar</strong> (o <kbd>Ctrl</kbd>+<kbd>V</kbd>). La carpeta desaparece del escritorio y aparece en la USB.</li>
+          <li>Dentro de <code>F:</code>, hacer clic derecho sobre <code>Fotos_viaje</code> → <strong>Comprimir en archivo ZIP</strong>. Se crea <code>Fotos_viaje.zip</code>.</li>
+          <li>Comprobar que el zip se abre y contiene las fotos.</li>
+          <li>Eliminar la carpeta <code>Fotos_viaje</code> de la USB dejando solo <code>Fotos_viaje.zip</code>, ya que el enunciado pide ahorrar espacio. Las fotos no se pierden porque están dentro del comprimido.</li>
+          <li>Expulsar la USB de forma segura: clic derecho sobre <code>F:</code> → <strong>Expulsar</strong>.</li>
+        </ol>
+        <p>Nota: al usar <em>Cortar</em> en lugar de <em>Copiar</em>, la carpeta se mueve, no se duplica.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-e · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En un equipo con Ubuntu 24.04, tienes una memoria USB montada automáticamente en <code>/media/alumno/USB</code>. Debes crear una carpeta llamada <code>respaldo</code> dentro de la USB, copiar los archivos <code>notas.txt</code> y <code>presupuesto.ods</code> desde tu carpeta personal (<code>/home/alumno</code>) a esa carpeta <code>respaldo</code>, luego comprimir la carpeta <code>respaldo</code> en un archivo <code>respaldo.tar.gz</code> dentro del USB y finalmente eliminar la carpeta <code>respaldo</code> original (conservando el comprimido). Escribe los comandos en orden y explica brevemente qué hace cada uno.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-e · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>En un equipo con Ubuntu 24.04, tienes en <code>/home/alumno/Escritorio</code> la carpeta <code>proyecto</code> con tres archivos: <code>portada.odt</code>, <code>datos.xlsx</code> y <code>notas.txt</code>. Debes preparar una copia de seguridad solo con <code>portada.odt</code> y <code>notas.txt</code>, dejando fuera el archivo <code>datos.xlsx</code>. Escribe los comandos para: listar el contenido de <code>proyecto</code>; crear <code>/home/alumno/copia_proyecto</code>; copiar los dos archivos indicados a esa carpeta; crear <code>/home/alumno/copia_proyecto.tar.gz</code>; comprobar con <code>ls</code> que el comprimido se ha creado; eliminar la carpeta <code>copia_proyecto</code> sin borrar <code>copia_proyecto.tar.gz</code>. Explica brevemente qué hace cada comando.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-e</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé copiar, mover, renombrar y eliminar archivos y carpetas en Windows y Ubuntu (interfaz gráfica y terminal).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé comprimir y descomprimir carpetas en ZIP (Windows) y TAR.GZ (Ubuntu).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Entiendo qué es una letra de unidad en Windows y una ruta de montaje en Ubuntu.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé conectar y expulsar de forma segura una memoria USB o disco externo.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé identificar la carpeta de montaje automático de una USB en Ubuntu (/media/usuario) y expulsarla de forma segura.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé buscar archivos y carpetas tanto en Windows como en Ubuntu.</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p>Confundir <strong>copiar</strong> (<kbd>Ctrl</kbd>+<kbd>C</kbd> → <kbd>Ctrl</kbd>+<kbd>V</kbd>) con <strong>mover</strong> (<kbd>Ctrl</kbd>+<kbd>X</kbd> → <kbd>Ctrl</kbd>+<kbd>V</kbd>). Al copiar, el archivo original permanece en su sitio; al mover, desaparece del origen. Si en un ejercicio te piden "mover a USB" y solo copias, dejarás una copia extra en el disco duro. Lee el enunciado con atención.</p>
+      <p>Otra trampa: desconectar un USB sin expulsarlo de forma segura puede dañar los archivos. No lo retires mientras el LED de actividad parpadea; usa siempre la opción <strong>Expulsar</strong> en Windows o <strong>Expulsar de forma segura</strong> en Ubuntu y espera a que desaparezca la unidad.</p>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="ceF">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num">f</div>
+      <div class="bloque-info">
+        <h3>Exploración de soportes de almacenamiento de datos</h3>
+        <p>CE-f · importante · 1 sesión</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">1 sesión</span>
+  </div>
+  <div class="bloque-body">
+    <p>En este CE vamos a aprender a <strong>explorar los soportes de almacenamiento de datos</strong> con las herramientas que nos ofrece el sistema operativo. Un <strong>soporte de almacenamiento</strong> es cualquier dispositivo o unidad donde se guardan archivos: discos duros internos, discos SSD, memorias USB, tarjetas SD o discos externos.</p>
+    <p>Explorar un soporte significa saber <strong>qué discos y unidades hay</strong>, <strong>cuánta capacidad tienen</strong>, <strong>cuánto espacio libre queda</strong> y <strong>cómo están organizados</strong> en partes llamadas <strong>particiones</strong>.</p>
+    <div class="box-importante">
+      <div class="box-label">IMPORTANTE</div>
+      <p>Una <strong>partición</strong> es una división de un disco físico en partes independientes. Cada partición puede tener su propia letra de unidad en Windows (C:, D:, E:) o su propio <strong>punto de montaje</strong> en Linux (una carpeta como <code>/media/ana/USB</code> donde se accede a su contenido).</p>
+      <p>En Linux, el punto de montaje <code>/</code> es la <strong>raíz del sistema de archivos</strong>: la carpeta principal de la que cuelgan todas las demás. Cuando una partición se monta en <code>/</code>, se la conoce como <strong>partición raíz</strong> y es la que contiene el sistema operativo.</p>
+    </div>
+
+    <h4>¿Qué herramientas usamos para explorar?</h4>
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <p><strong>1. Explorador de archivos → «Este equipo»</strong></p>
+        <p>Al abrir el Explorador de archivos (tecla <kbd>Windows</kbd> + <kbd>E</kbd>, como vimos en CE-c) y hacer clic en <strong>«Este equipo»</strong> en el panel izquierdo, vemos todas las unidades conectadas con su letra (C:, D:, E:…). Debajo de cada unidad aparece una <strong>barra de espacio</strong>: azul para el espacio usado y gris para el libre.</p>
+        <p><strong>2. Propiedades de la unidad</strong></p>
+        <p>Hacemos clic derecho sobre una unidad → <strong>Propiedades</strong>. Se abre una ventana con un gráfico circular que muestra <strong>capacidad total</strong>, <strong>espacio usado</strong> y <strong>espacio libre</strong>. También indica el <strong>sistema de archivos</strong>, que es la manera en que se organizan los datos dentro de la partición. Los más frecuentes son <strong>NTFS</strong> (New Technology File System, el más usado en Windows para discos internos), <strong>FAT32</strong> (File Allocation Table de 32 bits, compatible con casi todos los dispositivos pero sin archivos mayores de 4 GB) y <strong>exFAT</strong> (Extended File Allocation Table, pensado para USB y tarjetas SD, sin límite práctico de tamaño por archivo).</p>
+        <p><strong>3. Administración de discos</strong></p>
+        <p>Hacemos clic derecho sobre el botón Inicio → <strong>Administración de discos</strong>. Muestra todos los <strong>discos físicos</strong> y sus <strong>particiones</strong>, con el tamaño de cada una, la letra asignada y el estado (correcto, sin asignar, etc.).</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <p><strong>1. Utilidad de discos</strong></p>
+        <p>Pulsamos la tecla <kbd>Super</kbd> (como vimos en CE-c) y escribimos <strong>Discos</strong>. Al abrir la aplicación <strong>Discos</strong> vemos en el panel izquierdo los discos físicos; al seleccionar uno, a la derecha aparecen sus <strong>particiones</strong> con el tamaño, el espacio libre y el sistema de archivos.</p>
+        <p><strong>2. Comando <code>lsblk</code></strong></p>
+        <p>Desde el terminal (Ctrl+Alt+T) ejecutamos <code>lsblk</code>. Muestra una lista en forma de árbol con los <strong>discos</strong> (como <code>sda</code>, <code>sdb</code>) y sus <strong>particiones</strong> (<code>sda1</code>, <code>sda2</code>…). En esta nomenclatura, <code>sda</code> es el primer disco detectado, <code>sdb</code> el segundo, y así sucesivamente. Las particiones se indican con un número: <code>sda1</code> es la primera partición del disco <code>sda</code>, <code>sda2</code> la segunda. En discos NVMe, el nombre puede aparecer como <code>nvme0n1</code> en lugar de <code>sda</code>; sus particiones serían <code>nvme0n1p1</code>, <code>nvme0n1p2</code>, etc.</p>
+        <p><strong>3. Comando <code>df -h</code></strong></p>
+        <p>Ejecutamos <code>df -h</code>. Muestra el <strong>espacio usado y libre</strong> de todos los sistemas de archivos que están <strong>montados</strong> (conectados al sistema).</p>
+      </div>
+    </div>
+
+    <h4>Comandos de terminal desglosados</h4>
+    <pre><code>lsblk</code></pre>
+    <ul>
+      <li><code>lsblk</code>: programa que <strong>lista los dispositivos de bloque</strong> (discos, SSD, USB y sus particiones). El nombre viene de <em>list block devices</em>.</li>
+      <li>No necesita argumentos para mostrar el árbol de discos y particiones con su tamaño y punto de montaje.</li>
+      <li>En Linux, los discos SATA o USB suelen nombrarse <code>sda</code>, <code>sdb</code>, etc.; el número final indica la partición (como <code>sda1</code>). En discos NVMe verás nombres como <code>nvme0n1</code>.</li>
+    </ul>
+    <pre><code>df -h</code></pre>
+    <ul>
+      <li><code>df</code>: comando que muestra el uso del <strong>espacio en disco</strong> de los sistemas de archivos montados.</li>
+      <li><code>-h</code>: opción <em>human readable</em> (legible para humanos); muestra los tamaños en <strong>K</strong> (kilobytes), <strong>M</strong> (megabytes) o <strong>G</strong> (gigabytes) en lugar de bytes, para que se lean fácilmente.</li>
+    </ul>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 460 220" role="img" aria-label="Relación entre disco físico, particiones y las unidades o puntos de montaje en Windows y Linux">
+        <defs>
+          <marker id="flecha-f-cef" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+          </marker>
+        </defs>
+        <rect x="30" y="70" width="120" height="90" rx="12" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="90" y="95" text-anchor="middle" font-size="15" fill="#1a2c3e">Disco físico</text>
+        <text x="90" y="115" text-anchor="middle" font-size="13" fill="#64748b">SSD / HDD / USB</text>
+        <line x1="150" y1="95" x2="200" y2="60" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+        <line x1="150" y1="130" x2="200" y2="165" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+        <rect x="200" y="30" width="110" height="60" rx="10" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+        <text x="255" y="55" text-anchor="middle" font-size="14" fill="#1a2c3e">Partición 1</text>
+        <text x="255" y="75" text-anchor="middle" font-size="12" fill="#64748b">C: / sda1</text>
+        <rect x="200" y="135" width="110" height="60" rx="10" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+        <text x="255" y="160" text-anchor="middle" font-size="14" fill="#1a2c3e">Partición 2</text>
+        <text x="255" y="180" text-anchor="middle" font-size="12" fill="#64748b">D: / sda2</text>
+        <rect x="345" y="30" width="95" height="60" rx="10" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="392" y="52" text-anchor="middle" font-size="13" fill="#1a2c3e">Unidad C:</text>
+        <text x="392" y="72" text-anchor="middle" font-size="12" fill="#64748b">Windows</text>
+        <rect x="345" y="135" width="95" height="60" rx="10" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="392" y="157" text-anchor="middle" font-size="13" fill="#1a2c3e">/media/ana/USB</text>
+        <text x="392" y="177" text-anchor="middle" font-size="12" fill="#64748b">Linux</text>
+        <line x1="310" y1="60" x2="345" y2="60" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+        <line x1="310" y1="165" x2="345" y2="165" stroke="#64748b" stroke-width="2" marker-end="url(#flecha-f-cef)"/>
+      </svg>
+      <figcaption>Un disco físico se divide en particiones; cada partición se ve como una unidad con letra en Windows o como un punto de montaje en Linux. Fíjate en que el mismo disco puede tener particiones distintas para cada sistema.</figcaption>
+    </figure>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>En la empresa <strong>Tecnoparts SL</strong>, la técnico Ana tiene que comprobar si en el ordenador de recepción (Windows 11) hay espacio libre suficiente en la unidad <code>C:</code> para instalar un programa que ocupa <strong>20 GB</strong>. También tiene que ver en el servidor Linux (Ubuntu 24.04) cuánto espacio libre queda en la partición raíz <code>/</code>.</p>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li>Abre el Explorador de archivos con <kbd>Windows</kbd> + <kbd>E</kbd> (como vimos en CE-c) y pulsa en <strong>«Este equipo»</strong>. Observa la barra bajo la unidad <code>C:</code>; de 120 GB totales, quedan libres <strong>15 GB</strong>.</li>
+        <li>Hace clic derecho sobre <code>C:</code> → <strong>Propiedades</strong> para confirmar: capacidad total 120 GB, espacio libre 15 GB. Como el programa necesita 20 GB, <strong>no hay espacio suficiente</strong>; Ana deberá liberar espacio o instalar en otra unidad.</li>
+        <li>En Ubuntu, abre el terminal con <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> (visto en CE-a) y escribe <code>df -h</code>.</li>
+        <li>Busca la línea que tiene <code>/</code> en la columna <em>Montado en</em>: muestra que la partición raíz tiene <strong>50 GB usados</strong> y <strong>30 GB libres</strong> de 80 GB totales.</li>
+        <li>Conclusión: en Windows no hay sitio para el programa; en Linux sí quedan 30 GB libres.</li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-f · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En la empresa <strong>Talleres Robles SL</strong>, el ordenador de oficina tiene Windows 11. El usuario necesita saber cuántas unidades de almacenamiento tiene conectadas y el espacio libre de la unidad <code>D:</code> para decidir si puede copiar una copia de seguridad de 10 GB. Describe qué pasos seguirías usando el Explorador de archivos y las Propiedades de la unidad.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p>Pasos:</p>
+        <ol>
+          <li>Abre el Explorador de archivos con <kbd>Windows</kbd> + <kbd>E</kbd>.</li>
+          <li>En el panel izquierdo, haz clic en <strong>«Este equipo»</strong>.</li>
+          <li>Observa la lista de unidades: verás <code>C:</code>, <code>D:</code> y quizá otras como <code>E:</code> si hay USB u otros discos.</li>
+          <li>Haz clic derecho sobre <code>D:</code> y selecciona <strong>Propiedades</strong>.</li>
+          <li>En la ventana, lee el gráfico circular: si dice que el espacio libre es mayor de 10 GB, la copia de seguridad cabe; si es menor, no cabe.</li>
+        </ol>
+        <p>Por ejemplo, si muestra «Espacio libre: 25 GB de 80 GB», sí cabe la copia de 10 GB.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-f · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En la empresa <strong>Comercial Andina SA</strong> hay dos ordenadores: uno con Windows 11 y otro con Ubuntu 24.04. En el equipo Windows, la unidad <code>C:</code> tiene 240 GB totales y 180 GB usados. En el equipo Linux, la partición raíz <code>/</code> tiene 120 GB totales y 95 GB usados. ¿Cuál de los dos equipos tiene más espacio libre en su partición principal? Calcula la diferencia y explica qué herramientas usarías en cada sistema para comprobarlo.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-f · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>En la empresa <strong>Muebles del Sur SL</strong>, el técnico conecta una memoria USB en un ordenador con Windows 11. La memoria no aparece en «Este equipo», pero al abrir <strong>Administración de discos</strong> sí se ve el dispositivo como «Disco 2» con una partición «sin letra de unidad». Explica qué está ocurriendo y qué pasos darías para poder explorar el contenido de esa memoria USB.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-f</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé qué es un soporte de almacenamiento y qué significa explorarlo.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Entiendo qué es una partición y en qué se diferencia de un disco físico.</label></li>
+        <li><label><input type="checkbox" class="check-item"> En Windows, sé usar «Este equipo», Propiedades y Administración de discos para ver unidades, espacio libre y particiones.</label></li>
+        <li><label><input type="checkbox" class="check-item"> En Ubuntu, sé usar la utilidad Discos para ver discos y particiones.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé usar los comandos <code>lsblk</code> y <code>df -h</code> en el terminal para listar dispositivos y ver espacio libre.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé interpretar la información de capacidad total, espacio usado y espacio libre de una unidad.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Sé distinguir entre la letra de unidad en Windows y el punto de montaje en Linux.</label></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="ceG">
+  <div class="bloque-header">
+    <div class="bloque-titulo">
+      <div class="bloque-num critico">g</div>
+      <div class="bloque-info">
+        <h3>Operaciones básicas de protección: antivirus y copias de seguridad</h3>
+        <p>CE-g · CRÍTICO · 2 sesiones</p>
+      </div>
+    </div>
+    <span class="bloque-sesiones">2 sesiones</span>
+  </div>
+  <div class="bloque-body">
+    <p>La seguridad de un equipo informático no solo depende de configurarlo bien (como vimos en CE-a, CE-b y CE-c), sino también de <strong>protegerlo frente a amenazas</strong> y de <strong>guardar copias de los datos importantes</strong>. En este CE aprenderemos a instalar y usar un antivirus, a realizar copias de seguridad y a aplicar otras medidas básicas de protección como el firewall o las actualizaciones automáticas.</p>
+
+    <h4>1. ¿Qué es un antivirus y por qué lo necesitamos?</h4>
+    <p>Un <strong>antivirus</strong> es un programa que detecta, bloquea y elimina <strong>malware</strong>. El malware (del inglés <em>malicious software</em>, programa malicioso) incluye:</p>
+    <ul>
+      <li><strong>Virus</strong>: se adjunta a otros archivos y se propaga al ejecutarlos.</li>
+      <li><strong>Troyano</strong>: se disfraza de programa útil pero abre una puerta trasera al atacante.</li>
+      <li><strong>Gusano</strong>: se copia a sí mismo por la red sin necesidad de que el usuario haga nada.</li>
+      <li><strong>Spyware</strong>: espía la actividad del usuario (teclas, pantalla, credenciales).</li>
+      <li><strong>Ransomware</strong>: cifra los archivos del usuario y pide un rescate económico.</li>
+    </ul>
+    <p>El antivirus analiza los archivos y los compara con una base de datos de <strong>firmas</strong> (patrones conocidos de malware). También usa <strong>heurística</strong> para detectar comportamientos sospechosos incluso de malware nuevo.</p>
+
+    <h4>2. Antivirus en Windows 11 y Ubuntu 24.04</h4>
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11: Microsoft Defender</h4>
+        <p>Windows 11 ya incluye un antivirus gratuito e integrado: <strong>Microsoft Defender Antivirus</strong>. Se gestiona desde la aplicación <strong>Seguridad de Windows</strong> (icono de escudo en la bandeja del sistema, junto al reloj).</p>
+        <p>Abre <strong>Seguridad de Windows</strong> → <strong>Protección antivirus y contra amenazas</strong>. Ahí puedes:</p>
+        <ul>
+          <li>Ver el estado de la protección en tiempo real (debe estar <strong>Activada</strong>).</li>
+          <li>Realizar un <strong>análisis rápido</strong> (revisa las zonas más vulnerables) o un <strong>análisis completo</strong> (revisa todo el disco).</li>
+          <li>Actualizar las <strong>definiciones de virus</strong> (firmas) manualmente.</li>
+        </ul>
+        <p>También se puede lanzar un análisis desde la línea de comandos. Lo más cómodo es abrir <strong>PowerShell como administrador</strong> y usar el comando <code>Start-MpScan</code>, que viene integrado en Windows 11 y no necesita indicar ninguna ruta. Existe además la herramienta <code>MpCmdRun.exe</code>, pero está guardada en una carpeta cuyo nombre incluye el número de versión de Defender (por ejemplo <code>C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.24090.11\</code>), y ese número <strong>es distinto en cada equipo y cambia con cada actualización</strong>: no sirve de nada copiar la ruta de otro ordenador. Lo veremos en el ejemplo resuelto.</p>
+        <p>Si decides instalar un antivirus de terceros (Avast, Bitdefender…), descárgalo <strong>solo desde la web oficial</strong> y ejecuta el instalador. Windows Defender se desactivará automáticamente para evitar conflictos.</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04: ClamAV</h4>
+        <p>Linux tiene menos malware que Windows, pero conviene protegerse, sobre todo si compartimos archivos con usuarios de Windows. <strong>ClamAV</strong> es un antivirus gratuito y de código abierto muy usado en Linux.</p>
+        <p>Instalación desde el terminal (Ctrl+Alt+T):</p>
+        <pre><code>sudo apt update && sudo apt install clamav clamtk -y</code></pre>
+        <ul>
+          <li><code>sudo</code>: ejecuta el comando con privilegios de administrador (root).</li>
+          <li><code>apt</code>: gestor de paquetes de Ubuntu, como vimos en CE-a.</li>
+          <li><code>update</code>: actualiza la lista de paquetes disponibles.</li>
+          <li><code>&&</code>: operador que encadena comandos; el segundo solo se ejecuta si el primero termina sin errores.</li>
+          <li><code>install</code>: instala los paquetes indicados.</li>
+          <li><code>clamav</code>: motor antivirus de línea de comandos.</li>
+          <li><code>clamtk</code>: interfaz gráfica opcional para ClamAV.</li>
+          <li><code>-y</code>: responde automáticamente "sí" a las preguntas de confirmación.</li>
+        </ul>
+        <p>Después hay que actualizar la base de datos de firmas:</p>
+        <pre><code>sudo freshclam</code></pre>
+        <ul>
+          <li><code>freshclam</code>: programa que descarga las definiciones de virus más recientes.</li>
+        </ul>
+        <p>Para escanear una carpeta (por ejemplo, tu carpeta personal):</p>
+        <pre><code>clamscan -r /home/tu_usuario</code></pre>
+        <ul>
+          <li><code>clamscan</code>: comando de ClamAV para analizar archivos.</li>
+          <li><code>-r</code>: modo recursivo, analiza también las subcarpetas.</li>
+          <li><code>/home/tu_usuario</code>: ruta de la carpeta a analizar.</li>
+        </ul>
+        <p>También puedes abrir <strong>ClamTk</strong> desde el menú de aplicaciones para un entorno gráfico.</p>
+      </div>
+    </div>
+
+    <h4>3. Copias de seguridad: nuestros datos a salvo</h4>
+    <p>Una <strong>copia de seguridad</strong> (backup) es una copia de nuestros archivos guardada en otro soporte (disco externo, memoria USB, carpeta de red, nube) para poder recuperarlos si los perdemos, se dañan o son secuestrados por ransomware.</p>
+    <p>Existen varios tipos de copia:</p>
+    <ul>
+      <li><strong>Completa</strong>: copia todos los archivos cada vez. Ocupa más tiempo y espacio, pero es la más fácil de restaurar.</li>
+      <li><strong>Incremental</strong>: copia solo los archivos que han cambiado desde la última copia (completa o incremental). Es rápida y ahorra espacio.</li>
+      <li><strong>Diferencial</strong>: copia los archivos que han cambiado desde la última copia completa. Intermedia entre las anteriores.</li>
+    </ul>
+    <p>Además, es fundamental guardar las copias <strong>en un lugar distinto al original</strong>: si el disco principal falla o se infecta, la copia debe estar en otro disco o en la nube.</p>
+
+    <h4>4. Copias de seguridad en Windows 11 y Ubuntu 24.04</h4>
+    <div class="dual-columns">
+      <div class="win-col">
+        <h4>🪟 Windows 11</h4>
+        <p><strong>Opción gráfica: Historial de archivos</strong></p>
+        <p>Conecta un disco externo o USB. Ve a <strong>Configuración</strong> → <strong>Sistema</strong> → <strong>Almacenamiento</strong> → <strong>Configuración avanzada de almacenamiento</strong> → <strong>Copia de seguridad</strong>. Activa <strong>Historial de archivos</strong> y elige la unidad de destino. Windows hará copias automáticas periódicas de tus carpetas personales (Documentos, Imágenes, Escritorio…).</p>
+        <p><strong>Opción por comandos: robocopy</strong></p>
+        <p><code>robocopy</code> (Robust Copy) es una herramienta avanzada de copia incluida en Windows. Ejemplo:</p>
+        <pre><code>robocopy C:\Users\ana\Documentos D:\Backup\Documentos /E /R:1 /W:1 /LOG:backup.log</code></pre>
+        <ul>
+          <li><code>robocopy</code>: programa de copia robusta de Windows.</li>
+          <li><code>C:\Users\ana\Documentos</code>: carpeta de origen.</li>
+          <li><code>D:\Backup\Documentos</code>: carpeta de destino (en una unidad externa D:).</li>
+          <li><code>/E</code>: copia todas las subcarpetas, incluidas las vacías.</li>
+          <li><code>/R:1</code>: número de reintentos si hay un error (1 reintento).</li>
+          <li><code>/W:1</code>: tiempo de espera entre reintentos (1 segundo).</li>
+          <li><code>/LOG:backup.log</code>: guarda un informe de la copia en el archivo backup.log.</li>
+        </ul>
+        <p>Para programar copias automáticas, usa el <strong>Programador de tareas</strong> (busca "Programador de tareas" en el menú Inicio) y crea una tarea básica que ejecute el comando robocopy cada día a una hora.</p>
+      </div>
+      <div class="linux-col">
+        <h4>🐧 Ubuntu 24.04</h4>
+        <p><strong>Opción por comandos: rsync</strong></p>
+        <p><code>rsync</code> sincroniza carpetas y es ideal para copias incrementales (solo copia lo que cambió). Ejemplo:</p>
+        <pre><code>rsync -av --delete /home/ana/Documentos /mnt/backup</code></pre>
+        <ul>
+          <li><code>rsync</code>: herramienta de sincronización de archivos.</li>
+          <li><code>-a</code>: modo archivo; copia recursivamente y preserva permisos, fechas y enlaces (equivale a -rlptgoD).</li>
+          <li><code>-v</code>: verbose, muestra los archivos que se copian.</li>
+          <li><code>--delete</code>: borra del destino los archivos que ya no existen en el origen. <strong>Ojo</strong>: esto convierte la copia en un espejo exacto; si borras un archivo del origen, también se borra en el destino. Para una copia de seguridad tradicional (sin borrar), omite esta opción.</li>
+          <li><code>/home/ana/Documentos</code>: carpeta de origen.</li>
+          <li><code>/mnt/backup</code>: carpeta de destino, normalmente un disco externo montado en /mnt. <strong>Ojo</strong>: rsync copia la carpeta de origen <em>dentro</em> del destino, así que el resultado será <code>/mnt/backup/Documentos</code>. Si escribieras <code>/mnt/backup/Documentos</code> como destino, acabarías con <code>/mnt/backup/Documentos/Documentos</code>.</li>
+        </ul>
+        <p><strong>Opción por comandos: tar</strong></p>
+        <p>Para crear un archivo comprimido (como vimos en CE-e), usa tar:</p>
+        <pre><code>tar -czf /mnt/backup/documentos-$(date +%Y%m%d).tar.gz /home/ana/Documentos</code></pre>
+        <ul>
+          <li><code>tar</code>: empaqueta archivos.</li>
+          <li><code>-c</code>: crea un archivo nuevo.</li>
+          <li><code>-z</code>: comprime con gzip.</li>
+          <li><code>-f</code>: indica el nombre del archivo de salida.</li>
+          <li><code>/mnt/backup/documentos-$(date +%Y%m%d).tar.gz</code>: archivo de destino con la fecha actual en el nombre (ej. documentos-20261015.tar.gz).</li>
+          <li><code>/home/ana/Documentos</code>: carpeta a empaquetar.</li>
+        </ul>
+        <p>Para guardar la salida de un comando en un archivo se usa el operador de redirección <code>&gt;</code>. Por ejemplo, <code>clamscan -r /home/carlos/Escritorio &gt; /home/carlos/escaneo.txt</code> crea o sobrescribe <code>escaneo.txt</code> con el resultado del comando. Lo usaremos en el ejercicio medio.</p>
+        <p>Para programar copias automáticas en Linux se usa <strong>cron</strong>, el planificador de tareas del sistema. Cada usuario tiene su propia tabla de tareas llamada <strong>crontab</strong>; se edita con <code>crontab -e</code>. La línea <code>0 20 * * * rsync -av /home/ana/Documentos /mnt/backup</code> está formada por:</p>
+        <ul>
+          <li><strong>Minuto</strong> (<code>0</code>): la tarea se ejecuta en el minuto 0.</li>
+          <li><strong>Hora</strong> (<code>20</code>): a las 20 h (8 de la tarde).</li>
+          <li><strong>Día del mes</strong> (<code>*</code>): cualquier día del mes.</li>
+          <li><strong>Mes</strong> (<code>*</code>): cualquier mes.</li>
+          <li><strong>Día de la semana</strong> (<code>*</code>): cualquier día de la semana.</li>
+        </ul>
+        <p>El asterisco <code>*</code> significa "cualquier valor". Por tanto, esta línea ejecuta el <code>rsync</code> todos los días a las 20:00.</p>
+      </div>
+    </div>
+
+    <h4>5. Otras medidas de protección</h4>
+    <ul>
+      <li><strong>Firewall (cortafuegos)</strong>: programa que filtra el tráfico de red entrante y saliente. En Windows 11, verifícalo en <strong>Seguridad de Windows</strong> → <strong>Firewall y protección de red</strong>. En Ubuntu, actívalo con <code>sudo ufw enable</code> (ufw = Uncomplicated Firewall).</li>
+      <li><strong>Actualizaciones automáticas</strong>: mantienen el sistema al día con parches de seguridad. En Windows, <strong>Configuración</strong> → <strong>Windows Update</strong>. En Ubuntu, <code>sudo apt update && sudo apt upgrade -y</code> (como vimos en CE-a).</li>
+      <li><strong>Contraseñas seguras</strong>: largas, con mayúsculas, minúsculas, números y símbolos. No uses la misma en varios sitios.</li>
+      <li><strong>Precaución con correos y USB</strong>: no abras adjuntos de remitentes desconocidos, no hagas clic en enlaces sospechosos y no conectes memorias USB de origen dudoso sin antes escanearlas.</li>
+    </ul>
+
+    <figure class="diagrama">
+      <svg viewBox="0 0 500 300" role="img" aria-label="Capas de protección alrededor de los datos">
+        <defs>
+          <!-- No se necesitan marcadores para este diagrama -->
+        </defs>
+        <!-- Capa exterior: Actualizaciones -->
+        <rect x="30" y="30" width="440" height="240" rx="20" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+        <text x="250" y="50" text-anchor="middle" font-size="14" fill="#1a2c3e">Actualizaciones</text>
+        <!-- Capa: Firewall -->
+        <rect x="70" y="70" width="360" height="160" rx="15" fill="#e5f3ff" stroke="#0078d4" stroke-width="2"/>
+        <text x="250" y="90" text-anchor="middle" font-size="14" fill="#1a2c3e">Firewall</text>
+        <!-- Capa: Antivirus -->
+        <rect x="110" y="110" width="280" height="90" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+        <text x="250" y="130" text-anchor="middle" font-size="14" fill="#1a2c3e">Antivirus</text>
+        <!-- Capa: Copias de seguridad -->
+        <rect x="150" y="145" width="200" height="45" rx="10" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="250" y="156" text-anchor="middle" font-size="14" fill="#1a2c3e">Copias de seguridad</text>
+        <!-- Centro: Datos -->
+        <rect x="190" y="158" width="120" height="24" rx="8" fill="#ffffff" stroke="#1a2c3e" stroke-width="2"/>
+        <text x="250" y="173" text-anchor="middle" font-size="14" fill="#1a2c3e">Datos</text>
+      </svg>
+      <figcaption>Capas de protección en un sistema informático. Cuantas más capas activas tengamos, más difícil será que el malware llegue a nuestros datos. Observa que las copias de seguridad son la última barrera: si todo falla, al menos podremos restaurar la información.</figcaption>
+    </figure>
+
+    <div class="ejemplo-resuelto">
+      <h5>💡 Ejemplo resuelto</h5>
+      <p>La empresa <strong>Tecnoparts SL</strong> tiene dos equipos: uno con Windows 11 (usuario <em>maria</em>) y otro con Ubuntu 24.04 (usuario <em>carlos</em>). El responsable de informática debe:</p>
+      <ol>
+        <li>Verificar que Windows Defender está activo y realizar un análisis completo en el equipo Windows.</li>
+        <li>Instalar ClamAV en Ubuntu, actualizar las firmas y escanear la carpeta <code>/home/carlos/Documentos</code>.</li>
+        <li>Hacer una copia de seguridad de <code>C:\Users\maria\Documentos</code> a una unidad USB con letra <code>E:</code> usando <code>robocopy</code>.</li>
+        <li>Hacer una copia de seguridad de <code>/home/carlos/Documentos</code> a <code>/mnt/backup</code> usando <code>rsync</code> sin borrar archivos del destino.</li>
+      </ol>
+      <p><strong>Resolución paso a paso:</strong></p>
+      <ol>
+        <li><strong>Windows Defender</strong>: abre <strong>Seguridad de Windows</strong> (escudo en bandeja del sistema). Ve a <strong>Protección antivirus y contra amenazas</strong>. Comprueba que <strong>Protección en tiempo real</strong> esté <strong>Activada</strong>. Haz clic en <strong>Opciones de análisis</strong> → <strong>Examen completo</strong> → <strong>Examinar ahora</strong>. Alternativamente, desde <strong>PowerShell como administrador</strong>:<br>
+          <pre><code>Start-MpScan -ScanType FullScan</code></pre>
+          <ul>
+            <li><code>Start-MpScan</code>: comando de PowerShell que lanza un análisis de Microsoft Defender. No hay que indicar ninguna ruta porque ya viene integrado en Windows 11.</li>
+            <li><code>-ScanType FullScan</code>: tipo de análisis; <code>FullScan</code> es el completo y <code>QuickScan</code> el rápido.</li>
+            <li>Si solo quisiéramos analizar una carpeta concreta: <code>Start-MpScan -ScanType CustomScan -ScanPath C:\Empresa</code>.</li>
+          </ul>
+        </li>
+        <li><strong>ClamAV en Ubuntu</strong>:<br>
+          <pre><code>sudo apt update && sudo apt install clamav clamtk -y</code></pre>
+          (Desglose en el apartado 2 de esta página). Luego:
+          <pre><code>sudo freshclam</code></pre>
+          Y el escaneo:
+          <pre><code>clamscan -r /home/carlos/Documentos</code></pre>
+          Si encuentra malware, lo mostrará en pantalla. Si no, dirá "Infected files: 0".
+        </li>
+        <li><strong>Copia de seguridad en Windows</strong>: abre el <strong>Símbolo del sistema</strong> (cmd) o PowerShell y ejecuta:<br>
+          <pre><code>robocopy C:\Users\maria\Documentos E:\Backup\Documentos /E /R:1 /W:1 /LOG:E:\Backup\backup.log</code></pre>
+          Desglose completo en el apartado 4. Este comando copia toda la carpeta Documentos a la unidad USB <code>E:</code>, incluyendo subcarpetas vacías, y guarda un informe.
+        </li>
+        <li><strong>Copia de seguridad en Ubuntu</strong>: abre un terminal y ejecuta:<br>
+          <pre><code>rsync -av /home/carlos/Documentos /mnt/backup</code></pre>
+          Observa que <strong>no</strong> usamos <code>--delete</code>, por lo que si un archivo se borra en el origen, permanece en el destino. Es una copia de seguridad acumulativa, no un espejo exacto.
+        </li>
+      </ol>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-g · Básico</h5>
+      <span class="nivel-tag nivel-basico">BÁSICO</span>
+      <p>En la empresa <strong>Tecnoparts SL</strong>, la usuaria <strong>maria</strong> trabaja con Windows 11 y quiere proteger su carpeta <code>C:\Users\maria\Proyectos</code>. Debe:</p>
+      <ul>
+        <li>Verificar que Windows Defender está activo y realizar un análisis rápido desde la interfaz gráfica.</li>
+        <li>Hacer una copia de seguridad de esa carpeta en una unidad USB con letra <code>F:</code> usando <code>robocopy</code>, incluyendo un informe en <code>F:\Backup\proyectos.log</code>.</li>
+      </ul>
+      <p>Escribe los pasos completos, incluyendo el comando robocopy y su desglose.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+      <details class="solucion"><summary>Ver solución</summary>
+        <p><strong>Paso 1: Verificar Windows Defender</strong></p>
+        <p>Abre <strong>Seguridad de Windows</strong> (icono de escudo en la bandeja del sistema). En el panel izquierdo, selecciona <strong>Protección antivirus y contra amenazas</strong>. Comprueba que <strong>Protección en tiempo real</strong> esté <strong>Activada</strong>. Luego, en la misma pantalla, haz clic en <strong>Examen rápido</strong> y espera a que termine.</p>
+        <p><strong>Paso 2: Copia de seguridad con robocopy</strong></p>
+        <p>Abre el <strong>Símbolo del sistema</strong> (cmd) y ejecuta:</p>
+        <pre><code>robocopy C:\Users\maria\Proyectos F:\Backup\Proyectos /E /R:1 /W:1 /LOG:F:\Backup\proyectos.log</code></pre>
+        <ul>
+          <li><code>robocopy</code>: herramienta de copia robusta de Windows.</li>
+          <li><code>C:\Users\maria\Proyectos</code>: carpeta de origen.</li>
+          <li><code>F:\Backup\Proyectos</code>: carpeta de destino en la unidad USB (letra F:).</li>
+          <li><code>/E</code>: copia todas las subcarpetas, incluso las vacías.</li>
+          <li><code>/R:1</code>: reintenta 1 vez si hay un error de lectura.</li>
+          <li><code>/W:1</code>: espera 1 segundo entre reintentos.</li>
+          <li><code>/LOG:F:\Backup\proyectos.log</code>: guarda un informe del proceso en ese archivo.</li>
+        </ul>
+        <p>Si la carpeta <code>F:\Backup\Proyectos</code> no existe, robocopy la crea automáticamente.</p>
+      </details>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-g · Medio</h5>
+      <span class="nivel-tag nivel-medio">MEDIO</span>
+      <p>En un equipo con <strong>Ubuntu 24.04</strong>, el usuario <strong>carlos</strong> necesita:</p>
+      <ul>
+        <li>Instalar ClamAV y ClamTk usando el terminal.</li>
+        <li>Actualizar las definiciones de virus.</li>
+        <li>Escanear recursivamente la carpeta <code>/home/carlos/Escritorio</code> y guardar el resultado en <code>/home/carlos/escaneo.txt</code> (usando la redirección <code>&gt;</code>).</li>
+        <li>Realizar una copia de seguridad de <code>/home/carlos/Documentos</code> a una unidad externa montada en <code>/media/carlos/Backup</code> usando <code>rsync</code> <strong>sin</strong> borrar archivos del destino.</li>
+        <li>Programar con <code>cron</code> una copia de seguridad diaria a las 15:30 de <code>/home/carlos/Documentos</code> a <code>/media/carlos/Backup/Documentos</code>.</li>
+      </ul>
+      <p>Describe todos los pasos, indicando los comandos y su significado.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="ejercicio">
+      <h5>Ejercicio CE-g · Avanzado</h5>
+      <span class="nivel-tag nivel-avanzado">AVANZADO</span>
+      <p>Un equipo con <strong>Windows 11</strong> almacena datos críticos en <code>C:\Empresa</code>. El responsable debe:</p>
+      <ul>
+        <li>Verificar que Microsoft Defender está activo y programar un análisis completo semanal usando el <strong>Programador de tareas</strong> para que ejecute <code>powershell.exe -Command "Start-MpScan -ScanType FullScan"</code>.</li>
+        <li>Realizar una copia de seguridad de <code>C:\Empresa</code> a una carpeta compartida de red <code>\\servidorbackup\backup\Empresa</code> usando <code>robocopy</code>. El comando puede ser:<br>
+        <pre><code>robocopy C:\Empresa \\servidorbackup\backup\Empresa /E /R:1 /W:1 /LOG:\\servidorbackup\backup\empresa.log</code></pre>
+        </li>
+        <li>Explicar qué hace cada parte del comando <code>robocopy</code> y por qué son útiles las opciones <code>/E</code> y <code>/LOG</code>.</li>
+      </ul>
+      <p>Describe el procedimiento completo y resuelve las dudas técnicas.</p>
+      <div class="respuesta" contenteditable="true" data-placeholder="Escribe tu respuesta aquí..."></div>
+    </div>
+
+    <div class="checklist">
+      <strong>✓ Checklist CE-g</strong>
+      <ul>
+        <li><label><input type="checkbox" class="check-item"> Sé qué es un antivirus y qué tipos de malware existen.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Puedo verificar el estado de Microsoft Defender en Windows 11 y realizar análisis.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Puedo instalar y usar ClamAV en Ubuntu 24.04.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Entiendo la diferencia entre copia completa, incremental y diferencial.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Puedo hacer copias de seguridad con robocopy en Windows y rsync/tar en Ubuntu.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Conozco el peligro de usar <code>--delete</code> en rsync o <code>/MIR</code> en robocopy para copias de seguridad.</label></li>
+        <li><label><input type="checkbox" class="check-item"> Puedo programar tareas básicas de seguridad (Programador de tareas, cron).</label></li>
+        <li><label><input type="checkbox" class="check-item"> Entiendo la importancia del firewall, las actualizaciones y las contraseñas seguras.</label></li>
+      </ul>
+    </div>
+
+    <div class="box-critico">
+      <div class="box-label">⚠ TRAMPA DE EXAMEN</div>
+      <p><strong>Confundir copia de seguridad con sincronización.</strong> Si usas <code>rsync</code> con la opción <code>--delete</code> o <code>robocopy</code> con <code>/MIR</code> (que combina <code>/E</code> y <code>/PURGE</code>: copia subcarpetas incluidas vacías y borra del destino lo que no está en el origen), estás sincronizando: cualquier archivo que borres en el origen se borrará también en el destino. Eso significa que, si borras un archivo por error y luego ejecutas la "copia", lo perderás también en la copia. En un examen, si te piden <strong>copia de seguridad</strong>, usa opciones que <strong>no</strong> borren del destino (por ejemplo, <code>rsync -av</code> sin <code>--delete</code>, o <code>robocopy /E</code> sin <code>/MIR</code>). La opción <code>--delete</code> o <code>/MIR</code> solo es apropiada cuando quieres un espejo exacto, no una copia de seguridad acumulativa.</p>
+    </div>
+  </div>
+</div>
+<div class="bloque" id="resumen">
+  <div class="bloque-header" style="border-left-color:#1a6b3a;">
+    <div class="bloque-titulo">
+      <div class="bloque-num" style="background:#1a6b3a;">★</div>
+      <div class="bloque-info">
+        <h3>Puntos clave — RA1</h3>
+        <p>Repasa esto antes del examen</p>
+      </div>
+    </div>
+  </div>
+  <div class="bloque-body">
+    <ol>
+      <li style="margin-bottom:8px;"><strong>CE-a.</strong> Dejar listo un equipo recién instalado: idioma, distribución de teclado, zona horaria, cuenta de usuario, nombre del equipo, red por DHCP y actualizaciones. En Windows 11 desde <strong>Configuración</strong> (Windows + I); en Ubuntu 24.04 desde <strong>Configuración</strong> o con <code>sudo hostnamectl set-hostname</code>, <code>sudo timedatectl set-timezone Europe/Madrid</code> y <code>sudo apt update &amp;&amp; sudo apt upgrade -y</code>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-a.</strong> No confundir el <strong>idioma de los menús</strong> con la <strong>distribución del teclado</strong>: son dos ajustes distintos y hay que revisar los dos.</li>
+      <li style="margin-bottom:8px;"><strong>CE-b.</strong> Cambiar fondo de pantalla, tema claro/oscuro, aplicaciones predeterminadas y opciones de accesibilidad. Distinguir las <strong>preferencias personales</strong> (se guardan por usuario) de la <strong>configuración del sistema</strong> (afecta a todo el equipo y pide administrador).</li>
+      <li style="margin-bottom:8px;"><strong>CE-c.</strong> Preparar el entorno de trabajo: anclar aplicaciones a la barra de tareas o al dock, crear accesos directos, acoplar dos ventanas con <code>Windows + flechas</code> / <code>Super + flechas</code> y usar escritorios virtuales. Un acceso directo <strong>no</strong> es una copia del original.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> Diferenciar <strong>atributo</strong> de <strong>permiso</strong>. En Windows: solo lectura y oculto en Propiedades o con <code>attrib +r</code>, y los permisos reales en la pestaña <strong>Seguridad</strong> (Lectura, Escritura, Modificar, Control total).</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> En Linux: leer la salida de <code>ls -l</code> (primer carácter tipo, luego 3+3+3 para propietario, grupo y otros), saber qué significan <code>r</code>, <code>w</code> y <code>x</code> en archivos y en directorios, y cambiar permisos con <code>chmod u+x</code> o <code>chmod u=rw,g=r,o=</code>. Ver los ocultos con <code>ls -a</code>.</li>
+      <li style="margin-bottom:8px;"><strong>CE-d.</strong> El atributo <em>Solo lectura</em> de Windows <strong>no protege los datos</strong>: cualquiera con permisos lo quita. La seguridad real está en los permisos.</li>
+      <li style="margin-bottom:8px;"><strong>CE-e.</strong> Copiar, mover, renombrar y eliminar por interfaz gráfica y por terminal: <code>copy</code>, <code>move</code>, <code>ren</code>, <code>del</code>, <code>mkdir</code>, <code>rmdir</code>, <code>dir</code> en Windows; <code>cp</code>, <code>mv</code>, <code>rm</code>, <code>mkdir</code>, <code>rmdir</code>, <code>ls</code> en Ubuntu. Comprimir y descomprimir con <code>tar</code> (ZIP en Windows, TAR.GZ en Ubuntu).</li>
+      <li style="margin-bottom:8px;"><strong>CE-e.</strong> Conectar y <strong>expulsar de forma segura</strong> memorias USB y discos externos. Saber que la misma USB aparece como <strong>letra de unidad</strong> en Windows y montada en <code>/media/usuario/</code> en Ubuntu. Cuidado con <code>rm -r</code> y con <code>del</code>: no pasan por la papelera.</li>
+      <li style="margin-bottom:8px;"><strong>CE-f.</strong> Explorar los soportes de almacenamiento: «Este equipo», Propiedades de la unidad y Administración de discos en Windows; la utilidad <strong>Discos</strong>, <code>lsblk</code> y <code>df -h</code> en Ubuntu. Distinguir disco físico de <strong>partición</strong>, y reconocer NTFS, FAT32 y exFAT.</li>
+      <li style="margin-bottom:8px;"><strong>CE-g.</strong> Comprobar que <strong>Microsoft Defender</strong> está activo y lanzar un análisis (interfaz gráfica o <code>Start-MpScan -ScanType FullScan</code>); instalar y usar <strong>ClamAV</strong> en Ubuntu (<code>sudo apt install clamav</code>, <code>sudo freshclam</code>, <code>clamscan -r</code>). Reconocer virus, troyano, gusano, spyware y ransomware.</li>
+      <li style="margin-bottom:8px;"><strong>CE-g.</strong> Hacer copias de seguridad con <code>robocopy</code> en Windows y <code>rsync</code> o <code>tar</code> en Ubuntu, guardándolas siempre en <strong>otro soporte distinto del original</strong>. Diferenciar copia completa, incremental y diferencial, y no confundir copia con sincronización: <code>--delete</code> y <code>/MIR</code> borran del destino.</li>
+      <li style="margin-bottom:8px;"><strong>CE-g.</strong> Otras medidas básicas: firewall activado, actualizaciones al día, contraseñas seguras y no abrir adjuntos ni conectar USB de origen desconocido.</li>
+    </ol>
+  </div>
+</div>
+</div>
+
+<footer>OACE · Grado Básico · RA1: Configura equipos informáticos para su funcionamiento en un entorno monousuario, identificando la funcionalidad de la instalación.</footer>
+
+<button class="btn-top" id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="progreso-badge" id="progresoBadge">Progreso: 0%</div>
+
+<script>
+
+  window.addEventListener('scroll', function() {
+    document.getElementById('btnTop').classList.toggle('visible', window.scrollY > 300);
+  });
+  function updateProgress() {
+    var all = document.querySelectorAll('.check-item');
+    var checked = document.querySelectorAll('.check-item:checked');
+    var pct = all.length > 0 ? Math.round((checked.length / all.length) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progresoBadge').textContent = 'Progreso: ' + pct + '%';
+    try { localStorage.setItem('progreso_ra1_oace', pct); } catch(e) {}
+  }
+  document.querySelectorAll('.check-item').forEach(function(cb, i) {
+    try { if (localStorage.getItem('cb_ra1_oace_' + i) === 'true') cb.checked = true; } catch(e) {}
+    cb.addEventListener('change', function() {
+      try { localStorage.setItem('cb_ra1_oace_' + i, cb.checked); } catch(e) {}
+      updateProgress();
+    });
+  });
+  document.querySelectorAll('.respuesta[contenteditable="true"]').forEach(function(div, i) {
+    try { var s = localStorage.getItem('resp_ra1_oace_' + i); if (s) div.innerHTML = s; } catch(e) {}
+    div.addEventListener('input', function() {
+      try { localStorage.setItem('resp_ra1_oace_' + i, div.innerHTML); } catch(e) {}
+    });
+  });
+  updateProgress();
+
+</script>
+</body>
+</html>
